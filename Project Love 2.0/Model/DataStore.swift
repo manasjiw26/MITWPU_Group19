@@ -9,6 +9,7 @@ import Foundation
 class DataStore {
     var activities: [Activity] = []
     var rewards: [Reward] = []
+    var activityCategory: [ActivityCategory] = []
     
     init() {
         loadSampleData()
@@ -40,9 +41,22 @@ class DataStore {
         self.rewards = sampleRewards
     }
     
+    func loadActivityCategory() {
+        let sampleCategory: [ActivityCategory] = [
+            ActivityCategory(name: "Fun & Playful", description: "Turn your ‘meh’ days into mini adventures.", image: "Fun&Playful"),
+            ActivityCategory(name: "Spice It Up!", description: "Turn up the spark and keep the chemistry alive.", image: "SpiceItUp"),
+            ActivityCategory(name: "No Filter Chats", description: "Builds trust, real talk, and emotional ick-proofing.", image: "NoFilterChats"),
+            ActivityCategory(name: "Acts of Love", description: "Keeps the romance alive through sweet gestures.", image: "ActsOfLove"),
+            ActivityCategory(name: "Daily Dose of Us", description: "Keeps the “everyday” feeling special.", image: "DailyDoseOfUs"),
+            ActivityCategory(name: "Meaning & Growth", description: "Nurtures emotional maturity and personal growth.", image: "Meaning&Growth")
+            ]
+        self.activityCategory = sampleCategory
+    }
+    
     func getActivities() -> [Activity] {
         return activities
     }
+    
 }
 
 // Create one shared instance

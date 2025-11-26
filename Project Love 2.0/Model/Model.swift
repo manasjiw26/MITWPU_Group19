@@ -14,6 +14,13 @@ struct Activity{
     var time : String
 }
 
+struct ActivityCategory{
+    var name : String
+    var description : String
+    var image : String
+
+}
+
 struct Reward{
     var image : String
     var name : String
