@@ -7,11 +7,17 @@
 
 import UIKit
 
+protocol ActivityHeaderDelegate: AnyObject {
+    func didChangeSegment(to index: Int)
+}
+
 class ActivitySectionHeaderViewCollectionReusableView: UICollectionReusableView {
     
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var segmentedControl: UISegmentedControl!
-
+    
+    weak var delegate: ActivityHeaderDelegate?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -19,18 +25,10 @@ class ActivitySectionHeaderViewCollectionReusableView: UICollectionReusableView 
     
     
     @IBAction func onSegmentChange(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            titleLabel.text = "Activities"
-        case 1:
-            titleLabel.text = "Ongoing"
-        case 2:
-            titleLabel.text = "Completed"
-        case 3:
-            titleLabel.text = "Custom"
-            
-        default:
-            break
-        }
+        
+        
+//         Send selected segment to ViewController
+        delegate?.didChangeSegment(to: sender.selectedSegmentIndex)
+        
     }
 }

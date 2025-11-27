@@ -12,13 +12,14 @@ struct Activity{
     var description : String
     var image : String
     var time : String
+    var completed: Bool
+    var ongoing: Bool
 }
 
 struct ActivityCategory{
     var name : String
     var description : String
     var image : String
-
 }
 
 struct Reward{

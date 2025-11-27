@@ -18,11 +18,14 @@ class DataStore {
     
     func loadSampleData() {
         let sampleActivities: [Activity] = [
-            Activity(name: "Chill & Glow Sesh", description: "Facemasks, candles, chill beats — just cozy vibes and glow time", image: "", time: "5 mins"),
-            Activity(name: "Petal Hunt", description: "Pick pretty blooms and build your own bouquet together.", image: "Activityimage", time: "5 mins"),
-            Activity(name: "Wholesome Craft Challenge", description: "Make a doodle / note / digital collage for her", image: "Activityimage", time: "5 mins"),
-            Activity(name: "Memory Lane Marathon", description: "Make a mini reel using your photos and favorite audio", image: "Activityimage", time: "5 mins"),
-            Activity(name: "Stuff-A-Memory Day", description: "Buy a tiny plush, both name it and take care of it together", image: "Activityimage", time: "5 mins")
+            Activity(name: "Chill & Glow Sesh", description: "Facemasks, candles, chill beats — just cozy vibes and glow time", image: "", time: "5 mins",completed: false ,ongoing: true),
+            Activity(name: "Petal Hunt", description: "Pick pretty blooms and build your own bouquet together.", image: "Activityimage", time: "5 mins",completed: false ,ongoing: false),
+            Activity(name: "Wholesome Craft Challenge", description: "Make a doodle / note / digital collage for her", image: "Activityimage", time: "5 mins",completed: false ,ongoing: false),
+            Activity(name: "Memory Lane Marathon", description: "Make a mini reel using your photos and favorite audio", image: "Activityimage", time: "5 mins",completed: true ,ongoing: false),
+            Activity(name: "Stuff-A-Memory Day", description: "Buy a tiny plush, both name it and take care of it together", image: "Activityimage", time: "5 mins",completed: false ,ongoing: false),
+            Activity(name: "Wholesome Craft Challenge", description: "Make a doodle / note / digital collage for her", image: "Activityimage", time: "5 mins",completed: true ,ongoing: false),
+            Activity(name: "Memory Lane Marathon", description: "Make a mini reel using your photos and favorite audio", image: "Activityimage", time: "5 mins",completed: false ,ongoing: false),
+            Activity(name: "Stuff-A-Memory Day", description: "Buy a tiny plush, both name it and take care of it together", image: "Activityimage", time: "5 mins",completed: false ,ongoing: true)
         ]
         self.activities = sampleActivities
     }
@@ -56,7 +59,12 @@ class DataStore {
     func getActivities() -> [Activity] {
         return activities
     }
-    
+    func getOngoingActivities() -> [Activity] {
+        return activities.filter { $0.ongoing == true }
+    }
+    func getCompletedActivities() -> [Activity] {
+        return activities.filter { $0.completed == true }
+    }
 }
 
 // Create one shared instance

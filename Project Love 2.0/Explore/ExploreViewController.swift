@@ -12,14 +12,18 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
     @IBOutlet var activity_collection: UICollectionView!
     var rewards: [Reward] = []
     var activityCategory: [ActivityCategory] = []
+    var activity : [Activity] = []
+    var selectedSegmentIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         rewards = dataStore.rewards
-        dataStore.loadActivityCategory()
-        activityCategory = dataStore.activityCategory
         
+        dataStore.loadActivityCategory()
+        dataStore.loadSampleData()
+        activityCategory = dataStore.activityCategory
+        activity=dataStore.activities
         registerCell()
         
         activity_collection.setCollectionViewLayout(generateLayout(), animated: true)
@@ -117,7 +121,28 @@ extension ExploreViewController:  UICollectionViewDataSource {
         if section == 0 {
             return rewards.count
         }
-        return activityCategory.count
+        else {
+
+            print("Inside numberOfItemsInSection → selected segment =", selectedSegmentIndex)
+
+            if selectedSegmentIndex == 0 {
+                return activityCategory.count
+            }
+            else if selectedSegmentIndex == 1 {
+                activity = dataStore.getOngoingActivities()
+                return activity.count// or filter ongoing count
+            }
+            else if selectedSegmentIndex == 2 {
+                activity = dataStore.getCompletedActivities()
+                return activity.count// or filter completed count
+            }
+            else if selectedSegmentIndex == 3 {
+                return 3// or custom
+            }
+
+            return activityCategory.count
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -127,6 +152,32 @@ extension ExploreViewController:  UICollectionViewDataSource {
             cell.configureCell(reward: reward)
             return cell
         } else {
+            if selectedSegmentIndex == 0 {
+                let cell = activity_collection.dequeueReusableCell(withReuseIdentifier: "activity_cell", for: indexPath) as! ActivityCollectionViewCell
+                let activity = activityCategory[indexPath.row]
+                cell.configureCell(activityCategory: activity)
+                return cell
+            } else if selectedSegmentIndex == 1 {   // ongoing
+                let cell = activity_collection.dequeueReusableCell(
+                    withReuseIdentifier: "activity_cell",
+                    for: indexPath
+                ) as! ActivityCollectionViewCell
+
+                let ongoingActivities = dataStore.getOngoingActivities()
+                let ongoingactivity = ongoingActivities[indexPath.row]
+                cell.configureCells(activity: ongoingactivity)
+                return cell
+            }else if selectedSegmentIndex == 2 {   // Completed
+                let cell = activity_collection.dequeueReusableCell(
+                    withReuseIdentifier: "activity_cell",
+                    for: indexPath
+                ) as! ActivityCollectionViewCell
+
+                let completedActivities = dataStore.getCompletedActivities()
+                let completedactivity = completedActivities[indexPath.row]
+                cell.configureCells(activity: completedactivity)
+                return cell
+            }
             let cell = activity_collection.dequeueReusableCell(withReuseIdentifier: "activity_cell", for: indexPath) as! ActivityCollectionViewCell
             let activity = activityCategory[indexPath.row]
             cell.configureCell(activityCategory: activity)
@@ -139,11 +190,36 @@ extension ExploreViewController:  UICollectionViewDataSource {
         if indexPath.section != 0{
             let header = activity_collection.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header_cell", for: indexPath) as! ActivitySectionHeaderViewCollectionReusableView
             
-            header.titleLabel.text = "Activities"
-            
+            switch selectedSegmentIndex {
+            case 0:
+                header.titleLabel.text = "Activities"
+                
+            case 1:
+                header.titleLabel.text = "Ongoing"
+                
+            case 2:
+                header.titleLabel.text = "Completed"
+                
+            case 3:
+                header.titleLabel.text = "Custom"
+                
+            default:
+                break
+            }
+            header.delegate = self
+            header.segmentedControl.selectedSegmentIndex = selectedSegmentIndex
             return header
         }
         return UICollectionReusableView()
     }
     
+}
+extension ExploreViewController: ActivityHeaderDelegate {
+    func didChangeSegment(to index: Int) {
+        selectedSegmentIndex = index
+//        activity_collection.setCollectionViewLayout(generateLayout(), animated: true)
+        activity_collection.reloadSections(IndexSet(integer : 1))
+//        activity_collection.reloadData()
+//        print("Selected segment:", selectedSegmentIndex)
+    }
 }
