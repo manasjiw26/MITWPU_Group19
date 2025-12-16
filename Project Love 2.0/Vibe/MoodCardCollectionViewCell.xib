@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="mood_cell" id="gTV-IL-0wX" customClass="MoodCardCollectionViewCell" customModule="Project_Love_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="360" height="165"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="360" height="165"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zIR-el-HEz">
+                        <rect key="frame" x="25" y="28" width="205" height="28.666666666666671"/>
+                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="24"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w8l-Om-Wiy">
+                        <rect key="frame" x="25" y="64.666666666666671" width="189" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0dD-Ue-cbd">
+                        <rect key="frame" x="230" y="0.0" width="120" height="165"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="120" id="jc5-Lm-hd7"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="0dD-Ue-cbd" firstAttribute="leading" secondItem="w8l-Om-Wiy" secondAttribute="trailing" constant="16" id="7uO-hz-qav"/>
+                <constraint firstItem="0dD-Ue-cbd" firstAttribute="leading" secondItem="zIR-el-HEz" secondAttribute="trailing" id="Bfz-WA-9xj"/>
+                <constraint firstItem="zIR-el-HEz" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="25" id="EpK-fK-vKD"/>
+                <constraint firstItem="0dD-Ue-cbd" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="P7u-Y9-u3V"/>
+                <constraint firstAttribute="bottom" secondItem="0dD-Ue-cbd" secondAttribute="bottom" id="YQL-bs-NKA"/>
+                <constraint firstItem="w8l-Om-Wiy" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="25" id="g3r-5h-yC6"/>
+                <constraint firstItem="zIR-el-HEz" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="28" id="qdC-S3-Zel"/>
+                <constraint firstAttribute="trailing" secondItem="0dD-Ue-cbd" secondAttribute="trailing" constant="10" id="utR-fU-fb6"/>
+                <constraint firstItem="w8l-Om-Wiy" firstAttribute="top" secondItem="zIR-el-HEz" secondAttribute="bottom" constant="8" symbolic="YES" id="xUA-qI-D2S"/>
+            </constraints>
+            <connections>
+                <outlet property="moodCardDescriptionLabel" destination="w8l-Om-Wiy" id="SJZ-KX-5Xy"/>
+                <outlet property="moodImageView" destination="0dD-Ue-cbd" id="4hu-HA-Zg1"/>
+                <outlet property="moodLabel" destination="zIR-el-HEz" id="oG7-YI-Z83"/>
+            </connections>
+            <point key="canvasLocation" x="138.93129770992365" y="153.16901408450704"/>
+        </collectionViewCell>
+    </objects>
+</document>
