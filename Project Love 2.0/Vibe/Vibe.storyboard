@@ -1,30 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7ZR-kt-Nch">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Vibe View Controller-->
+        <!--Vibe-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="VibeVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="VibeViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VibeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="VibeViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ncA-P5-nxF">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" name="AppBackground"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="m1l-Pd-LNL">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ivE-3Z-gL3">
+                                        <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="EXn-mY-YC3">
+                                            <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="ncA-P5-nxF" secondAttribute="bottom" id="Euc-WO-6bJ"/>
+                            <constraint firstItem="ncA-P5-nxF" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="O3r-KE-mCS"/>
+                            <constraint firstItem="ncA-P5-nxF" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="dC1-k2-JBB"/>
+                            <constraint firstItem="ncA-P5-nxF" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="fgV-cS-WBN"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Vibe" id="Qv0-da-vsF">
+                        <rightBarButtonItems>
+                            <barButtonItem image="person.fill" catalog="system" id="IyR-qq-tyd"/>
+                            <barButtonItem image="bell.fill" catalog="system" id="N7N-tb-YI9"/>
+                        </rightBarButtonItems>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="vibeCollectionView" destination="ncA-P5-nxF" id="SxE-mT-bhC"/>
+                        <segue destination="0UJ-G2-Gxg" kind="presentation" identifier="LoveTipsModal" id="1If-wn-rPz"/>
+                        <segue destination="FaD-rG-NTq" kind="presentation" identifier="LoveNoteSheet" id="jnX-Vj-gcO"/>
+                        <segue destination="vvj-uj-Kg1" kind="show" identifier="goToMood" id="gTD-2v-ziO"/>
+                        <segue destination="Adf-lx-yhr" kind="push" identifier="ActivityForHerVC" id="mCf-M4-DL1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138.1679389312977" y="130.98591549295776"/>
+            <point key="canvasLocation" x="1408" y="176"/>
+        </scene>
+        <!--LoveTips-->
+        <scene sceneID="KQf-v6-bM9">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="LoveTipsVC1" storyboardName="LoveTips" id="0UJ-G2-Gxg" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Yke-XD-n4R"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7FN-oa-WeM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2497" y="-226"/>
+        </scene>
+        <!--ActivitiesForHer-->
+        <scene sceneID="ikz-Ig-NAM">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="ActivityForHerVC" storyboardName="ActivitiesForHer" id="Adf-lx-yhr" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="fBe-cy-y1K"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="w1c-xV-3lM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2692" y="102"/>
+        </scene>
+        <!--LoveNote-->
+        <scene sceneID="ZTf-oS-d9R">
+            <objects>
+                <viewControllerPlaceholder storyboardName="LoveNote" id="FaD-rG-NTq" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R9H-1s-QzC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2710" y="297"/>
+        </scene>
+        <!--MoodCheckIn-->
+        <scene sceneID="Vqk-0G-gv9">
+            <objects>
+                <viewControllerPlaceholder storyboardName="MoodCheckIn" id="vvj-uj-Kg1" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Zz2-an-04r"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XVi-K2-kVC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2493" y="433"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="9my-4Q-6bB">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7ZR-kt-Nch" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="qBd-JT-aCe">
+                        <rect key="frame" x="0.0" y="118" width="393" height="106"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="cw3-Tt-LDN"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QOA-SH-Ewt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="599" y="175"/>
         </scene>
     </scenes>
     <resources>
+        <image name="bell.fill" catalog="system" width="123" height="128"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
+        <namedColor name="AppBackground">
+            <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

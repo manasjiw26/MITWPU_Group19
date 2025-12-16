@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="calendar_cell" id="gTV-IL-0wX" customClass="CalendarCollectionViewCell" customModule="Project_Love_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="52" height="86"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="52" height="86"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJD-zo-5qF">
+                        <rect key="frame" x="0.0" y="29.666666666666668" width="52" height="14.333333333333332"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MX9-uv-KNQ">
+                        <rect key="frame" x="0.0" y="50" width="52" height="24"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="MX9-uv-KNQ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="BaB-Zr-RtQ"/>
+                <constraint firstAttribute="bottom" secondItem="vJD-zo-5qF" secondAttribute="bottom" constant="42" id="Pwt-0g-nGt"/>
+                <constraint firstAttribute="trailing" secondItem="MX9-uv-KNQ" secondAttribute="trailing" id="XSu-xg-Py3"/>
+                <constraint firstAttribute="trailing" secondItem="vJD-zo-5qF" secondAttribute="trailing" id="mYT-N3-3sJ"/>
+                <constraint firstAttribute="bottom" secondItem="MX9-uv-KNQ" secondAttribute="bottom" constant="12" id="mcB-Ny-86c"/>
+                <constraint firstItem="vJD-zo-5qF" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="yeH-ZR-8aR"/>
+            </constraints>
+            <size key="customSize" width="52" height="86"/>
+            <connections>
+                <outlet property="dateLabel" destination="MX9-uv-KNQ" id="tpo-pk-5lK"/>
+                <outlet property="dayLabel" destination="vJD-zo-5qF" id="NfF-of-NHF"/>
+            </connections>
+            <point key="canvasLocation" x="138.93129770992365" y="157.74647887323945"/>
+        </collectionViewCell>
+    </objects>
+</document>
