@@ -225,7 +225,7 @@ class DataStore {
         let sampleBuildYourBond: [BuildYourBond] = [
             BuildYourBond(name: "Navigate Conflict Together", imageName: "Conflict"),
             BuildYourBond(name: "Rekindle Honeymoon Phase", imageName: "Rekindle"),
-            BuildYourBond(name: "Establishing Good Communication", imageName: "Communication")]
+            BuildYourBond(name: "Establishing Good Communication", imageName: "communication")]
         
             return sampleBuildYourBond
     }
