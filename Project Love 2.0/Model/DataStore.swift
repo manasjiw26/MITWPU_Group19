@@ -23,7 +23,7 @@ class DataStore {
     var bondpage: [BuildYourBondpage] = []
     var ongoingActivities: [Activity] = []
     
-    var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "Calm")
+    var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
     var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
    
     
@@ -232,8 +232,8 @@ class DataStore {
     
     func sampleMoods() -> [MoodCheckIn] {
         let mood: [MoodCheckIn] = [
-            MoodCheckIn(label: "Me", imageName: "Calm", moodLabel: "Calm"),
-            MoodCheckIn(label: "Her", imageName: "Drained", moodLabel: "Drained")
+            MoodCheckIn(label: "Me", imageName: "calm", moodLabel: "Calm"),
+            MoodCheckIn(label: "Her", imageName: "drained", moodLabel: "Drained")
         ]
         return mood
     }
@@ -474,7 +474,7 @@ class DataStore {
             Mood(id: 3, title: "Peaceful", imageName: "Peaceful"),
 
             Mood(id: 4, title: "Satisfied", imageName: "Satisfied"),
-            Mood(id: 5, title: "Calm", imageName: "Calm"),
+            Mood(id: 5, title: "Calm", imageName: "calm"),
             Mood(id: 6, title: "Productive", imageName: "Productive"),
 
             Mood(id: 7, title: "Determined", imageName: "Determined"),
@@ -486,7 +486,7 @@ class DataStore {
             Mood(id: 12, title: "Sad", imageName: "Sad"),
 
             Mood(id: 13, title: "Disappointed", imageName: "Disappointed"),
-            Mood(id: 14, title: "Drained", imageName: "Drained"),
+            Mood(id: 14, title: "Drained", imageName: "drained"),
             Mood(id: 15, title: "Angry", imageName: "Angry")
         ]
     }
