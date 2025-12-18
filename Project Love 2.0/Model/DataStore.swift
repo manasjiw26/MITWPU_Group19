@@ -156,23 +156,23 @@ class DataStore {
     func loadSampleQuestions () {
         let sampleQuestions: [Question] = [
             Question(
-                       title: "What's your gender?",
-                       options: ["Male", "Female", "Prefer not to say"]
+                       title: "How close do you feel to your partner today so far?",
+                       options: ["Very close", "Somewhat close", "A bit distant", "Very distant"]
                    ),
 
                    Question(
-                       title: "What's your love language?",
-                       options: ["Quality time", "Act of service", "Physical touch", "Words of affirmation"]
+                       title: "How has your vibe been with each other today so far?",
+                       options: ["Smooth", "Neutral", "A little off", "Tense"]
                    ),
 
                    Question(
-                       title: "What's your relationship type?",
-                       options: ["Same city", "Living together", "Long distance", "Situationship"]
+                       title: "What do you feel you need from your partner right now?",
+                       options: ["Comfort", "Connection", "Fun", "Space"]
                    ),
 
                    Question(
-                       title: "What makes you feel cared?",
-                       options: ["Encouragement", "Surprises", "Appreciated", "Quality time", "Validation"]
+                       title: "How open are you to doing something together right now?",
+                       options: ["Very open", "Somewhat open", "Not right now, but later", "Not in the mood"]
                    )
                ]
         self.questions = sampleQuestions

@@ -52,7 +52,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
             if section == 0 { //Rewards
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .fractionalHeight(1.0)   // enough for circle + label
+                    heightDimension: .fractionalHeight(1.0)   // for circle and label
                 )
 
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -73,15 +73,15 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
                 
                 return section
-            } else {  // Activities (FlowLayout style)
+            } else {  // Activities
                 
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(115)   // your FlowLayout height
+                    heightDimension: .absolute(115)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                // Full width group, height = 115 per cell
+                
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .absolute(115)
@@ -93,7 +93,6 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
 
                 let section = NSCollectionLayoutSection(group: group)
 
-                // match your top/left/bottom/right insets and line spacing
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
                 section.interGroupSpacing = 12
 

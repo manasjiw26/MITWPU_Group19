@@ -36,6 +36,7 @@ class FeedBackViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         messageTextField.addTarget(
             self,
             action: #selector(textDidChange),
