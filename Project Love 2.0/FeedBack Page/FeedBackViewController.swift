@@ -127,7 +127,7 @@ class FeedBackViewController: UIViewController {
             withIdentifier: "TellMoodSelectionViewController"
         ) as! TellMoodSelectionViewController
         
-        vc.screenTitle1 = "Update your mood"
+//        vc.screenTitle1 = "Update your mood"
         vc.delegate = self
         vc.selectedIndexPath = nil
         vc.modalPresentationStyle = .fullScreen

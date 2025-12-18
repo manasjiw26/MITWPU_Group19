@@ -34,7 +34,7 @@ class TellMoodSelectionViewController: UIViewController {
     }()
     
     let moods = DataStore.shared.moodOptions
-    var screenTitle1: String?
+    //var screenTitle1: String?
 
     
     override func viewDidLoad() {
@@ -43,7 +43,7 @@ class TellMoodSelectionViewController: UIViewController {
         collectionView.dataSource = self
         backButton.configuration = .glass()
         setupBackButton()
-        titleLabel.text = screenTitle1
+        //titleLabel.text = screenTitle1
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
             layout.estimatedItemSize = .zero
