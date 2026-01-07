@@ -89,15 +89,20 @@ extension CategoryViewController: UICollectionViewDelegate {
 
         let selectedActivity = activities[indexPath.row]
 
+        // pass REAL Activity (business logic)
+        modalVC.selectedActivity = selectedActivity
+
+        // pass modal UI data
         if let modalData = dataStore.smallmodal.first(
             where: { $0.title == selectedActivity.name }
         ) {
-            modalVC.selectedActivity = modalData
+            modalVC.modalData = modalData
         }
 
-//        modalVC.flowSource = .category
-        modalVC.modalPresentationStyle = .overFullScreen
+        // tell modal this came from Explore
+        modalVC.flowSource = .explore
 
+        modalVC.modalPresentationStyle = .overFullScreen
         present(modalVC, animated: false)
     }
 }

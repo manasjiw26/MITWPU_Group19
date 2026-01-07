@@ -13,9 +13,14 @@ struct Activity{
     var description : String
     var image : String
     var time : String
-    var completed: Bool
-    var ongoing: Bool
+    var status: ActivityStatus
     var category: String
+}
+
+enum ActivityStatus {
+    case none
+    case ongoing
+    case completed
 }
 
 struct ActivityCategory{

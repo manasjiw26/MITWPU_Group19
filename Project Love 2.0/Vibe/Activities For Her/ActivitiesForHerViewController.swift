@@ -84,7 +84,7 @@ extension ActivitiesForHerViewController: UICollectionViewDataSource {
         let selectedActivity = activitiesForHer[indexPath.row]
 
         if let modalData = dataStore.smallmodal.first(where: { $0.title == selectedActivity.name }) {
-            destinationVC.selectedActivity = modalData
+            destinationVC.modalData = modalData
         }
         destinationVC.flowSource = .activitiesForHer
         destinationVC.modalPresentationStyle = .overFullScreen
