@@ -11,7 +11,7 @@ import UIKit
 class FeedBackViewController: UIViewController {
     var feedbackItem: FeedBackGiven!
     var flowSource: ActivityFlowSource?
-
+    var activity: Activity?
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -92,9 +92,9 @@ class FeedBackViewController: UIViewController {
             DataStore.shared.saveFeedback(feedbackItem)
 
             // Mark activity completed
-            DataStore.shared.markActivityCompleted(
-                activityName: feedbackItem.title
-            )
+        if let activity = activity {
+            DataStore.shared.markActivityCompleted(activity: activity)
+        }
 
             // 🔽 Ongoing count
             let ongoingCount = UserDefaults.standard.integer(

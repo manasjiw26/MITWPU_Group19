@@ -10,6 +10,7 @@ class StepsViewController: UIViewController {
     var steps: [StepsToFollow] = []
     var activitytitle: String = ""
     var flowSource: ActivityFlowSource?
+    var activity: Activity?
 
     @IBOutlet weak var activityTitle: UILabel!
     @IBOutlet weak var subtitle: UILabel!
@@ -110,6 +111,7 @@ class StepsViewController: UIViewController {
 
        
         feedbackVC.feedbackItem = feedbackItem
+        feedbackVC.activity = activity
         feedbackVC.flowSource = flowSource
 
         feedbackVC.modalPresentationStyle = .fullScreen

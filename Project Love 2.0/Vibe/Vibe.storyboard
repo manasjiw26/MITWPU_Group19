@@ -51,14 +51,14 @@
                     </view>
                     <navigationItem key="navigationItem" title="Vibe" id="Qv0-da-vsF">
                         <rightBarButtonItems>
-                            <barButtonItem title="Item" style="done" id="IyR-qq-tyd">
-                                <imageReference key="image" image="person.fill" catalog="system" symbolScale="large"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+
+                            <barButtonItem title="Item" image="person.fill" catalog="system" id="IyR-qq-tyd">
+                                <connections>
+                                    <action selector="profileTapped:" destination="Y6W-OH-hqX" id="cNw-I7-s19"/>
+                                </connections>
                             </barButtonItem>
-                            <barButtonItem style="done" id="N7N-tb-YI9">
-                                <imageReference key="image" image="bell.fill" catalog="system" symbolScale="large"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </barButtonItem>
+                            <barButtonItem image="bell.fill" catalog="system" id="N7N-tb-YI9"/>
+
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>

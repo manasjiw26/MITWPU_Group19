@@ -13,7 +13,7 @@ class MoodViewController: UIViewController, SmallModalDelegate {
     @IBOutlet weak var MoodCheckIn: UICollectionView!
     
     private var isFirstLoad = true
-    var moods: [MoodCheckIn] = dataStore.getMood()
+    var moods: [MoodCheckIn] = DataStore.shared.getMood()
     var activitystats: [ActivityStats] = []
     
     var hasCompletedDailyCheckIn = false
@@ -32,7 +32,7 @@ class MoodViewController: UIViewController, SmallModalDelegate {
         MoodCheckIn.collectionViewLayout = generateLayout()
         MoodCheckIn.delegate = self
         MoodCheckIn.dataSource = self
-        suggestedActivities = dataStore.getSuggestedActivities()
+        suggestedActivities = DataStore.shared.getSuggestedActivities()
 
         registerCells()
     }
@@ -61,20 +61,20 @@ class MoodViewController: UIViewController, SmallModalDelegate {
         MoodCheckIn.reloadData()
     }
 
-    private func openOngoingScreen() {
-
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-        let vc = storyboard.instantiateViewController(
-            withIdentifier: "ActivityForHerVC"
-        ) as! ActivitiesForHerViewController
-
-        vc.activitiesForHer = DataStore.shared.ongoingActivities   // ✅ KEY LINE
-        vc.screenTitle = "Ongoing"
-
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
-    }
+//    private func openOngoingScreen() {
+//
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//        let vc = storyboard.instantiateViewController(
+//            withIdentifier: "ActivityForHerVC"
+//        ) as! ActivitiesForHerViewController
+//
+//        vc.activitiesForHer = DataStore.shared.ongoingActivities   // ✅ KEY LINE
+//        vc.screenTitle = "Ongoing"
+//
+//        vc.modalPresentationStyle = .fullScreen
+//        present(vc, animated: true)
+//    }
    
 //       private func openTellMoodSelection(indexPath: IndexPath? = nil) {
 //           let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
@@ -310,11 +310,13 @@ class MoodViewController: UIViewController, SmallModalDelegate {
                 nibName: "SmallModalViewController",
                 bundle: nil
             )
+            
+            destinationVC.selectedActivity = selectedActivity
 
-            if let modalData = dataStore.smallmodal.first(
+            if let modalData = DataStore.shared.smallmodal.first(
                 where: { $0.title == selectedActivity.name }
             ) {
-                destinationVC.selectedActivity = modalData
+                destinationVC.modalData = modalData
             }
 
             destinationVC.flowSource = .activitiesForHer
@@ -325,9 +327,9 @@ class MoodViewController: UIViewController, SmallModalDelegate {
         }
 
         // ✅ ONGOING CARD TAP
-        if indexPath.section == 2, indexPath.row == 0 {
-            openOngoingScreen()
-        }
+//        if indexPath.section == 2, indexPath.row == 0 {
+//            openOngoingScreen()
+//        }
     }
         func didStartActivity() {
                // Increase ongoing count

@@ -11,8 +11,9 @@ protocol SmallModalDelegate: AnyObject {
 }
 
 class SmallModalViewController: UIViewController {
-    var selectedActivity: SmallModalData?
+    var modalData: SmallModalData?
     var flowSource: ActivityFlowSource?
+    var selectedActivity: Activity?
     weak var delegate: SmallModalDelegate?
     
     @IBOutlet weak var modalView: UIView!
@@ -45,7 +46,7 @@ class SmallModalViewController: UIViewController {
 
         
         
-        if let data = selectedActivity {
+        if let data = modalData {
             titleLabel.text = data.title
             DesciptionLabel.text = data.descriptionLabel
             timerLabel.text = data.timerLabel
@@ -107,42 +108,34 @@ class SmallModalViewController: UIViewController {
     
     
     @IBAction func beginButon(_ sender: Any) {
-        // ✅ 1. Find matching Activity from DataStore
-            if let modal = selectedActivity,
-               let activity = dataStore.getActivities().first(
-                   where: { $0.name == modal.title }
-               ) {
+        if flowSource == .explore,
+              let activity = selectedActivity {
 
-                // ✅ 2. Avoid duplicates
-                if !DataStore.shared.ongoingActivities.contains(
-                    where: { $0.name == activity.name }
-                ) {
-                    DataStore.shared.ongoingActivities.append(activity)
-                }
-            }
+               DataStore.shared.markActivityOngoing(activity: activity)
+           }
+        
 
-            // ✅ 3. Increase ongoing count
-            delegate?.didStartActivity()
+           delegate?.didStartActivity()
 
-            // ✅ 4. Continue existing flow
-            let storyboard = UIStoryboard(name: "Steps", bundle: nil)
-            let stepsVC = storyboard.instantiateViewController(
-                withIdentifier: "StepsViewController"
-            ) as! StepsViewController
+           let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+           let stepsVC = storyboard.instantiateViewController(
+               withIdentifier: "StepsViewController"
+           ) as! StepsViewController
 
-            stepsVC.activitytitle = selectedActivity?.title ?? ""
-            stepsVC.modalPresentationStyle = .fullScreen
-            stepsVC.flowSource = flowSource
+           stepsVC.activitytitle = selectedActivity?.name ?? ""
+           stepsVC.activity = selectedActivity
+           stepsVC.flowSource = flowSource
+           stepsVC.modalPresentationStyle = .fullScreen
 
-            if let presenter = self.presentingViewController {
-                UIView.animate(withDuration: 0.1, animations: {
-                    self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
-                    self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
-                })
-                self.dismiss(animated: true) {
-                    presenter.present(stepsVC, animated: true)
-                }
-            }
+           if let presenter = self.presentingViewController {
+               UIView.animate(withDuration: 0.1) {
+                   self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
+                   self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
+               }
+               self.dismiss(animated: true) {
+                   presenter.present(stepsVC, animated: true)
+               }
+           }
 
     }
 }

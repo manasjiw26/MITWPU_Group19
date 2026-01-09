@@ -30,11 +30,11 @@ class VibeViewController: UIViewController,UICollectionViewDelegate {
         vibeCollectionView.dataSource = self
         vibeCollectionView.delegate = self
         if !didScrollToMiddle {
-                let mid = days.count / 2
-                let indexPath = IndexPath(item: mid, section: 0)
-//                vibeCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
-                didScrollToMiddle = true
-            }
+            let mid = days.count / 2
+            let indexPath = IndexPath(item: mid, section: 0)
+            //                vibeCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            didScrollToMiddle = true
+        }
         
         
     }
@@ -99,70 +99,83 @@ class VibeViewController: UIViewController,UICollectionViewDelegate {
             } else if section == 2{
                 print("Generate layout working")
                 let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .absolute(100),
-                        heightDimension: .absolute(120)
-                    )
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                                
-                    let groupSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .absolute(120)
-                    )
-                                
-                    let group = NSCollectionLayoutGroup.horizontal(
-                        layoutSize: groupSize,
-                        subitems: [item]
-                    )
-                    group.interItemSpacing = .flexible(15)
-                                
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.orthogonalScrollingBehavior = .none
-                    section.interGroupSpacing = 34
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 30, bottom: 25, trailing: 30)  // Changed from 16 to 30
-                    section.boundarySupplementaryItems = [titleItem]
-                                
-                    return section
+                    widthDimension: .absolute(100),
+                    heightDimension: .absolute(120)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(120)
+                )
+                
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                group.interItemSpacing = .flexible(15)
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .none
+                section.interGroupSpacing = 34
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 30, bottom: 25, trailing: 30)  // Changed from 16 to 30
+                section.boundarySupplementaryItems = [titleItem]
+                
+                return section
             }
             else{
                 let itemSize = NSCollectionLayoutSize(
-                           widthDimension: .fractionalWidth(1.0),
-                           heightDimension: .fractionalHeight(1.0)
-                       )
-                       let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                       
-                       // GROUP
-                       let groupSize = NSCollectionLayoutSize(
-                           widthDimension: .absolute(260),
-                           heightDimension: .absolute(290)
-                       )
-                       let group = NSCollectionLayoutGroup.horizontal(
-                           layoutSize: groupSize,
-                           subitems: [item]
-                       )
-                       
-                       // SECTION
-                       let section = NSCollectionLayoutSection(group: group)
-                       section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-                       
-                       section.interGroupSpacing = 16
-                       
-                       section.contentInsets = NSDirectionalEdgeInsets(
-                           top: 20,
-                           leading: 16,
-                           bottom: 12,
-                           trailing: 16
-                       )
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .fractionalHeight(1.0)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                // GROUP
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .absolute(260),
+                    heightDimension: .absolute(290)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(
+                    layoutSize: groupSize,
+                    subitems: [item]
+                )
+                
+                // SECTION
+                let section = NSCollectionLayoutSection(group: group)
+                section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+                
+                section.interGroupSpacing = 16
+                
+                section.contentInsets = NSDirectionalEdgeInsets(
+                    top: 20,
+                    leading: 16,
+                    bottom: 12,
+                    trailing: 16
+                )
                 section.boundarySupplementaryItems = [titleItem]
-                       
-                       return section
+                
+                return section
             }
         }
         
-            return layout
-        }
+        return layout
+    }
     
-}
+    @IBAction func profileTapped(_ sender: UIBarButtonItem) {
+        print("hello button clicked")
+        let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+        
+        let profileVC = storyboard.instantiateInitialViewController()!
+        let navVC = UINavigationController(rootViewController: profileVC)
+        present(navVC, animated: true)
 
+        present(navVC, animated: true)
+
+    
+        navVC.modalPresentationStyle = .pageSheet
+        present(navVC, animated: true)
+    }
+}
 
 
 extension VibeViewController:  UICollectionViewDataSource {
@@ -298,3 +311,4 @@ extension VibeViewController {
         
     }
 }
+

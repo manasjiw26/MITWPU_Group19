@@ -13,9 +13,14 @@ struct Activity{
     var description : String
     var image : String
     var time : String
-    var completed: Bool
-    var ongoing: Bool
+    var status: ActivityStatus
     var category: String
+}
+
+enum ActivityStatus {
+    case none
+    case ongoing
+    case completed
 }
 
 struct ActivityCategory{
@@ -134,7 +139,29 @@ struct MemoryCategory {
     var items: [MemoryItem]
 }
 
+
 struct PhysicsCategory {
     static let jar: UInt32 = 0b1      // 1
     static let heart: UInt32 = 0b10   // 2
+}
+// MARK: - User Profile
+
+struct UserProfile {
+    var name: String
+    var email: String
+    var profileImageName: String
+}
+
+// MARK: - Profile Sections
+
+struct ProfileSection {
+    var title: String
+    var items: [ProfileItem]
+}
+
+struct ProfileItem {
+    var title: String
+    var iconName: String
+    var showsChevron: Bool
+
 }

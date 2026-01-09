@@ -21,11 +21,16 @@ class DataStore {
     var questions: [Question] = []
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
-    var ongoingActivities: [Activity] = []
+    //var ongoingActivities: [Activity] = []
     
     var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
     var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
    
+    // MARK: - Profile Data
+
+    var userProfile: UserProfile?
+    var profileSections: [ProfileSection] = []
+
     
     init() {
         loadSampleData()
@@ -37,6 +42,7 @@ class DataStore {
         loadSampleQuestions()
         loadSuggestedActivity()
         loadsampleBuildYourBond()
+        loadProfileData()
 
         //loadCheckIn()
         
@@ -61,8 +67,7 @@ class DataStore {
                 description: "Facemasks, candles, chill beats — just cozy vibes and glow time",
                 image: "Chill and Glow sesh",
                 time: "5 mins",
-                completed: false,
-                ongoing: true,
+                status: .none,
                 category: "Fun & Playful"
             ),
 
@@ -71,8 +76,7 @@ class DataStore {
                 description: "Pick pretty blooms and build your own bouquet together.",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: false,
-                ongoing: false,
+                status: .none,
                 category: "Fun & Playful"
             ),
 
@@ -81,8 +85,7 @@ class DataStore {
                 description: "Make a doodle / note / digital collage for her",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: false,
-                ongoing: false,
+                status: .none,
                 category: "Fun & Playful"
             ),
 
@@ -92,8 +95,7 @@ class DataStore {
                 description: "Make a mini reel using your photos and favorite audio",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: true,
-                ongoing: false,
+                status: .none,
                 category: "Daily Dose of Us"
             ),
 
@@ -102,8 +104,7 @@ class DataStore {
                 description: "Buy a tiny plush, both name it and take care of it together",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: false,
-                ongoing: false,
+                status: .none,
                 category: "Acts of Love"
             ),
 
@@ -113,8 +114,7 @@ class DataStore {
                 description: "Make a doodle / note / digital collage for her",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: true,
-                ongoing: false,
+                status: .none,
                 category: "Meaning & Growth"
             ),
 
@@ -124,8 +124,7 @@ class DataStore {
                 description: "Make a mini reel using your photos and favorite audio",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: false,
-                ongoing: false,
+                status: .none,
                 category: "Daily Dose of Us"
             ),
 
@@ -135,8 +134,7 @@ class DataStore {
                 description: "Buy a tiny plush, both name it and take care of it together",
                 image: "Activityimage",
                 time: "5 mins",
-                completed: false,
-                ongoing: true,
+                status: .none,
                 category: "Acts of Love"
             )
         ]
@@ -145,9 +143,9 @@ class DataStore {
     
     func loadSuggestedActivity () {
         let suggestedActivity: [Activity] = [
-            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", completed: false, ongoing: false,category : "suggestedActivity"),
-            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", completed: false, ongoing: false,category : "suggestedActivity"),
-            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", completed: false, ongoing: false,category : "suggestedActivity")
+            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity"),
+            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none,category : "suggestedActivity"),
+            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category : "suggestedActivity")
         ]
         self.suggestedActivities = suggestedActivity
     }
@@ -237,6 +235,48 @@ class DataStore {
         ]
         return mood
     }
+    //Profile data
+    func loadProfileData() {
+
+        userProfile = UserProfile(
+            name: "Name",
+            email: "name@email.com",
+            profileImageName: "Profile"
+        )
+
+        profileSections = [
+           
+            ProfileSection(
+                title: "Account",
+                items: [
+                    ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true)
+                ]
+            ),
+            ProfileSection(
+                title: "Activity",
+                items: [
+                    ProfileItem(title: "Status", iconName: "slider.horizontal.3", showsChevron: true)
+                    
+                ]
+            ),
+           
+            ProfileSection(
+                title: "Support",
+                items: [
+                    ProfileItem(title: "Help & Support", iconName: "questionmark.circle", showsChevron: true),
+                    ProfileItem(title: "About App", iconName: "info.circle", showsChevron: true),
+                    ProfileItem(title: "Feedback", iconName: "bubble.left", showsChevron: true)
+                ]
+            ),
+            ProfileSection(
+                title: "",
+                items: [
+                    ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
+                ]
+            )
+        ]
+    }
+
     
 
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {
@@ -295,10 +335,10 @@ class DataStore {
         stepLabel:  "You are currently on Step 1: Identifying the Conflict.",
         step: ["Identify","Empathize","Solution","Sustain"],
         activity: [
-        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "Activityimage", time: "5mins", completed: false, ongoing: false,category: "Navigate Conflict Together"),
-        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "Activityimage", time: "5mins", completed: false, ongoing: false,category: "Navigate Conflict Together"),
-        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "Activityimage", time: "5mins", completed: false, ongoing: false,category: "Navigate Conflict Together"),
-        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "Activityimage", time: "5mins", completed: false, ongoing: false,category: "Navigate Conflict Together")
+        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together"),
+        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together"),
+        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together"),
+        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together")
     ],
         badge: "Harmony Seeker",
         badgesubHeading: "Master the art of peaceful resolution.",
@@ -307,18 +347,26 @@ class DataStore {
         ]
         self.bondpage = bond
     }
-    func markActivityCompleted(activityName: String) {
-
-        if let index = activities.firstIndex(where: { $0.name == activityName }) {
-
-            activities[index].completed = true
-            activities[index].ongoing = false
+    
+    func markActivityCompleted(activity: Activity) {
+        if let index = activities.firstIndex(where: {
+            $0.name == activity.name &&
+            $0.category == activity.category
+        }) {
+            activities[index].status = .completed
+            print(" MARKED COMPLETED:", activities[index].name)
+        }
+    }
+    
+    func markActivityOngoing(activity: Activity) {
+        if let index = activities.firstIndex(where: {
+            $0.name == activity.name &&
+            $0.category == activity.category
+        }) {
+            activities[index].status = .ongoing
         }
     }
 
-
-
-    
     func getBuildYourBondPages(name : String) -> BuildYourBondpage? {
         return bondpage.first { $0.Name == name }
     }
@@ -350,10 +398,10 @@ class DataStore {
         return activities
     }
     func getOngoingActivities() -> [Activity] {
-        return activities.filter { $0.ongoing == true }
+        return activities.filter { $0.status == .ongoing }
     }
     func getCompletedActivities() -> [Activity] {
-        return activities.filter { $0.completed == true }
+        return activities.filter { $0.status == .completed }
     }
     func getTips() -> [Tip] {
         return tips

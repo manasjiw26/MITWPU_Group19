@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="custom_cell" id="gTV-IL-0wX" customClass="CustomCollectionViewCell" customModule="Project_Love_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="501" height="281"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="501" height="281"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRd-tW-8mJ">
+                        <rect key="frame" x="20" y="36" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="fmd-hw-Su5"/>
+                            <constraint firstAttribute="width" constant="40" id="mWb-bg-cUE"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="filled" image="plus" catalog="system">
+                            <backgroundConfiguration key="background" cornerRadius="20"/>
+                            <color key="baseBackgroundColor" red="0.61568627450980395" green="0.53333333333333333" blue="0.80784313725490198" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                        </buttonConfiguration>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mJ0-k1-FJK">
+                        <rect key="frame" x="77" y="33" width="45.666666666666657" height="21.666666666666671"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xKb-A3-5vc">
+                        <rect key="frame" x="77" y="59.666666666666664" width="43.666666666666657" height="21.666666666666664"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IQs-do-pa5">
+                        <rect key="frame" x="7" y="7" width="487" height="267"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="NRd-tW-8mJ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="O7I-Ws-m57"/>
+                <constraint firstItem="mJ0-k1-FJK" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="33" id="a5o-A8-Jo4"/>
+                <constraint firstAttribute="bottom" secondItem="IQs-do-pa5" secondAttribute="bottom" constant="7" id="aOs-4G-mII"/>
+                <constraint firstItem="xKb-A3-5vc" firstAttribute="top" secondItem="mJ0-k1-FJK" secondAttribute="bottom" constant="5" id="d0Z-sN-Sc0"/>
+                <constraint firstItem="IQs-do-pa5" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="7" id="hVb-2F-GbS"/>
+                <constraint firstItem="xKb-A3-5vc" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="77" id="iTm-Mv-Izi"/>
+                <constraint firstItem="mJ0-k1-FJK" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="77" id="icB-A3-RAm"/>
+                <constraint firstItem="NRd-tW-8mJ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="36" id="mab-oz-k0q"/>
+                <constraint firstItem="IQs-do-pa5" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="7" id="n99-uh-esR"/>
+                <constraint firstAttribute="trailing" secondItem="IQs-do-pa5" secondAttribute="trailing" constant="7" id="uas-Nu-pOT"/>
+            </constraints>
+            <size key="customSize" width="501" height="281"/>
+            <connections>
+                <outlet property="addButton" destination="NRd-tW-8mJ" id="Cfw-Y1-n7Q"/>
+                <outlet property="imageView" destination="IQs-do-pa5" id="Y8u-rP-JhL"/>
+                <outlet property="label" destination="mJ0-k1-FJK" id="fyn-Oh-Muu"/>
+                <outlet property="subtitleLabel" destination="xKb-A3-5vc" id="AVg-sY-bVe"/>
+            </connections>
+            <point key="canvasLocation" x="483.20610687022901" y="220.77464788732397"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="plus" catalog="system" width="128" height="113"/>
+    </resources>
+</document>
