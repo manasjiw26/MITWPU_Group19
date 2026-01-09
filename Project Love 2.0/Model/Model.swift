@@ -73,6 +73,7 @@ struct ActivityStats{
     var imageName: String
     var count: Int
 }
+
 struct SmallModalData{
     var title: String
     var mainImageName: String
@@ -133,3 +134,7 @@ struct MemoryCategory {
     var items: [MemoryItem]
 }
 
+struct PhysicsCategory {
+    static let jar: UInt32 = 0b1      // 1
+    static let heart: UInt32 = 0b10   // 2
+}

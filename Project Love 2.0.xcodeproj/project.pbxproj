@@ -12,6 +12,7 @@
 
 /* Begin PBXFileReference section */
 		1909FEE72ED5D2B80007823D /* Project Love 2.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project Love 2.0.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		197A8F8B2F10BBB500001447 /* Extension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Extension.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,6 +60,13 @@
 			isa = PBXGroup;
 			children = (
 				1909FEE72ED5D2B80007823D /* Project Love 2.0.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		197A8F8D2F10BBB500001447 /* Products */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,6 +127,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1909FEE82ED5D2B80007823D /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 197A8F8D2F10BBB500001447 /* Products */;
+					ProjectRef = 197A8F8B2F10BBB500001447 /* Extension.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1909FEE62ED5D2B80007823D /* Project Love 2.0 */,
@@ -155,7 +169,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6H55S6G6GC;
+				DEVELOPMENT_TEAM = 9YW76R6Q5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
@@ -191,7 +205,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6H55S6G6GC;
+				DEVELOPMENT_TEAM = 9YW76R6Q5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
