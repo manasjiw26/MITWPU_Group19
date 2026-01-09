@@ -138,3 +138,23 @@ struct MemoryCategory {
     var items: [MemoryItem]
 }
 
+// MARK: - User Profile
+
+struct UserProfile {
+    var name: String
+    var email: String
+    var profileImageName: String
+}
+
+// MARK: - Profile Sections
+
+struct ProfileSection {
+    var title: String
+    var items: [ProfileItem]
+}
+
+struct ProfileItem {
+    var title: String
+    var iconName: String
+    var showsChevron: Bool
+}

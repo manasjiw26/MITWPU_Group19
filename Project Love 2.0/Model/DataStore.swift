@@ -26,6 +26,11 @@ class DataStore {
     var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
     var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
    
+    // MARK: - Profile Data
+
+    var userProfile: UserProfile?
+    var profileSections: [ProfileSection] = []
+
     
     init() {
         loadSampleData()
@@ -37,6 +42,7 @@ class DataStore {
         loadSampleQuestions()
         loadSuggestedActivity()
         loadsampleBuildYourBond()
+        loadProfileData()
 
         //loadCheckIn()
         
@@ -229,6 +235,48 @@ class DataStore {
         ]
         return mood
     }
+    //Profile data
+    func loadProfileData() {
+
+        userProfile = UserProfile(
+            name: "Name",
+            email: "name@email.com",
+            profileImageName: "Profile"
+        )
+
+        profileSections = [
+           
+            ProfileSection(
+                title: "Account",
+                items: [
+                    ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true)
+                ]
+            ),
+            ProfileSection(
+                title: "Activity",
+                items: [
+                    ProfileItem(title: "Status", iconName: "slider.horizontal.3", showsChevron: true)
+                    
+                ]
+            ),
+           
+            ProfileSection(
+                title: "Support",
+                items: [
+                    ProfileItem(title: "Help & Support", iconName: "questionmark.circle", showsChevron: true),
+                    ProfileItem(title: "About App", iconName: "info.circle", showsChevron: true),
+                    ProfileItem(title: "Feedback", iconName: "bubble.left", showsChevron: true)
+                ]
+            ),
+            ProfileSection(
+                title: "",
+                items: [
+                    ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
+                ]
+            )
+        ]
+    }
+
     
 
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {

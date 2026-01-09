@@ -50,7 +50,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Vibe" id="Qv0-da-vsF">
                         <rightBarButtonItems>
-                            <barButtonItem title="Item" image="person.fill" catalog="system" id="IyR-qq-tyd"/>
+                            <barButtonItem title="Item" image="person.fill" catalog="system" id="IyR-qq-tyd">
+                                <connections>
+                                    <action selector="profileTapped:" destination="Y6W-OH-hqX" id="cNw-I7-s19"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem image="bell.fill" catalog="system" id="N7N-tb-YI9"/>
                         </rightBarButtonItems>
                     </navigationItem>
