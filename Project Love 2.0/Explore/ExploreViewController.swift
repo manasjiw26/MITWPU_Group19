@@ -365,6 +365,34 @@ extension ExploreViewController: ActivityHeaderDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 {
+            let reward = rewards[indexPath.row]
+            let modalVC = RewardModalViewController(nibName: "RewardModalViewController", bundle: nil)
+
+            modalVC.rewardName = reward.name
+            modalVC.rewardEmoji = reward.emoji
+            modalVC.initialStep = reward.progressStep
+
+            modalVC.onProgressUpdate = { [weak self] newStep in
+                self?.rewards[indexPath.row].progressStep = newStep
+            }
+
+            modalVC.modalPresentationStyle = .pageSheet
+
+            if let sheet = modalVC.sheetPresentationController {
+                sheet.detents = [
+                        .custom { _ in
+                            return 350 //height of the modal
+                        }
+                    ]
+                sheet.preferredCornerRadius = 30
+                
+            }
+
+            self.present(modalVC, animated: true)
+            return
+        }
 
         guard indexPath.section == 1 else { return }
 

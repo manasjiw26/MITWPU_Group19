@@ -32,6 +32,8 @@ struct ActivityCategory{
 struct Reward{
     var image : String
     var name : String
+    var emoji: String
+    var progressStep: Int
 }
 
 struct DayInfo{

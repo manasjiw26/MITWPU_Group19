@@ -177,13 +177,13 @@ class DataStore {
     }
     func loadSampleRewards() {
         let sampleRewards: [Reward] = [
-            Reward(image: "Send_Hug", name: "Send hug"),
-            Reward(image: "Send_Flower", name: "Send flower"),
-            Reward(image: "Send_Kiss", name: "Send kiss"),
-            Reward(image: "Send_Heart", name: "Send heart"),
-            Reward(image: "Send_Note", name: "Send note"),
-            Reward(image: "Send_Wave", name: "Send wave"),
-            Reward(image: "Send_Hug", name: "Send high five")
+            Reward(image: "Send_Hug", name: "Send hug", emoji: "🤗", progressStep: 0),
+            Reward(image: "Send_Flower", name: "Send flower", emoji: "🌻", progressStep: 0),
+            Reward(image: "Send_Kiss", name: "Send kiss", emoji: "😘", progressStep: 0),
+            Reward(image: "Send_Heart", name: "Send heart", emoji: "🫶🏻", progressStep: 0),
+            Reward(image: "Send_Note", name: "Send note", emoji: "💌", progressStep: 0),
+            Reward(image: "Send_Wave", name: "Send wave", emoji: "👋", progressStep: 0),
+            Reward(image: "Send_Hug", name: "Send high five", emoji: "🙌", progressStep: 0)
         ]
         
         self.rewards = sampleRewards
