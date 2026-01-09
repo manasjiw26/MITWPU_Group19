@@ -1,9 +1,72 @@
+# ===============================
+# macOS
+# ===============================
 .DS_Store
-*.xcuserstate
+
+# ===============================
+# Xcode
+# ===============================
+build/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
 xcuserdata/
-.DS_Store
+*.xccheckout
 *.xcuserstate
-xcuserdata/
-.DS_Store
-xcuserdata/
-*.xcuserstate
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ===============================
+# Swift Package Manager
+# ===============================
+.build/
+Packages/
+Package.resolved
+
+# ===============================
+# CocoaPods
+# ===============================
+Pods/
+Podfile.lock
+
+# ===============================
+# Carthage
+# ===============================
+Carthage/Build/
+
+# ===============================
+# Fastlane
+# ===============================
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# ===============================
+# Code Injection
+# ===============================
+iOSInjectionProject/
+
+# ===============================
+# Logs & Temp files
+# ===============================
+*.log
+*.tmp
+*.swp
+*.lock
+
+# ===============================
+# Playgrounds
+# ===============================
+timeline.xctimeline
+playground.xcworkspace
+
+# ===============================
+# Environment files
+# ===============================
+.env
