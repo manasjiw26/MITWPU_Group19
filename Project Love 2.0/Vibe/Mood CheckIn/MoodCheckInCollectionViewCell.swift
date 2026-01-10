@@ -22,10 +22,7 @@ class MoodCheckInCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.addSubview(circleView)
         contentView.sendSubviewToBack(circleView)
-        // Enable tap on image
-        moodImage.isUserInteractionEnabled = true
-        let tap = UITapGestureRecognizer(target: self, action: #selector(moodTapped))
-        moodImage.addGestureRecognizer(tap)
+
         // Card appearance
         self.layer.cornerRadius = 16
         self.layer.masksToBounds = false
@@ -52,27 +49,45 @@ class MoodCheckInCollectionViewCell: UICollectionViewCell {
         
     }
     @objc private func moodTapped() {
+        print("MOOD IMAGE TAPPED")
         delegate?.didTapMood(in: self)
     }
     
     func configureCells(mood: MoodCheckIn) {
+
         label.text = mood.label
-        if mood.label == "Me"{
-            let hisMood = dataStore.getHisMood()
-            moodImage.image = UIImage(named: hisMood?.imageName ?? "")
-            moodLabel.text = hisMood?.title
-        } else {
-            let herMood = dataStore.getHerMood()
-            moodImage.image = UIImage(named: herMood?.imageName ?? "")
-            moodLabel.text = herMood?.title
+        moodImage.gestureRecognizers?.forEach {
+            moodImage.removeGestureRecognizer($0)
         }
-//        moodImage.image = UIImage(named: mood.imageName)
-//        moodLabel.text = mood.moodLabel
+
+        if mood.label == "Me" {
+
+            if let hisMood = DataStore.shared.getHisMood() {
+                moodImage.image = UIImage(named: hisMood.imageName)
+                moodLabel.text = hisMood.title
+            } else {
+                moodImage.image = UIImage(named: "neutral")
+                moodLabel.text = "Not set"
+            }
+
+            moodImage.isUserInteractionEnabled = true
+            let tap = UITapGestureRecognizer(
+                target: self,
+                action: #selector(moodTapped)
+            )
+            moodImage.addGestureRecognizer(tap)
+            circleView.alpha = 1.0
+
+        } else {
+
+            let herMood = DataStore.shared.getHerMood()
+            moodImage.image = UIImage(
+                named: herMood?.imageName ?? "calm"
+            )
+            moodLabel.text = herMood?.title ?? "Calm"
+            moodImage.isUserInteractionEnabled = false
+            circleView.alpha = 0.85
+        }
     }
-    
-//    func updateMood(imageName: String,moodText: String) {
-//        moodImage.image = UIImage(named: imageName)
-//        moodLabel.text = moodText
-//    }
     
 }

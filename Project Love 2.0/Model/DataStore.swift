@@ -23,8 +23,13 @@ class DataStore {
     var bondpage: [BuildYourBondpage] = []
     //var ongoingActivities: [Activity] = []
     
-    var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
-    var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
+    private var HisMood: Mood?
+    private var HerMood: Mood? = Mood(
+        id: -1,
+        title: "Calm",
+        imageName: "calm"
+    )
+
    
     // MARK: - Profile Data
 
@@ -378,10 +383,14 @@ class DataStore {
 //        
 //        self.checkin = sampleCheckIn
 //    }
-    
-    func setHisMood(moodId: Int) {
-        HisMood = mood(by: moodId)
+    func setHisMood(_ mood: Mood) {
+        HisMood = mood
+        print("His mood ", mood.title)
     }
+
+//    func setHisMood(moodId: Int) {
+//        HisMood = mood(by: moodId)
+//    }
 
     func setHerMood(moodId: Int) {
         HerMood = mood(by: moodId)
@@ -389,9 +398,8 @@ class DataStore {
     func getHisMood() -> Mood? {
         HisMood
     }
-
     func getHerMood() -> Mood? {
-        HerMood
+        return HerMood
     }
     
     func getActivities() -> [Activity] {

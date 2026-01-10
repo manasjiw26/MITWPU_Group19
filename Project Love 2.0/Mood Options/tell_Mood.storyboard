@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
@@ -18,13 +18,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tell Your Mood" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWM-d0-jlm">
-                                <rect key="frame" x="16" y="122.99999999999999" width="393" height="32.333333333333329"/>
+                                <rect key="frame" x="16" y="70" width="393" height="32.333333333333343"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="puN-eO-SPP">
-                                <rect key="frame" x="16" y="201" width="361" height="583"/>
+                                <rect key="frame" x="16" y="128.33333333333331" width="361" height="655.66666666666674"/>
                                 <color key="backgroundColor" name="AppBackground"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="92n-oB-DYW">
                                     <size key="itemSize" width="106" height="114"/>
@@ -74,7 +74,7 @@
                                 </cells>
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How you are feeling right now?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RMa-za-Ssw">
-                                <rect key="frame" x="16" y="170" width="393" height="21"/>
+                                <rect key="frame" x="16" y="107.33333333333333" width="393" height="20.999999999999986"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -85,16 +85,18 @@
                         <constraints>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="DWM-d0-jlm" secondAttribute="trailing" constant="-16" id="0rU-GX-GeX"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="puN-eO-SPP" secondAttribute="bottom" id="9gq-eT-qr8"/>
-                            <constraint firstItem="RMa-za-Ssw" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" constant="170" id="A3j-b8-V9T"/>
-                            <constraint firstItem="DWM-d0-jlm" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" constant="123" id="AQa-be-tS6"/>
+                            <constraint firstItem="DWM-d0-jlm" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" constant="70" id="AQa-be-tS6"/>
+                            <constraint firstItem="RMa-za-Ssw" firstAttribute="top" secondItem="DWM-d0-jlm" secondAttribute="bottom" constant="5" id="DOp-dL-qNF"/>
                             <constraint firstAttribute="trailing" secondItem="puN-eO-SPP" secondAttribute="trailing" constant="16" id="DUO-Yh-aYj"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="RMa-za-Ssw" secondAttribute="trailing" constant="-16" id="DuV-oo-gNb"/>
                             <constraint firstItem="puN-eO-SPP" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="FqR-k1-jza"/>
                             <constraint firstItem="RMa-za-Ssw" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="IJh-oh-0je"/>
                             <constraint firstItem="DWM-d0-jlm" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="iH2-rH-qjd"/>
-                            <constraint firstItem="puN-eO-SPP" firstAttribute="top" secondItem="RMa-za-Ssw" secondAttribute="bottom" constant="10" id="zT3-mE-iuc"/>
+                            <constraint firstItem="puN-eO-SPP" firstAttribute="top" secondItem="RMa-za-Ssw" secondAttribute="bottom" id="zT3-mE-iuc"/>
                         </constraints>
                     </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="puN-eO-SPP" id="9fh-gr-h1A"/>
                         <outlet property="subtitleLabel" destination="RMa-za-Ssw" id="uvM-I2-4kn"/>
