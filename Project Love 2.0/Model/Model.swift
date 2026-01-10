@@ -138,3 +138,82 @@ struct MemoryCategory {
     var items: [MemoryItem]
 }
 
+
+enum NotificationType {
+    case memory
+    case activity
+    case loveNote
+    case affirmation
+    case mood
+}
+
+struct AppNotification {
+    let id: UUID
+    let senderName: String
+    let message: String
+    let type: NotificationType
+    let createdAt: Date
+    var isRead: Bool
+}
+
+//// Notification
+//enum NotificationType {
+//    case memory
+//    case activity
+//    case loveNote
+//    case affirmation
+//    case mood
+//
+//    var titleText: String {
+//        switch self {
+//        case .memory:
+//            return "MEMORY ALERT"
+//        case .activity:
+//            return "ACTIVITY ALERT"
+//        case .loveNote:
+//            return "LOVE NOTE"
+//        case .affirmation:
+//            return "AFFIRMATION"
+//        case .mood:
+//            return "MOOD UPDATE"
+//        }
+//    }
+//
+//    var iconName: String {
+//        switch self {
+//        case .memory:
+//            return "photo.on.rectangle"
+//        case .activity:
+//            return "checklist"
+//        case .loveNote:
+//            return "heart.text.square"
+//        case .affirmation:
+//            return "quote.bubble"
+//        case .mood:
+//            return "face.smiling"
+//        }
+//    }
+//}
+//
+//
+//struct AppNotification {
+//    let id: UUID
+//    let senderName: String
+//    let message: String
+//    let type: NotificationType
+//    let createdAt: Date
+//    var isRead: Bool
+//
+//    var titleText: String { type.titleText }
+//    var iconName: String { type.iconName }
+//    var timeAgoText: String { createdAt.timeAgoText }
+//}
+//
+//
+//extension Date {
+//    var timeAgoText: String {
+//        let formatter = RelativeDateTimeFormatter()
+//        formatter.unitsStyle = .short
+//        return formatter.localizedString(for: self, relativeTo: Date())
+    }
+}

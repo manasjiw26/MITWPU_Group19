@@ -26,6 +26,7 @@ class DataStore {
     var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
     var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
    
+    private(set) var notifications: [AppNotification] = []
     
     init() {
         loadSampleData()
@@ -37,10 +38,61 @@ class DataStore {
         loadSampleQuestions()
         loadSuggestedActivity()
         loadsampleBuildYourBond()
+        loadSampleNotifications()
 
         //loadCheckIn()
         
     }
+    
+    
+    // Notification
+    
+    func addNotification(_ notification: AppNotification) {
+        notifications.insert(notification, at: 0)
+    }
+
+    func getNotifications() -> [AppNotification] {
+        notifications
+    }
+
+    func markNotificationAsRead(id: UUID) {
+        if let index = notifications.firstIndex(where: { $0.id == id }) {
+            notifications[index].isRead = true
+        }
+    }
+
+    func loadSampleNotifications() {
+        notifications = [
+            AppNotification(
+                id: UUID(),
+                senderName: "Sam",
+                message: "Just added a new memory for you 💌",
+                type: .memory,
+                createdAt: Date().addingTimeInterval(-120),
+                isRead: false
+            ),
+            AppNotification(
+                id: UUID(),
+                senderName: "Sam",
+                message: "Next up: Cozy Cocoon! Tap to know more 🕯️",
+                type: .activity,
+                createdAt: Date().addingTimeInterval(-900),
+                isRead: false
+            ),
+            AppNotification(
+                id: UUID(),
+                senderName: "Sam",
+                message: "Sent you a love note ❤️",
+                type: .loveNote,
+                createdAt: Date().addingTimeInterval(-3600),
+                isRead: true
+            )
+        ]
+    }
+    
+    
+    // update mood
+    
     private(set) var savedFeedback: [FeedBackGiven] = []
 
         func saveFeedback(_ feedback: FeedBackGiven) {

@@ -51,7 +51,11 @@
                     <navigationItem key="navigationItem" title="Vibe" id="Qv0-da-vsF">
                         <rightBarButtonItems>
                             <barButtonItem title="Item" image="person.fill" catalog="system" id="IyR-qq-tyd"/>
-                            <barButtonItem image="bell.fill" catalog="system" id="N7N-tb-YI9"/>
+                            <barButtonItem image="bell.fill" catalog="system" id="N7N-tb-YI9">
+                                <connections>
+                                    <segue destination="b0U-cM-LeK" kind="push" id="Swg-mk-mdV"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
@@ -66,6 +70,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1408" y="176"/>
+        </scene>
+        <!--NotificationVC-->
+        <scene sceneID="yKT-Fi-JBM">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="NotificationVC" storyboardName="Notification" referencedIdentifier="NotificationVC" id="b0U-cM-LeK" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="6AZ-vd-Vsy"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="I9X-p8-GMc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2044" y="-164"/>
         </scene>
         <!--LoveTips-->
         <scene sceneID="KQf-v6-bM9">

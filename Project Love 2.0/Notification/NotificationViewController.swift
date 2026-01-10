@@ -1,29 +1,43 @@
-//
-//  NotificationViewController.swift
-//  Project Love 2.0
-//
-//  Created by SDC-USER on 09/01/26.
-//
-
 import UIKit
 
-class NotificationViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+final class NotificationViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        <#code#>
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        <#code#>
     }
     
 
-    /*
-    // MARK: - Navigation
+    @IBOutlet weak var collectionView: UICollectionView!
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private var notifications: [AppNotification] = []
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupCollectionView()
+        loadNotifications()
     }
-    */
 
+    private func setupCollectionView() {
+        collectionView.register(
+            UINib(nibName: "NotificationCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "NotificationCollectionViewCell"
+        )
+
+        collectionView.delegate = self
+        collectionView.dataSource = self
+
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumLineSpacing = 12
+            layout.sectionInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0)
+        }
+    }
+
+    private func loadNotifications() {
+        notifications = DataStore.shared.notifications
+        collectionView.reloadData()
+    }
 }
+
