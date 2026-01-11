@@ -108,9 +108,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 section.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0)
                 return section
             }
-            else if section == 1  {
+            else if section == 1  { //mood
                 
-                if !self.hasCheckedInToday {
+                if !self.hasCheckedInToday { //how are feeling card
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
                         heightDimension: .absolute(160)
@@ -124,12 +124,12 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
                     
                     let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 15, trailing: 16)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 8, trailing: 16)
                     
                     return section
                 }
                 
-                else {
+                else { //mood cards
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(0.5),   
                         heightDimension: .estimated(180)
@@ -157,7 +157,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     section.contentInsets = NSDirectionalEdgeInsets(
                         top: 30,
                         leading: 16,
-                        bottom: 20,
+                        bottom: 12,
                         trailing: 16
                     )
                     section.interGroupSpacing = 8
@@ -184,7 +184,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(
-                        top: 25, leading: 16, bottom: 12, trailing: 16
+                        top: 12, leading: 16, bottom: 12, trailing: 16
                     )
 
                     return section
@@ -217,27 +217,34 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 section.interGroupSpacing = 2
 
                 section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 28,
+                    top: 6,
                     leading: 16,
-                    bottom: 24,
+                    bottom: 12,
                     trailing: 16
                 )
+                section.supplementaryContentInsetsReference = .none
+
+                let titleSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(52)
+                )
+
                 let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: compactTitleSize,
+                    layoutSize: titleSize,
                     elementKind: "title",
                     alignment: .top
                 )
 
                 titleHeader.contentInsets = NSDirectionalEdgeInsets(
-                    top: 0,
+                    top: 16,
                     leading: 16,
-                    bottom: 4,
+                    bottom: 0,
                     trailing: 16
                 )
 
                 section.boundarySupplementaryItems = [titleHeader]
                 return section
-            } else if section == 3 {
+            } else if section == 3 { //make her smile
 
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(100),
@@ -245,8 +252,8 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                let groupWidth: CGFloat = 332 // 100 + 16 + 100 + 16 + 100
-
+                let groupWidth: CGFloat = 332
+                
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(groupWidth),
                     heightDimension: .absolute(120)
@@ -294,7 +301,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 section.orthogonalScrollingBehavior = .none
 
                 return section
-            } else {
+            } else { //build your bond
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .fractionalHeight(1.0)
@@ -316,7 +323,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 section.interGroupSpacing = 16
                 
                 section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 20,
+                    top: 10,
                     leading: 16,
                     bottom: 12,
                     trailing: 16
