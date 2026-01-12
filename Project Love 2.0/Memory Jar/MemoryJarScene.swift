@@ -70,9 +70,9 @@ class MemoryJarScene: SKScene,SKPhysicsContactDelegate{
     };
 
     func setupJarCap() {
-        let capTexture = SKTexture(imageNamed: "jar_cap_icon")
+        let capTexture = SKTexture(imageNamed: "jar_cap_icon2")
         
-        if UIImage(named: "jar_cap_icon") == nil {
+        if UIImage(named: "jar_cap_icon2") == nil {
                 print("❌ Error: Cap image jar_cap_icon not found in Assets!")
                 return
             }

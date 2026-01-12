@@ -22,7 +22,7 @@ class DataStore {
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
     //var ongoingActivities: [Activity] = []
-    
+    var savedMemories: [Memory] = []
     var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
     var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
    

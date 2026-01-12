@@ -16,43 +16,48 @@ class MemoryLaneViewController: UIViewController, UICollectionViewDataSource, UI
         return memoryLaneItems.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "MemoryGridCell",
-            for: indexPath
-        ) as! MemoryGridCell
-
-        let item = memoryLaneItems[indexPath.item]
-        cell.ImageView.image = UIImage(named: item.imageName)
-
-        return cell
-    }
     
     var memoryLaneItems: [MemoryItem] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-        memoryLaneItemCollectionView.dataSource = self
-              memoryLaneItemCollectionView.delegate = self
         
-//        memoryLaneItems = dataStore.memoryLaneItems
+        self.memoryLaneItems = dataStore.savedMemories.map { memory in
+            return MemoryItem(imageName: memory.imageName)
+        }
+        
+        memoryLaneItemCollectionView.dataSource = self
+        memoryLaneItemCollectionView.delegate = self
         memoryLaneItemCollectionView.collectionViewLayout = generateLayout()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "MemoryGridCell",
+            for: indexPath
+        ) as! MemoryGridCell
+
+        let memory = dataStore.savedMemories[indexPath.item]
+        
+        if let realPhoto = memory.uiImage {
+            cell.ImageView.image = realPhoto
+        } else {
+            cell.ImageView.image = UIImage(named: memory.imageName)
+        }
+
+        return cell
     }
     
     private func generateLayout() -> UICollectionViewLayout {
+        
+        let spacing: CGFloat = 1
 
-
-        let spacing: CGFloat = 2
-
-        // ITEM (square)
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.33),
+            widthDimension: .fractionalWidth(1.0/3.0),
             heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
         item.contentInsets = NSDirectionalEdgeInsets(
             top: spacing,
             leading: spacing,
@@ -60,23 +65,24 @@ class MemoryLaneViewController: UIViewController, UICollectionViewDataSource, UI
             trailing: spacing
         )
 
-        // GROUP (3 columns)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(0.2)
+            heightDimension: .fractionalWidth(1.0/3.0)
         )
         
         let group = NSCollectionLayoutGroup.horizontal(
-               layoutSize: groupSize,
-               subitems: [item]
-           )
+            layoutSize: groupSize,
+            subitems: [item]
+        )
 
-        // SECTION
+        // 4. SECTION
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .zero
+        
+        
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
 
-        return UICollectionViewCompositionalLayout(section: section)    }
-
+        return UICollectionViewCompositionalLayout(section: section)
+    }
 
 
     /*

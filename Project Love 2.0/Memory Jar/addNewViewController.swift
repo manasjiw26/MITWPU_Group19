@@ -66,6 +66,46 @@ class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewCon
 
         self.present(vc, animated: true)
     }
+    
+    @IBAction func closeButtonTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func doneButtonTapped(_ sender: Any) {
+        // 1. Get the data from your UI
+        let capturedImage = self.image.image // This is the UIImageView from your picker
+        let location = self.locationLabel.text ?? ""
+        let description = self.descriptionTextView.text ?? ""
+        let dateStr = self.datePickerLabel.title(for: .normal) ?? ""
+
+        // 2. Create the Memory object
+        // We pass the actual UIImage to the 'uiImage' property we added to the model
+        let newMemory = Memory(
+            imageName: "captured_memory", // Placeholder string
+            location: location,
+            title: description,
+            subtitle: dateStr,
+            uiImage: capturedImage
+        )
+
+        // 3. Save to the Global DataStore
+        dataStore.savedMemories.append(newMemory)
+
+        // 4. Show Success Alert (As you designed)
+        let alert = UIAlertController(title: nil, message: "Memory Added Successfully!", preferredStyle: .alert)
+        self.present(alert, animated: true)
+
+        // 5. Wait, then notify and dismiss
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            alert.dismiss(animated: true) {
+                // This triggers 'handleNewMemory' in your Jar VC
+                NotificationCenter.default.post(name: NSNotification.Name("MemoryAdded"), object: nil)
+                
+                // Go back to the Jar
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
         // MARK: - Lifecycle
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -81,7 +121,7 @@ class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewCon
         }
     private func setupLocationUI() {
         
-        locationView.layer.cornerRadius = 8
+        locationView.layer.cornerRadius = 6
         locationView.clipsToBounds = true
         
         
@@ -93,11 +133,11 @@ class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewCon
         
         private func setupUI() {
             // Round corners for the white background card
-            whiteimgView.layer.cornerRadius = 16
+            whiteimgView.layer.cornerRadius = 12
             whiteimgView.clipsToBounds = true
             
             // Round corners for the actual image
-            image.layer.cornerRadius = 16
+            image.layer.cornerRadius = 12
             image.clipsToBounds = true
             image.contentMode = .scaleAspectFill
             image.isUserInteractionEnabled = true
@@ -127,7 +167,7 @@ class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewCon
             view.endEditing(true)
         }
 
-        // MARK: - UITextViewDelegate
+        
 
         func textViewDidBeginEditing(_ textView: UITextView) {
             if textView.textColor == .placeholderText {
