@@ -44,7 +44,8 @@ UICollectionViewDelegateFlowLayout {
         addButton.configuration = .glass()
         addButton.setTitle("Add", for: .normal)
         
-        
+        //hides back button after clicking on notification
+        navigationItem.hidesBackButton = true
         
         memoryLaneCollectionView.dataSource = self
         memoryLaneCollectionView.delegate = self
