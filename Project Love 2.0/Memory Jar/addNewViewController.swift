@@ -10,7 +10,13 @@ import PhotosUI
 
 class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    @IBOutlet weak var locationView: UIView!
     
+    @IBOutlet weak var locationLabel: UILabel!
+    @IBAction func locationCancelButton(_ sender: Any) {
+        locationLabel.text = "Add Location...."
+        locationLabel.textColor = .placeholderText
+    }
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var datePickerLabel: UIButton!
     
@@ -69,11 +75,21 @@ class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewCon
             setupDismissKeyboardGesture()
             datePickerLabel.isUserInteractionEnabled = true
             updateButtonDate(date: Date())
+            setupLocationUI()
             
             
         }
-
-        // MARK: - Setup Methods
+    private func setupLocationUI() {
+        
+        locationView.layer.cornerRadius = 8
+        locationView.clipsToBounds = true
+        
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(locationBarTapped))
+        locationView.addGestureRecognizer(tap)
+        locationView.isUserInteractionEnabled = true
+    }
+    
         
         private func setupUI() {
             // Round corners for the white background card
@@ -230,4 +246,36 @@ class addNewViewController: UIViewController,UITextViewDelegate, PHPickerViewCon
             }
         }
 
+}
+extension addNewViewController {
+    
+    @objc func locationBarTapped() {
+        presentLocationEntryAlert()
+    }
+    
+    func presentLocationEntryAlert() {
+        let alert = UIAlertController(title: "Add Location",
+                                      message: "Enter the name of the place where this memory happened.",
+                                      preferredStyle: .alert)
+        
+        alert.addTextField { textField in
+            textField.placeholder = "E.g., Pune, Maharashtra"
+            // Pre-fill with existing text if it's not the default placeholder
+            if self.locationLabel.text != "Add Location...." {
+                textField.text = self.locationLabel.text
+            }
+        }
+        
+        let setAction = UIAlertAction(title: "Set", style: .default) { [weak self] _ in
+            if let newLocation = alert.textFields?.first?.text, !newLocation.isEmpty {
+                self?.locationLabel.text = newLocation
+                
+            }
+        }
+        
+        alert.addAction(setAction)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        self.present(alert, animated: true)
+    }
 }
