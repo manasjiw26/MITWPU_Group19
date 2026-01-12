@@ -10,13 +10,19 @@ import UIKit
 class ExploreViewController: UIViewController, UICollectionViewDelegate {
     
     @IBOutlet var activity_collection: UICollectionView!
+    @IBOutlet var calendarButton: UIButton!
+    
     var rewards: [Reward] = []
     var activityCategory: [ActivityCategory] = []
     var activity : [Activity] = []
     var selectedSegmentIndex: Int = 0
     var selectedCategory: ActivityCategory?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        calendarButton.configuration = .glass()
+        calendarButton.setImage(UIImage(systemName: "calendar"), for: .normal)
         
         rewards = DataStore.shared.rewards
         
@@ -53,6 +59,20 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         present(modalVC, animated: false)
     }
 
+    @IBAction func calendarTapped(_ sender: UIButton) {
+        print("Calendar button tapped")
+        openCalendarModal()
+    }
+    
+    private func openCalendarModal() {
+
+        let storyboard = UIStoryboard(name: "Calendar", bundle: nil)
+            let calendarVC = storyboard.instantiateViewController(
+                withIdentifier: "CalendarViewController"
+            )
+
+            navigationController?.pushViewController(calendarVC, animated: true)
+    }
     
     func registerCell() {
         activity_collection.register(UINib(nibName: "RewardsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "reward_cell")
@@ -60,6 +80,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         activity_collection.register(UINib(nibName: "ActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "activity_cell")
         
         activity_collection.register(UINib(nibName: "ActivitySectionHeaderViewCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header_cell")
+        
         activity_collection.register(
             UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "empty_cell"
@@ -67,6 +88,10 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         activity_collection.register(
             UINib(nibName: "CustomCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "custom_cell"
+        )
+        activity_collection.register(
+            UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "scheduleCalendar_cell"
         )
         
     }

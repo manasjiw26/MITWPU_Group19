@@ -15,6 +15,7 @@ struct Activity{
     var time : String
     var status: ActivityStatus
     var category: String
+    var scheduledDate: Date
 }
 
 enum ActivityStatus {
