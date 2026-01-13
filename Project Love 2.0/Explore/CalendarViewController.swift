@@ -75,8 +75,14 @@ extension CalendarViewController: UICollectionViewDataSource {
                 withReuseIdentifier: "scheduleCalendar_cell",
                 for: indexPath
             ) as! ScheduleCalendarCollectionViewCell
-            
-            cell.configure(with: selectedDate)
+
+            let activityDates = DataStore.shared.activities.map { $0.scheduledDate }
+
+            cell.configure(
+                selectedDate: selectedDate,
+                activityDates: activityDates
+            )
+
             cell.onDateChanged = { [weak self] date in
                 self?.selectedDate = date
                 self?.filterActivities()
@@ -121,7 +127,7 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
 
         // Calendar
         if indexPath.section == 0 {
-            return CGSize(width: width, height: 360)
+            return CGSize(width: width, height: 300)
         }
         
         // Empty State

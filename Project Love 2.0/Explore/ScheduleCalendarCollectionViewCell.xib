@@ -19,23 +19,7 @@
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K5y-oU-sYZ">
                         <rect key="frame" x="16" y="16" width="343" height="683"/>
-                        <subviews>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="inline" translatesAutoresizingMaskIntoConstraints="NO" id="ahm-6a-gIq">
-                                <rect key="frame" x="0.0" y="0.0" width="343" height="324"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="324" id="Auc-r8-mMM"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="dateChanged:" destination="gTV-IL-0wX" eventType="valueChanged" id="3Ki-Nu-xB1"/>
-                                </connections>
-                            </datePicker>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="ahm-6a-gIq" secondAttribute="trailing" id="Czf-2p-xm2"/>
-                            <constraint firstItem="ahm-6a-gIq" firstAttribute="leading" secondItem="K5y-oU-sYZ" secondAttribute="leading" id="us0-wk-jaX"/>
-                            <constraint firstItem="ahm-6a-gIq" firstAttribute="top" secondItem="K5y-oU-sYZ" secondAttribute="top" id="vnX-sj-IBl"/>
-                        </constraints>
                     </view>
                 </subviews>
             </view>
@@ -47,9 +31,6 @@
                 <constraint firstItem="K5y-oU-sYZ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="qt8-2Y-mbF"/>
             </constraints>
             <size key="customSize" width="375" height="715"/>
-            <connections>
-                <outlet property="datePicker" destination="ahm-6a-gIq" id="Uhw-y0-cR1"/>
-            </connections>
             <point key="canvasLocation" x="3.8167938931297707" y="351.05633802816902"/>
         </collectionViewCell>
     </objects>
