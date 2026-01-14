@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CalendarModalViewController" customModule="Project_Love_2_0" customModuleProvider="target">
+            <connections>
+                <outlet property="crossButton" destination="rJE-bT-DFP" id="nrT-i7-KVR"/>
+                <outlet property="datePicker" destination="KCF-kw-nP7" id="FqN-7S-Yh0"/>
+                <outlet property="scheduleLabel" destination="Iev-ff-vkW" id="t8w-in-OG8"/>
+                <outlet property="tickButton" destination="FAY-5p-YBg" id="2eP-vq-DMd"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" style="inline" translatesAutoresizingMaskIntoConstraints="NO" id="KCF-kw-nP7">
+                    <rect key="frame" x="16" y="167.99999999999997" width="361" height="353.33333333333326"/>
+                    <connections>
+                        <action selector="selectedDate:" destination="-1" eventType="valueChanged" id="6sy-91-LJB"/>
+                    </connections>
+                </datePicker>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6Uk-3g-R7m">
+                    <rect key="frame" x="16" y="16" width="361" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="close" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJE-bT-DFP">
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="Zyj-Id-fXA"/>
+                                <constraint firstAttribute="width" constant="44" id="v7T-CK-a6m"/>
+                            </constraints>
+                            <buttonConfiguration key="configuration" style="filled"/>
+                            <connections>
+                                <action selector="cancelButton:" destination="-1" eventType="touchUpInside" id="1Qp-Tr-mvx"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FAY-5p-YBg">
+                            <rect key="frame" x="317" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="27w-wj-Di1"/>
+                                <constraint firstAttribute="width" constant="44" id="x1q-di-Aso"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" image="checkmark" catalog="system"/>
+                            <connections>
+                                <action selector="doneButton:" destination="-1" eventType="touchUpInside" id="Pno-eQ-4p5"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="WAs-Gg-pl9"/>
+                    </constraints>
+                </stackView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iev-ff-vkW">
+                    <rect key="frame" x="16" y="533" width="361" height="18"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="Iev-ff-vkW" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="415" id="4H6-mV-qdc"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="KCF-kw-nP7" secondAttribute="trailing" constant="16" id="LUI-Z8-FCh"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="6Uk-3g-R7m" secondAttribute="trailing" constant="16" id="OOL-fS-KlN"/>
+                <constraint firstItem="6Uk-3g-R7m" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="16" id="dIq-if-Qk7"/>
+                <constraint firstItem="Iev-ff-vkW" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="itm-FO-F0j"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Iev-ff-vkW" secondAttribute="trailing" constant="16" id="mAh-Sh-Miw"/>
+                <constraint firstItem="6Uk-3g-R7m" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="u0i-z3-6hr"/>
+                <constraint firstItem="KCF-kw-nP7" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="50" id="uly-FK-q8P"/>
+                <constraint firstItem="KCF-kw-nP7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="wOj-b5-Mte"/>
+            </constraints>
+            <point key="canvasLocation" x="-245.03816793893128" y="148.59154929577466"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="checkmark" catalog="system" width="128" height="114"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

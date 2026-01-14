@@ -73,9 +73,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Fun & Playful",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -85,9 +83,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Fun & Playful",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -97,9 +93,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Fun & Playful",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -109,9 +103,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Daily Dose of Us",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -121,9 +113,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Acts of Love",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -133,9 +123,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Meaning & Growth",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -145,9 +133,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Daily Dose of Us",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             ),
 
             Activity(
@@ -157,9 +143,7 @@ class DataStore {
                 time: "5 mins",
                 status: .none,
                 category: "Acts of Love",
-                scheduledDate: Calendar.current.date(
-                        from: DateComponents(year: 2026, month: 1, day: 10)
-                    )!
+                scheduledDate: nil
             )
         ]
         self.activities = sampleActivities
@@ -167,15 +151,9 @@ class DataStore {
     
     func loadSuggestedActivity () {
         let suggestedActivity: [Activity] = [
-            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity",scheduledDate: Calendar.current.date(
-                from: DateComponents(year: 2026, month: 1, day: 10)
-            )!),
-            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none,category : "suggestedActivity",scheduledDate: Calendar.current.date(
-                from: DateComponents(year: 2026, month: 1, day: 10)
-            )!),
-            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category : "suggestedActivity",scheduledDate: Calendar.current.date(
-                from: DateComponents(year: 2026, month: 1, day: 10)
-            )!)
+            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity",scheduledDate: nil),
+            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none,category : "suggestedActivity",scheduledDate: nil) ,
+            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category : "suggestedActivity",scheduledDate: nil)
         ]
         self.suggestedActivities = suggestedActivity
     }
@@ -365,18 +343,10 @@ class DataStore {
         stepLabel:  "You are currently on Step 1: Identifying the Conflict.",
         step: ["Identify","Empathize","Solution","Sustain"],
         activity: [
-        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: Calendar.current.date(
-            from: DateComponents(year: 2026, month: 1, day: 10)
-        )!),
-        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: Calendar.current.date(
-            from: DateComponents(year: 2026, month: 1, day: 10)
-        )!),
-        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: Calendar.current.date(
-            from: DateComponents(year: 2026, month: 1, day: 10)
-        )!),
-        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: Calendar.current.date(
-            from: DateComponents(year: 2026, month: 1, day: 10)
-        )!)
+        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: nil),
+        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: nil),
+        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: nil),
+        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together",scheduledDate: nil)
     ],
         badge: "Harmony Seeker",
         badgesubHeading: "Master the art of peaceful resolution.",
@@ -452,6 +422,11 @@ class DataStore {
     }
     func getSuggestedActivities() -> [Activity] {
         return suggestedActivities
+    }
+    func updateScheduledDate(for activity: Activity, date: Date) {
+        if let index = activities.firstIndex(where: { $0.name == activity.name }) {
+            activities[index].scheduledDate = date
+        }
     }
     
     //calendar

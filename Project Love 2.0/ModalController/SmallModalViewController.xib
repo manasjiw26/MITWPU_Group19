@@ -77,6 +77,9 @@
                                 <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="baseBackgroundColor" name="AppBackground"/>
                             </buttonConfiguration>
+                            <connections>
+                                <action selector="scheduleForLaterButton:" destination="-1" eventType="touchUpInside" id="GvJ-ho-M5m"/>
+                            </connections>
                         </button>
                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tvC-m3-2kG">
                             <rect key="frame" x="25" y="232" width="352" height="35"/>

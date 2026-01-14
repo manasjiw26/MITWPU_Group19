@@ -25,6 +25,10 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
         calendar.fontDesign = .rounded
         calendar.delegate = self
         calendar.tintColor = UIColor(named: "PurpleColor")!
+        calendar.preservesSuperviewLayoutMargins = false
+        calendar.directionalLayoutMargins = .zero
+        calendar.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
+
 
         let selection = UICalendarSelectionSingleDate(delegate: self)
         calendar.selectionBehavior = selection
@@ -32,11 +36,13 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(calendar)
 
         NSLayoutConstraint.activate([
-            calendar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -10),
-            calendar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            calendar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
-            calendar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 105)
-                ])
+            calendar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+            calendar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            calendar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+            calendar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
+        ])
+
+        //calendar.heightAnchor.constraint(equalToConstant: 420).isActive = true
 
         self.calendarView = calendar
     }
@@ -60,22 +66,25 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
 @available(iOS 16.0, *)
 extension ScheduleCalendarCollectionViewCell: UICalendarViewDelegate {
 
-    func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
+    func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents ) -> UICalendarView.Decoration? {
 
         let hasActivity = activityDates.contains {
-            Calendar.current.isDate($0, equalTo: Calendar.current.date(from: dateComponents)!, toGranularity: .day)
+            Calendar.current.isDate(
+                $0,
+                equalTo: Calendar.current.date(from: dateComponents)!,
+                toGranularity: .day
+            )
         }
 
-        return hasActivity ? .default(color: UIColor(named: "PurpleColor")!, size: .medium) : nil
+        return hasActivity
+            ? .default(color: UIColor(named: "PurpleColor")!, size: .small)
+            : nil
     }
 }
 @available(iOS 16.0, *)
 extension ScheduleCalendarCollectionViewCell: UICalendarSelectionSingleDateDelegate {
 
-    func dateSelection(
-        _ selection: UICalendarSelectionSingleDate,
-        didSelectDate dateComponents: DateComponents?
-    ) {
+    func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents? ) {
         guard let date = Calendar.current.date(from: dateComponents!) else { return }
         onDateChanged?(date)
     }

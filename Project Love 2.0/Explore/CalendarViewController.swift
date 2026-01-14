@@ -36,15 +36,11 @@ class CalendarViewController: UIViewController {
     
     func filterActivities() {
         activitiesForSelectedDate = DataStore.shared.activities.filter {
-            Calendar.current.isDate($0.scheduledDate, inSameDayAs: selectedDate)
+            guard let date = $0.scheduledDate else { return false }
+            return Calendar.current.isDate(date, inSameDayAs: selectedDate)
         }
 
-        UIView.performWithoutAnimation {
-            activityCollectionView.performBatchUpdates({
-                
-                activityCollectionView.reloadSections(IndexSet(integer: 1))
-            }, completion: nil)
-        }
+        activityCollectionView.reloadSections(IndexSet(integer: 1))
     }
     
     @IBAction func dateChanged(_ sender: UIDatePicker) {
@@ -76,7 +72,7 @@ extension CalendarViewController: UICollectionViewDataSource {
                 for: indexPath
             ) as! ScheduleCalendarCollectionViewCell
 
-            let activityDates = DataStore.shared.activities.map { $0.scheduledDate }
+            let activityDates = DataStore.shared.activities.compactMap { $0.scheduledDate }
 
             cell.configure(
                 selectedDate: selectedDate,
@@ -122,12 +118,11 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let horizontalPadding: CGFloat = 40
-        let width = collectionView.bounds.width - horizontalPadding
+        let width = collectionView.bounds.width
 
         // Calendar
         if indexPath.section == 0 {
-            return CGSize(width: width, height: 300)
+            return CGSize(width: width, height: 250)
         }
         
         // Empty State
@@ -142,17 +137,22 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
         return 16
     }
     
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAt section: Int
-    ) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int ) -> UIEdgeInsets {
 
         if section == 0 {
-            return UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 20)
+            return UIEdgeInsets(top: 0, left: 20, bottom: 16, right: 20)
         }
 
         // Activities section
         return UIEdgeInsets(top: 0, left: 20, bottom: 24, right: 20)
+    }
+}
+extension CalendarViewController: ScheduleCalendarDelegate {
+    func didSchedule(activity: Activity, on date: Date) {
+        selectedDate = date
+        filterActivities()
+
+        // reload calendar section to show dot
+        activityCollectionView.reloadSections(IndexSet(integer: 0))
     }
 }
