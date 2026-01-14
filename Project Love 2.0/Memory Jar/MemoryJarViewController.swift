@@ -37,19 +37,16 @@ UICollectionViewDelegateFlowLayout {
     @objc func handleNewMemory() {
         if let scene = MemoryJarView.scene as? MemoryJarScene {
             // Trigger SpriteKit animation
-            scene.addHeart()
+            let newIndex = dataStore.savedMemories.count - 1
+            scene.addHeart(index: newIndex)
             
             DispatchQueue.main.async {
-                // 1. Reload the collection view data
-                self.memoryLaneCollectionView.reloadData()
-                
-                // 2. Automatically scroll to the newly added memory at the end
-                let lastItem = dataStore.savedMemories.count - 1
-                if lastItem >= 0 {
-                    let indexPath = IndexPath(item: lastItem, section: 0)
-                    self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
-                }
-            }
+                        self.memoryLaneCollectionView.reloadData()
+                        if newIndex >= 0 {
+                            let indexPath = IndexPath(item: newIndex, section: 0)
+                            self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
+                        }
+                    }
             
             // Performance settings
             MemoryJarView.showsPhysics = false
@@ -73,6 +70,7 @@ UICollectionViewDelegateFlowLayout {
         
         // Observe the custom notification from addNewViewController
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showMemoryDisplay(_:)), name: NSNotification.Name("OpenMemory"), object: nil)
     }
 
     override func viewDidLayoutSubviews() {
@@ -80,22 +78,22 @@ UICollectionViewDelegateFlowLayout {
         
         if MemoryJarView.scene == nil {
             MemoryJarView.backgroundColor = .clear
-            MemoryJarView.showsPhysics = false
             
-            // Present the SpriteKit scene using view bounds
             let scene = MemoryJarScene(size: MemoryJarView.bounds.size)
             scene.scaleMode = .aspectFill
             MemoryJarView.presentScene(scene)
+            
+            // --- ADD THIS: Fill the jar with hearts for existing memories ---
+            for (index, _) in dataStore.savedMemories.enumerated() {
+                scene.addHeart(index: index)
+            }
         }
     }
-    
     // MARK: - Layout Generation
     
     private func generateLayout() -> UICollectionViewLayout {
-        // 1. Spacing between photos
         let spacing: CGFloat = 1
 
-        // 2. ITEM: Since height is fixed, we set height to 100% of the group
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalHeight(1.0), // Makes width match height (Square)
             heightDimension: .fractionalHeight(1.0)
@@ -108,8 +106,6 @@ UICollectionViewDelegateFlowLayout {
             trailing: spacing
         )
 
-        // 3. GROUP: Lock the height to 110
-        // The width is .estimated(110) so it can repeat horizontally
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .estimated(110),
             heightDimension: .absolute(110)
@@ -120,11 +116,20 @@ UICollectionViewDelegateFlowLayout {
             subitems: [item]
         )
 
-        // 4. SECTION: Horizontal scrolling
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10)
 
         return UICollectionViewCompositionalLayout(section: section)
+    }
+    @objc func showMemoryDisplay(_ notification: Notification) {
+        guard let index = notification.object as? Int else { return }
+        let selectedMemory = dataStore.savedMemories[index]
+        
+        if let displayVC = storyboard?.instantiateViewController(withIdentifier: "memoryDisplay") as? memoryDisplay {
+            displayVC.memory = selectedMemory
+            displayVC.modalPresentationStyle = .pageSheet
+            self.present(displayVC, animated: true)
+        }
     }
 }

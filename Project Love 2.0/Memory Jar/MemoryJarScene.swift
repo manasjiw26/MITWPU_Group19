@@ -94,6 +94,25 @@ class MemoryJarScene: SKScene,SKPhysicsContactDelegate{
             addChild(cap)
         }
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        let tappedNodes = nodes(at: location)
+        
+        for node in tappedNodes {
+            // Look for nodes whose name starts with "heart_"
+            if let nodeName = node.name, nodeName.hasPrefix("heart_") {
+                let indexStr = nodeName.replacingOccurrences(of: "heart_", with: "")
+                if let index = Int(indexStr) {
+                    // Trigger the notification you already set up in MemoryJarViewController
+                    NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: index)
+                    
+                    // Add a little tap feel
+                    triggerHaptic(style: .medium)
+                }
+            }
+        }
+    }
     func animateCapOpening() {
         // 1. Upward move (EaseOut se animation natural lagti hai)
         let moveUp = SKAction.moveBy(x: 0, y: 60, duration: 0.3)
@@ -109,31 +128,34 @@ class MemoryJarScene: SKScene,SKPhysicsContactDelegate{
         let sequence = SKAction.sequence([moveUp, wait, moveDown])
         jarCap?.run(sequence)
     }
-    func addHeart() {
+    func addHeart(index: Int) {
+
         animateCapOpening()
-        
+
         let delay = SKAction.wait(forDuration: 0.2)
+        
         let dropAction = SKAction.run { [weak self] in
             guard let self = self else { return }
-            
+
             let heart = SKSpriteNode(texture: self.heartTexture)
             heart.size = CGSize(width: 50, height: 45)
-            
-            // 🔥 CHANGE: Ab heart 0.90 par paida hoga (Wall ke niche)
-            // Isse Ghost mode ki zaroorat nahi padegi
+            heart.name = "heart_\(index)"
             heart.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.88)
-            
             if self.sharedHeartPhysicsBody == nil {
-                self.sharedHeartPhysicsBody = SKPhysicsBody(texture: self.heartTexture, alphaThreshold: 0.5, size: heart.size)
+                self.sharedHeartPhysicsBody = SKPhysicsBody(texture: self.heartTexture,
+                                                            alphaThreshold: 0.5,
+                                                            size: heart.size)
             }
+            
             heart.physicsBody = self.sharedHeartPhysicsBody?.copy() as? SKPhysicsBody
             
-            // Seedha solid physics
             heart.physicsBody?.categoryBitMask = PhysicsCategory.heart
             heart.physicsBody?.collisionBitMask = PhysicsCategory.heart | PhysicsCategory.jar
             heart.physicsBody?.contactTestBitMask = PhysicsCategory.jar | PhysicsCategory.heart
+            
             self.addChild(heart)
         }
+        
         self.run(SKAction.sequence([delay, dropAction]))
     }
     let motionManager = CMMotionManager()

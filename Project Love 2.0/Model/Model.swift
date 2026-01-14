@@ -135,15 +135,7 @@ struct MemoryItem {
     let imageName: String
 }
 
-struct Memory {
-    var id: UUID = UUID() 
-    var date: Date = Date() // Stores the current date and time
-    var imageName: String
-    var location: String
-    var title: String
-    var subtitle: String
-    var uiImage: UIImage?
-}
+ 
 struct MemoryCategory {
     let title: String
     var items: [MemoryItem]
