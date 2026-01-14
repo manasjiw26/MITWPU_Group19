@@ -30,12 +30,14 @@ class DataStore {
 
     var userProfile: UserProfile?
     var profileSections: [ProfileSection] = []
+    // MARK: - Personal Info Data
+    var personalInfoSections: [PersonalInfoSection] = []
 
     
     init() {
         loadSampleData()
         loadSampleRewards()
-        loadSampleTips()
+//        loadSampleTips()
         moods = sampleMoods()
         loadSmallModalData()
         moodOptions = loadMoodOptions()
@@ -43,7 +45,7 @@ class DataStore {
         loadSuggestedActivity()
         loadsampleBuildYourBond()
         loadProfileData()
-
+        loadPersonalInfoData()
         //loadCheckIn()
         
     }
@@ -203,8 +205,8 @@ class DataStore {
         ]
         self.activityCategory = sampleCategory
     }
-    func loadSampleTips() {
-        let sampleTips: [Tip] = [
+    func getAllTips() -> [Tip] {
+        return [
             Tip(title: "Make hot chocolate for her"),
             Tip(title: "Write her a sweet note"),
             Tip(title: "Give her a foot massage"),
@@ -215,9 +217,8 @@ class DataStore {
             Tip(title: "Help her with her homework"),
             Tip(title: "Organize her closet")
         ]
-        
-        self.tips = sampleTips
     }
+
     
     func loadBuildYourbond() -> [BuildYourBond]{
         let sampleBuildYourBond: [BuildYourBond] = [
@@ -272,6 +273,27 @@ class DataStore {
                 title: "",
                 items: [
                     ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
+                ]
+            )
+        ]
+    }
+    func loadPersonalInfoData() {
+        personalInfoSections = [
+            PersonalInfoSection(
+                title: "Basic Information",
+                items: [
+                    PersonalInfoItem(title: "Full Name", value: "Name", showsChevron: false),
+                    PersonalInfoItem(title: "Email", value: "name@email.com", showsChevron: false),
+                    PersonalInfoItem(title: "Phone Number", value: "+91 9876543210", showsChevron: false),
+                    PersonalInfoItem(title: "Date of Birth", value: "12 Jan 2003", showsChevron: false)
+                ]
+            ),
+
+            PersonalInfoSection(
+                title: "RelationShip Profile",
+                items: [
+                    PersonalInfoItem(title: "Partner Pairing", value: "", showsChevron: true),
+                    PersonalInfoItem(title: "Edit Preferences", value: "", showsChevron: true)
                 ]
             )
         ]

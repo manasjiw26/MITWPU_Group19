@@ -158,3 +158,13 @@ struct ProfileItem {
     var iconName: String
     var showsChevron: Bool
 }
+struct PersonalInfoItem {
+    let title: String
+    var value: String
+    let showsChevron: Bool
+}
+
+struct PersonalInfoSection {
+    let title: String
+    var items: [PersonalInfoItem]
+}

@@ -30,6 +30,7 @@ class TipTableViewCell: UITableViewCell {
        
         }
     
+    
     func configure(option: String, isSelected: Bool) {
         optionLabel.text = option
         
