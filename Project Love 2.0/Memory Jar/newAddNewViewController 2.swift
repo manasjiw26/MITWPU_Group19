@@ -2,16 +2,10 @@ import UIKit
 import PhotosUI
 import MapKit
 
-class NewAddNewViewController: UIViewController, LocationSearchDelegate {
-    
-    
-    func didSelectLocation(_ name: String) {
-        locationTextField.text = name
-    }
-    
+class NewAddNewViewController: UIViewController {
     
     // MARK: - Outlets
-    @IBOutlet var textFieldView: [UIView]! // Ensure ALL container views are in this collection
+    @IBOutlet var textFieldView: [UIView]!
     @IBOutlet weak var dateTextField: UITextField!
     @IBOutlet weak var memoryTitleTextField: UITextField!
     @IBOutlet weak var locationTextField: UITextField!
@@ -19,116 +13,124 @@ class NewAddNewViewController: UIViewController, LocationSearchDelegate {
     @IBOutlet weak var memoryImageView: UIImageView!
     
     // MARK: - Properties
-    let datePicker = UIDatePicker()
+    private let datePicker = UIDatePicker()
     private let placeholderText = "Type here..."
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupDatePicker()
-        setupTextView()
-        setupImagePicker()
-        setupDismissKeyboardGesture()
-        applyCornerStyles()
-        locationTextField.delegate = self
-        
-        // Keyboard Observers
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        setupDelegates()
+        setupInteractions()
+        setupNotifications()
     }
-    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         applyCornerStyles()
     }
     
-    // MARK: - Setup UI
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - Setup Logic
     private func setupUI() {
-        // Remove borders from text fields to show the rounded container view instead
-        dateTextField.borderStyle = .none
-        memoryTitleTextField.borderStyle = .none
-        locationTextField.borderStyle = .none
+        // Remove text field borders to show custom container styling
+        [dateTextField, memoryTitleTextField, locationTextField].forEach {
+            $0?.borderStyle = .none
+        }
         
-        // Setup Image View
+        // Image View styling
         memoryImageView.layer.cornerRadius = 15
         memoryImageView.clipsToBounds = true
         memoryImageView.contentMode = .scaleAspectFill
         memoryImageView.isUserInteractionEnabled = true
+        
+        // Date Picker setup
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.maximumDate = Date()
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
+        dateTextField.inputView = datePicker
+        updateDateTextField(date: Date())
+        
+        // Description TextView placeholder
+        descriptionTextView.text = placeholderText
+        descriptionTextView.textColor = .placeholderText
     }
-    
+
+    private func setupDelegates() {
+        locationTextField.delegate = self
+        descriptionTextView.delegate = self
+        memoryTitleTextField.delegate = self
+    }
+
+    private func setupInteractions() {
+        let imageTap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+        memoryImageView.addGestureRecognizer(imageTap)
+        
+        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        dismissTap.cancelsTouchesInView = false
+        view.addGestureRecognizer(dismissTap)
+    }
+
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
     private func applyCornerStyles() {
-        guard let containers = textFieldView else { return }
-        for container in containers {
+        textFieldView?.forEach { container in
             container.layer.cornerRadius = 12
-            container.layer.masksToBounds = true // Crucial for corner radius
-            container.clipsToBounds = true
+            container.layer.masksToBounds = true
             container.layer.borderWidth = 1.0
             container.layer.borderColor = UIColor.systemGray6.cgColor
         }
     }
-    
-    private func setupTextView() {
-        descriptionTextView.delegate = self
-        descriptionTextView.text = placeholderText
-        descriptionTextView.textColor = .placeholderText
-    }
-    
-    // MARK: - Date Picker
-    private func setupDatePicker() {
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.maximumDate = Date()
-        
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
-        
-        dateTextField.inputView = datePicker
-        updateDateTextField(date: Date())
-    }
 
-    @objc func datePickerValueChanged() {
+    // MARK: - Actions
+    @objc private func datePickerValueChanged() {
         updateDateTextField(date: datePicker.date)
     }
-    
 
-    
-    private func updateDateTextField(date: Date) {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        dateTextField.text = formatter.string(from: date)
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 
-    // MARK: - Saving Logic with Validation
-    // MARK: - Saving Logic with Validation
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+
     @IBAction func saveButtonTapped(_ sender: Any) {
-        // 1. Check if image is nil OR if it's still the placeholder image
         let currentImage = memoryImageView.image
         let placeholderImage = UIImage(named: "Empty_Image1")
         
-        // Validation: Ensure photo is selected and isn't the placeholder
+        // 1. Image Validation
         if currentImage == nil || currentImage?.pngData() == placeholderImage?.pngData() {
             showError(message: "Please select a photo to save this memory.")
             return
         }
 
+        // 2. Data Preparation
         let title = memoryTitleTextField.text ?? ""
         let location = locationTextField.text ?? ""
-        let dateStr = dateTextField.text ?? ""
         let description = (descriptionTextView.text == placeholderText) ? "" : descriptionTextView.text ?? ""
         
-        // Create and save
+        // 3. Create Memory Object (Using all your fields)
         let newMemory = Memory(
+            date: datePicker.date,
             imageName: "captured_memory",
-            date : dateStr ,
             location: location,
             title: title,
-            subtitle: dateStr,
+            description: description,
             uiImage: currentImage!
         )
         
+        // 4. Persistence
         dataStore.savedMemories.append(newMemory)
         
+        // 5. Success Feedback
         let alert = UIAlertController(title: nil, message: "Memory Added Successfully!", preferredStyle: .alert)
         self.present(alert, animated: true)
         
@@ -139,56 +141,43 @@ class NewAddNewViewController: UIViewController, LocationSearchDelegate {
             }
         }
     }
-    
+
+    // MARK: - Helpers
+    private func updateDateTextField(date: Date) {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        dateTextField.text = formatter.string(from: date)
+    }
+
     private func showError(message: String) {
         let alert = UIAlertController(title: "Missing Info", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+}
 
-    // MARK: - Keyboard Management
-    @objc func keyboardWillShow(notification: NSNotification) {
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-
-        var shiftHeight: CGFloat = 0
-        
-        if locationTextField.isFirstResponder {
-            shiftHeight = keyboardSize.height * 0.7 // Moves it a little
-        } else if descriptionTextView.isFirstResponder {
-            shiftHeight = keyboardSize.height * 1 // Moves it a little more
-        }
-
-        if self.view.frame.origin.y == 0 {
-            UIView.animate(withDuration: 0.3) {
-                self.view.frame.origin.y -= shiftHeight
-            }
-        }
+// MARK: - Location Search
+extension NewAddNewViewController: LocationSearchDelegate {
+    func didSelectLocation(_ name: String) {
+        locationTextField.text = name
     }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
+    
+    private func presentLocationPicker() {
+        performSegue(withIdentifier: "goToSearch", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToSearch",
+           let destination = segue.destination as? LocationSearchViewController {
+            destination.delegate = self
         }
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    @IBAction func cancelButtonTapped(_ sender: Any) {
-        self.dismiss(animated: true)
     }
 }
 
 // MARK: - Image Picking
 extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private func setupImagePicker() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
-        memoryImageView.addGestureRecognizer(tap)
-    }
-    
-    @objc func imageTapped() {
+    @objc private func imageTapped() {
         let alert = UIAlertController(title: "Choose Memory Photo", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default) { _ in self.openCamera() })
         alert.addAction(UIAlertAction(title: "Gallery", style: .default) { _ in self.openGallery() })
@@ -197,13 +186,12 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePicker
     }
     
     private func openCamera() {
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            let picker = UIImagePickerController()
-            picker.delegate = self
-            picker.sourceType = .camera
-            picker.allowsEditing = true
-            present(picker, animated: true)
-        }
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return }
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = .camera
+        picker.allowsEditing = true
+        present(picker, animated: true)
     }
     
     private func openGallery() {
@@ -224,36 +212,45 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePicker
             }
         }
     }
-}
-
-// MARK: - TextView Delegate
-extension NewAddNewViewController: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == .placeholderText {
-            textView.text = nil
-            textView.textColor = .secondaryLabel
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        if let edited = info[.editedImage] as? UIImage {
+            memoryImageView.image = edited
+        } else if let original = info[.originalImage] as? UIImage {
+            memoryImageView.image = original
         }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = placeholderText
-            textView.textColor = .placeholderText
-        }
-    }
-    
-    private func setupDismissKeyboardGesture() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
     }
 }
 
-extension NewAddNewViewController: UITextFieldDelegate {
+// MARK: - Keyboard & Text Delegates
+extension NewAddNewViewController: UITextFieldDelegate, UITextViewDelegate {
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        var shiftHeight: CGFloat = 0
+        
+        if locationTextField.isFirstResponder {
+            shiftHeight = keyboardSize.height * 0.7
+        } else if descriptionTextView.isFirstResponder {
+            shiftHeight = keyboardSize.height * 1.0
+        }
+
+        if self.view.frame.origin.y == 0 {
+            UIView.animate(withDuration: 0.3) {
+                self.view.frame.origin.y -= shiftHeight
+            }
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            UIView.animate(withDuration: 0.3) {
+                self.view.frame.origin.y = 0
+            }
+        }
+    }
+
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if textField == locationTextField {
             presentLocationPicker()
@@ -261,17 +258,18 @@ extension NewAddNewViewController: UITextFieldDelegate {
         }
         return true
     }
-    
-    // Triggered when location field is tapped
-    func presentLocationPicker() {
-        performSegue(withIdentifier: "goToSearch", sender: self)
-    }
 
-    // Passes the delegate so the main screen gets the data back
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToSearch",
-           let destination = segue.destination as? LocationSearchViewController {
-            destination.delegate = self
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == .placeholderText {
+            textView.text = nil
+            textView.textColor = .label
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = placeholderText
+            textView.textColor = .placeholderText
         }
     }
 }

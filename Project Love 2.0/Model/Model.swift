@@ -135,6 +135,15 @@ struct MemoryItem {
     let imageName: String
 }
 
+struct Memory {
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var imageName: String
+    var location: String
+    var title: String
+    var description: String
+    var uiImage: UIImage?
+}
  
 struct MemoryCategory {
     let title: String

@@ -1,5 +1,4 @@
 import UIKit
-import PhotosUI
 
 class memoryDisplay: UIViewController {
 
@@ -10,69 +9,77 @@ class memoryDisplay: UIViewController {
     @IBOutlet weak var datePickerLabel: UIButton!
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var whiteimgView: UIView!
-    
     @IBOutlet weak var memoryTitle: UITextField!
-    // MARK: - Data Property
-    // This will hold the memory passed from your previous screen
+    
+    // MARK: - Properties
     var memory: Memory?
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         displayMemoryData()
     }
 
     private func setupUI() {
-        // Visual Styling
         whiteimgView.layer.cornerRadius = 12
-        whiteimgView.clipsToBounds = true
         
         image.layer.cornerRadius = 12
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFill
         
-        // MAKE NON-EDITABLE: Disable interactions
-        image.isUserInteractionEnabled = false
-        locationView.isUserInteractionEnabled = false
-        datePickerLabel.isUserInteractionEnabled = false
-        
-        descriptionTextView.isEditable = false // User cannot type
+        // Disable interactions for viewing
+        memoryTitle.isEnabled = false
+        descriptionTextView.isEditable = false
         descriptionTextView.isSelectable = true
-        descriptionTextView.text = memory?.subtitle
-        // User can still copy text if they want
+        
+        // Allow the text view to scroll if the description is long
         descriptionTextView.isScrollEnabled = true
+        
+        // Prevent background color issues
+        descriptionTextView.backgroundColor = .clear
     }
 
     private func displayMemoryData() {
-        guard let memory = memory else { return }
+        guard let data = memory else { return }
         
-        // Fill the UI with the memory data
-        if memory.location == nil || memory.location == "" || memory.location == "Add Location...." {
-                locationView.isHidden = true
-            } else {
-                locationView.isHidden = false
-            }
-        locationLabel.text = memory.location
-        image.image = memory.uiImage
-        datePickerLabel.setTitle(memory.subtitle, for: .normal)
-        descriptionTextView.text = memory.title // Or use description if you added that field
-        memoryTitle.text = memory.title
-        memoryTitle.textColor = .secondaryLabel
-        // If the description is empty, hide the text view or show a default message
-        if memory.title.isEmpty {
-            descriptionTextView.text = "No description added for this memory."
+        // 1. Map Title
+        memoryTitle.text = data.title
+        
+        // 2. Map Description (The content that was collapsing)
+        if data.description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            descriptionTextView.text = "No additional notes for this memory."
             descriptionTextView.textColor = .secondaryLabel
         } else {
+            descriptionTextView.text = data.description
             descriptionTextView.textColor = .label
         }
+        
+        // 3. Map Image
+        image.image = data.uiImage
+        
+        // 4. Map Location & Handling "Dissolve"
+        let hasNoLocation = data.location.isEmpty || data.location == "Add Location...."
+        locationView.isHidden = hasNoLocation
+        locationLabel.text = data.location
+        
+        // 5. Map Date (Formatting from Date object)
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        datePickerLabel.setTitle(formatter.string(from: data.date), for: .normal)
+        
+        // 6. Force Layout - Tells the system to calculate the text height immediately
+        descriptionTextView.invalidateIntrinsicContentSize()
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
     }
 
+    // MARK: - Actions
     @IBAction func closeButtonTapped(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
     }
+    
     @IBAction func doneButton(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
     }
 }
