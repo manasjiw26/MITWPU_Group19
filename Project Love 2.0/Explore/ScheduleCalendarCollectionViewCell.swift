@@ -2,7 +2,9 @@ import UIKit
 
 @available(iOS 16.0, *)
 class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
-
+    
+    @IBOutlet weak var calendarBackground: UIView!
+    
     private var calendarView: UICalendarView!
     private var activityDates: [Date] = []
 
@@ -14,9 +16,9 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupCalendar() {
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 20
-        contentView.clipsToBounds = true
+//        contentView.backgroundColor = .white
+//        contentView.layer.cornerRadius = 20
+//        contentView.clipsToBounds = true
 
         let calendar = UICalendarView()
         calendar.translatesAutoresizingMaskIntoConstraints = false
@@ -27,19 +29,19 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
         calendar.tintColor = UIColor(named: "PurpleColor")!
         calendar.preservesSuperviewLayoutMargins = false
         calendar.directionalLayoutMargins = .zero
-        calendar.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
+        //calendar.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
 
 
         let selection = UICalendarSelectionSingleDate(delegate: self)
         calendar.selectionBehavior = selection
 
-        contentView.addSubview(calendar)
+        calendarBackground.addSubview(calendar)
 
         NSLayoutConstraint.activate([
-            calendar.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-            calendar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
-            calendar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-            calendar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
+            calendar.topAnchor.constraint(equalTo: calendarBackground.topAnchor, constant: 5),
+            calendar.leadingAnchor.constraint(equalTo: calendarBackground.leadingAnchor, constant: 0),
+            calendar.trailingAnchor.constraint(equalTo: calendarBackground.trailingAnchor, constant: 0),
+            calendar.bottomAnchor.constraint(equalTo: calendarBackground.bottomAnchor, constant: 0)
         ])
 
         //calendar.heightAnchor.constraint(equalToConstant: 420).isActive = true

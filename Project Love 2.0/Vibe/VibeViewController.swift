@@ -56,6 +56,10 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.register(UINib(nibName: "MoodCheckInCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "mood_checkin_cell")
         vibeCollectionView.register(UINib(nibName: "DailyCheckInCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "daily_CheckIn")
         vibeCollectionView.register(UINib(nibName: "SuggestedActivityCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "suggestedActivity_cell")
+        vibeCollectionView.register(
+            UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "scheduleCalendar_cell"
+        )
 
     }
     

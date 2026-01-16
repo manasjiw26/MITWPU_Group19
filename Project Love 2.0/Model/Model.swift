@@ -22,6 +22,7 @@ enum ActivityStatus {
     case none
     case ongoing
     case completed
+    case scheduled
 }
 
 struct ActivityCategory{

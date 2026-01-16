@@ -18,19 +18,27 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K5y-oU-sYZ">
-                        <rect key="frame" x="16" y="16" width="343" height="683"/>
+                        <rect key="frame" x="0.0" y="5" width="375" height="705"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <integer key="value" value="20"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
                 <constraint firstItem="K5y-oU-sYZ" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="OsF-iG-BHU"/>
-                <constraint firstItem="K5y-oU-sYZ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="Vxl-cj-Yef"/>
-                <constraint firstAttribute="trailing" secondItem="K5y-oU-sYZ" secondAttribute="trailing" constant="16" id="dai-eT-Ioq"/>
-                <constraint firstItem="K5y-oU-sYZ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="16" id="qt8-2Y-mbF"/>
+                <constraint firstItem="K5y-oU-sYZ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Vxl-cj-Yef"/>
+                <constraint firstAttribute="trailing" secondItem="K5y-oU-sYZ" secondAttribute="trailing" id="dai-eT-Ioq"/>
+                <constraint firstItem="K5y-oU-sYZ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="qt8-2Y-mbF"/>
             </constraints>
             <size key="customSize" width="375" height="715"/>
+            <connections>
+                <outlet property="calendarBackground" destination="K5y-oU-sYZ" id="gsq-fj-o9Y"/>
+            </connections>
             <point key="canvasLocation" x="3.8167938931297707" y="351.05633802816902"/>
         </collectionViewCell>
     </objects>

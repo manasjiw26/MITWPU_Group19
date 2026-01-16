@@ -21,6 +21,9 @@ class DataStore {
     var questions: [Question] = []
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
+    
+    private(set) var allActivities: [Activity] = []
+
     //var ongoingActivities: [Activity] = []
     
     private var HisMood: Mood?
@@ -48,7 +51,7 @@ class DataStore {
         loadSuggestedActivity()
         loadsampleBuildYourBond()
         loadProfileData()
-
+        buildAllActivities()
         //loadCheckIn()
         
     }
@@ -424,10 +427,37 @@ class DataStore {
         return suggestedActivities
     }
     func updateScheduledDate(for activity: Activity, date: Date) {
-        if let index = activities.firstIndex(where: { $0.name == activity.name }) {
-            activities[index].scheduledDate = date
+
+        if let index = allActivities.firstIndex(where: {
+            $0.name == activity.name && $0.category == activity.category
+        }) {
+            allActivities[index].scheduledDate = date
+            allActivities[index].status = .scheduled
         }
     }
+
+    func getScheduledActivities() -> [Activity] {
+        return activities.filter {
+            $0.status == .scheduled && $0.scheduledDate != nil
+        }
+    }
+    func buildAllActivities() {
+        allActivities = []
+
+        // Explore
+        allActivities.append(contentsOf: activities)
+
+        // Suggested (Vibe)
+        allActivities.append(contentsOf: suggestedActivities)
+
+        // Build Your Bond
+        bondpage.forEach { page in
+            allActivities.append(contentsOf: page.activity)
+        }
+    }
+
+
+
     
     //calendar
     func getDayInfo(for date: Date, color: UIColor) -> DayInfo {

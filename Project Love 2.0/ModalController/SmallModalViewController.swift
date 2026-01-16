@@ -92,9 +92,11 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     }
     
     func didSchedule(activity: Activity, on date: Date) {
-        if let presenter = presentingViewController as? ScheduleCalendarDelegate {
-            presenter.didSchedule(activity: activity, on: date)
-        }
+        DataStore.shared.updateScheduledDate(for: activity, date: date)
+
+            // ✅ 2. Notify parent to refresh if needed
+            delegate?.didStartActivity()
+
         
         UIView.animate(withDuration: 0.2, animations: {
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
@@ -164,7 +166,11 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
         if let sheet = calendarVC.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = 24
+            sheet.preferredCornerRadius = 40
+            
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         }
         
         present(calendarVC, animated: true)

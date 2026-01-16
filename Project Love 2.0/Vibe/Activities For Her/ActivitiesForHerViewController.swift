@@ -75,20 +75,19 @@ extension ActivitiesForHerViewController: UICollectionViewDataSource {
 //        present(destinationVC, animated: false)
 //    }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//
-//        let destinationVC = storyboard.instantiateViewController(withIdentifier: "SmallModalViewController") as! SmallModalViewController
-        let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
-
         let selectedActivity = activitiesForHer[indexPath.row]
+        let destinationVC = SmallModalViewController( nibName: "SmallModalViewController", bundle: nil )
+
+        destinationVC.selectedActivity = selectedActivity
 
         if let modalData = dataStore.smallmodal.first(where: { $0.title == selectedActivity.name }) {
             destinationVC.modalData = modalData
         }
+
         destinationVC.flowSource = .activitiesForHer
         destinationVC.modalPresentationStyle = .overFullScreen
         present(destinationVC, animated: false)
+
     }
 
 
