@@ -15,8 +15,7 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
     @IBOutlet var lineView: [UIView]!
     @IBOutlet var circlesubtitleLabel: [UILabel]!
     @IBOutlet var progressLabel: UILabel!
-    
-//    private var sectionView: BUBSection1?
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,10 +29,10 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
         for btn in circleButton {
             btn.layer.cornerRadius = btn.bounds.width / 2
             btn.layer.masksToBounds = true
-            btn.layer.borderColor = UIColor.lightGray.cgColor
+//            btn.layer.borderColor = UIColor.lightGray.cgColor
             btn.layer.borderWidth = 3
             btn.backgroundColor = .white
-
+            
             // Make height = width
             if let widthConstraint = btn.constraints.first(where: { $0.firstAttribute == .height }) {
                 widthConstraint.constant = btn.bounds.width
@@ -42,40 +41,90 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    func configure(bond : BuildYourBondpage){
-        if let data: BuildYourBondpage = dataStore.getBuildYourBondPages(name : bond.Name){
-            heading.text = data.Name
-            subHeading.text = data.SubHeading
-            progressLabel.text = data.stepLabel
-            loadSectionView(bond : data)
-        }
-        
-    }
-    func loadSectionView(bond : BuildYourBondpage) {
-//        for i in 0..<circleButton.count{
-//            print(i)
-//            print(circleButton[i].frame.size.width)
-////            circleButton[i].frame.size.height = circleButton[i].frame.width
-////            circleButton[i].frame.size.height = 50
-//            circleButton[i].heightAnchor.constraint(equalToConstant: circleButton[i].frame.width).isActive = true
-//            print(circleButton[i].frame.height)
-//            circleButton[i].layer.cornerRadius = circleButton[i].frame.width / 2
-//            
-//            circleButton[i].translatesAutoresizingMaskIntoConstraints = false
-//            
-//            circleButton[i].layer.masksToBounds = true
-//            circleButton[i].backgroundColor = .white
-//            circleButton[i].layer.borderColor = UIColor.lightGray.cgColor
-//            circleButton[i].layer.borderWidth = 3
-//        }
-        for i in 0..<lineView.count{
-            lineView[i].backgroundColor = .lightGray
-            lineView[i].translatesAutoresizingMaskIntoConstraints = false
-        }
-        for i in 0..<circlesubtitleLabel.count{
+
+    func configure(bond: BuildYourBondpage) {
+
+        heading.text = bond.Name
+        subHeading.text = bond.SubHeading
+
+        // Update progress text
+        updateProgressLabel(bond: bond)
+
+        for i in 0..<circleButton.count {
+
+            // Step titles (Identify, Empathize, etc.)
             circlesubtitleLabel[i].text = bond.step[i]
-            circlesubtitleLabel[i].setContentCompressionResistancePriority(.required, for: .horizontal)
-            
+
+            // Render unlocked / locked state
+            renderCircle(at: i, bond: bond)
         }
     }
+
+    private func renderCircle(
+        at index: Int,
+        bond: BuildYourBondpage
+    ) {
+        let button = circleButton[index]
+
+        // checking if this step is unlocked?
+        let isUnlocked: Bool
+        if index == 0 {
+            isUnlocked = true
+        } else {
+            isUnlocked = bond.activity[index - 1].status == .completed
+        }
+
+        // Circle styling (unlock-based)
+        button.layer.borderColor =
+            isUnlocked ? UIColor.systemBlue.cgColor : UIColor.lightGray.cgColor
+
+        button.setTitleColor(
+            isUnlocked ? .systemBlue : .lightGray,
+            for: .normal
+        )
+
+        //  Line styling (completion-based)
+        // Line before this circle
+        if index > 0 {
+            let line = lineView[index - 1]
+            let previousCompleted =
+                bond.activity[index - 1].status == .completed
+
+            line.backgroundColor =
+                previousCompleted ? .systemBlue : .lightGray
+        }
+    }
+
+
+    
+    
+    //*****************to update subtitle heading**********************
+    
+    private func updateProgressLabel(bond: BuildYourBondpage) {
+
+        var completedCount = 0
+
+        // Count completed activities
+        for activity in bond.activity {
+            if activity.status == .completed {
+                completedCount += 1
+            }
+        }
+
+        // If all activities are completed
+        if completedCount == bond.activity.count {
+            progressLabel.text = "You've completed all steps! "
+            return
+        }
+
+        // Current step user is on
+        let stepIndex = completedCount
+        let stepNumber = stepIndex + 1
+        let stepName = bond.activity[stepIndex].name
+
+        progressLabel.text =
+        "You are currently on Step \(stepNumber): \(stepName)."
+    }
+
 }
+

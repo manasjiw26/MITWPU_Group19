@@ -7,12 +7,24 @@
 
 import UIKit
 
-class BuildYourBondViewController: UIViewController, SmallModalDelegate {
+class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondActivityCompletionDelegate {
+    
+    
+    func didCompleteBondActivity() {
+        guard let name = bondPage?.Name else { return }
+
+        bondPage = DataStore.shared.getBuildYourBondPages(name: name)
+
+        //Reload both sections
+        collectionView.reloadSections(IndexSet([0, 1, 3]))
+    }
+    
     func didStartActivity() {
         if let name = bondPage?.Name {
              bondPage = DataStore.shared.getBuildYourBondPages(name: name)
          }
-         collectionView.reloadSections(IndexSet(integer: 3))
+        collectionView.reloadSections(IndexSet([0, 1, 3]))
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -22,7 +34,8 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate {
             bondPage = DataStore.shared.getBuildYourBondPages(name: name)
         }
 
-        collectionView.reloadSections(IndexSet(integer: 3))
+        collectionView.reloadSections(IndexSet([0, 1, 3]))
+
     }
 
     
@@ -49,12 +62,23 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate {
     func registerCell(){
         
         
-        collectionView.register(UINib(nibName: "BUBSection1CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondHeaderCell")
-        collectionView.register(UINib(nibName: "BUBSection2CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondBadgeCell")
-        collectionView.register(UINib(nibName: "BUBSection3CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondHIWCell")
-        collectionView.register(UINib(nibName: "BondHIWCell", bundle: nil), forCellWithReuseIdentifier: "BondProgressCell")
-        collectionView.register(UINib(nibName: "BUBSection4CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondActivitiesCell")
-        collectionView.register(UINib(nibName: "TitleCollectionResuableView", bundle: nil), forSupplementaryViewOfKind: "title", withReuseIdentifier: "title_cell")
+        collectionView.register(
+            UINib(nibName: "BUBSection1CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondHeaderCell")
+        collectionView.register(
+            UINib(nibName: "BUBSection2CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondBadgeCell")
+        collectionView.register(
+            UINib(nibName: "BUBSection3CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondHIWCell")
+        collectionView.register(
+            UINib(nibName: "BondHIWCell", bundle: nil), forCellWithReuseIdentifier: "BondProgressCell")
+        collectionView.register(
+            UINib(nibName: "BUBSection4CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BondActivitiesCell")
+        collectionView.register(
+            UINib(nibName: "TitleCollectionResuableView", bundle: nil), forSupplementaryViewOfKind: "title", withReuseIdentifier: "title_cell")
+        collectionView.register(
+            UINib(nibName: "EarnedBadgeCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "EarnedBadgeCell"
+        )
+
     }
     func generateLayout() ->UICollectionViewLayout{
         let layout = UICollectionViewCompositionalLayout { section, env in
@@ -205,10 +229,32 @@ extension BuildYourBondViewController:  UICollectionViewDataSource {
             return cell
 
         case 1:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BondBadgeCell", for: indexPath) as! BUBSection2CollectionViewCell
-            if let bp = bondPage {
-                cell.configureCells(bond: bp)
+
+            guard let bond = bondPage else {
+                return UICollectionViewCell()
             }
+
+            let isJourneyCompleted = bond.activity.allSatisfy { activity in
+                activity.status == .completed
+            }
+
+            if isJourneyCompleted {
+
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "EarnedBadgeCell",
+                    for: indexPath
+                ) as! EarnedBadgeCollectionViewCell
+
+                cell.configure(bond: bond)
+                return cell
+            }
+
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "BondBadgeCell",
+                for: indexPath
+            ) as! BUBSection2CollectionViewCell
+
+            cell.configureCells(bond: bond)
             return cell
 
         case 2:
@@ -252,6 +298,7 @@ extension BuildYourBondViewController:  UICollectionViewDataSource {
         }
         return title
     }
+    
 }
 extension BuildYourBondViewController: UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView,
