@@ -64,24 +64,21 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
 
     // MARK: - Heart Management
 
-    func addHeart(index: Int, animate: Bool = false) {
+    func addHeart(index: Int, memoryID: UUID, animate: Bool = false) {
         if animate { animateCapOpening() }
 
         let heart = SKSpriteNode(texture: heartTexture)
         heart.size = CGSize(width: 50, height: 45)
-        heart.name = "heart_node" // Used for targeted clearing in ViewController
+        heart.name = "heart_\(memoryID.uuidString)"
         heart.userData = ["index": index]
         heart.position = CGPoint(x: size.width / 2, y: size.height * 0.88)
-
         if sharedHeartPhysicsBody == nil {
             sharedHeartPhysicsBody = SKPhysicsBody(texture: heartTexture, alphaThreshold: 0.5, size: heart.size)
         }
-        
         heart.physicsBody = sharedHeartPhysicsBody?.copy() as? SKPhysicsBody
         heart.physicsBody?.categoryBitMask = PhysicsCategory.heart
         heart.physicsBody?.collisionBitMask = PhysicsCategory.heart | PhysicsCategory.jar
         heart.physicsBody?.restitution = 0.3
-        
         addChild(heart)
     }
 
@@ -100,7 +97,14 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         let tappedNodes = nodes(at: location)
         
         for node in tappedNodes {
-            if node.name == "heart_node", let index = node.userData?["index"] as? Int {
+            if let name = node.name, name.hasPrefix("heart_") {
+
+                let uuidString = String(name.dropFirst("heart_".count))
+                guard let uuid = UUID(uuidString: uuidString) else { return }
+
+                // ✅ find correct memory index dynamically
+                guard let index = dataStore.savedMemories.firstIndex(where: { $0.id == uuid }) else { return }
+
                 NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: index)
             }
         }
@@ -114,11 +118,13 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
-
+    func removeHeart(memoryID: UUID) {
+        let nodeName = "heart_\(memoryID.uuidString)"
+        childNode(withName: nodeName)?.removeFromParent()
+    }
     override func update(_ currentTime: TimeInterval) {
         if let accel = motionData {
-            // Gravity follows phone tilt (y is inverted for natural feel)
-            self.physicsWorld.gravity = CGVector(dx: accel.x * 12, dy: accel.y * -12)
+            self.physicsWorld.gravity = CGVector(dx: accel.x * 12, dy: accel.y * 12)
         }
     }
 }

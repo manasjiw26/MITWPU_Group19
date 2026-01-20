@@ -19,6 +19,10 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showMemoryDisplay(_:)), name: NSNotification.Name("OpenMemory"), object: nil)
+        memoryLaneCollectionView.alwaysBounceVertical = false
+        memoryLaneCollectionView.showsVerticalScrollIndicator = false
+        memoryLaneCollectionView.contentInsetAdjustmentBehavior = .never
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -48,20 +52,18 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
 
     private func syncJarHearts() {
         guard let scene = MemoryJarView.scene as? MemoryJarScene else { return }
-        
-        // Filter nodes by name to target ONLY hearts
-        let currentHearts = scene.children.filter { $0.name == "heart_node" }
+        let currentHearts = scene.children.filter { $0.name?.hasPrefix("heart_") == true }
         let actualDataCount = dataStore.savedMemories.count
         
         // Only refresh if the count is incorrect (prevents doubling hearts)
         if currentHearts.count != actualDataCount {
             // "Surgical" removal: Jar body and Cap stay because their names are different
-            scene.enumerateChildNodes(withName: "heart_node") { node, _ in
-                node.removeFromParent()
-            }
+            scene.children
+                .filter { $0.name?.hasPrefix("heart_") == true }
+                .forEach { $0.removeFromParent() }
             
-            for (index, _) in dataStore.savedMemories.enumerated() {
-                scene.addHeart(index: index, animate: false)
+            for (index, memory) in dataStore.savedMemories.enumerated() {
+                scene.addHeart(index: index, memoryID: memory.id, animate: false)
             }
         }
     }
@@ -72,9 +74,8 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             
             if let scene = self.MemoryJarView.scene as? MemoryJarScene {
                 let newIndex = dataStore.savedMemories.count - 1
-                // Add ONE heart with the "Cap opening" animation
-                scene.addHeart(index: newIndex, animate: true)
-                
+                let memory = dataStore.savedMemories[newIndex]
+                scene.addHeart(index: newIndex, memoryID: memory.id, animate: true)
                 let indexPath = IndexPath(item: newIndex, section: 0)
                 self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
             }
@@ -95,18 +96,35 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
     }
 
     private func generateLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalHeight(1.0), heightDimension: .fractionalHeight(1.0))
+        
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
+        )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(110), heightDimension: .absolute(110))
+        
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(110),
+            heightDimension: .absolute(110)
+        )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 1
+        section.interGroupSpacing = 2   // space between cells
         section.orthogonalScrollingBehavior = .continuous
+        
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12) // left-right spacing
+        
         return UICollectionViewCompositionalLayout(section: section)
     }
 
     @objc func showMemoryDisplay(_ notification: Notification) {
+        
         guard let index = notification.object as? Int else { return }
+        
+        // ✅ prevents index out of range crash
+        guard index >= 0 && index < dataStore.savedMemories.count else { return }
+        
         if let displayVC = storyboard?.instantiateViewController(withIdentifier: "memoryDisplay") as? memoryDisplay {
             displayVC.memory = dataStore.savedMemories[index]
             displayVC.modalPresentationStyle = .pageSheet

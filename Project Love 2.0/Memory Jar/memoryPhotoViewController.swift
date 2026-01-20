@@ -1,5 +1,5 @@
 import UIKit
-
+import SpriteKit
 class memoryPhotoViewController: UIViewController,
                                  UICollectionViewDataSource,
                                  UICollectionViewDelegate,
@@ -64,7 +64,7 @@ class memoryPhotoViewController: UIViewController,
             scrollPosition: .centeredHorizontally
         )
     }
-
+    
     // MARK: - Menu (•••)
     func setupMenu() {
 
@@ -106,9 +106,20 @@ class memoryPhotoViewController: UIViewController,
         updateUI()
     }
 
-    // MARK: - Delete
     func deleteMemory() {
+
+        // ✅ Step 1: take the memory before removing
+        let deletedMemory = dataStore.savedMemories[currentIndex]
+
+        // ✅ Step 2: delete from datastore
         dataStore.savedMemories.remove(at: currentIndex)
+
+        // ✅ Step 3: delete ONLY that heart from jar (NO notifications)
+        if let jarVC = navigationController?.viewControllers.first(where: { $0 is MemoryJarViewController }) as? MemoryJarViewController,
+           let scene = jarVC.MemoryJarView.scene as? MemoryJarScene {
+
+            scene.removeHeart(memoryID: deletedMemory.id)
+        }
 
         if dataStore.savedMemories.isEmpty {
             navigationController?.popViewController(animated: true)

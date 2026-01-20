@@ -56,24 +56,38 @@ class MemoryLaneViewController: UIViewController,
 
     private func generateLayout() -> UICollectionViewLayout {
 
+        let spacing: CGFloat = 2
+        let columns: CGFloat = 3
+        
+        // ITEM
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0 / 3.0),
+            widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalHeight(1.0)
         )
-
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: spacing/2,
+                                                     leading: spacing/2,
+                                                     bottom: spacing/2,
+                                                     trailing: spacing/2)
 
+        // GROUP (Row with 3 items)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalWidth(1.0 / 3.0)
+            heightDimension: .fractionalWidth(1.0 / columns)
         )
-
+        
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
-            subitems: [item]
+            subitem: item,
+            count: Int(columns)
         )
 
+        // SECTION
         let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: spacing,
+                                                        leading: spacing,
+                                                        bottom: spacing,
+                                                        trailing: spacing)
 
         return UICollectionViewCompositionalLayout(section: section)
     }
