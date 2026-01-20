@@ -417,6 +417,16 @@ extension ExploreViewController: ActivityHeaderDelegate {
 //        case 2: // Completed → Open feedback / summary
 //            let activity = DataStore.shared.getCompletedActivities()[indexPath.row]
 //            openActivity(activity)
+        case 3:
+            let vc = CustomActivityPickerViewController(
+                nibName: "CustomActivityPickerViewController",
+                bundle: nil
+            )
+
+            vc.modalPresentationStyle = .overCurrentContext
+            vc.modalTransitionStyle = .crossDissolve
+
+            present(vc, animated: true)
 
 
         default:
