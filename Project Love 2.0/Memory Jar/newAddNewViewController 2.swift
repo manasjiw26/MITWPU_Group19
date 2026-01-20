@@ -3,7 +3,7 @@ import PhotosUI
 import MapKit
 
 class NewAddNewViewController: UIViewController {
-    
+
     // MARK: - Outlets
     @IBOutlet var textFieldView: [UIView]!
     @IBOutlet weak var dateTextField: UITextField!
@@ -11,11 +11,11 @@ class NewAddNewViewController: UIViewController {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var memoryImageView: UIImageView!
-    
+
     // MARK: - Properties
     private let datePicker = UIDatePicker()
     private let placeholderText = "Type here..."
-    
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,38 +24,34 @@ class NewAddNewViewController: UIViewController {
         setupInteractions()
         setupNotifications()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         applyCornerStyles()
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
 
-    // MARK: - Setup Logic
+    // MARK: - Setup
     private func setupUI() {
-        // Remove text field borders to show custom container styling
         [dateTextField, memoryTitleTextField, locationTextField].forEach {
             $0?.borderStyle = .none
         }
-        
-        // Image View styling
+
         memoryImageView.layer.cornerRadius = 15
         memoryImageView.clipsToBounds = true
         memoryImageView.contentMode = .scaleAspectFill
         memoryImageView.isUserInteractionEnabled = true
-        
-        // Date Picker setup
+
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.maximumDate = Date()
         datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         dateTextField.inputView = datePicker
         updateDateTextField(date: Date())
-        
-        // Description TextView placeholder
+
         descriptionTextView.text = placeholderText
         descriptionTextView.textColor = .placeholderText
     }
@@ -69,23 +65,24 @@ class NewAddNewViewController: UIViewController {
     private func setupInteractions() {
         let imageTap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         memoryImageView.addGestureRecognizer(imageTap)
-        
+
         let dismissTap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         dismissTap.cancelsTouchesInView = false
         view.addGestureRecognizer(dismissTap)
     }
 
     private func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     private func applyCornerStyles() {
-        textFieldView?.forEach { container in
-            container.layer.cornerRadius = 12
-            container.layer.masksToBounds = true
-            container.layer.borderWidth = 1.0
-            container.layer.borderColor = UIColor.systemGray6.cgColor
+        textFieldView.forEach {
+            $0.layer.cornerRadius = 12
+            $0.layer.borderWidth = 1
+            $0.layer.borderColor = UIColor.systemGray6.cgColor
         }
     }
 
@@ -99,25 +96,30 @@ class NewAddNewViewController: UIViewController {
     }
 
     @IBAction func cancelButtonTapped(_ sender: Any) {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
 
     @IBAction func saveButtonTapped(_ sender: Any) {
+
         let currentImage = memoryImageView.image
         let placeholderImage = UIImage(named: "Empty_Image1")
-        
-        // 1. Image Validation
+
+        // Image validation
         if currentImage == nil || currentImage?.pngData() == placeholderImage?.pngData() {
             showError(message: "Please select a photo to save this memory.")
             return
         }
 
-        // 2. Data Preparation
-        let title = memoryTitleTextField.text ?? ""
+        // ✅ TITLE FIX (DEFAULT = "Memory")
+        let rawTitle = memoryTitleTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let title = rawTitle.isEmpty ? "Memory" : rawTitle
+
         let location = locationTextField.text ?? ""
-        let description = (descriptionTextView.text == placeholderText) ? "" : descriptionTextView.text ?? ""
-        
-        // 3. Create Memory Object (Using all your fields)
+        let description = (descriptionTextView.text == placeholderText)
+            ? ""
+            : descriptionTextView.text ?? ""
+
         let newMemory = Memory(
             date: datePicker.date,
             imageName: "captured_memory",
@@ -126,17 +128,20 @@ class NewAddNewViewController: UIViewController {
             description: description,
             uiImage: currentImage!
         )
-        
-        // 4. Persistence
+
         dataStore.savedMemories.append(newMemory)
-        
-        // 5. Success Feedback
-        let alert = UIAlertController(title: nil, message: "Memory Added Successfully!", preferredStyle: .alert)
-        self.present(alert, animated: true)
-        
+
+        let alert = UIAlertController(title: nil,
+                                      message: "Memory Added Successfully!",
+                                      preferredStyle: .alert)
+        present(alert, animated: true)
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
             alert.dismiss(animated: true) {
-                NotificationCenter.default.post(name: NSNotification.Name("MemoryAdded"), object: nil)
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("MemoryAdded"),
+                    object: nil
+                )
                 self.dismiss(animated: true)
             }
         }
@@ -150,7 +155,9 @@ class NewAddNewViewController: UIViewController {
     }
 
     private func showError(message: String) {
-        let alert = UIAlertController(title: "Missing Info", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Missing Info",
+                                      message: message,
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
@@ -158,14 +165,15 @@ class NewAddNewViewController: UIViewController {
 
 // MARK: - Location Search
 extension NewAddNewViewController: LocationSearchDelegate {
+
     func didSelectLocation(_ name: String) {
         locationTextField.text = name
     }
-    
+
     private func presentLocationPicker() {
         performSegue(withIdentifier: "goToSearch", sender: self)
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToSearch",
            let destination = segue.destination as? LocationSearchViewController {
@@ -175,16 +183,20 @@ extension NewAddNewViewController: LocationSearchDelegate {
 }
 
 // MARK: - Image Picking
-extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+extension NewAddNewViewController: PHPickerViewControllerDelegate,
+                                   UIImagePickerControllerDelegate,
+                                   UINavigationControllerDelegate {
+
     @objc private func imageTapped() {
-        let alert = UIAlertController(title: "Choose Memory Photo", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Choose Memory Photo",
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default) { _ in self.openCamera() })
         alert.addAction(UIAlertAction(title: "Gallery", style: .default) { _ in self.openGallery() })
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        self.present(alert, animated: true)
+        present(alert, animated: true)
     }
-    
+
     private func openCamera() {
         guard UIImagePickerController.isSourceTypeAvailable(.camera) else { return }
         let picker = UIImagePickerController()
@@ -193,7 +205,7 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePicker
         picker.allowsEditing = true
         present(picker, animated: true)
     }
-    
+
     private func openGallery() {
         var config = PHPickerConfiguration()
         config.filter = .images
@@ -201,7 +213,7 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePicker
         picker.delegate = self
         present(picker, animated: true)
     }
-    
+
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         results.first?.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] img, _ in
@@ -212,8 +224,9 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePicker
             }
         }
     }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         if let edited = info[.editedImage] as? UIImage {
             memoryImageView.image = edited
@@ -225,18 +238,21 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate, UIImagePicker
 
 // MARK: - Keyboard & Text Delegates
 extension NewAddNewViewController: UITextFieldDelegate, UITextViewDelegate {
-    
+
     @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        guard let keyboardSize =
+            (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else { return }
+
         var shiftHeight: CGFloat = 0
-        
+
         if locationTextField.isFirstResponder {
             shiftHeight = keyboardSize.height * 0.7
         } else if descriptionTextView.isFirstResponder {
-            shiftHeight = keyboardSize.height * 1.0
+            shiftHeight = keyboardSize.height
         }
 
-        if self.view.frame.origin.y == 0 {
+        if view.frame.origin.y == 0 {
             UIView.animate(withDuration: 0.3) {
                 self.view.frame.origin.y -= shiftHeight
             }
@@ -244,7 +260,7 @@ extension NewAddNewViewController: UITextFieldDelegate, UITextViewDelegate {
     }
 
     @objc private func keyboardWillHide(notification: NSNotification) {
-        if self.view.frame.origin.y != 0 {
+        if view.frame.origin.y != 0 {
             UIView.animate(withDuration: 0.3) {
                 self.view.frame.origin.y = 0
             }
@@ -265,7 +281,7 @@ extension NewAddNewViewController: UITextFieldDelegate, UITextViewDelegate {
             textView.textColor = .label
         }
     }
-    
+
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = placeholderText
