@@ -15,6 +15,9 @@ class SmallModalViewController: UIViewController {
     var flowSource: ActivityFlowSource?
     var selectedActivity: Activity?
     weak var delegate: SmallModalDelegate?
+    var selectedActivityIndex: Int?
+    var bondName: String?
+
     
     @IBOutlet weak var modalView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -125,6 +128,12 @@ class SmallModalViewController: UIViewController {
            stepsVC.activitytitle = selectedActivity?.name ?? ""
            stepsVC.activity = selectedActivity
            stepsVC.flowSource = flowSource
+        
+        stepsVC.selectedActivityIndex = selectedActivityIndex
+        stepsVC.bondName = bondName
+        stepsVC.bondDelegate = presentingViewController as? BondActivityCompletionDelegate
+
+
            stepsVC.modalPresentationStyle = .fullScreen
 
            if let presenter = self.presentingViewController {

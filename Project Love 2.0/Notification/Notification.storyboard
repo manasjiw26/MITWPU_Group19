@@ -24,7 +24,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0HL-c5-fHl">
-                                <rect key="frame" x="16" y="274.66666666666674" width="361" height="509.33333333333326"/>
+                                <rect key="frame" x="16" y="284.66666666666674" width="361" height="499.33333333333326"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oYq-6q-HIP">
                                     <size key="itemSize" width="128" height="128"/>
@@ -51,7 +51,7 @@
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="0HL-c5-fHl" secondAttribute="trailing" constant="16" id="5X4-7M-aZe"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="0HL-c5-fHl" secondAttribute="bottom" id="AbF-tN-P8O"/>
                             <constraint firstItem="0HL-c5-fHl" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="Wt1-Rc-95s"/>
-                            <constraint firstItem="0HL-c5-fHl" firstAttribute="top" secondItem="ogx-fl-pdI" secondAttribute="bottom" constant="10" id="eGi-fo-pnL"/>
+                            <constraint firstItem="0HL-c5-fHl" firstAttribute="top" secondItem="ogx-fl-pdI" secondAttribute="bottom" constant="20" id="eGi-fo-pnL"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ogx-fl-pdI" secondAttribute="trailing" constant="16" id="qOY-0g-UKF"/>
                             <constraint firstItem="ogx-fl-pdI" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="tIh-vo-eH5"/>
                         </constraints>

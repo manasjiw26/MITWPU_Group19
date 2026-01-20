@@ -107,7 +107,7 @@ class DataStore {
     func loadSampleData() {
         let sampleActivities: [Activity] = [
 
-            // MARK: - Fun & Playful
+            // Fun & Playful
             Activity(
                 name: "Chill & Glow Sesh",
                 description: "Facemasks, candles, chill beats — just cozy vibes and glow time",
@@ -135,7 +135,7 @@ class DataStore {
                 category: "Fun & Playful"
             ),
 
-            // MARK: - Daily Dose of Us
+            // Daily Dose of Us
             Activity(
                 name: "Memory Lane Marathon",
                 description: "Make a mini reel using your photos and favorite audio",
@@ -322,7 +322,55 @@ class DataStore {
                 StepsToFollow(number: 4, title: "Cocoon & Connect",
                               descriptionLabel: "Get comfortable inside, press play, and enjoy.")
             ]
-
+        case "The Soft Start-Up":
+            return [
+                StepsToFollow(number: 1, title: "Sit Together",
+                         descriptionLabel: "Sit next to each other or face the same direction."),
+                     StepsToFollow(number: 2, title: "Pick One Word",
+                         descriptionLabel: "Choose one word that captures what hurt."),
+                     StepsToFollow(number: 3, title: "Reveal Together",
+                         descriptionLabel: "Count to three and reveal the words at the same time."),
+                     StepsToFollow(number: 4, title: "Pause",
+                         descriptionLabel: "Pause and take in both words without reacting.")
+            ]
+            
+        case "The Empathy Bridge":
+            return [
+                StepsToFollow(number: 1, title: "Look at the Word",
+                    descriptionLabel: "Read your partner’s chosen word."),
+                StepsToFollow(number: 2, title: "Make a Guess",
+                    descriptionLabel: "Share your guess in one sentence."),
+                StepsToFollow(number: 3, title: "Confirm",
+                    descriptionLabel: "Partner responds with Yes or Not Quite."),
+                StepsToFollow(number: 4, title: "Clarify",
+                    descriptionLabel: "Clarify in one short sentence if needed.")
+            ]
+            
+            
+        case "Collaborative Sprint":
+            return [
+                StepsToFollow(number: 1, title: "Recall the Moment",
+                        descriptionLabel: "Think about when things escalated."),
+                StepsToFollow(number: 2, title: "Name the Behavior",
+                        descriptionLabel: "Each name one behavior that made it worse."),
+                StepsToFollow(number: 3, title: "Choose One Change",
+                        descriptionLabel: "Agree on one behavior to stop next time."),
+                StepsToFollow(number: 4, title: "Say It Together",
+                        descriptionLabel: "Say the change out loud together.")
+            ]
+            
+        case "The Pattern Interrupt":
+            return [
+                StepsToFollow(number: 1, title: "Pick an Activity",
+                        descriptionLabel: "Choose a neutral activity you can do immediately."),
+                StepsToFollow(number: 2, title: "Do It Together",
+                        descriptionLabel: "Do the activity without discussing the conflict."),
+                StepsToFollow(number: 3, title: "Closure Line",
+                        descriptionLabel: "One person says: ‘We’re good.’"),
+                StepsToFollow(number: 4, title: "Move On",
+                        descriptionLabel: "Continue the day without reopening the issue.")
+            ]
+            
 
         default:
             return []
@@ -339,19 +387,50 @@ class DataStore {
         stepLabel:  "You are currently on Step 1: Identifying the Conflict.",
         step: ["Identify","Empathize","Solution","Sustain"],
         activity: [
-        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together"),
-        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together"),
-        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together"),
-        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "Activityimage", time: "5mins", status: .none,category: "Navigate Conflict Together")
+        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "noContextReveal", time: "5mins", status: .none,category: "Navigate Conflict Together"),
+        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "GuessBeforeYouAreTold", time: "5mins", status: .none,category: "Navigate Conflict Together"),
+        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "DeletetheGlitch", time: "5mins", status: .none,category: "Navigate Conflict Together"),
+        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "BacktoUs", time: "5mins", status: .none,category: "Navigate Conflict Together")
     ],
         badge: "Harmony Seeker",
-        badgesubHeading: "Master the art of peaceful resolution.",
+        badgesubHeading: "Master the art of peaceful resolution.", badgeImageName: "HarmonySeekerBadge",
         HIWStep: ["Identify the Conflict","Empathizing with Perspectives","Crafting Joint Solutions","Sustaining Harmony"]
             )
         ]
         self.bondpage = bond
     }
     
+    
+    // Badge Popup Data
+    func getBadgePopupData(for bondName: String) -> BadgePopupData? {
+        switch bondName {
+
+        case "Navigate Conflict Together":
+            return BadgePopupData(
+                title: "Harmony Seeker",
+                subtitle: "You’ve mastered the art of peaceful resolution.",
+                imageName: "HarmonySeekerBadge"
+            )
+
+        case "Establishing Good Communication":
+            return BadgePopupData(
+                title: "Communication Champ",
+                subtitle: "You’ve built a strong foundation of open dialogue.",
+                imageName: "CommunicationBadge"
+            )
+
+        case "Rekindle Honeymoon Phase":
+            return BadgePopupData(
+                title: "Spark Keeper",
+                subtitle: "You’ve reignited closeness and emotional warmth.",
+                imageName: "SparkKeeperBadge"
+            )
+
+        default:
+            return nil
+        }
+    }
+
     func markActivityCompleted(activity: Activity) {
         if let index = activities.firstIndex(where: {
             $0.name == activity.name &&
@@ -487,8 +566,50 @@ class DataStore {
                 clockImageName: "clock",
                 timerLabel: "5 mins"
             ),
-            SmallModalData(title: "Cozy Cocoon", mainImageName: "Cozy Cocoon", descriptionLabel: "Create a comfy little fort, grab snacks and play something relaxing. Settle in and enjoy your cozy escape.", pointsymbol: "star.fill", pointsLabel: "10", clockImageName: "clock", timerLabel: "15 mins")
-            
+            SmallModalData(
+                title: "Cozy Cocoon",
+                mainImageName: "Cozy Cocoon",
+                descriptionLabel: "Create a comfy little fort, grab snacks and play something relaxing. Settle in and enjoy your cozy escape.",
+                pointsymbol: "star.fill",
+                pointsLabel: "10",
+                clockImageName: "clock",
+                timerLabel: "15 mins")
+            ,
+            SmallModalData(
+                title: "The Soft Start-Up",
+                mainImageName: "noContextReveal",
+                descriptionLabel: "One word can cut through a lot of noise. This level creates a quiet reveal that often makes the real issue obvious without restarting the fight.",
+                pointsymbol: "star.fill",
+                pointsLabel: "10",
+                clockImageName: "clock",
+                timerLabel: "5 mins")
+            ,
+            SmallModalData(
+                title: "The Empathy Bridge",
+                mainImageName: "GuessBeforeYouAreTold",
+                descriptionLabel: "Understanding becomes a small challenge here. Guessing first brings curiosity into the moment and often softens tension before anything is explained.",
+                pointsymbol: "star.fill",
+                pointsLabel: "20",
+                clockImageName: "clock",
+                timerLabel: "10 mins")
+            ,
+            SmallModalData(
+                title: "Collaborative Sprint",
+                mainImageName: "DeletetheGlitch",
+                descriptionLabel: "A simple upgrade that removes one move that keeps causing friction, helping future conflicts play out more smoothly.",
+                pointsymbol: "star.fill",
+                pointsLabel: "30",
+                clockImageName: "clock",
+                timerLabel: "10 mins")
+            ,
+            SmallModalData(
+                title: "The Pattern Interrupt",
+                mainImageName: "BacktoUs",
+                descriptionLabel: "Closure doesn’t always need more words. This level uses a simple shared action to reset the mood and help both people move forward.",
+                pointsymbol:"star.fill",
+                pointsLabel: "40",
+                clockImageName: "clock",
+                timerLabel: "5 mins")
             // Add more for other activities
         ]
         
@@ -519,6 +640,7 @@ class DataStore {
                 selectedMood: nil
                 )]
     }
+
     func loadMoodOptions() -> [Mood] {
         return [
             Mood(id: 1, title: "Joyful", imageName: "Joyful"),
@@ -542,6 +664,26 @@ class DataStore {
             Mood(id: 15, title: "Angry", imageName: "Angry")
         ]
     }
+    
+    
+    // unlock of activities in build your bond
+    func unlockNextBondActivity( bondName: String,
+                                 completedIndex: Int) {
+       
+        guard let pageIndex = bondpage.firstIndex(where: { $0.Name == bondName }) else {
+              return
+          }
+
+          // Mark current as completed
+          bondpage[pageIndex].activity[completedIndex].status = .completed
+
+          // Unlock next if exists
+          let nextIndex = completedIndex + 1
+          if nextIndex < bondpage[pageIndex].activity.count {
+              bondpage[pageIndex].activity[nextIndex].status = .none
+          }
+    }
+
 
 }
 // Create one shared instance

@@ -7,24 +7,44 @@
 
 import UIKit
 
-class BuildYourBondViewController: UIViewController {
+class BuildYourBondViewController: UIViewController, SmallModalDelegate {
+    func didStartActivity() {
+        if let name = bondPage?.Name {
+             bondPage = DataStore.shared.getBuildYourBondPages(name: name)
+         }
+         collectionView.reloadSections(IndexSet(integer: 3))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+      
+        if let name = selectedbondOption?.name {
+            bondPage = DataStore.shared.getBuildYourBondPages(name: name)
+        }
+
+        collectionView.reloadSections(IndexSet(integer: 3))
+    }
+
     
     @IBOutlet weak var collectionView: UICollectionView!
     var selectedbondOption: BuildYourBond?
     var bondPage: BuildYourBondpage?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        registerCell()
+         collectionView.delegate = self
+         collectionView.dataSource = self
+         registerCell()
 
-        guard let selectedBond = selectedbondOption else { return }
+         guard let selectedBond = selectedbondOption else { return }
 
-        let page = dataStore.getBuildYourBondPages(name: selectedBond.name)
-        self.bondPage = page
+         bondPage = DataStore.shared.getBuildYourBondPages(
+             name: selectedBond.name
+         )
 
-        collectionView.setCollectionViewLayout(generateLayout(), animated: false)
+         collectionView.setCollectionViewLayout(generateLayout(), animated: false)
+         collectionView.reloadData()
     }
     func registerCell(){
         
@@ -171,7 +191,7 @@ extension BuildYourBondViewController:  UICollectionViewDataSource {
             return 1
         }
         else {
-            return 4
+            return bondPage?.activity.count ?? 0
         }
     }
     
@@ -206,10 +226,12 @@ extension BuildYourBondViewController:  UICollectionViewDataSource {
 
             if let bp = bondPage {
                 let activity = bp.activity[indexPath.item]
+              
                 cell.configureCells(
                     activity: activity,
-                    index: indexPath.item,
-                    total: bp.activity.count
+                       index: indexPath.item,
+                       total: bp.activity.count,
+                       activities: bp.activity
                 )
             }
 
@@ -232,9 +254,43 @@ extension BuildYourBondViewController:  UICollectionViewDataSource {
     }
 }
 extension BuildYourBondViewController: UICollectionViewDelegate{
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 0{
-            
-        }
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+        
+        guard indexPath.section == 3 else { return }
+            guard let bp = bondPage else { return }
+
+            let activity = bp.activity[indexPath.item]
+
+            if indexPath.item > 0 {
+                let previous = bp.activity[indexPath.item - 1]
+                guard previous.status == .completed else { return }
+            }
+
+            openActivity(activity, index: indexPath.item)
+    }
+    
+    
+    private func openActivity(_ activity: Activity, index: Int) {
+        let modalVC = SmallModalViewController(
+            nibName: "SmallModalViewController",
+            bundle: nil
+        )
+        
+        modalVC.selectedActivity = activity
+        modalVC.selectedActivityIndex = index
+        modalVC.bondName = bondPage?.Name
+        modalVC.flowSource = .explore
+        modalVC.delegate = self
+        
+        
+        if let modal = DataStore.shared.smallmodal.first(
+              where: { $0.title == activity.name }
+          ) {
+              modalVC.modalData = modal
+          }
+
+          modalVC.modalPresentationStyle = .overFullScreen
+          present(modalVC, animated: false)
     }
 }

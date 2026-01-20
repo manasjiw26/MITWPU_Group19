@@ -113,6 +113,7 @@ struct Message {
 enum ActivityFlowSource {
     case activitiesForHer
     case explore
+    
 }
 struct DailyCheckInResult {
     let activityTitle: String
@@ -125,11 +126,20 @@ struct BuildYourBondpage {
     var stepLabel: String
     var step: [String]
     var activity : [Activity]
+    
     var badge : String
     var badgesubHeading: String
-    var HIWStep : [String]
+    var badgeImageName: String
     
+    var HIWStep : [String]
 }
+
+struct BadgePopupData {
+    let title: String
+    let subtitle: String
+    let imageName: String
+}
+
 struct MemoryItem {
     let imageName: String
 }

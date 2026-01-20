@@ -12,6 +12,13 @@ class FeedBackViewController: UIViewController {
     var feedbackItem: FeedBackGiven!
     var flowSource: ActivityFlowSource?
     var activity: Activity?
+
+    var bondName: String?
+    var selectedActivityIndex: Int?
+    
+    weak var bondDelegate: BondActivityCompletionDelegate?
+
+
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -89,38 +96,57 @@ class FeedBackViewController: UIViewController {
     }
     @IBAction func doneTapped(_ sender: UIButton) {
         // Save feedback
-            DataStore.shared.saveFeedback(feedbackItem)
-
-            // Mark activity completed
         if let activity = activity {
-            DataStore.shared.markActivityCompleted(activity: activity)
+               DataStore.shared.markActivityCompleted(activity: activity)
+           }
+
+        // unlovk next activity
+           guard
+               let bondName = bondName,
+               let completedIndex = selectedActivityIndex,
+               let page = DataStore.shared.getBuildYourBondPages(name: bondName)
+           else {
+               dismissAll()
+               return
+           }
+
+           DataStore.shared.unlockNextBondActivity(
+               bondName: bondName,
+               completedIndex: completedIndex
+           )
+
+           let isLastActivity = completedIndex == page.activity.count - 1
+
+           if isLastActivity {
+               dismissAndShowBadge()
+           } else {
+               dismissAll()
+           }
+        
+        // Ongoing count
+        let ongoingCount = UserDefaults.standard.integer(
+            forKey: "ongoingActivityCount"
+        )
+        let newOngoing = max(0, ongoingCount - 1)
+        UserDefaults.standard.set(newOngoing, forKey: "ongoingActivityCount")
+        
+        // Completed count
+        let completedCount = UserDefaults.standard.integer(
+            forKey: "completedActivityCount"
+        )
+        UserDefaults.standard.set(
+            completedCount + 1,
+            forKey: "completedActivityCount"
+        )
+        
+        // Dismiss screens
+        var topVC: UIViewController? = self
+        while let presenter = topVC?.presentingViewController {
+            topVC = presenter
         }
-
-            // 🔽 Ongoing count
-            let ongoingCount = UserDefaults.standard.integer(
-                forKey: "ongoingActivityCount"
-            )
-            let newOngoing = max(0, ongoingCount - 1)
-            UserDefaults.standard.set(newOngoing, forKey: "ongoingActivityCount")
-
-            // 🔼 Completed count
-            let completedCount = UserDefaults.standard.integer(
-                forKey: "completedActivityCount"
-            )
-            UserDefaults.standard.set(
-                completedCount + 1,
-                forKey: "completedActivityCount"
-            )
-
-            // Dismiss screens
-            var topVC: UIViewController? = self
-            while let presenter = topVC?.presentingViewController {
-                topVC = presenter
-            }
-            topVC?.dismiss(animated: true)
-
+        topVC?.dismiss(animated: true)
+        
     }
-    
     
     @IBAction func updateMoodButton(_ sender: Any) {
         let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
@@ -136,6 +162,66 @@ class FeedBackViewController: UIViewController {
         present(vc, animated: true)
         
     }
+    
+    private func showBadgePopup(from page: BuildYourBondpage) {
+
+        let storyboard = UIStoryboard(name: "BuildYourBond", bundle: nil)
+
+        let vc = storyboard.instantiateViewController(
+            withIdentifier: "BadgePopupViewController"
+        ) as! BadgePopUPViewController
+
+        vc.data = BadgePopupData(
+            title: page.badge,
+            subtitle: page.badgesubHeading,
+            imageName: page.badgeImageName
+        )
+
+        vc.modalPresentationStyle = .overFullScreen
+
+        UIApplication.shared
+            .connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?
+            .rootViewController?
+            .present(vc, animated: true)
+    }
+
+    
+    private func dismissAndShowBadge() {
+        var rootVC: UIViewController? = self
+
+        while let presenter = rootVC?.presentingViewController {
+            rootVC = presenter
+        }
+
+        // Dismiss everything first
+        rootVC?.dismiss(animated: true) {
+            //  Present badge popup after dismissal
+            let storyboard = UIStoryboard(
+                name: "BuildYourBond",
+                bundle: nil
+            )
+
+            let badgeVC = storyboard.instantiateViewController(
+                withIdentifier: "BadgePopupViewController"
+            ) as! BadgePopUPViewController
+            
+            badgeVC.bondName = self.bondName
+            
+            badgeVC.modalPresentationStyle = .overFullScreen
+            rootVC?.present(badgeVC, animated: false)
+        }
+    }
+    
+    private func dismissAll() {
+        var topVC: UIViewController? = self
+        while let presenter = topVC?.presentingViewController {
+            topVC = presenter
+        }
+        topVC?.dismiss(animated: true)
+    }
+
 }
 extension FeedBackViewController: TellMoodSelectionDelegate {
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
@@ -144,6 +230,10 @@ extension FeedBackViewController: TellMoodSelectionDelegate {
     }
     }
     
+protocol BondActivityCompletionDelegate: AnyObject {
+    func didCompleteBondActivity()
+}
+
 
 
 

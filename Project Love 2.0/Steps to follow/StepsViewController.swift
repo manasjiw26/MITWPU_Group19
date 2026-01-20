@@ -12,6 +12,12 @@ class StepsViewController: UIViewController {
     var flowSource: ActivityFlowSource?
     var activity: Activity?
 
+    
+    var selectedActivityIndex: Int?
+    var bondName: String?
+    
+    weak var bondDelegate: BondActivityCompletionDelegate?
+
     @IBOutlet weak var activityTitle: UILabel!
     @IBOutlet weak var subtitle: UILabel!
     @IBOutlet weak var continueButton: UIButton!
@@ -20,6 +26,9 @@ class StepsViewController: UIViewController {
     
     @IBOutlet weak var tableBackgroundCell: UIView!
     @IBOutlet weak var combinedLabel: UILabel!
+    
+    
+    
     //back button
     private let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -94,6 +103,9 @@ class StepsViewController: UIViewController {
     }
     
     @IBAction func continueButton(_ sender: Any) {
+        
+        
+
         //self.dismiss(animated: true, completion: nil)
         let storyboard = UIStoryboard(name: "feedBack", bundle: nil)
         let feedbackVC = storyboard.instantiateViewController(
@@ -113,8 +125,15 @@ class StepsViewController: UIViewController {
         feedbackVC.feedbackItem = feedbackItem
         feedbackVC.activity = activity
         feedbackVC.flowSource = flowSource
+        
+        feedbackVC.bondName = bondName
+        feedbackVC.selectedActivityIndex = selectedActivityIndex
+        feedbackVC.bondDelegate = bondDelegate
 
+
+        
         feedbackVC.modalPresentationStyle = .fullScreen
+        
         present(feedbackVC, animated: true)
     }
 }
