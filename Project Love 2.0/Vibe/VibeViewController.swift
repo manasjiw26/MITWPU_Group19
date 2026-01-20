@@ -510,20 +510,29 @@ extension VibeViewController:  UICollectionViewDataSource {
         guard cell.label.text == "Me",
               let indexPath = vibeCollectionView.indexPath(for: cell) else { return }
 
+        // ⏱ CHECK 3 HOUR LOCK
+        if !MoodManager.shared.canChangeMood() {
+            showAlert()
+            return
+        }
+
         let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
         let vc = storyboard.instantiateViewController(
             withIdentifier: "TellMoodSelectionViewController"
         ) as! TellMoodSelectionViewController
 
         vc.delegate = self
-        vc.selectedIndexPath = indexPath 
+        vc.selectedIndexPath = indexPath
         vc.modalPresentationStyle = .pageSheet
+
         present(vc, animated: true)
     }
 
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
+        
+        MoodManager.shared.registerMoodChange()
 
-        // Layout switches from single card → two cards
+        // Layout switches from one card to two cards
         vibeCollectionView.setCollectionViewLayout(
             generateLayout(),
             animated: false
@@ -533,6 +542,20 @@ extension VibeViewController:  UICollectionViewDataSource {
         vibeCollectionView.performBatchUpdates {
             vibeCollectionView.reloadSections(IndexSet(integer: 1))
         }
+    }
+    
+    func showAlert() {
+
+        let message = MoodManager.shared.remainingTimeText()
+
+        let alert = UIAlertController(
+            title: "Mood Locked",
+            message: message,
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 

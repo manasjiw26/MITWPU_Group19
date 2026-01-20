@@ -547,7 +547,7 @@ class DataStore {
         [
             FeedBackGiven(
                 title: "Chill and Glow Sesh",
-                subTitle:"How did that activity make you feel?",
+                subTitle:"Tell us how this activity made you feel",
                 imageName: "camera",
                 userMessage: nil,
                 selectedMood: nil
@@ -555,7 +555,7 @@ class DataStore {
             
             FeedBackGiven(
                 title: "Petal Hunt",
-                subTitle: "How did that activity make you feel?",
+                subTitle: "Tell us how this activity made you feel",
                 imageName: "camera",
                 userMessage: nil,
                 selectedMood: nil

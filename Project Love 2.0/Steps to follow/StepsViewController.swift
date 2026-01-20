@@ -103,7 +103,7 @@ class StepsViewController: UIViewController {
        
         let feedbackItem = FeedBackGiven(
             title: activitytitle,   
-            subTitle: "How did that activity make you feel?",
+            subTitle: "Tell us how this activity made you feel",
             imageName: "camera",
             userMessage: nil,
             selectedMood: nil

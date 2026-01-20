@@ -8,17 +8,22 @@
 import UIKit
 
 
-class FeedBackViewController: UIViewController {
+class FeedBackViewController: UIViewController, UITextViewDelegate {
     var feedbackItem: FeedBackGiven!
     var flowSource: ActivityFlowSource?
     var activity: Activity?
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var messageTextField: UITextField!
-    @IBOutlet weak var moodButton: UIButton!
+    //@IBOutlet weak var messageTextField: UITextField!
+    //@IBOutlet weak var moodButton: UIButton!
     @IBOutlet weak var moodLabel: UILabel!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet var noButton: UIButton!
+    @IBOutlet var yesButton: UIButton!
+    
+    @IBOutlet var messageText: UITextView!
+    
     
     private let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -31,19 +36,20 @@ class FeedBackViewController: UIViewController {
         button.setImage(image, for: .normal)
         button.tintColor = .black
         
+        
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        messageTextField.addTarget(
-            self,
-            action: #selector(textDidChange),
-            for: .editingChanged
-        )
-        messageTextField.layer.cornerRadius = 12
-        messageTextField.layer.masksToBounds = true
+//        messageText.addTarget(
+//            self,
+//            action: #selector(textDidChange),
+//            for: .editingChanged
+//        )
+        messageText.layer.cornerRadius = 12
+        messageText.layer.masksToBounds = true
         moodLabel.layer.cornerRadius = 8
         moodLabel.layer.masksToBounds = true
         doneButton.configuration = .glass()
@@ -52,14 +58,47 @@ class FeedBackViewController: UIViewController {
         backButton.configuration = .glass()
         titleLabel.text = feedbackItem.title
         subtitleLabel.text = feedbackItem.subTitle
-        moodButton.setTitle(
-            feedbackItem.selectedMood ?? "Update Mood",
-            for: .normal
-        )
+//        noButton.configuration = .glass()
+//        noButton.setTitle("Not really", for: .normal)
+//        yesButton.configuration = .glass()
+//        yesButton.setTitle("Yes, it did", for: .normal)
+        
+//        moodButton.setTitle(
+//            feedbackItem.selectedMood ?? "Update Mood",
+//            for: .normal
+//        )
+        setupPlaceholder()
+        
         
     }
+    func setupPlaceholder() {
+        messageText.delegate = self
+
+        messageText.text = "Write your message here..."
+        messageText.textColor = .lightGray
+    }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+
+        if textView.textColor == .lightGray {
+            textView.text = ""
+            textView.textColor = .black
+        }
+    }
+
+    func textViewDidEndEditing(_ textView: UITextView) {
+
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = "Write your message here..."
+            textView.textColor = .lightGray
+        }
+    }
     @objc private func textDidChange() {
-        feedbackItem.userMessage = messageTextField.text
+
+        if messageText.textColor == .lightGray {
+            feedbackItem.userMessage = ""
+        } else {
+            feedbackItem.userMessage = messageText.text
+        }
     }
     private func setupBackButton() {
         view.addSubview(backButton)
@@ -96,14 +135,14 @@ class FeedBackViewController: UIViewController {
             DataStore.shared.markActivityCompleted(activity: activity)
         }
 
-            // 🔽 Ongoing count
+            // Ongoing count
             let ongoingCount = UserDefaults.standard.integer(
                 forKey: "ongoingActivityCount"
             )
             let newOngoing = max(0, ongoingCount - 1)
             UserDefaults.standard.set(newOngoing, forKey: "ongoingActivityCount")
 
-            // 🔼 Completed count
+            // Completed count
             let completedCount = UserDefaults.standard.integer(
                 forKey: "completedActivityCount"
             )
@@ -122,25 +161,25 @@ class FeedBackViewController: UIViewController {
     }
     
     
-    @IBAction func updateMoodButton(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
-        let vc = storyboard.instantiateViewController(
-            withIdentifier: "TellMoodSelectionViewController"
-        ) as! TellMoodSelectionViewController
-        
-//        vc.screenTitle1 = "Update your mood"
-        vc.delegate = self
-        vc.selectedIndexPath = nil
-        vc.modalPresentationStyle = .fullScreen
-        
-        present(vc, animated: true)
-        
-    }
+//    @IBAction func updateMoodButton(_ sender: Any) {
+//        let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
+//        let vc = storyboard.instantiateViewController(
+//            withIdentifier: "TellMoodSelectionViewController"
+//        ) as! TellMoodSelectionViewController
+//        
+////        vc.screenTitle1 = "Update your mood"
+//        vc.delegate = self
+//        vc.selectedIndexPath = nil
+//        vc.modalPresentationStyle = .fullScreen
+//        
+//        present(vc, animated: true)
+//        
+//    }
 }
 extension FeedBackViewController: TellMoodSelectionDelegate {
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
         feedbackItem.selectedMood = mood.label
-        moodButton.setTitle(mood.label, for: .normal)
+        //moodButton.setTitle(mood.label, for: .normal)
     }
     }
     
