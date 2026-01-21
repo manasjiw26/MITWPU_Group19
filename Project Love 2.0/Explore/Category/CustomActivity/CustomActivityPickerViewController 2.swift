@@ -71,15 +71,24 @@ class CustomActivityPickerViewController: UIViewController {
     // MARK: - Button Actions
 
     @IBAction func createQATapped(_ sender: UIButton) {
-        dismiss(animated: false) {
-               let vc = QnAViewController(
-                   nibName: "QnAViewController",
-                   bundle: nil
-               )
-               vc.modalPresentationStyle = .fullScreen
-               UIApplication.shared.keyWindow?.rootViewController?
-                   .present(vc, animated: true)
-           }
+    
+
+            guard let presentingVC = self.presentingViewController else { return }
+
+            dismiss(animated: false) {
+                let storyboard = UIStoryboard(name: "QnAViewController", bundle: nil)
+
+                guard let vc = storyboard.instantiateViewController(
+                    withIdentifier: "QnAViewController"
+                ) as? QnAViewController else {
+                    print("❌ QnAViewController not found in storyboard")
+                    return
+                }
+
+                vc.modalPresentationStyle = .fullScreen
+                presentingVC.present(vc, animated: true)
+            }
+    
         
     }
 

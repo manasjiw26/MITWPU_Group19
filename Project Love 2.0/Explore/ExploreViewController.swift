@@ -38,20 +38,39 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         if selectedSegmentIndex == 2 {
             return DataStore.shared.getCompletedActivities().isEmpty
         }
+        // Segment 3 (Custom) is never "empty" because the 'Create' button is always there
         return false
     }
-    
+    // Inside ExploreViewController.swift
+
+    // In ExploreViewController.swift
     private func openActivity(_ activity: Activity) {
-        let modalVC = SmallModalViewController(
-            nibName: "SmallModalViewController",
+        let modalVC = CustomModalViewController(
+            nibName: "CustomModalViewController",
             bundle: nil
         )
 
-        modalVC.selectedActivity = activity
-        modalVC.flowSource = .explore
-        modalVC.modalPresentationStyle = .overFullScreen
-        present(modalVC, animated: false)
+        // Passing the data
+        modalVC.activityName = activity.name
+        modalVC.activityDescription = activity.description
+        modalVC.imageName = activity.image
+
+        modalVC.modalPresentationStyle = .pageSheet
+
+        if let sheet = modalVC.sheetPresentationController {
+            // ONLY include .large() to force it to open expanded immediately
+            sheet.detents = [.large()]
+            
+            // This ensures the top grabber bar is visible
+            sheet.prefersGrabberVisible = true
+            
+            // Setting the corner radius to 40 as requested
+            sheet.preferredCornerRadius = 40
+        }
+
+        present(modalVC, animated: true)
     }
+   
 
     
     func registerCell() {
@@ -202,11 +221,7 @@ extension ExploreViewController:  UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
             return rewards.count
-        }
-        else {
-
-            print("Inside numberOfItemsInSection → selected segment =", selectedSegmentIndex)
-
+        } else {
             if selectedSegmentIndex == 0 {
                 return activityCategory.count
             }
@@ -219,12 +234,11 @@ extension ExploreViewController:  UICollectionViewDataSource {
                 return count == 0 ? 1 : count
             }
             else if selectedSegmentIndex == 3 {
-                return 1// or custom
+                // Fix: Return 1 (for the 'Create' button) + any added custom activities
+                return 1 + DataStore.shared.customActivities.count
             }
-
             return activityCategory.count
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -315,14 +329,32 @@ extension ExploreViewController:  UICollectionViewDataSource {
         }
         
         if selectedSegmentIndex == 3 {
-                let cell = activity_collection.dequeueReusableCell(
-                    withReuseIdentifier: "custom_cell",
-                    for: indexPath
-                ) as! CustomCollectionViewCell
-            cell.configureCells(imageName: "customBorder", title: "Create your own activity!", subtitle: "Add your unique spark.")
-
-                return cell
-        }
+                // If it's the first cell in the Custom segment, show the "Create" button
+                if indexPath.row == 0 {
+                    let cell = activity_collection.dequeueReusableCell(
+                        withReuseIdentifier: "custom_cell",
+                        for: indexPath
+                    ) as! CustomCollectionViewCell
+                    cell.configureCells(imageName: "customBorder", title: "Create your own activity!", subtitle: "Add your unique spark.")
+                    return cell
+                }else {
+                    let cell = activity_collection.dequeueReusableCell(
+                        withReuseIdentifier: "activity_cell",
+                        for: indexPath
+                    ) as! ActivityCollectionViewCell
+                    
+                    let customActivity = DataStore.shared.customActivities[indexPath.row - 1]
+                    
+                    // 1. First, call your existing configuration
+                    cell.configureCells(activity: customActivity)
+                    
+                    // 2. OVERRIDE: Change the label to show the DATE string
+                    // FIX: Using 'activityDescriptionLabel' instead of 'descriptionLabel'
+                    cell.activityDescriptionLabel.text = customActivity.time
+                    
+                    return cell
+                }
+            }
 
         return UICollectionViewCell()
     }
@@ -396,41 +428,27 @@ extension ExploreViewController: ActivityHeaderDelegate {
 
         guard indexPath.section == 1 else { return }
 
-        switch selectedSegmentIndex {
-
-        case 0: // All → Category
-            selectedCategory = activityCategory[indexPath.row]
-            performSegue(withIdentifier: "CategoryVC", sender: self)
-
-        case 1: // Ongoing -> BYPASS MODAL, OPEN STEPS DIRECTLY
-            let ongoingActivities = DataStore.shared.getOngoingActivities()
-            let activity = ongoingActivities[indexPath.row] 
-            let storyboard = UIStoryboard(name: "Steps", bundle: nil)
-            if let stepsVC = storyboard.instantiateViewController(withIdentifier: "StepsViewController") as? StepsViewController {
-                stepsVC.activitytitle = activity.name
-                stepsVC.activity = activity
-                stepsVC.flowSource = .explore
-                stepsVC.modalPresentationStyle = .fullScreen
-                self.present(stepsVC, animated: true, completion: nil)
+            switch selectedSegmentIndex {
+            case 0: // All
+                selectedCategory = activityCategory[indexPath.row]
+                performSegue(withIdentifier: "CategoryVC", sender: self)
+            case 1: // Ongoing
+                let activity = DataStore.shared.getOngoingActivities()[indexPath.row]
+                // Open steps directly as per your existing code
+            case 3: // Custom
+                if indexPath.row == 0 {
+                    // ONLY open the picker if the first cell (Create button) is tapped
+                    let vc = CustomActivityPickerViewController(nibName: "CustomActivityPickerViewController", bundle: nil)
+                    vc.modalPresentationStyle = .overCurrentContext
+                    vc.modalTransitionStyle = .crossDissolve
+                    present(vc, animated: true)
+                } else {
+                    // Open SmallModal for actual custom activity items
+                    let customActivity = DataStore.shared.customActivities[indexPath.row - 1]
+                    openActivity(customActivity)
+                }
+            default:
+                break
             }
-
-//        case 2: // Completed → Open feedback / summary
-//            let activity = DataStore.shared.getCompletedActivities()[indexPath.row]
-//            openActivity(activity)
-        case 3:
-            let vc = CustomActivityPickerViewController(
-                nibName: "CustomActivityPickerViewController",
-                bundle: nil
-            )
-
-            vc.modalPresentationStyle = .overCurrentContext
-            vc.modalTransitionStyle = .crossDissolve
-
-            present(vc, animated: true)
-
-
-        default:
-            break
-        }
     }
 }

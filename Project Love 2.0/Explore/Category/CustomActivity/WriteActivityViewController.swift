@@ -15,7 +15,8 @@ class WriteActivityViewController: UIViewController {
     
     @IBOutlet weak var activityTitle: UITextField!
     
-    @IBOutlet weak var descriptionActivity: UITextField!
+  
+    @IBOutlet weak var descriptionActivity: UITextView!
     
     @IBOutlet weak var dateText: UITextField!
     
@@ -25,13 +26,7 @@ class WriteActivityViewController: UIViewController {
         backtapped.configuration = .glass()
         saveTapped.configuration = .glass()
         saveTapped.setTitle("Save", for: .normal)
-        let chevronImage = UIImage(
-               systemName: "chevron.left"
-           )?.withRenderingMode(.alwaysTemplate)
-
-           backtapped.setImage(chevronImage, for: .normal)
-           backtapped.setTitle("", for: .normal)   // No text, icon only
-           backtapped.tintColor = .label
+        backtapped.setImage(UIImage(systemName: "chevron.left", withConfiguration: UIImage.SymbolConfiguration(weight: .medium)), for: .normal)
     }
 
 
@@ -46,5 +41,18 @@ class WriteActivityViewController: UIViewController {
     */
 @IBAction func backTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    @IBAction func saveTapped(_ sender: Any) {
+        // Capture the text from your descriptionActivity text field
+            guard let title = activityTitle.text, !title.isEmpty,
+                  let desc = descriptionActivity.text, // This is your 'Description' input
+                  let date = dateText.text else { return }
+                    
+            // 1. Save to DataStore: Ensure 'desc' is passed to the description parameter
+            DataStore.shared.addCustomActivity(name: title, description: desc, date: date)
+                    
+            // 2. Dismiss back to Explore
+            self.dismiss(animated: true, completion: nil)
+        
     }
 }

@@ -22,7 +22,8 @@ class DataStore {
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
     //var ongoingActivities: [Activity] = []
-    
+    var customActivities: [Activity] = []
+   
     var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
     var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
    
@@ -538,7 +539,17 @@ class DataStore {
             Mood(id: 15, title: "Angry", imageName: "Angry")
         ]
     }
-
+    func addCustomActivity(name: String, description: String, date: String) {
+        let newActivity = Activity(
+            name: name,
+            description: description, // <--- Keep the actual text here for the Modal
+            image: "Activityimage",
+            time: date,                // <--- Keep the date here for the Cell
+            status: .none,
+            category: "Custom"
+        )
+        customActivities.append(newActivity)
+    }
 }
 // Create one shared instance
 let dataStore = DataStore()

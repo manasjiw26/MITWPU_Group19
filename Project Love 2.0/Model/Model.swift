@@ -8,13 +8,14 @@
 import Foundation
 import UIKit
 
-struct Activity{
-    var name : String
-    var description : String
-    var image : String
-    var time : String
+struct Activity {
+    var name: String
+    var description: String
+    var image: String
+    var time: String
     var status: ActivityStatus
     var category: String
+    var date: String? // New field for Custom Activity Date
 }
 
 enum ActivityStatus {
@@ -116,6 +117,7 @@ struct Message {
 enum ActivityFlowSource {
     case activitiesForHer
     case explore
+    case custom // New case for custom activities
 }
 struct DailyCheckInResult {
     let activityTitle: String
@@ -166,4 +168,9 @@ struct ProfileItem {
     var iconName: String
     var showsChevron: Bool
 
+}
+struct QuestionModel {
+    var title: String = ""
+    var questionText: String = ""
+    var options: [String] = [""] // Starts with one empty option
 }
