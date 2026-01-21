@@ -36,17 +36,21 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
     }
     private func saveProfileData() {
         for cell in Table.visibleCells {
-
-            guard
-                let indexPath = Table.indexPath(for: cell),
-                let cell = cell as? PersonalInfoTableViewCell
-            else { continue }
+            guard let indexPath = Table.indexPath(for: cell),
+                  let cell = cell as? PersonalInfoTableViewCell else { continue }
 
             let newValue = cell.valueTextField.text ?? ""
 
-            DataStore.shared.personalInfoSections[indexPath.section]
-                .items[indexPath.row]
-                .value = newValue
+            // Update the list of sections
+            DataStore.shared.personalInfoSections[indexPath.section].items[indexPath.row].value = newValue
+            
+            // ADD THIS: Specific update for the UserProfile object
+            let itemTitle = DataStore.shared.personalInfoSections[indexPath.section].items[indexPath.row].title
+            if itemTitle == "Full Name" {
+                DataStore.shared.userProfile?.name = newValue
+            } else if itemTitle == "Email" {
+                DataStore.shared.userProfile?.email = newValue
+            }
         }
     }
 

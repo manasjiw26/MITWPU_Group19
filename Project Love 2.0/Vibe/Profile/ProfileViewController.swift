@@ -12,7 +12,17 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - Data
     private var user: UserProfile!
     private let sections = DataStore.shared.profileSections
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Refresh the local user object from the updated DataStore
+        user = DataStore.shared.userProfile
+        
+        // Update the labels
+        nameLabel.text = user.name
+        emailLabel.text = user.email
+        profileImage.image = UIImage(named: user.profileImageName)
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
