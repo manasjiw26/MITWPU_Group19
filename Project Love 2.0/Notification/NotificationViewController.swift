@@ -66,7 +66,7 @@ final class NotificationViewController: UIViewController {
          let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
 
          let selectedActivity = activities[0]
-
+         destinationVC.selectedActivity = selectedActivity
          if let modalData = dataStore.smallmodal.first(where: { $0.title == selectedActivity.name }) {
              destinationVC.modalData = modalData
          }

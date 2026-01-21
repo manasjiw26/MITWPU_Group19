@@ -60,7 +60,12 @@ class FeedBackViewController: UIViewController {
         backButton.configuration = .glass()
         titleLabel.text = feedbackItem.title
         subtitleLabel.text = feedbackItem.subTitle
-        
+        let tapGesture = UITapGestureRecognizer(
+                target: self,
+                action: #selector(dismissKeyboard)
+            )
+            tapGesture.cancelsTouchesInView = false
+            view.addGestureRecognizer(tapGesture)
         moodButton.setTitle(
             feedbackItem.selectedMood ?? "Update Mood",
             for: .normal
@@ -188,7 +193,9 @@ class FeedBackViewController: UIViewController {
             .rootViewController?
             .present(vc, animated: true)
     }
-
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     private func dismissAndShowBadge() {
         var rootVC: UIViewController? = self
