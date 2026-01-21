@@ -21,12 +21,25 @@ class DataStore {
     var questions: [Question] = []
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
+    
+    private(set) var allActivities: [Activity] = []
+
     //var ongoingActivities: [Activity] = []
     
-    var HisMood: Mood? = Mood(id: 5, title: "Calm", imageName: "calm")
-    var HerMood: Mood? = Mood(id: 8, title: "Adventurous", imageName: "Adventurous")
+    private var HisMood: Mood?
+    private var HerMood: Mood? = Mood(
+        id: -1,
+        title: "Calm",
+        imageName: "calm"
+    )
+
    
     private(set) var notifications: [AppNotification] = []
+    // MARK: - Profile Data
+
+    var userProfile: UserProfile?
+    var profileSections: [ProfileSection] = []
+
     
     init() {
         loadSampleData()
@@ -40,6 +53,8 @@ class DataStore {
         loadsampleBuildYourBond()
         loadSampleNotifications()
 
+        loadProfileData()
+        buildAllActivities()
         //loadCheckIn()
         
     }
@@ -114,7 +129,8 @@ class DataStore {
                 image: "Chill and Glow sesh",
                 time: "5 mins",
                 status: .none,
-                category: "Fun & Playful"
+                category: "Fun & Playful",
+                scheduledDate: nil
             ),
 
             Activity(
@@ -123,7 +139,8 @@ class DataStore {
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Fun & Playful"
+                category: "Fun & Playful",
+                scheduledDate: nil
             ),
 
             Activity(
@@ -132,7 +149,8 @@ class DataStore {
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Fun & Playful"
+                category: "Fun & Playful",
+                scheduledDate: nil
             ),
 
             // Daily Dose of Us
@@ -142,7 +160,8 @@ class DataStore {
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Daily Dose of Us"
+                category: "Daily Dose of Us",
+                scheduledDate: nil
             ),
 
             Activity(
@@ -151,37 +170,38 @@ class DataStore {
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Acts of Love"
+                category: "Acts of Love",
+                scheduledDate: nil
             ),
 
-            // MARK: - Meaning & Growth
             Activity(
                 name: "Wholesome Craft Challenge",
                 description: "Make a doodle / note / digital collage for her",
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Meaning & Growth"
+                category: "Meaning & Growth",
+                scheduledDate: nil
             ),
 
-            // MARK: - Daily Dose of Us
             Activity(
                 name: "Memory Lane Marathon",
                 description: "Make a mini reel using your photos and favorite audio",
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Daily Dose of Us"
+                category: "Daily Dose of Us",
+                scheduledDate: nil
             ),
 
-            // MARK: - Acts of Love
             Activity(
                 name: "Stuff-A-Memory Day",
                 description: "Buy a tiny plush, both name it and take care of it together",
                 image: "Activityimage",
                 time: "5 mins",
                 status: .none,
-                category: "Acts of Love"
+                category: "Acts of Love",
+                scheduledDate: nil
             )
         ]
         self.activities = sampleActivities
@@ -189,9 +209,9 @@ class DataStore {
     
     func loadSuggestedActivity () {
         let suggestedActivity: [Activity] = [
-            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity"),
-            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none,category : "suggestedActivity"),
-            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category : "suggestedActivity")
+            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity",scheduledDate: nil),
+            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none,category : "suggestedActivity",scheduledDate: nil) ,
+            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category : "suggestedActivity",scheduledDate: nil)
         ]
         self.suggestedActivities = suggestedActivity
     }
@@ -223,13 +243,13 @@ class DataStore {
     }
     func loadSampleRewards() {
         let sampleRewards: [Reward] = [
-            Reward(image: "Send_Hug", name: "Send hug"),
-            Reward(image: "Send_Flower", name: "Send flower"),
-            Reward(image: "Send_Kiss", name: "Send kiss"),
-            Reward(image: "Send_Heart", name: "Send heart"),
-            Reward(image: "Send_Note", name: "Send note"),
-            Reward(image: "Send_Wave", name: "Send wave"),
-            Reward(image: "Send_Hug", name: "Send high five")
+            Reward(image: "Send_Hug", name: "Send hug", emoji: "🤗", progressStep: 0),
+            Reward(image: "Send_Flower", name: "Send flower", emoji: "🌻", progressStep: 0),
+            Reward(image: "Send_Kiss", name: "Send kiss", emoji: "😘", progressStep: 0),
+            Reward(image: "Send_Heart", name: "Send heart", emoji: "🫶🏻", progressStep: 0),
+            Reward(image: "Send_Note", name: "Send note", emoji: "💌", progressStep: 0),
+            Reward(image: "Send_Wave", name: "Send wave", emoji: "👋", progressStep: 0),
+            Reward(image: "Send_Hug", name: "Send high five", emoji: "🙌", progressStep: 0)
         ]
         
         self.rewards = sampleRewards
@@ -281,6 +301,48 @@ class DataStore {
         ]
         return mood
     }
+    //Profile data
+    func loadProfileData() {
+
+        userProfile = UserProfile(
+            name: "Name",
+            email: "name@email.com",
+            profileImageName: "Profile"
+        )
+
+        profileSections = [
+           
+            ProfileSection(
+                title: "Account",
+                items: [
+                    ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true)
+                ]
+            ),
+            ProfileSection(
+                title: "Activity",
+                items: [
+                    ProfileItem(title: "Status", iconName: "slider.horizontal.3", showsChevron: true)
+                    
+                ]
+            ),
+           
+            ProfileSection(
+                title: "Support",
+                items: [
+                    ProfileItem(title: "Help & Support", iconName: "questionmark.circle", showsChevron: true),
+                    ProfileItem(title: "About App", iconName: "info.circle", showsChevron: true),
+                    ProfileItem(title: "Feedback", iconName: "bubble.left", showsChevron: true)
+                ]
+            ),
+            ProfileSection(
+                title: "",
+                items: [
+                    ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
+                ]
+            )
+        ]
+    }
+
     
 
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {
@@ -449,6 +511,22 @@ class DataStore {
             activities[index].status = .ongoing
         }
     }
+    func startActivity(_ activity: Activity) {
+
+        if let index = activities.firstIndex(where: {
+            $0.name == activity.name &&
+            $0.category == activity.category
+        }) {
+            activities[index].status = .ongoing
+            return
+        }
+
+        var newActivity = activity
+        newActivity.status = .ongoing
+        activities.append(newActivity)
+
+        print("Added new ongoing activity:", newActivity.name)
+    }
 
     func getBuildYourBondPages(name : String) -> BuildYourBondpage? {
         return bondpage.first { $0.Name == name }
@@ -461,10 +539,14 @@ class DataStore {
 //        
 //        self.checkin = sampleCheckIn
 //    }
-    
-    func setHisMood(moodId: Int) {
-        HisMood = mood(by: moodId)
+    func setHisMood(_ mood: Mood) {
+        HisMood = mood
+        print("His mood ", mood.title)
     }
+
+//    func setHisMood(moodId: Int) {
+//        HisMood = mood(by: moodId)
+//    }
 
     func setHerMood(moodId: Int) {
         HerMood = mood(by: moodId)
@@ -472,9 +554,8 @@ class DataStore {
     func getHisMood() -> Mood? {
         HisMood
     }
-
     func getHerMood() -> Mood? {
-        HerMood
+        return HerMood
     }
     
     func getActivities() -> [Activity] {
@@ -495,6 +576,38 @@ class DataStore {
     func getSuggestedActivities() -> [Activity] {
         return suggestedActivities
     }
+    func updateScheduledDate(for activity: Activity, date: Date) {
+
+        if let index = allActivities.firstIndex(where: {
+            $0.name == activity.name && $0.category == activity.category
+        }) {
+            allActivities[index].scheduledDate = date
+            allActivities[index].status = .scheduled
+        }
+    }
+
+    func getScheduledActivities() -> [Activity] {
+        return activities.filter {
+            $0.status == .scheduled && $0.scheduledDate != nil
+        }
+    }
+    func buildAllActivities() {
+        allActivities = []
+
+        // Explore
+        allActivities.append(contentsOf: activities)
+
+        // Suggested (Vibe)
+        allActivities.append(contentsOf: suggestedActivities)
+
+        // Build Your Bond
+        bondpage.forEach { page in
+            allActivities.append(contentsOf: page.activity)
+        }
+    }
+
+
+
     
     //calendar
     func getDayInfo(for date: Date, color: UIColor) -> DayInfo {
@@ -626,7 +739,7 @@ class DataStore {
         [
             FeedBackGiven(
                 title: "Chill and Glow Sesh",
-                subTitle:"How did that activity make you feel?",
+                subTitle:"Tell us how this activity made you feel",
                 imageName: "camera",
                 userMessage: nil,
                 selectedMood: nil
@@ -634,7 +747,7 @@ class DataStore {
             
             FeedBackGiven(
                 title: "Petal Hunt",
-                subTitle: "How did that activity make you feel?",
+                subTitle: "Tell us how this activity made you feel",
                 imageName: "camera",
                 userMessage: nil,
                 selectedMood: nil

@@ -39,25 +39,25 @@ class MoodViewController: UIViewController, SmallModalDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // ✅ Ongoing count
+        //  Ongoing count
         let ongoing = UserDefaults.standard.integer(
             forKey: ongoingActivityCountKey
         )
         activitystats[0].count = ongoing
 
-        // ✅ Completed count
+        //  Completed count
         let completed = UserDefaults.standard.integer(
             forKey: completedActivityCountKey
         )
         activitystats[2].count = completed
 
-        // ✅ Update moods
+        //  Update moods
         moods = DataStore.shared.moods
 
-        // ✅ Reload Activity Stats section
+        //  Reload Activity Stats section
         MoodCheckIn.reloadSections(IndexSet(integer: 2))
 
-        // ✅ Reload mood cards
+        //  Reload mood cards
         MoodCheckIn.reloadData()
     }
 
@@ -69,7 +69,7 @@ class MoodViewController: UIViewController, SmallModalDelegate {
 //            withIdentifier: "ActivityForHerVC"
 //        ) as! ActivitiesForHerViewController
 //
-//        vc.activitiesForHer = DataStore.shared.ongoingActivities   // ✅ KEY LINE
+//        vc.activitiesForHer = DataStore.shared.ongoingActivities
 //        vc.screenTitle = "Ongoing"
 //
 //        vc.modalPresentationStyle = .fullScreen
@@ -91,7 +91,7 @@ class MoodViewController: UIViewController, SmallModalDelegate {
     func registerCells() {
         MoodCheckIn.register(
             UINib(nibName: "MoodCheckInCollectionViewCell", bundle: nil),
-            forCellWithReuseIdentifier: "mood_cell"
+            forCellWithReuseIdentifier: "mood_checkin_cell"
         )
 
         MoodCheckIn.register(
@@ -188,7 +188,7 @@ class MoodViewController: UIViewController, SmallModalDelegate {
             // SECTION 1 – Daily Check-In / Suggested Activities
             if section == 1 {
 
-                // ✅ DAILY CHECK-IN (single full-width card)
+                //  DAILY CHECK-IN
                 if !self.hasCompletedDailyCheckIn {
 
                     let itemSize = NSCollectionLayoutSize(
@@ -326,7 +326,7 @@ class MoodViewController: UIViewController, SmallModalDelegate {
             return
         }
 
-        // ✅ ONGOING CARD TAP
+        // ONGOING CARD TAP
 //        if indexPath.section == 2, indexPath.row == 0 {
 //            openOngoingScreen()
 //        }
@@ -372,7 +372,7 @@ extension MoodViewController: UICollectionViewDataSource, UICollectionViewDelega
 
         case 0:
             let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "mood_cell",
+                withReuseIdentifier: "mood_checkin_cell",
                 for: indexPath
             ) as! MoodCheckInCollectionViewCell
 

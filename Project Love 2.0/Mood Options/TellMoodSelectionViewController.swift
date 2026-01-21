@@ -22,14 +22,25 @@ class TellMoodSelectionViewController: UIViewController {
     private let backButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        
+
         let image = UIImage(
-            systemName: "chevron.left",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)
+            systemName: "xmark",
+            withConfiguration: UIImage.SymbolConfiguration(
+                pointSize: 17,
+                weight: .medium
+            )
         )
         button.setImage(image, for: .normal)
-        button.tintColor = .black
-        
+        button.tintColor = .label
+
+        // Native-style background
+        button.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
+        button.layer.cornerRadius = 20
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.08
+        button.layer.shadowRadius = 6
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+
         return button
     }()
     
@@ -41,6 +52,7 @@ class TellMoodSelectionViewController: UIViewController {
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
+        
         backButton.configuration = .glass()
         setupBackButton()
         //titleLabel.text = screenTitle1
@@ -60,16 +72,10 @@ class TellMoodSelectionViewController: UIViewController {
         )
         
         NSLayoutConstraint.activate([
-            backButton.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 0
-            ),
-            backButton.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 16
-            ),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44)
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backButton.widthAnchor.constraint(equalToConstant: 40),
+            backButton.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     
@@ -150,11 +156,25 @@ extension TellMoodSelectionViewController:
 
         let selectedMood = moods[indexPath.item]
 
-        dataStore.setHisMood(moodId: selectedMood.id)
         
-        //delegate?.didSelectMood(moodCheckIn, at: selectedIndexPath)
+        DataStore.shared.setHisMood(selectedMood)
+
+       
+        if let selectedIndexPath = selectedIndexPath {
+
+            let moodCheckIn = MoodCheckIn(
+                label: "Me",
+                imageName: selectedMood.imageName,
+                moodLabel: selectedMood.title
+            )
+
+            delegate?.didSelectMood(moodCheckIn, at: selectedIndexPath)
+        }
+
+        
         dismiss(animated: true)
     }
+
 
     }
 

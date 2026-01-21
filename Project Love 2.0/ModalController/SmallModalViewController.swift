@@ -10,7 +10,7 @@ protocol SmallModalDelegate: AnyObject {
     func didStartActivity()
 }
 
-class SmallModalViewController: UIViewController {
+class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     var modalData: SmallModalData?
     var flowSource: ActivityFlowSource?
     var selectedActivity: Activity?
@@ -46,7 +46,7 @@ class SmallModalViewController: UIViewController {
             ),
             for: .normal
         )
-
+        
         
         
         if let data = modalData {
@@ -65,17 +65,13 @@ class SmallModalViewController: UIViewController {
         //  Dim background
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
-        
-        
-        
         //  Modal actual container
         modalView.backgroundColor = .white
         modalView.layer.cornerRadius = 40
         modalView.layer.masksToBounds = true
-//        modalView.translatesAutoresizingMaskIntoConstraints = false
+        //        modalView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(modalView)
-        
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -98,6 +94,20 @@ class SmallModalViewController: UIViewController {
         })
     }
     
+    func didSchedule(activity: Activity, on date: Date) {
+        DataStore.shared.updateScheduledDate(for: activity, date: date)
+
+            delegate?.didStartActivity()
+
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
+            self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
+        }) { _ in
+            self.dismiss(animated: true)
+        }
+    }
+    
     
     @IBAction func closeButton(_ sender: Any) {
         //self.dismiss(animated: true, completion: nil)
@@ -111,40 +121,61 @@ class SmallModalViewController: UIViewController {
     
     
     @IBAction func beginButon(_ sender: Any) {
-        if flowSource == .explore,
-              let activity = selectedActivity {
 
-               DataStore.shared.markActivityOngoing(activity: activity)
-           }
-        
+        guard let activity = selectedActivity else { return }
 
-           delegate?.didStartActivity()
+        DataStore.shared.startActivity(activity)
 
-           let storyboard = UIStoryboard(name: "Steps", bundle: nil)
-           let stepsVC = storyboard.instantiateViewController(
-               withIdentifier: "StepsViewController"
-           ) as! StepsViewController
+        delegate?.didStartActivity()
 
-           stepsVC.activitytitle = selectedActivity?.name ?? ""
-           stepsVC.activity = selectedActivity
-           stepsVC.flowSource = flowSource
-        
+        let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+        let stepsVC = storyboard.instantiateViewController(
+            withIdentifier: "StepsViewController"
+        ) as! StepsViewController
+
+        stepsVC.activity = activity
+        stepsVC.flowSource = flowSource
+        stepsVC.modalPresentationStyle = .fullScreen
+
         stepsVC.selectedActivityIndex = selectedActivityIndex
         stepsVC.bondName = bondName
         stepsVC.bondDelegate = presentingViewController as? BondActivityCompletionDelegate
 
-
-           stepsVC.modalPresentationStyle = .fullScreen
-
-           if let presenter = self.presentingViewController {
-               UIView.animate(withDuration: 0.1) {
-                   self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
-                   self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
-               }
-               self.dismiss(animated: true) {
-                   presenter.present(stepsVC, animated: true)
-               }
-           }
-
+        if let presenter = self.presentingViewController {
+            UIView.animate(withDuration: 0.1) {
+                self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
+                self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
+            }
+            self.dismiss(animated: true) {
+                presenter.present(stepsVC, animated: true)
+            }
+        }
+    }
+    
+    
+    @IBAction func scheduleForLaterButton(_ sender: Any) {
+        
+        guard let activity = selectedActivity else { return }
+        
+        let calendarVC = CalendarModalViewController(
+            nibName: "CalendarModalViewController",
+            bundle: nil
+        )
+        
+        calendarVC.activity = activity
+        calendarVC.delegate = self
+        
+        calendarVC.modalPresentationStyle = .pageSheet
+        if let sheet = calendarVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 40
+            
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        }
+        
+        present(calendarVC, animated: true)
     }
 }

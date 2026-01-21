@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="V7C-if-nlT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="V7C-if-nlT">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -39,19 +39,34 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ezl-T7-Lby">
+                                <rect key="frame" x="337" y="121" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="2R9-SZ-UdB"/>
+                                    <constraint firstAttribute="height" constant="40" id="Jh9-TA-cd4"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" image="calendar" catalog="system"/>
+                                <connections>
+                                    <action selector="calendarTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="yB6-xv-xwz"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Ezl-T7-Lby" secondAttribute="trailing" constant="16" id="bYm-WC-aAx"/>
                             <constraint firstItem="c6Y-L3-fsu" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="bdI-De-osc"/>
                             <constraint firstAttribute="bottom" secondItem="c6Y-L3-fsu" secondAttribute="bottom" id="bta-Hl-BFM"/>
                             <constraint firstItem="c6Y-L3-fsu" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="s3R-6s-WFY"/>
+                            <constraint firstItem="Ezl-T7-Lby" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" constant="121" id="xgl-ME-nFW"/>
                             <constraint firstItem="c6Y-L3-fsu" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="zKt-K7-meq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Explore" id="KWt-en-AiW"/>
                     <connections>
                         <outlet property="activity_collection" destination="c6Y-L3-fsu" id="zpY-Mo-E81"/>
+                        <outlet property="calendarButton" destination="Ezl-T7-Lby" id="Sue-VL-QBW"/>
                         <segue destination="L2x-um-GI4" kind="show" identifier="CategoryVC" id="9kn-iH-yco"/>
                     </connections>
                 </viewController>
@@ -90,6 +105,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="calendar" catalog="system" width="128" height="107"/>
         <namedColor name="AppBackground">
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

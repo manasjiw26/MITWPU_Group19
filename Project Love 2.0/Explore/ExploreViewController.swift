@@ -10,18 +10,24 @@ import UIKit
 class ExploreViewController: UIViewController, UICollectionViewDelegate {
     
     @IBOutlet var activity_collection: UICollectionView!
+    @IBOutlet var calendarButton: UIButton!
+    
     var rewards: [Reward] = []
     var activityCategory: [ActivityCategory] = []
     var activity : [Activity] = []
     var selectedSegmentIndex: Int = 0
     var selectedCategory: ActivityCategory?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        calendarButton.configuration = .glass()
+        calendarButton.setImage(UIImage(systemName: "calendar"), for: .normal)
         
         rewards = DataStore.shared.rewards
         
         DataStore.shared.loadActivityCategory()
-        DataStore.shared.loadSampleData()
+        //DataStore.shared.loadSampleData()
         activityCategory = DataStore.shared.activityCategory
         activity = DataStore.shared.activities
         
@@ -53,6 +59,20 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         present(modalVC, animated: false)
     }
 
+    @IBAction func calendarTapped(_ sender: UIButton) {
+        print("Calendar button tapped")
+        openCalendarModal()
+    }
+    
+    private func openCalendarModal() {
+
+        let storyboard = UIStoryboard(name: "Calendar", bundle: nil)
+            let calendarVC = storyboard.instantiateViewController(
+                withIdentifier: "CalendarViewController"
+            )
+
+            navigationController?.pushViewController(calendarVC, animated: true)
+    }
     
     func registerCell() {
         activity_collection.register(UINib(nibName: "RewardsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "reward_cell")
@@ -60,6 +80,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         activity_collection.register(UINib(nibName: "ActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "activity_cell")
         
         activity_collection.register(UINib(nibName: "ActivitySectionHeaderViewCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header_cell")
+        
         activity_collection.register(
             UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "empty_cell"
@@ -67,6 +88,10 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         activity_collection.register(
             UINib(nibName: "CustomCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "custom_cell"
+        )
+        activity_collection.register(
+            UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "scheduleCalendar_cell"
         )
         
     }
@@ -365,6 +390,34 @@ extension ExploreViewController: ActivityHeaderDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 {
+            let reward = rewards[indexPath.row]
+            let modalVC = RewardModalViewController(nibName: "RewardModalViewController", bundle: nil)
+
+            modalVC.rewardName = reward.name
+            modalVC.rewardEmoji = reward.emoji
+            modalVC.initialStep = reward.progressStep
+
+            modalVC.onProgressUpdate = { [weak self] newStep in
+                self?.rewards[indexPath.row].progressStep = newStep
+            }
+
+            modalVC.modalPresentationStyle = .pageSheet
+
+            if let sheet = modalVC.sheetPresentationController {
+                sheet.detents = [
+                        .custom { _ in
+                            return 350 //height of the modal
+                        }
+                    ]
+                sheet.preferredCornerRadius = 30
+                
+            }
+
+            self.present(modalVC, animated: true)
+            return
+        }
 
         guard indexPath.section == 1 else { return }
 

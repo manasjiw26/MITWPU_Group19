@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SpriteKit
 
 class MemoryJarViewController: UIViewController,
 UICollectionViewDataSource,
@@ -16,6 +17,11 @@ UICollectionViewDelegateFlowLayout {
     
     
     @IBOutlet weak var addButton: UIButton!
+    
+    @IBOutlet weak var MemoryJarView: SKView!
+    
+    
+    
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -33,13 +39,26 @@ UICollectionViewDelegateFlowLayout {
         return cell
         
     }
+    @objc func handleNewMemory() {
+            // 2. Ab direct MemoryJarView se scene access karein, subviews ki zaroorat nahi
+            if let scene = MemoryJarView.scene as? MemoryJarScene {
+                scene.addHeart()
+                
+                // Lag fix karne ke liye debugging hamesha false rakhein
+                MemoryJarView.showsPhysics = false
+                MemoryJarView.showsFPS = false
+                MemoryJarView.showsNodeCount = false
+                MemoryJarView.isAccessibilityElement = false
+                
+            }
+        }
     
 
     
 
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+            super.viewDidLoad()
 
         addButton.configuration = .glass()
         addButton.setTitle("Add", for: .normal)
@@ -49,9 +68,27 @@ UICollectionViewDelegateFlowLayout {
         
         memoryLaneCollectionView.dataSource = self
         memoryLaneCollectionView.delegate = self
-
+            
         memoryLaneCollectionView.collectionViewLayout = generateLayout()
-    }
+
+            NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+        }
+
+        // 3. View sizes calculate hone ke baad scene present karna best hota hai
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            
+            if MemoryJarView.scene == nil {
+                MemoryJarView.backgroundColor = .clear
+                MemoryJarView.showsPhysics = true
+                
+                
+                // Scene creation with direct bounds
+                let scene = MemoryJarScene(size: MemoryJarView.bounds.size)
+                scene.scaleMode = .aspectFill
+                MemoryJarView.presentScene(scene)
+            }
+        }
     private func generateLayout() -> UICollectionViewLayout {
 
         let itemSize = NSCollectionLayoutSize(

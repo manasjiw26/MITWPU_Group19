@@ -15,12 +15,14 @@ struct Activity{
     var time : String
     var status: ActivityStatus
     var category: String
+    var scheduledDate: Date?
 }
 
 enum ActivityStatus {
     case none
     case ongoing
     case completed
+    case scheduled
 }
 
 struct ActivityCategory{
@@ -32,6 +34,8 @@ struct ActivityCategory{
 struct Reward{
     var image : String
     var name : String
+    var emoji: String
+    var progressStep: Int
 }
 
 struct DayInfo{
@@ -78,6 +82,7 @@ struct ActivityStats{
     var imageName: String
     var count: Int
 }
+
 struct SmallModalData{
     var title: String
     var mainImageName: String
@@ -148,8 +153,6 @@ struct MemoryCategory {
     var items: [MemoryItem]
 }
 
-
-// Notification
 enum NotificationType {
     case memory
     case activity
@@ -204,4 +207,30 @@ extension Date {
         formatter.unitsStyle = .short
         return formatter.localizedString(for: self, relativeTo: Date())
     }
+}
+
+struct PhysicsCategory {
+    static let jar: UInt32 = 0b1      // 1
+    static let heart: UInt32 = 0b10   // 2
+}
+// MARK: - User Profile
+
+struct UserProfile {
+    var name: String
+    var email: String
+    var profileImageName: String
+}
+
+// MARK: - Profile Sections
+
+struct ProfileSection {
+    var title: String
+    var items: [ProfileItem]
+}
+
+struct ProfileItem {
+    var title: String
+    var iconName: String
+    var showsChevron: Bool
+
 }
