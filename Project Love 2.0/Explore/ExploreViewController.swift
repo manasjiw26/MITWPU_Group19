@@ -55,18 +55,9 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         modalVC.activityDescription = activity.description
         modalVC.imageName = activity.image
 
-        modalVC.modalPresentationStyle = .pageSheet
+        modalVC.modalPresentationStyle = .overFullScreen
 
-        if let sheet = modalVC.sheetPresentationController {
-            // ONLY include .large() to force it to open expanded immediately
-            sheet.detents = [.large()]
-            
-            // This ensures the top grabber bar is visible
-            sheet.prefersGrabberVisible = true
-            
-            // Setting the corner radius to 40 as requested
-            sheet.preferredCornerRadius = 40
-        }
+        
 
         present(modalVC, animated: true)
     }
@@ -95,7 +86,50 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                 vc.category = selectedCategory
             }
         }
-    
+    private func showCustomActivityAlert() {
+
+        let alert = UIAlertController(
+            title: "Choose Your Activity type",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+
+        // Create Your Own Q&A
+        let createQA = UIAlertAction(title: "Create Your Own Q&A", style: .default) { _ in
+            let storyboard = UIStoryboard(name: "QnAViewController", bundle: nil)
+            let vc = storyboard.instantiateViewController(
+                withIdentifier: "QnAViewController"
+            ) as! QnAViewController
+
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
+        }
+
+        // Write an Activity
+        let writeActivity = UIAlertAction(title: "Write an Activity", style: .default) { _ in
+            let storyboard = UIStoryboard(name: "WriteActivity", bundle: nil)
+            let vc = storyboard.instantiateViewController(
+                withIdentifier: "WriteActivity"
+            ) as! WriteActivityViewController
+
+            if let nav = self.navigationController {
+                nav.pushViewController(vc, animated: true)
+            } else {
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true)
+            }
+        }
+
+        // Cancel
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alert.addAction(createQA)
+        alert.addAction(writeActivity)
+        alert.addAction(cancel)
+        
+
+        present(alert, animated: true)
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         activity_collection.reloadData()
@@ -437,11 +471,13 @@ extension ExploreViewController: ActivityHeaderDelegate {
                 // Open steps directly as per your existing code
             case 3: // Custom
                 if indexPath.row == 0 {
-                    // ONLY open the picker if the first cell (Create button) is tapped
-                    let vc = CustomActivityPickerViewController(nibName: "CustomActivityPickerViewController", bundle: nil)
-                    vc.modalPresentationStyle = .overCurrentContext
-                    vc.modalTransitionStyle = .crossDissolve
-                    present(vc, animated: true)
+//                    // ONLY open the picker if the first cell (Create button) is tapped
+//                    let vc = CustomActivityPickerViewController(nibName: "CustomActivityPickerViewController", bundle: nil)
+//                    vc.modalPresentationStyle = .overCurrentContext
+//                    vc.modalTransitionStyle = .crossDissolve
+//                    present(vc, animated: true)
+                    showCustomActivityAlert()
+                    
                 } else {
                     // Open SmallModal for actual custom activity items
                     let customActivity = DataStore.shared.customActivities[indexPath.row - 1]
