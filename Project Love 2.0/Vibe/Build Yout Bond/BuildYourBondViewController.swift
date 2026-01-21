@@ -9,16 +9,7 @@ import UIKit
 
 class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondActivityCompletionDelegate {
     
-    
-    func didCompleteBondActivity() {
-        guard let name = bondPage?.Name else { return }
 
-        bondPage = DataStore.shared.getBuildYourBondPages(name: name)
-
-        //Reload both sections
-        collectionView.reloadSections(IndexSet([0, 1, 3]))
-    }
-    
     func didStartActivity() {
         if let name = bondPage?.Name {
              bondPage = DataStore.shared.getBuildYourBondPages(name: name)
@@ -26,6 +17,15 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
         collectionView.reloadSections(IndexSet([0, 1, 3]))
 
     }
+    
+    func didCompleteBondActivity() {
+        guard let name = bondPage?.Name else { return }
+
+        bondPage = DataStore.shared.getBuildYourBondPages(name: name)
+
+        collectionView.reloadSections(IndexSet([0, 1, 3]))
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -93,7 +93,7 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
                         )
                     )
 
-                    // Optional: small internal item padding
+                    //small internal item padding
                     item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
 
                     let group = NSCollectionLayoutGroup.vertical(

@@ -23,13 +23,14 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
         contentView.backgroundColor = .white
         
     }
+    
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
         for btn in circleButton {
             btn.layer.cornerRadius = btn.bounds.width / 2
             btn.layer.masksToBounds = true
-//            btn.layer.borderColor = UIColor.lightGray.cgColor
             btn.layer.borderWidth = 3
             btn.backgroundColor = .white
             
@@ -52,11 +53,11 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
 
         for i in 0..<circleButton.count {
 
-            // Step titles (Identify, Empathize, etc.)
-            circlesubtitleLabel[i].text = bond.step[i]
+        // Step titles (Identify, Empathize, etc.)
+        circlesubtitleLabel[i].text = bond.step[i]
 
-            // Render unlocked / locked state
-            renderCircle(at: i, bond: bond)
+        // Render unlocked / locked state
+        renderCircle(at: i, bond: bond)
         }
     }
 
@@ -66,7 +67,7 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
     ) {
         let button = circleButton[index]
 
-        // checking if this step is unlocked?
+        // checking if current step is unlocked
         let isUnlocked: Bool
         if index == 0 {
             isUnlocked = true
@@ -98,7 +99,7 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
 
     
     
-    //*****************to update subtitle heading**********************
+    //***************** to update progressLabel **********************
     
     private func updateProgressLabel(bond: BuildYourBondpage) {
 

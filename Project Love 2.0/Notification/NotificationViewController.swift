@@ -34,8 +34,9 @@ final class NotificationViewController: UIViewController {
          collectionView.reloadData()
      }
     
+    
     //tap handling
-
+    
      private func handleNotificationTap(_ notification: AppNotification) {
          switch notification.type {
 

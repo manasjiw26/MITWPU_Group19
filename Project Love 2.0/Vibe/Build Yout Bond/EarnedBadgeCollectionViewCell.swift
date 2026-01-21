@@ -14,17 +14,20 @@ class EarnedBadgeCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var badgeTitleLabel: UILabel!
     
+    
+    @IBOutlet weak var badgeName: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         
         contentView.layer.cornerRadius = 10
         contentView.backgroundColor = .white
+
     }
 
-    
     func configure(bond: BuildYourBondpage) {
-         badgeTitleLabel.text = bond.badge
+         badgeName.text = bond.badge
          badgeImageView.image = UIImage(
             named: bond.badgeImageName
         )

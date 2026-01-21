@@ -100,6 +100,10 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         
         //Hide keyboard when user drags the chat
         messagesCollectionView.delegate = self
+        
+        messagesCollectionView.register(
+            AudioMessageCell.self
+        )
 
 
     }
@@ -334,6 +338,12 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
 
         // Stop recorder
         audioRecorder?.stop()
+        
+        guard let recorder = audioRecorder,
+                  recorder.currentTime > 0.5 else {
+                cancelRecording()
+                return
+            }
 
         guard let url = audioFileURL else {
             print("No audio file available")
@@ -404,7 +414,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
        }
    }
 
-   extension ChatViewController: MessagesLayoutDelegate{}
    extension ChatViewController: MessagesDisplayDelegate{
        func configureAvatarView(
         _ avatarView: AvatarView,
@@ -541,3 +550,15 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
            present(picker, animated: true)
        }
    }
+
+extension ChatViewController: MessagesLayoutDelegate {
+
+    func audioCellSize(
+        for message: MessageType,
+        at indexPath: IndexPath,
+        in messagesCollectionView: MessagesCollectionView
+    ) -> CGSize {
+        return CGSize(width: 160, height: 40)
+    }
+}
+

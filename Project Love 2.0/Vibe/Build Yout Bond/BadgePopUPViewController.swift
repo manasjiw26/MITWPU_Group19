@@ -42,7 +42,14 @@ class BadgePopUPViewController: UIViewController {
         popupView.layer.shadowRadius = 20
         popupView.layer.masksToBounds = false
         
-        dismissButton.tintColor = .white
+        dismissButton.configuration = .glass()
+        dismissButton.setImage(
+            UIImage(
+                systemName: "xmark",
+                withConfiguration: UIImage.SymbolConfiguration(weight: .medium)
+            ),
+            for: .normal
+        )
         dismissButton.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         dismissButton.layer.cornerRadius = 16
 

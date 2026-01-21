@@ -8,6 +8,7 @@
 import MessageKit
 import Foundation
 import UIKit
+import AVFAudio
 
 struct Sender: SenderType, Codable {
     let senderId: String
@@ -43,13 +44,22 @@ struct ImageMediaItem: MediaItem {
 
 struct ChatAudioItem: AudioItem {
 
-    var url: URL
-    var duration: Float
-    var size: CGSize
+    let url: URL
+    let duration: Float
+    let size: CGSize
 
-    init(url: URL, duration: Float = 2.0) {
+    init(url: URL) {
         self.url = url
-        self.duration = duration
+
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback)
+        try? session.setActive(true)
+
+        let player = try? AVAudioPlayer(contentsOf: url)
+        self.duration = Float(player?.duration ?? 1.0) 
+
         self.size = CGSize(width: 160, height: 40)
     }
 }
+
+
