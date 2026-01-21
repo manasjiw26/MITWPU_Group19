@@ -59,6 +59,7 @@ class FeedBackViewController: UIViewController {
         backButton.configuration = .glass()
         titleLabel.text = feedbackItem.title
         subtitleLabel.text = feedbackItem.subTitle
+        
         moodButton.setTitle(
             feedbackItem.selectedMood ?? "Update Mood",
             for: .normal
@@ -157,7 +158,7 @@ class FeedBackViewController: UIViewController {
 //        vc.screenTitle1 = "Update your mood"
         vc.delegate = self
         vc.selectedIndexPath = nil
-        vc.modalPresentationStyle = .fullScreen
+        vc.modalPresentationStyle = .pageSheet
         
         present(vc, animated: true)
         

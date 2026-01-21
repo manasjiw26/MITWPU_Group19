@@ -114,7 +114,6 @@ class QuestionViewController: UIViewController, UITableViewDelegate,UITableViewD
                currentIndex += 1
                updateUI()
            } else {
-               // 🔴 THIS IS THE KEY LINE
                completionDelegate?.didCompleteDailyCheckIn()
                dismiss(animated: true)
            }

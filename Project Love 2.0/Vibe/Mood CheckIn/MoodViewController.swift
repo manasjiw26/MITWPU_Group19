@@ -61,32 +61,6 @@ class MoodViewController: UIViewController, SmallModalDelegate {
         MoodCheckIn.reloadData()
     }
 
-//    private func openOngoingScreen() {
-//
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//
-//        let vc = storyboard.instantiateViewController(
-//            withIdentifier: "ActivityForHerVC"
-//        ) as! ActivitiesForHerViewController
-//
-//        vc.activitiesForHer = DataStore.shared.ongoingActivities
-//        vc.screenTitle = "Ongoing"
-//
-//        vc.modalPresentationStyle = .fullScreen
-//        present(vc, animated: true)
-//    }
-   
-//       private func openTellMoodSelection(indexPath: IndexPath? = nil) {
-//           let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
-//           let vc = storyboard.instantiateViewController(
-//               withIdentifier: "TellMoodSelectionViewController"
-//           ) as! TellMoodSelectionViewController
-//
-//           vc.selectedIndexPath = indexPath
-//           vc.delegate = self
-//           vc.modalPresentationStyle = .fullScreen
-//           present(vc, animated: true)
-//       }
 
     func registerCells() {
         MoodCheckIn.register(

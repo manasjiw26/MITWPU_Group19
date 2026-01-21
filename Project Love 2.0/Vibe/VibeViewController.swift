@@ -510,7 +510,6 @@ extension VibeViewController:  UICollectionViewDataSource {
         guard cell.label.text == "Me",
               let indexPath = vibeCollectionView.indexPath(for: cell) else { return }
 
-        // ⏱ CHECK 3 HOUR LOCK
         if !MoodManager.shared.canChangeMood() {
             showAlert()
             return

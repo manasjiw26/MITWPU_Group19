@@ -155,24 +155,17 @@ extension TellMoodSelectionViewController:
                         didSelectItemAt indexPath: IndexPath) {
 
         let selectedMood = moods[indexPath.item]
-
-        
-        DataStore.shared.setHisMood(selectedMood)
-
-       
-        if let selectedIndexPath = selectedIndexPath {
+    
+            DataStore.shared.setHisMood(selectedMood)
 
             let moodCheckIn = MoodCheckIn(
-                label: "Me",
+                label: selectedMood.title,
                 imageName: selectedMood.imageName,
                 moodLabel: selectedMood.title
             )
-
-            delegate?.didSelectMood(moodCheckIn, at: selectedIndexPath)
-        }
-
-        
-        dismiss(animated: true)
+            delegate?.didSelectMood(moodCheckIn, at: indexPath)
+            
+            dismiss(animated: true)
     }
 
 

@@ -140,7 +140,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
 
                         let itemSize = NSCollectionLayoutSize(
                             widthDimension: .fractionalWidth(1.0),
-                            heightDimension: .absolute(450)   // 👈 BIG EMPTY CELL
+                            heightDimension: .absolute(450)   // BIG EMPTY CELL
                         )
 
                         let item = NSCollectionLayoutItem(layoutSize: itemSize)
