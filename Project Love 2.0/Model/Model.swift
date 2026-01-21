@@ -87,8 +87,6 @@ struct SmallModalData{
     var title: String
     var mainImageName: String
     var descriptionLabel: String
-    var pointsymbol: String
-    var pointsLabel: String
     var clockImageName: String
     var timerLabel: String
 }

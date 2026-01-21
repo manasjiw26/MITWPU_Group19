@@ -665,8 +665,6 @@ class DataStore {
                 title: "Chill & Glow Sesh",
                 mainImageName: "Chill and Glow sesh",
                 descriptionLabel: "Light up your calm with candles, a facemask, and your favorite tunes. Then breathe, smile, and just flow.",
-                pointsymbol: "star.fill",
-                pointsLabel: "5 ",
                 clockImageName: "clock",
                 timerLabel: "5 mins"
             ),
@@ -675,44 +673,34 @@ class DataStore {
                 title: "Petal Hunt",
                 mainImageName: "Activityimage",
                 descriptionLabel: "Pick pretty blooms and build your own bouquet together.",
-                pointsymbol: "star.fill",
-                pointsLabel: "5 ",
-                clockImageName: "clock",
+               clockImageName: "clock",
                 timerLabel: "5 mins"
             ),
             SmallModalData(
                 title: "Cozy Cocoon",
                 mainImageName: "Cozy Cocoon",
                 descriptionLabel: "Create a comfy little fort, grab snacks and play something relaxing. Settle in and enjoy your cozy escape.",
-                pointsymbol: "star.fill",
-                pointsLabel: "10",
-                clockImageName: "clock",
+               clockImageName: "clock",
                 timerLabel: "15 mins")
             ,
             SmallModalData(
                 title: "The Soft Start-Up",
                 mainImageName: "noContextReveal",
                 descriptionLabel: "One word can cut through a lot of noise. This level creates a quiet reveal that often makes the real issue obvious without restarting the fight.",
-                pointsymbol: "star.fill",
-                pointsLabel: "10",
-                clockImageName: "clock",
+               clockImageName: "clock",
                 timerLabel: "5 mins")
             ,
             SmallModalData(
                 title: "The Empathy Bridge",
                 mainImageName: "GuessBeforeYouAreTold",
                 descriptionLabel: "Understanding becomes a small challenge here. Guessing first brings curiosity into the moment and often softens tension before anything is explained.",
-                pointsymbol: "star.fill",
-                pointsLabel: "20",
-                clockImageName: "clock",
+               clockImageName: "clock",
                 timerLabel: "10 mins")
             ,
             SmallModalData(
                 title: "Collaborative Sprint",
                 mainImageName: "DeletetheGlitch",
                 descriptionLabel: "A simple upgrade that removes one move that keeps causing friction, helping future conflicts play out more smoothly.",
-                pointsymbol: "star.fill",
-                pointsLabel: "30",
                 clockImageName: "clock",
                 timerLabel: "10 mins")
             ,
@@ -720,9 +708,7 @@ class DataStore {
                 title: "The Pattern Interrupt",
                 mainImageName: "BacktoUs",
                 descriptionLabel: "Closure doesn’t always need more words. This level uses a simple shared action to reset the mood and help both people move forward.",
-                pointsymbol:"star.fill",
-                pointsLabel: "40",
-                clockImageName: "clock",
+               clockImageName: "clock",
                 timerLabel: "5 mins")
             // Add more for other activities
         ]

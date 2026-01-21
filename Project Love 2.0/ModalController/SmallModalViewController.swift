@@ -25,8 +25,8 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     @IBOutlet weak var clockImage: UIImageView!
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var DesciptionLabel: UILabel!
-    @IBOutlet weak var PointsLabel: UILabel!
-    @IBOutlet weak var PointsImage: UIImageView!
+//    @IBOutlet weak var PointsLabel: UILabel!
+//    @IBOutlet weak var PointsImage: UIImageView!
     @IBOutlet weak var beginButton: UIButton!
     @IBOutlet weak var scheduleButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
@@ -53,13 +53,10 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
             titleLabel.text = data.title
             DesciptionLabel.text = data.descriptionLabel
             timerLabel.text = data.timerLabel
-            PointsLabel.text = data.pointsLabel
-            
             mainImage.image = UIImage(named: data.mainImageName)
-            PointsImage.image = UIImage(systemName: data.pointsymbol)
             clockImage.image = UIImage(systemName: data.clockImageName)
             clockImage.tintColor = .black
-            PointsImage.tintColor = UIColor(red: 255/255, green: 204/255, blue: 0/255, alpha: 1)
+            
         }
         
         //  Dim background
