@@ -24,20 +24,20 @@
                                 <rect key="frame" x="10" y="0.0" width="350" height="90"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4kY-7A-qaY">
-                                        <rect key="frame" x="80" y="10" width="254" height="15.666666666666664"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                        <rect key="frame" x="80" y="10" width="254" height="13.333333333333336"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6u1-eX-LWW">
-                                        <rect key="frame" x="80" y="28.666666666666671" width="254" height="19.333333333333329"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                        <rect key="frame" x="80" y="28.333333333333329" width="254" height="18"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9mn-bC-dco">
-                                        <rect key="frame" x="307" y="10" width="33" height="15.666666666666664"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                        <rect key="frame" x="309" y="10" width="31" height="14.333333333333336"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -55,7 +55,7 @@
                                 <constraints>
                                     <constraint firstItem="uk3-sF-5at" firstAttribute="centerY" secondItem="DBJ-bq-VZc" secondAttribute="centerY" id="35q-6a-a1k"/>
                                     <constraint firstAttribute="trailing" secondItem="4kY-7A-qaY" secondAttribute="trailing" constant="16" id="4FC-4H-qTg"/>
-                                    <constraint firstItem="6u1-eX-LWW" firstAttribute="top" secondItem="4kY-7A-qaY" secondAttribute="bottom" constant="3" id="5S8-4H-D0f"/>
+                                    <constraint firstItem="6u1-eX-LWW" firstAttribute="top" secondItem="4kY-7A-qaY" secondAttribute="bottom" constant="5" id="5S8-4H-D0f"/>
                                     <constraint firstAttribute="trailing" secondItem="6u1-eX-LWW" secondAttribute="trailing" constant="16" id="8Yg-cq-LaO"/>
                                     <constraint firstItem="4kY-7A-qaY" firstAttribute="leading" secondItem="uk3-sF-5at" secondAttribute="trailing" constant="12" id="AmX-ez-s1H"/>
                                     <constraint firstItem="9mn-bC-dco" firstAttribute="top" secondItem="DBJ-bq-VZc" secondAttribute="top" constant="10" id="Den-Oe-VoV"/>
