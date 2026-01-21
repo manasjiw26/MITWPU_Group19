@@ -19,7 +19,7 @@ class FeedBackViewController: UIViewController {
     weak var bondDelegate: BondActivityCompletionDelegate?
 
 
-    
+    @IBOutlet weak var UpdateMoodView : UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var messageTextField: UITextField!
@@ -49,6 +49,7 @@ class FeedBackViewController: UIViewController {
             action: #selector(textDidChange),
             for: .editingChanged
         )
+        UpdateMoodView.layer.cornerRadius = 12
         messageTextField.layer.cornerRadius = 12
         messageTextField.layer.masksToBounds = true
         moodLabel.layer.cornerRadius = 8

@@ -1,124 +1,129 @@
-//
-//  MemoryJarViewController.swift
-//  Project Love 2.0
-//
-//  Created by SDC-USER on 25/11/25.
-//
-
 import UIKit
 import SpriteKit
 
-class MemoryJarViewController: UIViewController,
-UICollectionViewDataSource,
-UICollectionViewDelegate,
-UICollectionViewDelegateFlowLayout {
+
+class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var memoryLaneCollectionView: UICollectionView!
-    
-    
     @IBOutlet weak var addButton: UIButton!
-    
     @IBOutlet weak var MemoryJarView: SKView!
     
-    
-    
-    
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemoryLaneCell", for: indexPath) as! MemoryLaneCell
-             
-       
-        
-        cell.ImageView.image = UIImage(named: "memjar\(indexPath.item + 1)")
-        
-        return cell
-        
-    }
-    @objc func handleNewMemory() {
-            // 2. Ab direct MemoryJarView se scene access karein, subviews ki zaroorat nahi
-            if let scene = MemoryJarView.scene as? MemoryJarScene {
-                scene.addHeart()
-                
-                // Lag fix karne ke liye debugging hamesha false rakhein
-                MemoryJarView.showsPhysics = false
-                MemoryJarView.showsFPS = false
-                MemoryJarView.showsNodeCount = false
-                MemoryJarView.isAccessibilityElement = false
-                
-            }
-        }
-    
-
-    
-
-    
     override func viewDidLoad() {
-            super.viewDidLoad()
-
-        addButton.configuration = .glass()
-        addButton.setTitle("Add", for: .normal)
-        
-        //hides back button after clicking on notification
-        navigationItem.hidesBackButton = true
+        super.viewDidLoad()
         
         memoryLaneCollectionView.dataSource = self
-        memoryLaneCollectionView.delegate = self
-            
         memoryLaneCollectionView.collectionViewLayout = generateLayout()
+        
+        MemoryJarView.allowsTransparency = true
+        MemoryJarView.backgroundColor = .clear
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showMemoryDisplay(_:)), name: NSNotification.Name("OpenMemory"), object: nil)
+        memoryLaneCollectionView.alwaysBounceVertical = false
+        memoryLaneCollectionView.showsVerticalScrollIndicator = false
+        memoryLaneCollectionView.contentInsetAdjustmentBehavior = .never
 
-            NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        MemoryJarView.isPaused = false
+        memoryLaneCollectionView.reloadData()
+        syncJarHearts()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        MemoryJarView.isPaused = true
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if MemoryJarView.scene == nil {
+            let scene = MemoryJarScene(size: MemoryJarView.bounds.size)
+            scene.scaleMode = .aspectFill
+            MemoryJarView.presentScene(scene)
+            syncJarHearts()
         }
+    }
 
-        // 3. View sizes calculate hone ke baad scene present karna best hota hai
-        override func viewDidLayoutSubviews() {
-            super.viewDidLayoutSubviews()
+    private func syncJarHearts() {
+        guard let scene = MemoryJarView.scene as? MemoryJarScene else { return }
+        let currentHearts = scene.children.filter { $0.name?.hasPrefix("heart_") == true }
+        let actualDataCount = dataStore.savedMemories.count
+        
+        if currentHearts.count != actualDataCount {
+            scene.children
+                .filter { $0.name?.hasPrefix("heart_") == true }
+                .forEach { $0.removeFromParent() }
             
-            if MemoryJarView.scene == nil {
-                MemoryJarView.backgroundColor = .clear
-                MemoryJarView.showsPhysics = true
-                
-                
-                // Scene creation with direct bounds
-                let scene = MemoryJarScene(size: MemoryJarView.bounds.size)
-                scene.scaleMode = .aspectFill
-                MemoryJarView.presentScene(scene)
+            for (index, memory) in dataStore.savedMemories.enumerated() {
+                scene.addHeart(index: index, memoryID: memory.id, animate: false)
             }
         }
-    private func generateLayout() -> UICollectionViewLayout {
+    }
 
+    @objc func handleNewMemory() {
+        DispatchQueue.main.async {
+            self.memoryLaneCollectionView.reloadData()
+            
+            if let scene = self.MemoryJarView.scene as? MemoryJarScene {
+                let newIndex = dataStore.savedMemories.count - 1
+                let memory = dataStore.savedMemories[newIndex]
+                scene.addHeart(index: newIndex, memoryID: memory.id, animate: true)
+                let indexPath = IndexPath(item: newIndex, section: 0)
+                self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
+            }
+        }
+    }
+
+    // MARK: - CollectionView Methods
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataStore.savedMemories.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemoryLaneCell", for: indexPath) as! MemoryLaneCell
+        let memory = dataStore.savedMemories[indexPath.item]
+        cell.ImageView.image = memory.uiImage ?? UIImage(named: memory.imageName)
+        return cell
+    }
+
+    private func generateLayout() -> UICollectionViewLayout {
+        
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(100),
-            heightDimension: .absolute(100)
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+        
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(100),
-            heightDimension: .absolute(100)
+            widthDimension: .estimated(110),
+            heightDimension: .absolute(110)
         )
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitems: [item]
-        )
-//        group.interItemSpacing = .fixed(10)
-
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
         let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 2   // space between cells
         section.orthogonalScrollingBehavior = .continuous
-        section.interGroupSpacing = 12
-
-        // THIS centers the cells vertically in 90pt height
-        section.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: 10,
-            bottom: 0,
-            trailing: 10
-        )
-
+        
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12) // left-right spacing
+        
         return UICollectionViewCompositionalLayout(section: section)
+    }
+
+    @objc func showMemoryDisplay(_ notification: Notification) {
+        
+        guard let index = notification.object as? Int else { return }
+        
+        guard index >= 0 && index < dataStore.savedMemories.count else { return }
+        
+        if let displayVC = storyboard?.instantiateViewController(withIdentifier: "memoryDisplay") as? memoryDisplay {
+            displayVC.memory = dataStore.savedMemories[index]
+            displayVC.modalPresentationStyle = .pageSheet
+            self.present(displayVC, animated: true)
+        }
     }
 }

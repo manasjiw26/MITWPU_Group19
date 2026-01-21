@@ -152,6 +152,15 @@ struct MemoryCategory {
     let title: String
     var items: [MemoryItem]
 }
+struct Memory {
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var imageName: String
+    var location: String
+    var title: String
+    var description: String
+    var uiImage: UIImage?
+}
 
 enum NotificationType {
     case memory

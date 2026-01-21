@@ -21,6 +21,7 @@ class DataStore {
     var questions: [Question] = []
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
+    var savedMemories: [Memory] = []
     
     private(set) var allActivities: [Activity] = []
 
