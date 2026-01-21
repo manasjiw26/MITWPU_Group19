@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19E4D7532F209832009CD345 /* GlassSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 19E4D7522F209832009CD345 /* GlassSound.mp3 */; };
+		19E4D7552F20A8B2009CD345 /* Tink.caf in Resources */ = {isa = PBXBuildFile; fileRef = 19E4D7542F20A8B2009CD345 /* Tink.caf */; };
 		1F1788AC2EF35C9F00976F75 /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1F1788AB2EF35C9F00976F75 /* MessageKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1909FEE72ED5D2B80007823D /* Project Love 2.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project Love 2.0.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		197A8F8B2F10BBB500001447 /* Extension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Extension.xcodeproj; sourceTree = "<group>"; };
+		19E4D7522F209832009CD345 /* GlassSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = GlassSound.mp3; sourceTree = "<group>"; };
+		19E4D7542F20A8B2009CD345 /* Tink.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Tink.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -51,6 +55,7 @@
 		1909FEDE2ED5D2B80007823D = {
 			isa = PBXGroup;
 			children = (
+				19E4D7512F2097D4009CD345 /* Resources */,
 				1909FEE92ED5D2B80007823D /* Project Love 2.0 */,
 				1909FEE82ED5D2B80007823D /* Products */,
 			);
@@ -69,6 +74,15 @@
 			children = (
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		19E4D7512F2097D4009CD345 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				19E4D7542F20A8B2009CD345 /* Tink.caf */,
+				19E4D7522F209832009CD345 /* GlassSound.mp3 */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -145,6 +159,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19E4D7532F209832009CD345 /* GlassSound.mp3 in Resources */,
+				19E4D7552F20A8B2009CD345 /* Tink.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +188,7 @@
 				DEVELOPMENT_TEAM = 9YW76R6Q5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -208,6 +225,7 @@
 				DEVELOPMENT_TEAM = 9YW76R6Q5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

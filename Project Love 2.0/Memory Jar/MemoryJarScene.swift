@@ -1,8 +1,12 @@
+import AVFoundation
+import UIKit
 import Foundation
 import SpriteKit
 import CoreMotion
 
 class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
+    private var lastGlassHit: TimeInterval = 0
+    private let glassHaptic = UIImpactFeedbackGenerator(style: .medium)
     
     // MARK: - Properties
     var motionData: CMAcceleration?
@@ -10,19 +14,65 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
     var jarCap: SKSpriteNode?
     var jarBodySprite: SKSpriteNode?
     let heartTexture = SKTexture(imageNamed: "heart_icon")
+    let heartBodyTexture = SKTexture(imageNamed: "heart_body")
+    
     var sharedHeartPhysicsBody: SKPhysicsBody?
     let motionManager = CMMotionManager()
-
+    private var glassPlayer: AVAudioPlayer?
+    private var lastHeartVelocity: CGVector = .zero
     override func didMove(to view: SKView) {
-        self.backgroundColor = .clear // Keeps the background transparent
-        
-        setupJarPhysics() 
+        self.backgroundColor = .clear
+        glassHaptic.prepare()
+        setupJarPhysics()
         setupJarCap()
-        
+        setupGlassSound()
         startGravityControl()
         self.physicsWorld.contactDelegate = self
     }
+    private func setupGlassSound() {
+        guard let url = Bundle.main.url(forResource: "Tink", withExtension: "caf") else {
+            fatalError("❌ glass_tap.wav not found in bundle")
+        }
 
+        do {
+            glassPlayer = try AVAudioPlayer(contentsOf: url)
+            glassPlayer?.volume = 0.1
+            glassPlayer?.prepareToPlay()
+        } catch {
+            fatalError("❌ Audio init failed")
+        }
+    }
+    func didBegin(_ contact: SKPhysicsContact) {
+
+        let now = CACurrentMediaTime()
+        guard now - lastGlassHit > 0.25 else { return }
+
+        let maskA = contact.bodyA.categoryBitMask
+        let maskB = contact.bodyB.categoryBitMask
+
+        let heartHitsJar =
+            (maskA == PhysicsCategory.heart && maskB == PhysicsCategory.jar) ||
+            (maskB == PhysicsCategory.heart && maskA == PhysicsCategory.jar)
+
+        guard heartHitsJar else { return }
+
+        // Get the HEART body (not the jar)
+        let heartBody: SKPhysicsBody =
+            (contact.bodyA.categoryBitMask == PhysicsCategory.heart)
+            ? contact.bodyA
+            : contact.bodyB
+
+        let impactStrength = hypot(lastHeartVelocity.dx, lastHeartVelocity.dy)
+
+        // ❌ ignore sliding / rolling
+        guard impactStrength > 100 else { return }
+       
+
+        lastGlassHit = now
+
+        glassHaptic.impactOccurred()
+        glassPlayer?.play()
+    }
     func setupJarPhysics() {
         // Using your original custom Bezier Path coordinates
         let jarPath = UIBezierPath()
@@ -49,6 +99,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         jarBody.restitution = 0.2
         jarBody.categoryBitMask = PhysicsCategory.jar
         jarBody.collisionBitMask = PhysicsCategory.heart
+        jarBody.contactTestBitMask = PhysicsCategory.heart
         self.physicsBody = jarBody
     }
 
@@ -73,12 +124,15 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         heart.userData = ["index": index]
         heart.position = CGPoint(x: size.width / 2, y: size.height * 0.88)
         if sharedHeartPhysicsBody == nil {
-            sharedHeartPhysicsBody = SKPhysicsBody(texture: heartTexture, alphaThreshold: 0.5, size: heart.size)
+            sharedHeartPhysicsBody = SKPhysicsBody(texture: heartBodyTexture, alphaThreshold: 0.5, size: heart.size)
         }
         heart.physicsBody = sharedHeartPhysicsBody?.copy() as? SKPhysicsBody
         heart.physicsBody?.categoryBitMask = PhysicsCategory.heart
         heart.physicsBody?.collisionBitMask = PhysicsCategory.heart | PhysicsCategory.jar
-        heart.physicsBody?.restitution = 0.3
+        heart.physicsBody?.contactTestBitMask = PhysicsCategory.jar
+        heart.physicsBody?.restitution = 0.1
+        heart.physicsBody?.linearDamping = 2.5
+        heart.physicsBody?.angularDamping = 3.0
         addChild(heart)
     }
 
@@ -125,6 +179,14 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         if let accel = motionData {
             self.physicsWorld.gravity = CGVector(dx: accel.x * 12, dy: accel.y * 12)
+        }
+
+        for node in children {
+            if let body = node.physicsBody,
+               body.categoryBitMask == PhysicsCategory.heart {
+                lastHeartVelocity = body.velocity
+                break
+            }
         }
     }
 }

@@ -79,7 +79,7 @@ class memoryDisplay: UIViewController {
         self.dismiss(animated: true)
     }
     
-    @IBAction func doneButton(_ sender: Any) {
-        self.dismiss(animated: true)
-    }
+//    @IBAction func doneButton(_ sender: Any) {
+//        self.dismiss(animated: true)
+//    }
 }

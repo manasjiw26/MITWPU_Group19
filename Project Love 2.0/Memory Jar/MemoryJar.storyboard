@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eCU-Nl-dqC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eCU-Nl-dqC">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -238,11 +238,6 @@
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="efl-OE-6au">
                                             <connections>
                                                 <action selector="closeButtonTapped:" destination="nql-1m-DIE" id="aYT-SX-TM4"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="qZx-p4-mrk">
-                                            <connections>
-                                                <action selector="doneButton:" destination="nql-1m-DIE" id="GSt-tP-YML"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -855,7 +850,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Jgv-H1-iZu"/>
+        <segue reference="5zS-HN-Ehg"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Empty_Image1" width="730" height="306"/>

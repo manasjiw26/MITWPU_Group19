@@ -1,6 +1,7 @@
 import UIKit
 import SpriteKit
 
+
 class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var memoryLaneCollectionView: UICollectionView!
@@ -13,7 +14,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         memoryLaneCollectionView.dataSource = self
         memoryLaneCollectionView.collectionViewLayout = generateLayout()
         
-        // Critical: Fixes the black box and ensures the SpriteKit jar is visible
         MemoryJarView.allowsTransparency = true
         MemoryJarView.backgroundColor = .clear
         
@@ -29,8 +29,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewWillAppear(animated)
         MemoryJarView.isPaused = false
         memoryLaneCollectionView.reloadData()
-        
-        // Sync hearts to fix the "doubling" issue
         syncJarHearts()
     }
 
@@ -55,9 +53,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         let currentHearts = scene.children.filter { $0.name?.hasPrefix("heart_") == true }
         let actualDataCount = dataStore.savedMemories.count
         
-        // Only refresh if the count is incorrect (prevents doubling hearts)
         if currentHearts.count != actualDataCount {
-            // "Surgical" removal: Jar body and Cap stay because their names are different
             scene.children
                 .filter { $0.name?.hasPrefix("heart_") == true }
                 .forEach { $0.removeFromParent() }
@@ -122,7 +118,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         
         guard let index = notification.object as? Int else { return }
         
-        // ✅ prevents index out of range crash
         guard index >= 0 && index < dataStore.savedMemories.count else { return }
         
         if let displayVC = storyboard?.instantiateViewController(withIdentifier: "memoryDisplay") as? memoryDisplay {
