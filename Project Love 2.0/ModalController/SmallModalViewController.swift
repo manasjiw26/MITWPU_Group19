@@ -94,7 +94,6 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     func didSchedule(activity: Activity, on date: Date) {
         DataStore.shared.updateScheduledDate(for: activity, date: date)
 
-            // ✅ 2. Notify parent to refresh if needed
             delegate?.didStartActivity()
 
         
@@ -119,25 +118,22 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     
     
     @IBAction func beginButon(_ sender: Any) {
-        if flowSource == .explore,
-           let activity = selectedActivity {
-            
-            DataStore.shared.markActivityOngoing(activity: activity)
-        }
-        
-        
+
+        guard let activity = selectedActivity else { return }
+
+        DataStore.shared.startActivity(activity)
+
         delegate?.didStartActivity()
-        
+
         let storyboard = UIStoryboard(name: "Steps", bundle: nil)
         let stepsVC = storyboard.instantiateViewController(
             withIdentifier: "StepsViewController"
         ) as! StepsViewController
-        
-        stepsVC.activitytitle = selectedActivity?.name ?? ""
-        stepsVC.activity = selectedActivity
+
+        stepsVC.activity = activity
         stepsVC.flowSource = flowSource
         stepsVC.modalPresentationStyle = .fullScreen
-        
+
         if let presenter = self.presentingViewController {
             UIView.animate(withDuration: 0.1) {
                 self.view.backgroundColor = UIColor.black.withAlphaComponent(0)

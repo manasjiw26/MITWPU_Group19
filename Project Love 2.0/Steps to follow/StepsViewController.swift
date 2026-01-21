@@ -38,25 +38,35 @@ class StepsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        steps = DataStore.shared.loadSteps(for: activitytitle)
-        stepsTable.reloadData()
-        setupBackButton()
-        backButton.configuration = .glass()
-        stepsTable.allowsSelection = false
-        stepsTable.tableFooterView = UIView()
-        continueButton.configuration = .glass()
-        continueButton.setTitle("Continue", for: .normal)
-        
-        tableBackgroundCell.layer.cornerRadius = 20
+
+        guard let activity = activity else {
+            print(" StepsViewController: activity is nil")
+            return
+        }
+
+        activitytitle = activity.name
+        activityTitle.text = activitytitle
+        subtitle.text = "Set the Scene with these steps"
+
+        steps = DataStore.shared.loadSteps(for: activity.name)
+
         stepsTable.dataSource = self
         stepsTable.delegate = self
+        stepsTable.reloadData()
+
+        setupBackButton()
+        backButton.configuration = .glass()
+
+        stepsTable.allowsSelection = false
+        stepsTable.tableFooterView = UIView()
         stepsTable.isScrollEnabled = false
         stepsTable.rowHeight = UITableView.automaticDimension
         stepsTable.estimatedRowHeight = 200
-        
-        activityTitle.text = activitytitle
-        subtitle.text = "Set the Scene with these steps"
-        
+
+        continueButton.configuration = .glass()
+        continueButton.setTitle("Continue", for: .normal)
+
+        tableBackgroundCell.layer.cornerRadius = 20
     }
     
     private func setupBackButton() {

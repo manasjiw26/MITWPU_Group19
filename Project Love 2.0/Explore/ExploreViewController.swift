@@ -27,7 +27,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         rewards = DataStore.shared.rewards
         
         DataStore.shared.loadActivityCategory()
-        DataStore.shared.loadSampleData()
+        //DataStore.shared.loadSampleData()
         activityCategory = DataStore.shared.activityCategory
         activity = DataStore.shared.activities
         

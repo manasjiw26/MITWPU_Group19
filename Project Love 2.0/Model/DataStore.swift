@@ -377,6 +377,22 @@ class DataStore {
             activities[index].status = .ongoing
         }
     }
+    func startActivity(_ activity: Activity) {
+
+        if let index = activities.firstIndex(where: {
+            $0.name == activity.name &&
+            $0.category == activity.category
+        }) {
+            activities[index].status = .ongoing
+            return
+        }
+
+        var newActivity = activity
+        newActivity.status = .ongoing
+        activities.append(newActivity)
+
+        print("Added new ongoing activity:", newActivity.name)
+    }
 
     func getBuildYourBondPages(name : String) -> BuildYourBondpage? {
         return bondpage.first { $0.Name == name }
