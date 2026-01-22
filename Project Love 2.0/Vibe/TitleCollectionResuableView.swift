@@ -13,7 +13,7 @@ class TitleCollectionResuableView: UICollectionReusableView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+
     }
     func configureTitle(title: String, subtitle: String) {
         titleLabel.text = title

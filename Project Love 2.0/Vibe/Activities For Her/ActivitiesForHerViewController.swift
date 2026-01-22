@@ -20,11 +20,6 @@ class ActivitiesForHerViewController: UIViewController, UICollectionViewDelegate
         activityCollectionView.delegate = self
         title = screenTitle
 
-//        if let layout = activityCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-//            layout.itemSize = CGSize(width: view.bounds.width - 32, height: 120)
-//            layout.minimumLineSpacing = 12
-//            layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-//        }
         registerCells()
        
     }
@@ -72,9 +67,9 @@ extension ActivitiesForHerViewController: UICollectionViewDataSource {
 
 extension ActivitiesForHerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let padding: CGFloat = 32 // 16 left + 16 right
+        let padding: CGFloat = 32
         let width = collectionView.bounds.width - padding
-        let height: CGFloat = 115 // Adjust this based on your cell's content
+        let height: CGFloat = 115 
         return CGSize(width: width, height: height)
     }
 }

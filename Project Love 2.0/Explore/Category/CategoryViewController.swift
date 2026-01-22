@@ -8,18 +8,14 @@ import UIKit
 
 class CategoryViewController: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet weak var navigationTitle: UINavigationItem!
     @IBOutlet weak var activityCollectionView: UICollectionView!
 
-    // MARK: - Input (set before navigation)
-    var category: ActivityCategory?        // preferred
-    var categoryName: String?              // optional fallback
+    var category: ActivityCategory?
+    var categoryName: String?
 
-    // MARK: - Data
     private var activities: [Activity] = []
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -28,8 +24,8 @@ class CategoryViewController: UIViewController {
         registerCells()
     }
 
-    // MARK: - Setup
     private func setupUI() {
+        
         activityCollectionView.dataSource = self
         activityCollectionView.delegate = self
 
@@ -64,10 +60,7 @@ extension CategoryViewController: UICollectionViewDataSource {
         return activities.count
     }
 
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath ) -> UICollectionViewCell {
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "activity_cell",
@@ -89,17 +82,14 @@ extension CategoryViewController: UICollectionViewDelegate {
 
         let selectedActivity = activities[indexPath.row]
 
-        // pass REAL Activity (business logic)
         modalVC.selectedActivity = selectedActivity
 
-        // pass modal UI data
         if let modalData = dataStore.smallmodal.first(
             where: { $0.title == selectedActivity.name }
         ) {
             modalVC.modalData = modalData
         }
 
-        // tell modal this came from Explore
         modalVC.flowSource = .explore
 
         modalVC.modalPresentationStyle = .overFullScreen
@@ -108,11 +98,7 @@ extension CategoryViewController: UICollectionViewDelegate {
 }
 extension CategoryViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath ) -> CGSize {
 
         let padding: CGFloat = 32
         let width = collectionView.bounds.width - padding

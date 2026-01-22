@@ -4,7 +4,6 @@ import MapKit
 
 class NewAddNewViewController: UIViewController {
 
-    // MARK: - Outlets
     @IBOutlet var textFieldView: [UIView]!
     @IBOutlet weak var dateTextField: UITextField!
     @IBOutlet weak var memoryTitleTextField: UITextField!
@@ -12,11 +11,9 @@ class NewAddNewViewController: UIViewController {
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var memoryImageView: UIImageView!
 
-    // MARK: - Properties
     private let datePicker = UIDatePicker()
     private let placeholderText = "Type here..."
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -34,7 +31,6 @@ class NewAddNewViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    // MARK: - Setup
     private func setupUI() {
         [dateTextField, memoryTitleTextField, locationTextField].forEach {
             $0?.borderStyle = .none
@@ -73,9 +69,9 @@ class NewAddNewViewController: UIViewController {
 
     private func setupNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
-                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+            name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
-                                               name: UIResponder.keyboardWillHideNotification, object: nil)
+            name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     private func applyCornerStyles() {
@@ -86,7 +82,6 @@ class NewAddNewViewController: UIViewController {
         }
     }
 
-    // MARK: - Actions
     @objc private func datePickerValueChanged() {
         updateDateTextField(date: datePicker.date)
     }
@@ -104,13 +99,11 @@ class NewAddNewViewController: UIViewController {
         let currentImage = memoryImageView.image
         let placeholderImage = UIImage(named: "Empty_Image1")
 
-        // Image validation
         if currentImage == nil || currentImage?.pngData() == placeholderImage?.pngData() {
             showError(message: "Please select a photo to save this memory.")
             return
         }
 
-        // ✅ TITLE FIX (DEFAULT = "Memory")
         let rawTitle = memoryTitleTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let title = rawTitle.isEmpty ? "Memory" : rawTitle
@@ -136,7 +129,7 @@ class NewAddNewViewController: UIViewController {
                                       preferredStyle: .alert)
         present(alert, animated: true)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             alert.dismiss(animated: true) {
                 NotificationCenter.default.post(
                     name: NSNotification.Name("MemoryAdded"),
@@ -147,7 +140,7 @@ class NewAddNewViewController: UIViewController {
         }
     }
 
-    // MARK: - Helpers
+
     private func updateDateTextField(date: Date) {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -163,7 +156,7 @@ class NewAddNewViewController: UIViewController {
     }
 }
 
-// MARK: - Location Search
+//  Location Search
 extension NewAddNewViewController: LocationSearchDelegate {
 
     func didSelectLocation(_ name: String) {
@@ -182,7 +175,7 @@ extension NewAddNewViewController: LocationSearchDelegate {
     }
 }
 
-// MARK: - Image Picking
+//Image Picking
 extension NewAddNewViewController: PHPickerViewControllerDelegate,
                                    UIImagePickerControllerDelegate,
                                    UINavigationControllerDelegate {
@@ -236,9 +229,9 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate,
     }
 }
 
-// MARK: - Keyboard & Text Delegates
+// Keyboard & Text Delegates
 extension NewAddNewViewController: UITextFieldDelegate, UITextViewDelegate {
-
+    
     @objc private func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize =
             (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue

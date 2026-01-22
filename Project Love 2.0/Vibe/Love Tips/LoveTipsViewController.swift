@@ -19,7 +19,7 @@ class LoveTipsViewController: UIViewController, UITableViewDelegate, UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Ensure the sheet starts at medium
+        
             if let sheet = self.sheetPresentationController {
                 sheet.detents = [.medium(), .large()]
                 sheet.selectedDetentIdentifier = .medium
@@ -49,11 +49,9 @@ class LoveTipsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBAction func confirmSelectionTapped(_ sender: UIButton) {
         let newlySelected = selectedOptions.map { tips[$0] }
         
-        // Update the master list
         selectedTips.append(contentsOf: newlySelected)
         delegate?.didUpdateSelectedTips(selectedTips)
 
-        // Show the summary/review screen
         let vc = UIStoryboard(name: "LoveTipsSelected", bundle: nil).instantiateViewController(withIdentifier: "LoveTipsSelectedViewController") as! LoveTipsSelectedViewController
         vc.selectedTips = selectedTips
         vc.delegate = delegate

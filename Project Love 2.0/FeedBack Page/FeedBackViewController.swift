@@ -9,15 +9,13 @@ import UIKit
 
 
 class FeedBackViewController: UIViewController {
+    
     var feedbackItem: FeedBackGiven!
     var flowSource: ActivityFlowSource?
     var activity: Activity?
-
     var bondName: String?
     var selectedActivityIndex: Int?
-    
     weak var bondDelegate: BondActivityCompletionDelegate?
-
 
     @IBOutlet weak var UpdateMoodView : UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -50,16 +48,22 @@ class FeedBackViewController: UIViewController {
             for: .editingChanged
         )
         UpdateMoodView.layer.cornerRadius = 12
+        
         messageTextField.layer.cornerRadius = 12
         messageTextField.layer.masksToBounds = true
+        
         moodLabel.layer.cornerRadius = 8
         moodLabel.layer.masksToBounds = true
+        
         doneButton.configuration = .glass()
         doneButton.setTitle("Done", for: .normal)
+        
         setupBackButton()
         backButton.configuration = .glass()
+        
         titleLabel.text = feedbackItem.title
         subtitleLabel.text = feedbackItem.subTitle
+        
         let tapGesture = UITapGestureRecognizer(
                 target: self,
                 action: #selector(dismissKeyboard)
@@ -106,7 +110,6 @@ class FeedBackViewController: UIViewController {
         if let activity = activity {
                DataStore.shared.markActivityCompleted(activity: activity)
            }
-
         // unlovk next activity
            guard
                let bondName = bondName,
@@ -161,7 +164,6 @@ class FeedBackViewController: UIViewController {
             withIdentifier: "TellMoodSelectionViewController"
         ) as! TellMoodSelectionViewController
         
-//        vc.screenTitle1 = "Update your mood"
         vc.delegate = self
         vc.selectedIndexPath = nil
         vc.modalPresentationStyle = .pageSheet

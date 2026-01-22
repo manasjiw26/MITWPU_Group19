@@ -41,14 +41,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fNU-07-Ygd">
-                                                    <rect key="frame" x="16" y="10" width="74" height="60"/>
+                                                    <rect key="frame" x="16" y="10" width="74" height="68"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="60" id="6BP-x4-W1X"/>
-                                                        <constraint firstAttribute="width" constant="60" id="JzB-h4-sVi"/>
+                                                        <constraint firstAttribute="height" constant="68" id="6BP-x4-W1X"/>
+                                                        <constraint firstAttribute="width" constant="68" id="JzB-h4-sVi"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pr3-w4-n5S">
-                                                    <rect key="frame" x="0.0" y="75" width="106" height="27"/>
+                                                    <rect key="frame" x="0.0" y="83" width="106" height="19"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>

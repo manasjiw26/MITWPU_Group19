@@ -33,7 +33,6 @@ class TellMoodSelectionViewController: UIViewController {
         button.setImage(image, for: .normal)
         button.tintColor = .label
 
-        // Native-style background
         button.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
         button.layer.cornerRadius = 20
         button.layer.shadowColor = UIColor.black.cgColor
@@ -45,9 +44,7 @@ class TellMoodSelectionViewController: UIViewController {
     }()
     
     let moods = DataStore.shared.moodOptions
-    //var screenTitle1: String?
-
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.delegate = self
@@ -55,7 +52,7 @@ class TellMoodSelectionViewController: UIViewController {
         
         backButton.configuration = .glass()
         setupBackButton()
-        //titleLabel.text = screenTitle1
+
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
             layout.estimatedItemSize = .zero
@@ -95,8 +92,7 @@ extension TellMoodSelectionViewController:
         }
 
         func collectionView(_ collectionView: UICollectionView,
-                            cellForItemAt indexPath: IndexPath)
-        -> UICollectionViewCell {
+                            cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "MoodCell",
@@ -137,7 +133,7 @@ extension TellMoodSelectionViewController:
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
 
-        // Screen width math for PERFECT centering
+        
         let totalCellWidth = (106 * 3)        // 3 cells
         let totalSpacing = (16 * 2)           // space between cells
         let totalUsed = CGFloat(totalCellWidth + totalSpacing)
@@ -167,7 +163,6 @@ extension TellMoodSelectionViewController:
             
             dismiss(animated: true)
     }
-
-
-    }
+    
+}
 

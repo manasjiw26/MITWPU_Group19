@@ -14,7 +14,7 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
         if let name = bondPage?.Name {
              bondPage = DataStore.shared.getBuildYourBondPages(name: name)
          }
-        collectionView.reloadSections(IndexSet([0, 1, 3]))
+        collectionView.reloadSections(IndexSet([0, 1, 3])) //reloads sections 0,1 and 3
 
     }
     
@@ -118,17 +118,16 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
                         )
                         let item = NSCollectionLayoutItem(layoutSize: itemSize)
                         
-                        // GROUP
                         let groupSize = NSCollectionLayoutSize(
                             widthDimension: .fractionalWidth(1.0),
-                            heightDimension: .estimated(240)  // Adjust based on your content height
+                            heightDimension: .estimated(240)
                         )
                         let group = NSCollectionLayoutGroup.vertical(
                             layoutSize: groupSize,
                             subitems: [item]
                         )
                         
-                        // SECTION
+                        
                         let section = NSCollectionLayoutSection(group: group)
                         section.contentInsets = NSDirectionalEdgeInsets(
                             top: 0,
@@ -163,11 +162,11 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
             else{
                 let itemSize = NSCollectionLayoutSize(
                           widthDimension: .fractionalWidth(1.0),
-                          heightDimension: .absolute(125) // auto height for labels
+                          heightDimension: .absolute(125)
                       )
                       let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                      // GROUP (vertical list)
+                      
                       let groupSize = NSCollectionLayoutSize(
                           widthDimension: .fractionalWidth(1.0),
                           heightDimension: .absolute(125)
@@ -177,10 +176,9 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
                           subitems: [item]
                       )
 
-                      // SECTION
+                      
                       let section = NSCollectionLayoutSection(group: group)
 
-                      // outer spacing (card margins)
                       section.contentInsets = NSDirectionalEdgeInsets(
                           top: 5,
                           leading: 16,
@@ -188,7 +186,7 @@ class BuildYourBondViewController: UIViewController, SmallModalDelegate,  BondAc
                           trailing: 16
                       )
 
-                      // spacing between cards (this is where your dotted line visually fits)
+                      //separator
                       section.interGroupSpacing = 8
                 section.boundarySupplementaryItems = [titleItem]
 

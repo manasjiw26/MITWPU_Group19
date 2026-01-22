@@ -13,14 +13,14 @@ import AVFoundation
 
 
 class ChatViewController: MessagesViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PHPickerViewControllerDelegate {
-    var pendingImages: [UIImage] = []
+
     let currentUser = Sender(
         senderId: "self", displayName: "Me"
     )
     let otherUser = Sender(
         senderId: "other", displayName: "User"
     )
-    
+    var i = 0
     var sampleMessages: [ChatMessage] = []
     
     //for voice recording //properties
@@ -55,10 +55,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
-        
-        
-        messagesCollectionView.reloadData()
-        messagesCollectionView.scrollToLastItem()
+  
         
         let plusButton = InputBarButtonItem()
         plusButton.setSize(
@@ -97,9 +94,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false   // So table view still works
         messagesCollectionView.addGestureRecognizer(tap)
-        
-        //Hide keyboard when user drags the chat
-        messagesCollectionView.delegate = self
+
         
         messagesCollectionView.register(
             AudioMessageCell.self
@@ -140,13 +135,11 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         ]
     }
     func configureInputBar() {
-        // 1. Set the delegate so we know when text changes
-        messageInputBar.delegate = self
         
-        // 2. Clear the default Send button initially
+        // Clear the default Send button initially
         messageInputBar.setStackViewItems([micButton], forStack: .right, animated: false)
         
-        // 3. Stylize the Input bar
+        // Stylize the Input bar
         messageInputBar.setRightStackViewWidthConstant(to: 38, animated: false)
     }
     
@@ -158,7 +151,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
     func showActions() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        // 1. Camera Action
+        // Camera Action
         let cameraImage = UIImage(systemName: "camera")?.withRenderingMode(.alwaysOriginal)
         let sendPhotoAction = UIAlertAction(title: "Open Camera", style: .default) { [weak self] _ in
             self?.openCamera()
@@ -166,7 +159,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         sendPhotoAction.setValue(cameraImage, forKey: "image")
         alert.addAction(sendPhotoAction)
         
-        // 2. Gallery Action
+        // Gallery Action
         let galleryImage = UIImage(systemName: "photo.stack")?.withRenderingMode(.alwaysOriginal)
         let openGalleryAction = UIAlertAction(title: "Open Gallery", style: .default) { [weak self] _ in
             self?.openGallery()
@@ -186,12 +179,12 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         in messagesCollectionView: MessagesCollectionView
     ) -> UIColor {
         
-        // If the message was sent by you → purple
+        // If the message was sent by you- purple
         if message.sender.senderId == currentUser.senderId {
             return UIColor.systemIndigo
         }
         
-        // Incoming messages → default gray
+        // Incoming messages- gray
         return UIColor.systemGray5
     }
 
@@ -222,7 +215,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
     func openGallery() {
         var config = PHPickerConfiguration(photoLibrary: .shared())
         config.filter = .images
-        config.selectionLimit = 0   // unlimited → Done(count)
+        config.selectionLimit = 0
 
         let picker = PHPickerViewController(configuration: config)
         picker.delegate = self
@@ -237,18 +230,15 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
     sender: currentUser,
     messageId: UUID().uuidString,
     sentDate: Date(),
-    kind: .photo(mediaItem) // <--- Using .photo instead of .text
+    kind: .photo(mediaItem)
         )
         
         sampleMessages.append(newMessage)
-        // Ensure you update your sampleMessages if you are using that as a backing store
-        // sampleMessages.append(newMessage)
         
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
     }
-    
-    // ... inside ChatViewController
+
     func showPhotoSentPopover(count: Int) {
 
         let message: String
@@ -273,7 +263,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
     }
 
 
-    // The Walkie-Talkie Button
     lazy var micButton: InputBarButtonItem = {
         let item = InputBarButtonItem()
         item.image = UIImage(systemName: "mic.fill")
@@ -290,7 +279,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
     
     @objc func startRecording() {
 
-        // 1. Request microphone permission
+        // Request microphone permission
         AVAudioSession.sharedInstance().requestRecordPermission { allowed in
             if !allowed {
                 print("Microphone access denied")
@@ -298,17 +287,14 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             }
         }
 
-        // 2. Prepare audio session
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playAndRecord, mode: .default)
         try? session.setActive(true)
 
-        // 3. Create file path
         let filename = UUID().uuidString + ".m4a"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
         audioFileURL = url
 
-        // 4. Recorder settings
         let settings: [String : Any] = [
             AVFormatIDKey: kAudioFormatMPEG4AAC,
             AVSampleRateKey: 12000,
@@ -316,7 +302,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
         ]
 
-        // 5. Start recording
         do {
             audioRecorder = try AVAudioRecorder(url: url, settings: settings)
             audioRecorder?.record()
@@ -352,10 +337,8 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
 
         print("Sending voice note:", url)
 
-        // Wrap into audio item
         let audioItem = ChatAudioItem(url: url)
 
-        // Build MessageKit message
         let message = ChatMessage(
             sender: currentUser,
    messageId: UUID().uuidString,
@@ -363,10 +346,8 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             kind: .audio(audioItem)
         )
 
-        // Add to array
         sampleMessages.append(message)
 
-        // Update UI
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
 
@@ -441,23 +422,12 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
 
 
    extension ChatViewController: InputBarAccessoryViewDelegate {
+       
        func inputBar(_ inputBar: InputBarAccessoryView,
                      didPressSendButtonWith text: String) {
 
-           // 1️⃣ Send queued images first
-           for image in pendingImages {
-       let message = ChatMessage(
-        sender: currentUser,
-        messageId: UUID().uuidString,
-        sentDate: Date(),
-        kind: .photo(ImageMediaItem(image: image))
-       )
-               sampleMessages.append(message)
-           }
 
-           pendingImages.removeAll()
-
-           // 2️⃣ Send text if any
+           // Send text after images
            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
            if !trimmed.isEmpty {
                let message = ChatMessage(
@@ -472,15 +442,16 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
            inputBar.inputTextView.text = ""
            messagesCollectionView.reloadData()
            messagesCollectionView.scrollToLastItem(animated: true)
+           simulatePartnerReply()
        }
        
        func inputBar(_ inputBar: InputBarAccessoryView, textViewTextDidChangeTo text: String) {
            
            if text.isEmpty {
-               // Text is empty -> Show Mic Button
+               // if text is empty then show Mic Button
                inputBar.setStackViewItems([micButton], forStack: .right, animated: true)
            } else {
-               // User is typing -> Show Send Button
+               // if user is typing then Show Send Button
                inputBar.setStackViewItems([inputBar.sendButton], forStack: .right, animated: true)
            }
        }
@@ -540,15 +511,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
            }
 
    }
-       func openPhotoPicker() {
-           var config = PHPickerConfiguration(photoLibrary: .shared())
-           config.filter = .images
-           config.selectionLimit = 0   // unlimited → enables count on Done
-
-           let picker = PHPickerViewController(configuration: config)
-           picker.delegate = self
-           present(picker, animated: true)
-       }
    }
 
 extension ChatViewController: MessagesLayoutDelegate {
@@ -561,4 +523,37 @@ extension ChatViewController: MessagesLayoutDelegate {
         return CGSize(width: 160, height: 40)
     }
 }
+extension ChatViewController {
+    /// Call this after YOU send a message
+    func simulatePartnerReply() {
+        let hardcodedReplies = [
+            "Hello! How are you?",
+            "I am also good",
+            "I’ll be back in an hour.",
+            "Okay see you later!"
+        ]
 
+        // Random reply
+        if(i < hardcodedReplies.count) {} else { return }
+        let replyText = hardcodedReplies[i]
+        i += 1
+
+        // Simulate typing delay (1.5–3 seconds)
+        let delay = Double.random(in: 1.5...3.0)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let self = self else { return }
+
+            let replyMessage = ChatMessage(
+                sender: self.otherUser,
+                messageId: UUID().uuidString,
+                sentDate: Date(),
+kind: .text(replyText)
+            )
+
+            self.sampleMessages.append(replyMessage)
+            self.messagesCollectionView.reloadData()
+            self.messagesCollectionView.scrollToLastItem(animated: true)
+        }
+    }
+}

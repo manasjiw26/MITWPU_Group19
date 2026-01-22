@@ -13,7 +13,7 @@ class BuildYourBondCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var BackgroundImage : UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+       
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
     }

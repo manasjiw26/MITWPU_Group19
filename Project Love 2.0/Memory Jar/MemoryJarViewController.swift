@@ -65,6 +65,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
     }
 
     @objc func handleNewMemory() {
+        //UI work must be done on the main thread to Prevents crashes and visual glitches
         DispatchQueue.main.async {
             self.memoryLaneCollectionView.reloadData()
             
@@ -72,13 +73,12 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                 let newIndex = dataStore.savedMemories.count - 1
                 let memory = dataStore.savedMemories[newIndex]
                 scene.addHeart(index: newIndex, memoryID: memory.id, animate: true)
+                // To scroll to last index where memory is added
                 let indexPath = IndexPath(item: newIndex, section: 0)
                 self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
             }
         }
     }
-
-    // MARK: - CollectionView Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataStore.savedMemories.count

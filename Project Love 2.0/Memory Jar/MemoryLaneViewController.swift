@@ -39,7 +39,8 @@ class MemoryLaneViewController: UIViewController,
 
         return cell
     }
-
+    
+    // Memory clicked open full image
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
 
@@ -58,8 +59,6 @@ class MemoryLaneViewController: UIViewController,
 
         let spacing: CGFloat = 2
         let columns: CGFloat = 3
-        
-        // ITEM
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalHeight(1.0)
@@ -70,7 +69,6 @@ class MemoryLaneViewController: UIViewController,
                                                      bottom: spacing/2,
                                                      trailing: spacing/2)
 
-        // GROUP (Row with 3 items)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalWidth(1.0 / columns)
@@ -81,8 +79,6 @@ class MemoryLaneViewController: UIViewController,
             subitem: item,
             count: Int(columns)
         )
-
-        // SECTION
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = NSDirectionalEdgeInsets(top: spacing,
                                                         leading: spacing,

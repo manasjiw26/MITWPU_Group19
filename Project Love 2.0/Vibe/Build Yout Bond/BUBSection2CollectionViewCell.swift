@@ -12,9 +12,11 @@ class BUBSection2CollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var trophySubtitleLabel: UILabel!
     @IBOutlet weak var trophyImageView: UIImageView!
     @IBOutlet var circleView: UIView!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+       
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
         contentView.backgroundColor = .white

@@ -8,40 +8,39 @@
 import Foundation
 import UIKit
 class DataStore {
+    
     static let shared = DataStore()
+    
     var activities: [Activity] = []
     var rewards: [Reward] = []
+    var customActivities: [Activity] = []
     var activityCategory: [ActivityCategory] = []
+    
+    var suggestedActivities: [Activity] = []
     var buildYourBond : [BuildYourBond] = []
+    var bondpage: [BuildYourBondpage] = []
     var tips: [Tip] = []
+    
     var moods: [MoodCheckIn] = []
+    var moodOptions: [Mood] = []
+    
     var smallmodal: [SmallModalData] = []
     var steps: [StepsToFollow] = []
-    var moodOptions: [Mood] = []
-    var questions: [Question] = []
-    var suggestedActivities: [Activity] = []
-    var bondpage: [BuildYourBondpage] = []
-    var savedMemories: [Memory] = []
-    var customActivities: [Activity] = []
-    var personalInfoSections: [PersonalInfoSection] = []
-    private(set) var allActivities: [Activity] = []
-
-    //var ongoingActivities: [Activity] = []
     
-    private var HisMood: Mood?
-    private var HerMood: Mood? = Mood(
-        id: -1,
-        title: "Calm",
-        imageName: "calm"
-    )
-
-   
-    private(set) var notifications: [AppNotification] = []
-    // MARK: - Profile Data
-
+    var questions: [Question] = []
+    
+    var savedMemories: [Memory] = []
+    
+    var personalInfoSections: [PersonalInfoSection] = []
     var userProfile: UserProfile?
     var profileSections: [ProfileSection] = []
-
+    
+    
+    private(set) var allActivities: [Activity] = []
+    private var HisMood: Mood?
+    private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "calm" )
+    private(set) var notifications: [AppNotification] = []
+    private(set) var savedFeedback: [FeedBackGiven] = []
     
     init() {
         loadSampleData()
@@ -57,13 +56,9 @@ class DataStore {
         loadPersonalInfoData()
         loadProfileData()
         buildAllActivities()
-        //loadCheckIn()
-        
     }
     
-    
     // Notification
-    
     func addNotification(_ notification: AppNotification) {
         notifications.insert(notification, at: 0)
     }
@@ -71,13 +66,11 @@ class DataStore {
     func getNotifications() -> [AppNotification] {
         notifications
     }
-
     func markNotificationAsRead(id: UUID) {
         if let index = notifications.firstIndex(where: { $0.id == id }) {
             notifications[index].isRead = true
         }
     }
-
     func loadSampleNotifications() {
         notifications = [
             AppNotification(
@@ -102,24 +95,22 @@ class DataStore {
                 message: "Sent you a love note ❤️",
                 type: .loveNote,
                 createdAt: Date().addingTimeInterval(-3600),
-                isRead: true
+                isRead: false
             )
         ]
     }
     
-    
     // update mood
-    
-    private(set) var savedFeedback: [FeedBackGiven] = []
-
-        func saveFeedback(_ feedback: FeedBackGiven) {
+    func saveFeedback(_ feedback: FeedBackGiven) {
             savedFeedback.append(feedback)
             print(" Saved feedback:", feedback)
         }
-    
+
     private func mood(by id: Int) -> Mood? {
         moodOptions.first { $0.id == id }
     }
+    
+    //custom activity
     func addCustomActivity(name: String, description: String, date: String) {
         let newActivity = Activity(
             name: name,
@@ -131,10 +122,10 @@ class DataStore {
         )
         customActivities.append(newActivity)
     }
+    
     func loadSampleData() {
         let sampleActivities: [Activity] = [
 
-            // Fun & Playful
             Activity(
                 name: "Chill & Glow Sesh",
                 description: "Facemasks, candles, chill beats — just cozy vibes and glow time",
@@ -165,7 +156,6 @@ class DataStore {
                 scheduledDate: nil
             ),
 
-            // Daily Dose of Us
             Activity(
                 name: "Memory Lane Marathon",
                 description: "Make a mini reel using your photos and favorite audio",
@@ -218,27 +208,7 @@ class DataStore {
         ]
         self.activities = sampleActivities
     }
-    func loadPersonalInfoData() {
-        personalInfoSections = [
-            PersonalInfoSection(
-                title: "Basic Information",
-                items: [
-                    PersonalInfoItem(title: "Full Name", value: "Name", showsChevron: false),
-                    PersonalInfoItem(title: "Email", value: "name@email.com", showsChevron: false),
-                    PersonalInfoItem(title: "Phone Number", value: "+91 9876543210", showsChevron: false),
-                    PersonalInfoItem(title: "Date of Birth", value: "12 Jan 2003", showsChevron: false)
-                ]
-            ),
-
-            PersonalInfoSection(
-                title: "RelationShip Profile",
-                items: [
-                    PersonalInfoItem(title: "Partner Pairing", value: "", showsChevron: true),
-                    PersonalInfoItem(title: "Edit Preferences", value: "", showsChevron: true)
-                ]
-            )
-        ]
-    }
+    
     func loadSuggestedActivity () {
         let suggestedActivity: [Activity] = [
             Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity",scheduledDate: nil),
@@ -247,46 +217,6 @@ class DataStore {
         ]
         self.suggestedActivities = suggestedActivity
     }
-    
-    
-    func loadSampleQuestions () {
-        let sampleQuestions: [Question] = [
-            Question(
-                       title: "How close do you feel to your partner today so far?",
-                       options: ["Very close", "Somewhat close", "A bit distant", "Very distant"]
-                   ),
-
-                   Question(
-                       title: "How has your vibe been with each other today so far?",
-                       options: ["Smooth", "Neutral", "A little off", "Tense"]
-                   ),
-
-                   Question(
-                       title: "What do you feel you need from your partner right now?",
-                       options: ["Comfort", "Connection", "Fun", "Space"]
-                   ),
-
-                   Question(
-                       title: "How open are you to doing something together right now?",
-                       options: ["Very open", "Somewhat open", "Not right now, but later", "Not in the mood"]
-                   )
-               ]
-        self.questions = sampleQuestions
-    }
-    func loadSampleRewards() {
-        let sampleRewards: [Reward] = [
-            Reward(image: "Send_Hug", name: "Send hug", emoji: "🤗", progressStep: 0),
-            Reward(image: "Send_Flower", name: "Send flower", emoji: "🌻", progressStep: 0),
-            Reward(image: "Send_Kiss", name: "Send kiss", emoji: "😘", progressStep: 0),
-            Reward(image: "Send_Heart", name: "Send heart", emoji: "🫶🏻", progressStep: 0),
-            Reward(image: "Send_Note", name: "Send note", emoji: "💌", progressStep: 0),
-            Reward(image: "Send_Wave", name: "Send wave", emoji: "👋", progressStep: 0),
-            Reward(image: "Send_Hug", name: "Send high five", emoji: "🙌", progressStep: 0)
-        ]
-        
-        self.rewards = sampleRewards
-    }
-    
     func getActivities(forCategoryName name: String) -> [Activity] {
             return activities.filter { $0.category == name }
         }
@@ -301,51 +231,30 @@ class DataStore {
         ]
         self.activityCategory = sampleCategory
     }
-    func loadSampleTips() {
-        let sampleTips: [Tip] = [
-            Tip(title: "Make hot chocolate for her"),
-            Tip(title: "Write her a sweet note"),
-            Tip(title: "Give her a foot massage"),
-            Tip(title: "Prepare dinner for her"),
-            Tip(title: "Offer to do her chores"),
-            Tip(title: "Plan a movie date night"),
-            Tip(title: "Cook her favorite meal"),
-            Tip(title: "Help her with her homework"),
-            Tip(title: "Organize her closet")
+    
+    
+    //profile
+    func loadPersonalInfoData() {
+        personalInfoSections = [
+            PersonalInfoSection(
+                title: "Basic Information",
+                items: [
+                    PersonalInfoItem(title: "Full Name", value: "Name", showsChevron: false),
+                    PersonalInfoItem(title: "Email", value: "name@email.com", showsChevron: false),
+                    PersonalInfoItem(title: "Phone Number", value: "+91 9876543210", showsChevron: false),
+                    PersonalInfoItem(title: "Date of Birth", value: "12 Jan 2003", showsChevron: false)
+                ]
+            ),
+            PersonalInfoSection(
+                title: "RelationShip Profile",
+                items: [
+                    PersonalInfoItem(title: "Partner Pairing", value: "", showsChevron: true),
+                    PersonalInfoItem(title: "Edit Preferences", value: "", showsChevron: true)
+                ]
+            )
         ]
-        
-        self.tips = sampleTips
-    }
-    func getAllTips() -> [Tip] {
-        return [
-            Tip(title: "Make hot chocolate for her"),
-            Tip(title: "Write her a sweet note"),
-            Tip(title: "Give her a foot massage"),
-            Tip(title: "Prepare dinner for her"),
-            Tip(title: "Offer to do her chores"),
-            Tip(title: "Plan a movie date night"),
-            Tip(title: "Cook her favorite meal"),
-            Tip(title: "Help her with her homework"),
-            Tip(title: "Organize her closet")
-        ]
-    }
-    func loadBuildYourbond() -> [BuildYourBond]{
-        let sampleBuildYourBond: [BuildYourBond] = [
-            BuildYourBond(name: "Navigate Conflict Together", imageName: "Conflict"),
-            BuildYourBond(name: "Rekindle Honeymoon Phase", imageName: "Rekindle"),
-            BuildYourBond(name: "Establishing Good Communication", imageName: "communication")]
-        
-            return sampleBuildYourBond
     }
     
-    func sampleMoods() -> [MoodCheckIn] {
-        let mood: [MoodCheckIn] = [
-            MoodCheckIn(label: "Me", imageName: "calm", moodLabel: "Calm"),
-            MoodCheckIn(label: "Her", imageName: "drained", moodLabel: "Drained")
-        ]
-        return mood
-    }
-    //Profile data
     func loadProfileData() {
 
         userProfile = UserProfile(
@@ -386,9 +295,98 @@ class DataStore {
             )
         ]
     }
-
     
+    
+    func loadSampleQuestions () {
+        let sampleQuestions: [Question] = [
+            Question(
+                       title: "How close do you feel to your partner today so far?",
+                       options: ["Very close", "Somewhat close", "A bit distant", "Very distant"]
+                   ),
 
+                   Question(
+                       title: "How has your vibe been with each other today so far?",
+                       options: ["Smooth", "Neutral", "A little off", "Tense"]
+                   ),
+
+                   Question(
+                       title: "What do you feel you need from your partner right now?",
+                       options: ["Comfort", "Connection", "Fun", "Space"]
+                   ),
+
+                   Question(
+                       title: "How open are you to doing something together right now?",
+                       options: ["Very open", "Somewhat open", "Not right now, but later", "Not in the mood"]
+                   )
+               ]
+        self.questions = sampleQuestions
+    }
+    
+    //rewards
+    func loadSampleRewards() {
+        let sampleRewards: [Reward] = [
+            Reward(image: "Send_Hug", name: "Send hug", emoji: "🤗", progressStep: 0),
+            Reward(image: "Send_Flower", name: "Send flower", emoji: "🌻", progressStep: 0),
+            Reward(image: "Send_Kiss", name: "Send kiss", emoji: "😘", progressStep: 0),
+            Reward(image: "Send_Heart", name: "Send heart", emoji: "🫶🏻", progressStep: 0),
+            Reward(image: "Send_Note", name: "Send note", emoji: "💌", progressStep: 0),
+            Reward(image: "Send_Wave", name: "Send wave", emoji: "👋", progressStep: 0),
+            Reward(image: "Send_Hug", name: "Send high five", emoji: "🙌", progressStep: 0)
+        ]
+        
+        self.rewards = sampleRewards
+    }
+    
+    //love tips
+    func loadSampleTips() {
+        let sampleTips: [Tip] = [
+            Tip(title: "Make hot chocolate for her"),
+            Tip(title: "Write her a sweet note"),
+            Tip(title: "Give her a foot massage"),
+            Tip(title: "Prepare dinner for her"),
+            Tip(title: "Offer to do her chores"),
+            Tip(title: "Plan a movie date night"),
+            Tip(title: "Cook her favorite meal"),
+            Tip(title: "Help her with her homework"),
+            Tip(title: "Organize her closet")
+        ]
+        
+        self.tips = sampleTips
+    }
+    
+    func getAllTips() -> [Tip] {
+        return [
+            Tip(title: "Make hot chocolate for her"),
+            Tip(title: "Write her a sweet note"),
+            Tip(title: "Give her a foot massage"),
+            Tip(title: "Prepare dinner for her"),
+            Tip(title: "Offer to do her chores"),
+            Tip(title: "Plan a movie date night"),
+            Tip(title: "Cook her favorite meal"),
+            Tip(title: "Help her with her homework"),
+            Tip(title: "Organize her closet")
+        ]
+    }
+    
+    //build your bond
+    func loadBuildYourbond() -> [BuildYourBond]{
+        let sampleBuildYourBond: [BuildYourBond] = [
+            BuildYourBond(name: "Navigate Conflict Together", imageName: "Conflict"),
+            BuildYourBond(name: "Rekindle Honeymoon Phase", imageName: "Rekindle"),
+            BuildYourBond(name: "Establishing Good Communication", imageName: "Communication")]
+        
+            return sampleBuildYourBond
+    }
+    
+    func sampleMoods() -> [MoodCheckIn] {
+        let mood: [MoodCheckIn] = [
+            MoodCheckIn(label: "Me", imageName: "calm", moodLabel: "Calm"),
+            MoodCheckIn(label: "Her", imageName: "drained", moodLabel: "Drained")
+        ]
+        return mood
+    }
+
+    //steps to follow
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {
 
         switch activityTitle {
@@ -577,9 +575,11 @@ class DataStore {
             return []
         }
     }
+    
     func getActivities(for category: ActivityCategory) -> [Activity] {
         return activities.filter { $0.category == category.name }
     }
+    
     func loadsampleBuildYourBond() {
         let bond :[BuildYourBondpage] = [
             BuildYourBondpage(
@@ -783,21 +783,10 @@ class DataStore {
         return bondpage.first { $0.Name == name }
     }
 
-//    func loadCheckIn() {
-//        let sampleCheckIn: [DailyCheckIn] = [
-//            DailyCheckIn(Title: "Daily Check-In", imageName: "calm", Subtitle: "Get personalised exercises based on your relationship")
-//        ]
-//        
-//        self.checkin = sampleCheckIn
-//    }
     func setHisMood(_ mood: Mood) {
         HisMood = mood
         print("His mood ", mood.title)
     }
-
-//    func setHisMood(moodId: Int) {
-//        HisMood = mood(by: moodId)
-//    }
 
     func setHerMood(moodId: Int) {
         HerMood = mood(by: moodId)
@@ -856,59 +845,8 @@ class DataStore {
             allActivities.append(contentsOf: page.activity)
         }
     }
-
-
-
     
-    //calendar
-    func getDayInfo(for date: Date, color: UIColor) -> DayInfo {
-        let formatter = DateFormatter()
-        formatter.locale = Locale.current
-        formatter.calendar = Calendar.current
-
-        formatter.dateFormat = "EEE"
-        let day = formatter.string(from: date)
-
-        formatter.dateFormat = "dd"
-        let dateNumber = formatter.string(from: date)
-
-        return DayInfo(rawDate: date, day: day, date: dateNumber, color: color)
-    }
-
-    func getLastAndNext15Days() -> [DayInfo] {
-        let calendar = Calendar.current
-        let today = Date()
-        var result: [DayInfo] = []
-        
-        // Last 15 days colors (RGB)
-        let lastColors: [UIColor] = [
-            UIColor(red: 164/255, green: 189/255, blue: 215/255, alpha: 1),
-            UIColor(red: 240/255, green: 196/255, blue: 228/255, alpha: 1),
-            UIColor(red: 200/255, green: 187/255,  blue: 240/255, alpha: 1),
-            UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
-        ]
-        
-        let white = UIColor.white
-        
-        // LAST 15 DAYS
-        for offset in -15...(-1) {
-            if let date = calendar.date(byAdding: .day, value: offset, to: today) {
-                result.append(getDayInfo(for: date, color: lastColors.randomElement()!))
-            }
-        }
-        
-        // TODAY
-        result.append(getDayInfo(for: today, color: white))
-        
-        // NEXT 15 DAYS
-        for offset in 1...15 {
-            if let date = calendar.date(byAdding: .day, value: offset, to: today) {
-                result.append(getDayInfo(for: date, color: white))
-            }
-        }
-        
-        return result
-    }
+    //small modal data
     func loadSmallModalData() {
         let sample: [SmallModalData] = [
             SmallModalData(
@@ -976,17 +914,11 @@ class DataStore {
             SmallModalData(title: "Bid-Catching Pro", mainImageName: "DeletetheGlitch", descriptionLabel: "Notice and respond to small connection bids.", clockImageName: "clock", timerLabel: "10 mins")
             ,
             SmallModalData(title: "The Intimacy Architect", mainImageName: "BacktoUs", descriptionLabel: "Build a daily ritual that bonds you deeply.", clockImageName: "clock", timerLabel: "10 mins")
-            // Add more for other activities
         ]
         
         self.smallmodal = sample
     }
 
-//    func makeSmileData() {
-//        MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard")
-//        MakeSmile(types: "Love Tips", imageName: "lightbulb.max")
-//        MakeSmile(types: "Activities for Her", imageName: "checklist")
-//    }
     
     func feedBackData() -> [FeedBackGiven] {
         [
@@ -1007,6 +939,7 @@ class DataStore {
                 )]
     }
 
+    //mood options
     func loadMoodOptions() -> [Mood] {
         return [
             Mood(id: 1, title: "Joyful", imageName: "Joyful"),
@@ -1033,8 +966,7 @@ class DataStore {
     
     
     // unlock of activities in build your bond
-    func unlockNextBondActivity( bondName: String,
-                                 completedIndex: Int) {
+    func unlockNextBondActivity( bondName: String, completedIndex: Int) {
        
         guard let pageIndex = bondpage.firstIndex(where: { $0.Name == bondName }) else {
               return
@@ -1049,8 +981,7 @@ class DataStore {
               bondpage[pageIndex].activity[nextIndex].status = .none
           }
     }
-
-
 }
+
 // Create one shared instance
 let dataStore = DataStore()

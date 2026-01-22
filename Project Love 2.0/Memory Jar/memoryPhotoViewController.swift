@@ -6,17 +6,14 @@ class memoryPhotoViewController: UIViewController,
                                  UICollectionViewDelegateFlowLayout,
                                  LocationSearchDelegate {
 
-    // MARK: - Outlets
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var MemoryTitle: UILabel!
     @IBOutlet weak var MemoryDate: UILabel!
     @IBOutlet weak var MemoryImage: UIImageView!
     @IBOutlet weak var thumbnailsCollectionView: UICollectionView!
 
-    // MARK: - Data
-    var currentIndex: Int = 0   // index into dataStore.savedMemories
+    var currentIndex: Int = 0
 
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -31,20 +28,20 @@ class memoryPhotoViewController: UIViewController,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        // disabling left swipe to back
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
-
+    
+    // tap bar hidden when memory is opened
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
     }
 
-    // MARK: - Close
     @IBAction func closeButton(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
 
-    // MARK: - UI Update (READ FROM DATASTORE)
     func updateUI() {
         guard !dataStore.savedMemories.isEmpty else { return }
 
@@ -56,7 +53,9 @@ class memoryPhotoViewController: UIViewController,
         MemoryDate.text = formatter.string(from: memory.date)
         MemoryImage.image = memory.uiImage ??
                             UIImage(named: memory.imageName)
-
+        
+        //collection view scroll to that particular image
+        
         let indexPath = IndexPath(item: currentIndex, section: 0)
         thumbnailsCollectionView.selectItem(
             at: indexPath,
@@ -65,7 +64,6 @@ class memoryPhotoViewController: UIViewController,
         )
     }
     
-    // MARK: - Menu (•••)
     func setupMenu() {
 
         let adjustLocation = UIAction(
@@ -91,8 +89,8 @@ class memoryPhotoViewController: UIViewController,
             delete
         ])
     }
-
-    // MARK: - Segue
+    
+    // Ti open location view controler
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToLocation" {
             let vc = segue.destination as! LocationSearchViewController
@@ -100,7 +98,6 @@ class memoryPhotoViewController: UIViewController,
         }
     }
 
-    // MARK: - LocationSearchDelegate (WRITE TO DATASTORE)
     func didSelectLocation(_ name: String) {
         dataStore.savedMemories[currentIndex].location = name
         updateUI()
@@ -108,19 +105,20 @@ class memoryPhotoViewController: UIViewController,
 
     func deleteMemory() {
 
-        // ✅ Step 1: take the memory before removing
+        // take the memory before removing
         let deletedMemory = dataStore.savedMemories[currentIndex]
 
-        // ✅ Step 2: delete from datastore
+        // delete from datastore
         dataStore.savedMemories.remove(at: currentIndex)
 
-        // ✅ Step 3: delete ONLY that heart from jar (NO notifications)
+        // find the jar vc
         if let jarVC = navigationController?.viewControllers.first(where: { $0 is MemoryJarViewController }) as? MemoryJarViewController,
            let scene = jarVC.MemoryJarView.scene as? MemoryJarScene {
 
             scene.removeHeart(memoryID: deletedMemory.id)
         }
-
+        
+        // If no memories give a popover
         if dataStore.savedMemories.isEmpty {
             navigationController?.popViewController(animated: true)
             return
@@ -131,7 +129,6 @@ class memoryPhotoViewController: UIViewController,
         updateUI()
     }
 
-    // MARK: - Swipes
     func setupSwipes() {
         let left = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
         left.direction = .left
@@ -154,14 +151,14 @@ class memoryPhotoViewController: UIViewController,
 
         UIView.transition(
             with: MemoryImage,
-            duration: 0.25,
+            duration: 0.4,
             options: .transitionCrossDissolve
         ) {
             self.updateUI()
         }
     }
-
-    // MARK: - Thumbnails
+    
+    // Collection view
     func setupThumbnails() {
         thumbnailsCollectionView.dataSource = self
         thumbnailsCollectionView.delegate = self

@@ -69,7 +69,7 @@ extension ActivityStatsViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let width = collectionView.frame.width - 32   // 16 left + 16 right
+        let width = collectionView.frame.width - 32   
         return CGSize(width: width, height: 100)
     }
 
@@ -93,14 +93,5 @@ extension ActivityStatsViewController: UICollectionViewDelegateFlowLayout {
         }
 }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 

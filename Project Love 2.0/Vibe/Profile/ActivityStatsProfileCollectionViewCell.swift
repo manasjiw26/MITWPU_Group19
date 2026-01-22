@@ -18,7 +18,6 @@ class ActivityStatsProfileCollectionViewCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 19
         contentView.layer.masksToBounds = true
         contentView.backgroundColor = .white
-        // Initialization code
     }
     func configureCell(item: ActivityStats) {
         let config = UIImage.SymbolConfiguration(weight: .semibold)

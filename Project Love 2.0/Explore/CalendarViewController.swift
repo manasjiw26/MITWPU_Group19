@@ -65,7 +65,7 @@ extension CalendarViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        //SECTION 0 - CALENDAR
+        // Calendar
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "scheduleCalendar_cell",
@@ -87,7 +87,7 @@ extension CalendarViewController: UICollectionViewDataSource {
             return cell
         }
 
-        // SECTION 1 - EMPTY STATE
+        // Empty state
         if activitiesForSelectedDate.isEmpty {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "empty_cell",
@@ -102,7 +102,7 @@ extension CalendarViewController: UICollectionViewDataSource {
             return cell
         }
 
-        //SECTION 1 - ACTIVITY CELL
+        //activity cell
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "activity_cell",
             for: indexPath
@@ -122,17 +122,17 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
 
                let width = collectionView.bounds.width - sectionInset.left - sectionInset.right
 
-               // SECTION 0 — CALENDAR
+               // calendar
                if indexPath.section == 0 {
                    return CGSize(width: width, height: 100)
                }
 
-               // SECTION 1 — EMPTY STATE
+               // empty state
                if activitiesForSelectedDate.isEmpty {
                    return CGSize(width: width, height: 400)
                }
 
-               // SECTION 1 — ACTIVITY CELL
+               // activity cell
                return CGSize(width: width, height: 115)
     }
 

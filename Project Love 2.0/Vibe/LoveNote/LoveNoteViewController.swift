@@ -27,7 +27,6 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
         containerView.clipsToBounds = true
     }
 
-    // MARK: - Schedule Popover
 
     @IBAction func scheduleTapped(_ sender: UIButton) {
         presentSchedulePopover(from: sender)
@@ -78,7 +77,7 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
         scheduleButton.setTitle("Scheduled for \(time)", for: .normal)
     }
 
-    // MARK: - Actions
+    
 
     @IBAction func closeTapped(_ sender: UIButton) {
         dismiss(animated: true)
@@ -90,7 +89,7 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
     }
 }
 
-// MARK: - Popover Delegate
+
 
 extension LoveNoteViewController {
     func adaptivePresentationStyle(

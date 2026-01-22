@@ -25,8 +25,6 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     @IBOutlet weak var clockImage: UIImageView!
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var DesciptionLabel: UILabel!
-//    @IBOutlet weak var PointsLabel: UILabel!
-//    @IBOutlet weak var PointsImage: UIImageView!
     @IBOutlet weak var beginButton: UIButton!
     @IBOutlet weak var scheduleButton: UIButton!
     @IBOutlet weak var closeButton: UIButton!
@@ -66,7 +64,6 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
         modalView.backgroundColor = .white
         modalView.layer.cornerRadius = 40
         modalView.layer.masksToBounds = true
-        //        modalView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(modalView)
         
@@ -74,11 +71,8 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Start with hidden dim background
-        //self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
         view.backgroundColor = .clear
         
-        // Start modalView off-screen
         modalView.transform = CGAffineTransform(translationX: 0, y: 400)
     }
     
@@ -95,7 +89,6 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
         DataStore.shared.updateScheduledDate(for: activity, date: date)
 
             delegate?.didStartActivity()
-
         
         UIView.animate(withDuration: 0.2, animations: {
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
@@ -107,7 +100,7 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     
     
     @IBAction func closeButton(_ sender: Any) {
-        //self.dismiss(animated: true, completion: nil)
+      
         UIView.animate(withDuration: 0.25, animations: {
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
             self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)

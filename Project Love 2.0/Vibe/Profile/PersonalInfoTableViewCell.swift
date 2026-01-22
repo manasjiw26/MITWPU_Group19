@@ -19,24 +19,9 @@ class PersonalInfoTableViewCell: UITableViewCell {
     }
     @IBOutlet weak var titleLabel: UILabel!
        @IBOutlet weak var valueTextField: UITextField!
-
-//    func configure(title: String, value: String, isEditing: Bool) {
-//        titleLabel.text = title
-//        valueTextField.text = value
-//
-//        valueTextField.isUserInteractionEnabled = isEditing
-//
-//        valueTextField.borderStyle = .none
-//        valueTextField.layer.cornerRadius = 10
-//        valueTextField.layer.borderWidth = isEditing ? 1 : 0
-//        valueTextField.layer.borderColor = UIColor.systemGray4.cgColor
-//        valueTextField.backgroundColor = isEditing ? .systemBackground : .clear
-//    }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     func configure(title: String,
                    value: String?,

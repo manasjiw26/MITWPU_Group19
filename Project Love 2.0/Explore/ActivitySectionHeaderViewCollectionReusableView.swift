@@ -20,14 +20,11 @@ class ActivitySectionHeaderViewCollectionReusableView: UICollectionReusableView 
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     
     @IBAction func onSegmentChange(_ sender: UISegmentedControl) {
         
-        
-//         Send selected segment to ViewController
         delegate?.didChangeSegment(to: sender.selectedSegmentIndex)
         
     }

@@ -27,7 +27,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         rewards = DataStore.shared.rewards
         
         DataStore.shared.loadActivityCategory()
-        //DataStore.shared.loadSampleData()
+        
         activityCategory = DataStore.shared.activityCategory
         activity = DataStore.shared.activities
         
@@ -164,9 +164,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                 )
 
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-//                item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
 
-                
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(100),
                     heightDimension: .absolute(120)
@@ -187,7 +185,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
 
                         let itemSize = NSCollectionLayoutSize(
                             widthDimension: .fractionalWidth(1.0),
-                            heightDimension: .absolute(450)   // BIG EMPTY CELL
+                            heightDimension: .absolute(450)
                         )
 
                         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -207,7 +205,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                             top: 40, leading: 16, bottom: 40, trailing: 16
                         )
 
-                        // header stays
+                        // header
                         let headerSize = NSCollectionLayoutSize(
                             widthDimension: .fractionalWidth(1),
                             heightDimension: .estimated(70)
@@ -302,7 +300,7 @@ extension ExploreViewController:  UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        // SECTION 0 – Rewards (NO CHANGE)
+        // Rewards
         if indexPath.section == 0 {
             let cell = activity_collection.dequeueReusableCell(
                 withReuseIdentifier: "reward_cell",
@@ -314,9 +312,8 @@ extension ExploreViewController:  UICollectionViewDataSource {
             return cell
         }
 
-        // SECTION 1 – Activities
-
-        // EMPTY STATE – ONGOING
+        // Activities
+        // Emty state – Ongoing
         if selectedSegmentIndex == 1,
            DataStore.shared.getOngoingActivities().isEmpty {
 
@@ -333,7 +330,7 @@ extension ExploreViewController:  UICollectionViewDataSource {
             return cell
         }
 
-        // EMPTY STATE – COMPLETED
+        // Emty state – Completed
         if selectedSegmentIndex == 2,
            DataStore.shared.getCompletedActivities().isEmpty {
 
@@ -445,7 +442,6 @@ extension ExploreViewController:  UICollectionViewDataSource {
 extension ExploreViewController: ActivityHeaderDelegate {
     func didChangeSegment(to index: Int) {
         selectedSegmentIndex = index
-        //activity_collection.setCollectionViewLayout(generateLayout(), animated: false)
         activity_collection.reloadSections(IndexSet(integer : 1))
         
     }
@@ -484,11 +480,11 @@ extension ExploreViewController: ActivityHeaderDelegate {
 
         switch selectedSegmentIndex {
 
-        case 0: // All → Category
+        case 0: // All Category
             selectedCategory = activityCategory[indexPath.row]
             performSegue(withIdentifier: "CategoryVC", sender: self)
 
-        case 1: // Ongoing -> BYPASS MODAL, OPEN STEPS DIRECTLY
+        case 1: // Ongoing
             let ongoingActivities = DataStore.shared.getOngoingActivities()
             let activity = ongoingActivities[indexPath.row] 
             let storyboard = UIStoryboard(name: "Steps", bundle: nil)
@@ -509,7 +505,6 @@ extension ExploreViewController: ActivityHeaderDelegate {
                 showCustomActivityAlert()
                 
             } else {
-                // Open SmallModal for actual custom activity items
                 let customActivity = DataStore.shared.customActivities[indexPath.row - 1]
                 openActivity(customActivity)
             }

@@ -2,28 +2,24 @@ import UIKit
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - Outlets
     @IBOutlet weak var viewForIcon: UIView!
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    // MARK: - Data
+   
     private var user: UserProfile!
     private let sections = DataStore.shared.profileSections
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Refresh the local user object from the updated DataStore
         user = DataStore.shared.userProfile
-        
-        // Update the labels
+       
         nameLabel.text = user.name
         emailLabel.text = user.email
         profileImage.image = UIImage(named: user.profileImageName)
     }
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = UIBarButtonItem(
@@ -36,8 +32,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         setupUI()
        
     }
-    
-    // MARK: - UI Setup
+
     private func setupUI() {
         view.backgroundColor = .systemGroupedBackground
         
@@ -47,37 +42,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         profileImage.image = UIImage(named: user.profileImageName)
     }
     
-    //    private func setupCloseButton() {
-    //        let closeButton = UIButton(type: .close)
-    //        closeButton.translatesAutoresizingMaskIntoConstraints = false
-    //        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-    //        view.addSubview(closeButton)
-    //
-    //        NSLayoutConstraint.activate([
-    //            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-    //            closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
-    //        ])
-    //    }
-//    private func setupEditButton() {
-//        let editButton = UIBarButtonItem(
-//            title: "Edit",
-//            style: .plain,
-//            target: self,
-//            action: #selector(editButtonTapped)
-//        )
-//        navigationItem.rightBarButtonItem = editButton
-//    }
-//    @objc private func editButtonTapped() {
-//        print("Edit tapped")
-//        // later: push EditProfileViewController
-//    }
-    
     
     @objc private func closeButtonTapped() {
         dismiss(animated: true)
     }
-    
-    // MARK: - TableView DataSource
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
@@ -105,8 +74,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return cell
     }
-    
-    // MARK: - TableView Delegate
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         

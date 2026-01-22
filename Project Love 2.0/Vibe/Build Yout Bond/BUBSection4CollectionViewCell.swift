@@ -15,16 +15,14 @@ class BUBSection4CollectionViewCell: UICollectionViewCell {
     @IBOutlet var ActivityimageView : UIImageView!
     @IBOutlet var ActivityView : UIView!
     @IBOutlet var separatorImageView: UIImageView!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        
+    
     }
  
-    func configureCells( activity: Activity,
-                         index: Int,
-                         total: Int,
-                         activities: [Activity]) {
+    func configureCells( activity: Activity,index: Int,total: Int,activities: [Activity]) {
         
             ActivityTitleLabel.text = "Level \(index + 1): \(activity.name)"
             ActivitydescriptionLabel.text = activity.description
@@ -41,7 +39,7 @@ class BUBSection4CollectionViewCell: UICollectionViewCell {
                 // First activity is always unlocked
                 isLocked = false
             } else {
-                // Locked ONLY if previous is not completed
+                // Locked only if previous is not completed
                 isLocked = activities[index - 1].status != .completed
             }
 

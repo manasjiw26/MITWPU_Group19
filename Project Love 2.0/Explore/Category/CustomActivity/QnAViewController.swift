@@ -2,16 +2,13 @@ import UIKit
 
 class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    // MARK: - Data Source
-    var questions: [[String]] = [[""]]   // Each question has options
+    var questions: [[String]] = [[""]]
 
-    // MARK: - Outlets
     @IBOutlet weak var backTapped: UIButton!
     @IBOutlet weak var doneTapped: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var imageView: UIImageView!
 
-    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -35,14 +32,12 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
         )
     }
 
-    // MARK: - Add New Question
     @objc func addNewQuestion() {
         questions.append([""])
         tableView.insertSections(IndexSet(integer: questions.count - 1),
                                  with: .automatic)
     }
 
-    // MARK: - TableView
     func numberOfSections(in tableView: UITableView) -> Int {
         return questions.count
     }
@@ -60,7 +55,7 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
             for: indexPath
         )
 
-        // Question TextView (only for first row)
+        // Question TextView
         if indexPath.row == 0,
            let questionTextView = cell.viewWithTag(100) as? UITextView {
             questionTextView.text = "Enter Question"
@@ -85,7 +80,7 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
         return cell
     }
 
-    // MARK: - Add Option
+    // Add Option
     @objc func addOption(_ sender: UIButton) {
         let section = sender.tag
         questions[section].append("")
@@ -97,7 +92,7 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
         )
     }
 
-    // MARK: - Delete Option
+    // Delete Option
     func tableView(_ tableView: UITableView,
                    commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
@@ -108,7 +103,6 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
         }
     }
 
-    // MARK: - Section Spacing
     func tableView(_ tableView: UITableView,
                    heightForHeaderInSection section: Int) -> CGFloat {
         return 16
@@ -119,7 +113,6 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
         UIView()
     }
 
-    // MARK: - Actions
     @IBAction func backTapped(_ sender: Any) {
         dismiss(animated: true)
     }
@@ -129,7 +122,6 @@ class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDel
     }
 }
 
-// MARK: - UITextView Delegate
 extension QnAViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         let section = textView.tag / 1000

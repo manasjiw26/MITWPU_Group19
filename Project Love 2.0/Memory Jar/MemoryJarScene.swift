@@ -8,7 +8,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
     private var lastGlassHit: TimeInterval = 0
     private let glassHaptic = UIImpactFeedbackGenerator(style: .medium)
     
-    // MARK: - Properties
+    
     var motionData: CMAcceleration?
     let opQueue = OperationQueue()
     var jarCap: SKSpriteNode?
@@ -20,6 +20,9 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
     let motionManager = CMMotionManager()
     private var glassPlayer: AVAudioPlayer?
     private var lastHeartVelocity: CGVector = .zero
+    
+    // Used when accelerometer move
+    
     override func didMove(to view: SKView) {
         self.backgroundColor = .clear
         glassHaptic.prepare()
@@ -29,9 +32,10 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         startGravityControl()
         self.physicsWorld.contactDelegate = self
     }
+    
     private func setupGlassSound() {
         guard let url = Bundle.main.url(forResource: "Tink", withExtension: "caf") else {
-            fatalError("❌ glass_tap.wav not found in bundle")
+            fatalError("glass_tap.wav not found in bundle")
         }
 
         do {
@@ -39,12 +43,14 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
             glassPlayer?.volume = 0.1
             glassPlayer?.prepareToPlay()
         } catch {
-            fatalError("❌ Audio init failed")
+            fatalError("Audio init failed")
         }
     }
+    
     func didBegin(_ contact: SKPhysicsContact) {
 
         let now = CACurrentMediaTime()
+        
         guard now - lastGlassHit > 0.25 else { return }
 
         let maskA = contact.bodyA.categoryBitMask
@@ -56,7 +62,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
 
         guard heartHitsJar else { return }
 
-        // Get the HEART body (not the jar)
+        // Get the heart body
         let heartBody: SKPhysicsBody =
             (contact.bodyA.categoryBitMask == PhysicsCategory.heart)
             ? contact.bodyA
@@ -64,7 +70,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
 
         let impactStrength = hypot(lastHeartVelocity.dx, lastHeartVelocity.dy)
 
-        // ❌ ignore sliding / rolling
+        //  ignore sliding / rolling
         guard impactStrength > 100 else { return }
        
 
@@ -73,8 +79,10 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         glassHaptic.impactOccurred()
         glassPlayer?.play()
     }
+    
+    
     func setupJarPhysics() {
-        // Using your original custom Bezier Path coordinates
+        // set boundaries of jar
         let jarPath = UIBezierPath()
         jarPath.move(to: CGPoint(x: size.width * 0.215, y: size.height * 0.95))
         jarPath.addLine(to: CGPoint(x: size.width * 0.215, y: size.height * 0.90))
@@ -109,11 +117,11 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         jarCap?.size = CGSize(width: size.width * 1.4, height: 80)
         jarCap?.position = CGPoint(x: size.width * 0.482, y: size.height * 0.92)
         jarCap?.zPosition = 10
-        jarCap?.name = "permanent_cap" // Protected name
+        jarCap?.name = "permanent_cap"
         if let cap = jarCap { addChild(cap) }
     }
 
-    // MARK: - Heart Management
+    
 
     func addHeart(index: Int, memoryID: UUID, animate: Bool = false) {
         if animate { animateCapOpening() }
@@ -136,6 +144,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         addChild(heart)
     }
 
+    
     func animateCapOpening() {
         let moveUp = SKAction.moveBy(x: 0, y: 60, duration: 0.3)
         let wait = SKAction.wait(forDuration: 0.6)
@@ -143,8 +152,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
         jarCap?.run(SKAction.sequence([moveUp, wait, moveDown]))
     }
 
-    // MARK: - Motion & Interactivity
-
+    // when heart touched memory opens
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -156,7 +164,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
                 let uuidString = String(name.dropFirst("heart_".count))
                 guard let uuid = UUID(uuidString: uuidString) else { return }
 
-                // ✅ find correct memory index dynamically
+                //  find correct memory index
                 guard let index = dataStore.savedMemories.firstIndex(where: { $0.id == uuid }) else { return }
 
                 NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: index)
@@ -172,10 +180,13 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
+    
+    
     func removeHeart(memoryID: UUID) {
         let nodeName = "heart_\(memoryID.uuidString)"
         childNode(withName: nodeName)?.removeFromParent()
     }
+    
     override func update(_ currentTime: TimeInterval) {
         if let accel = motionData {
             self.physicsWorld.gravity = CGVector(dx: accel.x * 12, dy: accel.y * 12)

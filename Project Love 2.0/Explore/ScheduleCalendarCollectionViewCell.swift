@@ -16,9 +16,6 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupCalendar() {
-//        contentView.backgroundColor = .white
-//        contentView.layer.cornerRadius = 20
-//        contentView.clipsToBounds = true
 
         let calendar = UICalendarView()
         calendar.translatesAutoresizingMaskIntoConstraints = false
@@ -44,8 +41,6 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
             calendar.bottomAnchor.constraint(equalTo: calendarBackground.bottomAnchor, constant: 0)
         ])
 
-        //calendar.heightAnchor.constraint(equalToConstant: 420).isActive = true
-
         self.calendarView = calendar
     }
 
@@ -65,7 +60,7 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
         calendarView.reloadDecorations(forDateComponents: datesToReload, animated: true)
     }
 }
-@available(iOS 16.0, *)
+@available(iOS 16.0, *)  //only available on iOS 16.0 and later
 extension ScheduleCalendarCollectionViewCell: UICalendarViewDelegate {
 
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents ) -> UICalendarView.Decoration? {

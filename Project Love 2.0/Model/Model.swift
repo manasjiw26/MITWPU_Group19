@@ -38,15 +38,6 @@ struct Reward{
     var progressStep: Int
 }
 
-struct DayInfo{
-    // Original date for logic
-    var rawDate: Date
-    // Formatted display strings
-    var day : String       // e.g. "Mon"
-    var date : String      // e.g. "27"
-    var color : UIColor
-}
-
 struct MakeSmile{
     var types: String
     var imageName: String    
@@ -54,9 +45,8 @@ struct MakeSmile{
 struct BuildYourBond {
     var name : String
     var imageName: String
-    
-    
 }
+
 struct Question {
     let title: String
     let options: [String]
@@ -72,11 +62,7 @@ struct MoodCheckIn {
     var imageName: String
     var moodLabel: String
 }
-//struct DailyCheckIn {
-//    var Title: String
-//    var imageName: String
-//    var Subtitle: String
-//}
+
 struct ActivityStats{
     var types: String
     var imageName: String
@@ -201,12 +187,10 @@ struct AppNotification {
     let type: NotificationType
     let createdAt: Date
     var isRead: Bool
-
     var titleText: String { type.titleText }
     var iconName: String { type.iconName }
     var timeAgoText: String { createdAt.timeAgoText }
 }
-
 
 extension Date {
     var timeAgoText: String {
@@ -217,16 +201,14 @@ extension Date {
 }
 
 struct PhysicsCategory {
-    static let jar: UInt32 = 0b1      // 1
-    static let heart: UInt32 = 0b10   // 2
+    static let jar: UInt32 = 0b1
+    static let heart: UInt32 = 0b10
 }
 struct UserProfile {
     var name: String
     var email: String
     var profileImageName: String
 }
-
-// MARK: - Profile Sections
 
 struct ProfileSection {
     var title: String

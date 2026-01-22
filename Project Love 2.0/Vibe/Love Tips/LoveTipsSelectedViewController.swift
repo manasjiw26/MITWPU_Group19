@@ -12,7 +12,7 @@ class LoveTipsSelectedViewController: UIViewController {
     var selectedTips: [Tip] = []
     private var displayedTips: [Tip] = []
     private var isExpanded = false
-    private var completedTipTitles: Set<String> = [] // Track which ones are "ticked"
+    private var completedTipTitles: Set<String> = [] // Track which ones are selected
     
     weak var delegate: LoveTipsSelectionDelegate?
 
@@ -68,8 +68,7 @@ class LoveTipsSelectedViewController: UIViewController {
         let remainingTips = selectedTips.filter { !completedTipTitles.contains($0.title) }
         
         delegate?.didUpdateSelectedTips(remainingTips)
-        
-        // Dismiss everything back to VibeViewController
+       
         self.view.window?.rootViewController?.dismiss(animated: true)
     }
 
@@ -110,7 +109,6 @@ extension LoveTipsSelectedViewController: UITableViewDelegate, UITableViewDataSo
         tableView.reloadRows(at: [indexPath], with: .none)
     }
 
-    // Swipe-to-delete logic
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let removedTip = displayedTips[indexPath.row]

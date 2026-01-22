@@ -14,7 +14,7 @@ class MemoryGridCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+       
         ImageView.layer.masksToBounds = true
     }
 }

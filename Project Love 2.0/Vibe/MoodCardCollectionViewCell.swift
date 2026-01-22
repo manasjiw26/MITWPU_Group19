@@ -23,7 +23,7 @@ class MoodCardCollectionViewCell: UICollectionViewCell {
     func configureCell(){
         let hisMood = dataStore.getHisMood()
         let herMood = dataStore.getHerMood()
-        //Hismood.image = UIImage(named: hisMood?.imageName ?? "")
+        
         Hismood.image = UIImage(named: "Joyful")
         Hermood.image = UIImage(named: herMood?.imageName ?? "")
         moodLabel.text = "How are you feeling today?"

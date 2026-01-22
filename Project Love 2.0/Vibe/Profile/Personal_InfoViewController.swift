@@ -2,11 +2,10 @@ import UIKit
 
 class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    // MARK: - Outlets
     @IBOutlet weak var Imageview: UIImageView!
     @IBOutlet weak var Cellview: UIView!
     @IBOutlet weak var Table: UITableView!
-    // MARK: - Data
+
     private var sections: [PersonalInfoSection] {
         DataStore.shared.personalInfoSections
     }
@@ -14,8 +13,6 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
     private let user = DataStore.shared.userProfile
     private var isEditingProfile = false
 
-
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -41,10 +38,8 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
 
             let newValue = cell.valueTextField.text ?? ""
 
-            // Update the list of sections
             DataStore.shared.personalInfoSections[indexPath.section].items[indexPath.row].value = newValue
-            
-            // ADD THIS: Specific update for the UserProfile object
+
             let itemTitle = DataStore.shared.personalInfoSections[indexPath.section].items[indexPath.row].title
             if itemTitle == "Full Name" {
                 DataStore.shared.userProfile?.name = newValue
@@ -77,8 +72,6 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
            Table.reloadData()
     }
 
-
-    // MARK: - UI Setup
     private func setupTableView() {
         Table.delegate = self
         Table.dataSource = self
@@ -97,8 +90,6 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
 
     }
 
-
-    // MARK: - TableView DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
@@ -130,15 +121,12 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
         return cell
     }
 
-
-
-    // MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
         let item = sections[indexPath.section].items[indexPath.row]
         print("\(item.title) tapped")
-        // later: push edit screens
+       
     }
     
 }

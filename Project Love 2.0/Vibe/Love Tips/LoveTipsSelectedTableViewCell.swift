@@ -2,11 +2,10 @@ import UIKit
 
 class LoveTipsSelectedTableViewCell: UITableViewCell {
 
-    // MARK: - Outlets
     @IBOutlet weak var optionLabel: UILabel!
     @IBOutlet weak var radioButtonSelected: UIButton!
 
-    // MARK: - Lifecycle
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -27,11 +26,10 @@ class LoveTipsSelectedTableViewCell: UITableViewCell {
             separator.heightAnchor.constraint(equalToConstant: 1)
         ])
 
-        // Prevent default highlight effect
+       
         radioButtonSelected.adjustsImageWhenHighlighted = false
     }
 
-    // MARK: - Configure
     func configure(option: String, isSelected: Bool) {
         optionLabel.text = option
 

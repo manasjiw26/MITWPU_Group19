@@ -7,10 +7,14 @@
 
 import UIKit
 
+protocol LoveTipsSelectionDelegate: AnyObject {
+    func didUpdateSelectedTips(_ tips: [Tip])
+}
+
 class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate {
     
     @IBOutlet weak var vibeCollectionView: UICollectionView!
-    var days : [DayInfo] = []
+    
     var makeSmileData: [MakeSmile] = []
     var didScrollToMiddle = false
     var BuildBond : [BuildYourBond] = []
@@ -18,32 +22,25 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var hasCompletedDailyCheckIn = false
     var suggestedActivities: [Activity] = []
     var selectedTips: [Tip] = []
-    //var hasCheckedInToday = false
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         makeSmileData = [
             MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
             MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
             MakeSmile(types: "Activities for Her", imageName: "checklist")
         ]
-        days = dataStore.getLastAndNext15Days()
+
         BuildBond = dataStore.loadBuildYourbond()
         suggestedActivities = DataStore.shared.getSuggestedActivities()
         registerCell()
         vibeCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
         vibeCollectionView.dataSource = self
         vibeCollectionView.delegate = self
-        if !didScrollToMiddle {
-            let mid = days.count / 2
-            let indexPath = IndexPath(item: mid, section: 0)
-            //                vibeCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
-            didScrollToMiddle = true
-        }
-        
-        
     }
+    
+    
     private var hasCheckedInToday: Bool {
         return DataStore.shared.getHisMood() != nil
     }
@@ -172,7 +169,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 }
             }  else if section == 2 {
                 
-                //  DAILY CHECK-IN
+                //  Daily check in
                 if !self.hasCompletedDailyCheckIn {
 
                     let itemSize = NSCollectionLayoutSize(
@@ -195,7 +192,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     return section
                 }
 
-                // SUGGESTED ACTIVITIES (horizontal + peek)
+                // suggested activity
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(350),
                     heightDimension: .estimated(120)
@@ -249,6 +246,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
                 section.boundarySupplementaryItems = [titleHeader]
                 return section
+                
             } else if section == 3 { //make her smile
 
                 let itemSize = NSCollectionLayoutSize(
@@ -357,7 +355,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     func didStartActivity() {
         print("Activity started")
 
-        // Optional: update UI if needed
         DispatchQueue.main.async {
             self.vibeCollectionView.reloadData()
         }
@@ -377,6 +374,7 @@ extension VibeViewController:  UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 5
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
             return 0
@@ -395,17 +393,8 @@ extension VibeViewController:  UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            let cell = vibeCollectionView.dequeueReusableCell(withReuseIdentifier: "calendar_cell", for: indexPath) as! CalendarCollectionViewCell
-            let dayInfo = days[indexPath.row]
-            if Int(dayInfo.date) == Calendar.current.component(.day, from: Date()) {
-                cell.configureTodayCell(day : dayInfo)
-            } else {
-                cell.configureCell(day : dayInfo)}
-            return cell
-        }
-        else if indexPath.section == 1 {
-
+        
+        if indexPath.section == 1 {
             if hasCheckedInToday {
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "mood_checkin_cell",
@@ -437,7 +426,7 @@ extension VibeViewController:  UICollectionViewDataSource {
                 return cell
             }
             else {
-                // SHOW "HOW ARE YOU FEELING TODAY?"
+                // how are you felling card
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "mood_cell",
                     for: indexPath
@@ -531,7 +520,7 @@ extension VibeViewController:  UICollectionViewDataSource {
             animated: false
         )
 
-        // Reload entire section safely
+        // Reload entire section
         vibeCollectionView.performBatchUpdates {
             vibeCollectionView.reloadSections(IndexSet(integer: 1))
         }
@@ -555,7 +544,7 @@ extension VibeViewController:  UICollectionViewDataSource {
 extension VibeViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        // SECTION 1 - How are you feeling today?
+        // section 1 - How are you feeling today?
         if indexPath.section == 1 && !hasCheckedInToday {
 
             let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
@@ -583,6 +572,8 @@ extension VibeViewController {
             present(vc, animated: true)
             return
         }
+        
+        // section 2 - daily check in
         if indexPath.section == 2, hasCompletedDailyCheckIn {
 
             let selectedActivity = suggestedActivities[indexPath.row]
@@ -607,20 +598,53 @@ extension VibeViewController {
             return
         }
       
-        // SECTION 3- Make Her Smile
+        // Section 3- Make Her Smile
         if indexPath.section == 3 {
             switch indexPath.row {
             case 0:
                 performSegue(withIdentifier: "openLoveNote", sender: nil)
             case 1:
-                performSegue(withIdentifier: "LoveTipsModal", sender: self)
+                let vc: UIViewController
+
+                if selectedTips.isEmpty {
+                    let storyboard = UIStoryboard(name: "LoveTips", bundle: nil)
+                    let loveTipsVC = storyboard.instantiateViewController(
+                        withIdentifier: "LoveTipsVC"
+                    ) as! LoveTipsViewController
+
+                    loveTipsVC.selectedTips = self.selectedTips
+                    loveTipsVC.delegate = self
+                    vc = loveTipsVC
+
+                } else {
+                    let selectedVC = UIStoryboard(
+                        name: "LoveTipsSelected",
+                        bundle: nil
+                    ).instantiateViewController(
+                        withIdentifier: "LoveTipsSelectedViewController"
+                    ) as! LoveTipsSelectedViewController
+
+                    selectedVC.selectedTips = self.selectedTips
+                    selectedVC.delegate = self
+                    vc = selectedVC
+                }
+                
+                if let sheet = vc.sheetPresentationController {
+                    sheet.detents = [.medium(), .large()]
+                    sheet.prefersGrabberVisible = true
+                    sheet.selectedDetentIdentifier = .medium
+                }
+                present(vc, animated: true)
+
+                
             case 2:
                 performSegue(withIdentifier: "ActivityForHerShow", sender: self)
             default: break
             }
             return
         }
-
+        
+        // section 4 - bub
         if indexPath.section == 4 {
             selectedbondOption = BuildBond[indexPath.row]
             performSegue(withIdentifier: "BUBSheet", sender: nil)
@@ -646,10 +670,6 @@ extension VibeViewController {
     }
 
     func reloadData() {
-        // Re-fetch data
-        
-
-        // Reload UI
         vibeCollectionView.reloadData()
         
     }
@@ -675,7 +695,4 @@ extension VibeViewController: LoveTipsSelectionDelegate {
         self.selectedTips = tips
         self.vibeCollectionView.reloadData()
     }
-}
-protocol LoveTipsSelectionDelegate: AnyObject {
-    func didUpdateSelectedTips(_ tips: [Tip])
 }

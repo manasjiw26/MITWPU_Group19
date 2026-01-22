@@ -23,8 +23,7 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
         contentView.backgroundColor = .white
         
     }
-    
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -34,7 +33,7 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
             btn.layer.borderWidth = 3
             btn.backgroundColor = .white
             
-            // Make height = width
+            
             if let widthConstraint = btn.constraints.first(where: { $0.firstAttribute == .height }) {
                 widthConstraint.constant = btn.bounds.width
             } else {
@@ -99,7 +98,7 @@ class BUBSection1CollectionViewCell: UICollectionViewCell {
 
     
     
-    //***************** to update progressLabel **********************
+    // to update progressLabel
     
     private func updateProgressLabel(bond: BuildYourBondpage) {
 

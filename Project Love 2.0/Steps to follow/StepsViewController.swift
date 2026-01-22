@@ -11,8 +11,6 @@ class StepsViewController: UIViewController {
     var activitytitle: String = ""
     var flowSource: ActivityFlowSource?
     var activity: Activity?
-
-    
     var selectedActivityIndex: Int?
     var bondName: String?
     
@@ -23,13 +21,9 @@ class StepsViewController: UIViewController {
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var stepsTable: UITableView!
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var tableBackgroundCell: UIView!
     @IBOutlet weak var combinedLabel: UILabel!
-    
-    
-    
-    //back button
+ 
     private let backButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -113,16 +107,13 @@ class StepsViewController: UIViewController {
     }
     
     @IBAction func continueButton(_ sender: Any) {
-        
-        
 
         //self.dismiss(animated: true, completion: nil)
         let storyboard = UIStoryboard(name: "feedBack", bundle: nil)
         let feedbackVC = storyboard.instantiateViewController(
             withIdentifier: "FeedBackViewController"
         ) as! FeedBackViewController
-        
-       
+
         let feedbackItem = FeedBackGiven(
             title: activitytitle,   
             subTitle: "Tell us how this activity made you feel",
@@ -131,7 +122,6 @@ class StepsViewController: UIViewController {
             selectedMood: nil
         )
 
-       
         feedbackVC.feedbackItem = feedbackItem
         feedbackVC.activity = activity
         feedbackVC.flowSource = flowSource
@@ -140,8 +130,6 @@ class StepsViewController: UIViewController {
         feedbackVC.selectedActivityIndex = selectedActivityIndex
         feedbackVC.bondDelegate = bondDelegate
 
-
-        
         feedbackVC.modalPresentationStyle = .fullScreen
         
         present(feedbackVC, animated: true)
@@ -149,7 +137,7 @@ class StepsViewController: UIViewController {
 }
 
 
-    extension StepsViewController: UITableViewDataSource, UITableViewDelegate {
+extension StepsViewController: UITableViewDataSource, UITableViewDelegate {
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return steps.count
         }
@@ -161,7 +149,7 @@ class StepsViewController: UIViewController {
 
             let fullText = NSMutableAttributedString()
 
-            // 1. Number
+            // Number
             let numberText = NSAttributedString(
                 string: "\(step.number). ",
                 attributes: [
@@ -169,7 +157,7 @@ class StepsViewController: UIViewController {
                 ]
             )
 
-            // 2. Bold Title
+            // Bold Title
             let titleText = NSAttributedString(
                 string: "\(step.title): ",
                 attributes: [
@@ -177,7 +165,7 @@ class StepsViewController: UIViewController {
                 ]
             )
 
-            // 3. Description (regular)
+            // Description
             let descText = NSAttributedString(
                 string: step.descriptionLabel,
                 attributes: [
@@ -200,9 +188,8 @@ class StepsViewController: UIViewController {
             if isLastRow {
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
             } else {
-                cell.separatorInset = .zero   // or whatever inset you want
+                cell.separatorInset = .zero
             }
-
 
             return cell
         }

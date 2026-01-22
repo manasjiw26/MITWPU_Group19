@@ -34,7 +34,6 @@ final class NotificationViewController: UIViewController {
          collectionView.reloadData()
      }
     
-    
     //tap handling
     
      private func handleNotificationTap(_ notification: AppNotification) {
@@ -97,10 +96,6 @@ final class NotificationViewController: UIViewController {
          present(alert, animated: true)
      }
  }
-
- 
-
-
 
  extension NotificationViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 
