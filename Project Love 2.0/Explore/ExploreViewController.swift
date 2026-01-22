@@ -46,17 +46,64 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         }
         return false
     }
-    
+    private func showCustomActivityAlert() {
+
+        let alert = UIAlertController(
+            title: "Choose Your Activity type",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+
+        // Create Your Own Q&A
+        let createQA = UIAlertAction(title: "Create Your Own Q&A", style: .default) { _ in
+            let storyboard = UIStoryboard(name: "QnAViewController", bundle: nil)
+            let vc = storyboard.instantiateViewController(
+                withIdentifier: "QnAViewController"
+            ) as! QnAViewController
+
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
+        }
+
+        // Write an Activity
+        let writeActivity = UIAlertAction(title: "Write an Activity", style: .default) { _ in
+            let storyboard = UIStoryboard(name: "WriteActivity", bundle: nil)
+            let vc = storyboard.instantiateViewController(
+                withIdentifier: "WriteActivity"
+            ) as! WriteActivityViewController
+
+            if let nav = self.navigationController {
+                nav.pushViewController(vc, animated: true)
+            } else {
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true)
+            }
+        }
+
+        // Cancel
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alert.addAction(createQA)
+        alert.addAction(writeActivity)
+        alert.addAction(cancel)
+        
+
+        present(alert, animated: true)
+    }
     private func openActivity(_ activity: Activity) {
-        let modalVC = SmallModalViewController(
-            nibName: "SmallModalViewController",
+        let modalVC = CustomModalViewController(
+            nibName: "CustomModalViewController",
             bundle: nil
         )
 
-        modalVC.selectedActivity = activity
-        modalVC.flowSource = .explore
+        // Passing the data
+        modalVC.activityName = activity.name
+        modalVC.activityDescription = activity.description
+        modalVC.imageName = activity.image
+
         modalVC.modalPresentationStyle = .overFullScreen
-        present(modalVC, animated: false)
+
+        present(modalVC, animated: true)
     }
 
     @IBAction func calendarTapped(_ sender: UIButton) {
@@ -244,7 +291,7 @@ extension ExploreViewController:  UICollectionViewDataSource {
                 return count == 0 ? 1 : count
             }
             else if selectedSegmentIndex == 3 {
-                return 1// or custom
+                return 1 + DataStore.shared.customActivities.count
             }
 
             return activityCategory.count
@@ -340,13 +387,27 @@ extension ExploreViewController:  UICollectionViewDataSource {
         }
         
         if selectedSegmentIndex == 3 {
+            if indexPath.row == 0 {
                 let cell = activity_collection.dequeueReusableCell(
                     withReuseIdentifier: "custom_cell",
                     for: indexPath
                 ) as! CustomCollectionViewCell
-            cell.configureCells(imageName: "customBorder", title: "Create your own activity!", subtitle: "Add your unique spark.")
-
+                cell.configureCells(imageName: "customBorder", title: "Create your own activity!", subtitle: "Add your unique spark.")
                 return cell
+            }else {
+                let cell = activity_collection.dequeueReusableCell(
+                    withReuseIdentifier: "activity_cell",
+                    for: indexPath
+                ) as! ActivityCollectionViewCell
+                
+                let customActivity = DataStore.shared.customActivities[indexPath.row - 1]
+                
+                cell.configureCells(activity: customActivity)
+
+                cell.activityDescriptionLabel.text = customActivity.time
+                
+                return cell
+            }
         }
 
         return UICollectionViewCell()
@@ -442,7 +503,16 @@ extension ExploreViewController: ActivityHeaderDelegate {
 //        case 2: // Completed → Open feedback / summary
 //            let activity = DataStore.shared.getCompletedActivities()[indexPath.row]
 //            openActivity(activity)
+        case 3: // Custom
+            if indexPath.row == 0 {
 
+                showCustomActivityAlert()
+                
+            } else {
+                // Open SmallModal for actual custom activity items
+                let customActivity = DataStore.shared.customActivities[indexPath.row - 1]
+                openActivity(customActivity)
+            }
 
         default:
             break

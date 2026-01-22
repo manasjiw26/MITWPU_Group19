@@ -17,6 +17,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var selectedbondOption: BuildYourBond?
     var hasCompletedDailyCheckIn = false
     var suggestedActivities: [Activity] = []
+    var selectedTips: [Tip] = []
     //var hasCheckedInToday = false
 
     
@@ -675,4 +676,13 @@ extension VibeViewController: DailyCheckInCompletionDelegate {
             self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
         }
     }
+}
+extension VibeViewController: LoveTipsSelectionDelegate {
+    func didUpdateSelectedTips(_ tips: [Tip]) {
+        self.selectedTips = tips
+        self.vibeCollectionView.reloadData()
+    }
+}
+protocol LoveTipsSelectionDelegate: AnyObject {
+    func didUpdateSelectedTips(_ tips: [Tip])
 }

@@ -22,6 +22,7 @@ class DataStore {
     var suggestedActivities: [Activity] = []
     var bondpage: [BuildYourBondpage] = []
     var savedMemories: [Memory] = []
+    var customActivities: [Activity] = []
     
     private(set) var allActivities: [Activity] = []
 
@@ -119,7 +120,17 @@ class DataStore {
     private func mood(by id: Int) -> Mood? {
         moodOptions.first { $0.id == id }
     }
-    
+    func addCustomActivity(name: String, description: String, date: String) {
+        let newActivity = Activity(
+            name: name,
+            description: description,
+            image: "Activityimage",
+            time: date,
+            status: .none,
+            category: "Custom"
+        )
+        customActivities.append(newActivity)
+    }
     func loadSampleData() {
         let sampleActivities: [Activity] = [
 
@@ -285,7 +296,19 @@ class DataStore {
         
         self.tips = sampleTips
     }
-    
+    func getAllTips() -> [Tip] {
+        return [
+            Tip(title: "Make hot chocolate for her"),
+            Tip(title: "Write her a sweet note"),
+            Tip(title: "Give her a foot massage"),
+            Tip(title: "Prepare dinner for her"),
+            Tip(title: "Offer to do her chores"),
+            Tip(title: "Plan a movie date night"),
+            Tip(title: "Cook her favorite meal"),
+            Tip(title: "Help her with her homework"),
+            Tip(title: "Organize her closet")
+        ]
+    }
     func loadBuildYourbond() -> [BuildYourBond]{
         let sampleBuildYourBond: [BuildYourBond] = [
             BuildYourBond(name: "Navigate Conflict Together", imageName: "Conflict"),
