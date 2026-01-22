@@ -364,16 +364,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     }
     
     @IBAction func profileTapped(_ sender: UIBarButtonItem) {
-        print("hello button clicked")
         let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
-        
         let profileVC = storyboard.instantiateInitialViewController()!
         let navVC = UINavigationController(rootViewController: profileVC)
-        present(navVC, animated: true)
-
-        present(navVC, animated: true)
-
-    
         navVC.modalPresentationStyle = .pageSheet
         present(navVC, animated: true)
     }

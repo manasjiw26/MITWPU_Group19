@@ -23,7 +23,7 @@ class DataStore {
     var bondpage: [BuildYourBondpage] = []
     var savedMemories: [Memory] = []
     var customActivities: [Activity] = []
-    
+    var personalInfoSections: [PersonalInfoSection] = []
     private(set) var allActivities: [Activity] = []
 
     //var ongoingActivities: [Activity] = []
@@ -54,7 +54,7 @@ class DataStore {
         loadSuggestedActivity()
         loadsampleBuildYourBond()
         loadSampleNotifications()
-
+        loadPersonalInfoData()
         loadProfileData()
         buildAllActivities()
         //loadCheckIn()
@@ -218,7 +218,27 @@ class DataStore {
         ]
         self.activities = sampleActivities
     }
-    
+    func loadPersonalInfoData() {
+        personalInfoSections = [
+            PersonalInfoSection(
+                title: "Basic Information",
+                items: [
+                    PersonalInfoItem(title: "Full Name", value: "Name", showsChevron: false),
+                    PersonalInfoItem(title: "Email", value: "name@email.com", showsChevron: false),
+                    PersonalInfoItem(title: "Phone Number", value: "+91 9876543210", showsChevron: false),
+                    PersonalInfoItem(title: "Date of Birth", value: "12 Jan 2003", showsChevron: false)
+                ]
+            ),
+
+            PersonalInfoSection(
+                title: "RelationShip Profile",
+                items: [
+                    PersonalInfoItem(title: "Partner Pairing", value: "", showsChevron: true),
+                    PersonalInfoItem(title: "Edit Preferences", value: "", showsChevron: true)
+                ]
+            )
+        ]
+    }
     func loadSuggestedActivity () {
         let suggestedActivity: [Activity] = [
             Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity",scheduledDate: nil),

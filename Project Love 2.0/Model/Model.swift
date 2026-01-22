@@ -220,8 +220,6 @@ struct PhysicsCategory {
     static let jar: UInt32 = 0b1      // 1
     static let heart: UInt32 = 0b10   // 2
 }
-// MARK: - User Profile
-
 struct UserProfile {
     var name: String
     var email: String
@@ -239,5 +237,14 @@ struct ProfileItem {
     var title: String
     var iconName: String
     var showsChevron: Bool
+}
+struct PersonalInfoItem {
+    let title: String
+    var value: String
+    let showsChevron: Bool
+}
 
+struct PersonalInfoSection {
+    let title: String
+    var items: [PersonalInfoItem]
 }
