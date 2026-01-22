@@ -434,6 +434,101 @@ class DataStore {
                         descriptionLabel: "Continue the day without reopening the issue.")
             ]
             
+        case "The Battery Check":
+            return [
+                StepsToFollow(number: 1, title: "Check Energy",
+                    descriptionLabel: "Rate your energy from 1–10 before starting the conversation."),
+                StepsToFollow(number: 2, title: "Share Why",
+                    descriptionLabel: "Briefly explain why your energy feels this way."),
+                StepsToFollow(number: 3, title: "Set Boundary",
+                    descriptionLabel: "If energy is low, agree to pause deep talk."),
+                StepsToFollow(number: 4, title: "Offer Support",
+                    descriptionLabel: "Ask what small thing could help them recharge.")
+            ]
+            
+        case "No-Gatekeeping Needs":
+            return [
+                StepsToFollow(number: 1, title: "Identify Need",
+                    descriptionLabel: "Pick one small thing you’ve been wanting."),
+                StepsToFollow(number: 2, title: "Ask Directly",
+                    descriptionLabel: "Say it clearly without hints or sarcasm."),
+                StepsToFollow(number: 3, title: "Be Specific",
+                    descriptionLabel: "Explain exactly what would help."),
+                StepsToFollow(number: 4, title: "Appreciate",
+                    descriptionLabel: "Thank them for hearing you out.")
+            ]
+            
+        case "The Echo Chamber":
+            return [
+                StepsToFollow(number: 1, title: "Invite Sharing",
+                    descriptionLabel: "Ask what’s been on their mind."),
+                StepsToFollow(number: 2, title: "Reflect Back",
+                    descriptionLabel: "Repeat what you heard in your own words."),
+                StepsToFollow(number: 3, title: "Confirm",
+                    descriptionLabel: "Ask if you understood them correctly."),
+                StepsToFollow(number: 4, title: "Respond",
+                    descriptionLabel: "Only share your thoughts after confirmation.")
+            ]
+
+        case "Safe Space Protocol":
+            return [
+                StepsToFollow(number: 1, title: "Choose Spot",
+                    descriptionLabel: "Sit in your agreed safe-space location."),
+                StepsToFollow(number: 2, title: "Set Rule",
+                    descriptionLabel: "Agree nothing said will be used later."),
+                StepsToFollow(number: 3, title: "Share Vulnerability",
+                    descriptionLabel: "Share one honest fear or thought."),
+                StepsToFollow(number: 4, title: "Seal It",
+                    descriptionLabel: "End with a 10-second hug.")
+            ]
+
+        case "Love Map Update":
+            return [
+                StepsToFollow(number: 1, title: "Ask Curiously",
+                    descriptionLabel: "Ask about a current favorite or interest."),
+                StepsToFollow(number: 2, title: "Listen",
+                    descriptionLabel: "Focus fully without interrupting."),
+                StepsToFollow(number: 3, title: "Note It",
+                    descriptionLabel: "Save the detail mentally or in notes."),
+                StepsToFollow(number: 4, title: "Switch Roles",
+                    descriptionLabel: "Now let them ask about you.")
+            ]
+        case "The Dopamine Drop":
+            return [
+                StepsToFollow(number: 1, title: "Choose New",
+                    descriptionLabel: "Pick an activity neither of you has done."),
+                StepsToFollow(number: 2, title: "Stay Present",
+                    descriptionLabel: "No phones during the activity."),
+                StepsToFollow(number: 3, title: "Embrace Awkward",
+                    descriptionLabel: "Laugh through mistakes."),
+                StepsToFollow(number: 4, title: "Reflect",
+                    descriptionLabel: "Talk about the most fun moment.")
+            ]
+        case "Bid-Catching Pro":
+            return [
+                StepsToFollow(number: 1, title: "Notice Bids",
+                    descriptionLabel: "Watch for small bids for attention."),
+                StepsToFollow(number: 2, title: "Turn Toward",
+                    descriptionLabel: "Pause what you’re doing and respond."),
+                StepsToFollow(number: 3, title: "Validate",
+                    descriptionLabel: "Acknowledge them warmly."),
+                StepsToFollow(number: 4, title: "Repeat",
+                    descriptionLabel: "Catch at least 3 bids today.")
+            ]
+            
+        case "The Intimacy Architect":
+            return [
+                StepsToFollow(number: 1, title: "Reunion Moment",
+                    descriptionLabel: "Do this when you first see each other."),
+                StepsToFollow(number: 2, title: "Hold",
+                    descriptionLabel: "Share a 6-second kiss."),
+                StepsToFollow(number: 3, title: "Breathe",
+                    descriptionLabel: "Stay present during the moment."),
+                StepsToFollow(number: 4, title: "Commit",
+                    descriptionLabel: "Make this a daily ritual.")
+            ]
+
+            
 
         default:
             return []
@@ -458,7 +553,119 @@ class DataStore {
         badge: "Harmony Seeker",
         badgesubHeading: "Master the art of peaceful resolution.", badgeImageName: "HarmonySeekerBadge",
         HIWStep: ["Identify the Conflict","Empathizing with Perspectives","Crafting Joint Solutions","Sustaining Harmony"]
-            )
+            
+            
+            ),
+        BuildYourBondpage(
+        Name: "Establishing Good Communication",
+        SubHeading: "Clear the static and really hear each other.",
+        stepLabel: "You are currently on Step 1: The Battery Check.",
+        step: [
+            "Check-in",
+            "Express",
+            "Reflect",
+            "Trust"
+            ],
+        activity: [
+            Activity(
+                name: "The Battery Check",
+                description: "Check their energy before unloading your day.",
+                image: "noContextReveal",
+                time: "5 mins",
+                status: .none,
+                category: "Establishing Good Communication"
+                ),
+            Activity(
+                name: "No-Gatekeeping Needs",
+                description: "Say what you need—no hints, no guessing.",
+                image: "GuessBeforeYouAreTold",
+                time: "5 mins",
+                status: .none,
+                category: "Establishing Good Communication"
+                ),
+            Activity(
+                name: "The Echo Chamber",
+                description: "Repeat to prove you’re really listening.",
+                image: "DeletetheGlitch",
+                time: "5 mins",
+                status: .none,
+                category: "Establishing Good Communication"
+                ),
+            Activity(
+                name: "Safe Space Protocol",
+                description: "Create a no-judgment zone for honesty.",
+                image: "BacktoUs",
+                time: "5 mins",
+                status: .none,
+                category: "Establishing Good Communication"
+                )
+                ],
+                badge: "Communication Champ",
+                badgesubHeading: "You’ve built a strong foundation of open dialogue.",
+                badgeImageName: "communicationChampBadge",
+                HIWStep: [
+                    "Checking emotional bandwidth",
+                    "Expressing needs clearly",
+                    "Active listening",
+                    "Creating emotional safety"
+                ]
+            ),
+            BuildYourBondpage(
+                Name: "Rekindle Honeymoon Phase",
+                SubHeading: "Bring back the spark and beat roommate mode.",
+                stepLabel: "You are currently on Step 1: Love Map Update.",
+                step: [
+                    "Explore",
+                    "Spark",
+                    "Notice",
+                    "Bond"
+                ],
+                activity: [
+                    Activity(
+                        name: "Love Map Update",
+                        description: "Update your knowledge of your partner’s world.",
+                        image: "noContextReveal",
+                        time: "5 mins",
+                        status: .none,
+                        category: "Rekindle Honeymoon Phase"
+                    ),
+                    Activity(
+                        name: "The Dopamine Drop",
+                        description: "Do something new to trigger first-date energy.",
+                        image: "GuessBeforeYouAreTold",
+                        time: "10 mins",
+                        status: .none,
+                        category: "Rekindle Honeymoon Phase"
+                    ),
+                    Activity(
+                        name: "Bid-Catching Pro",
+                        description: "Notice and respond to small connection bids.",
+                        image: "DeletetheGlitch",
+                        time: "5 mins",
+                        status: .none,
+                        category: "Rekindle Honeymoon Phase"
+                    ),
+                    Activity(
+                        name: "The Intimacy Architect",
+                        description: "Build a daily ritual that bonds you deeply.",
+                        image: "BacktoUs",
+                        time: "5 mins",
+                        status: .none,
+                        category: "Rekindle Honeymoon Phase"
+                    )
+                ],
+                badge: "Spark Keeper",
+                badgesubHeading: "You’ve reignited closeness and emotional warmth.",
+                badgeImageName: "sparkKeeperBadge",
+                HIWStep: [
+                    "Updating love maps",
+                    "Introducing novelty",
+                    "Catching connection bids",
+                    "Daily bonding rituals"
+                ]
+            ),
+
+
         ]
         self.bondpage = bond
     }
@@ -479,14 +686,14 @@ class DataStore {
             return BadgePopupData(
                 title: "Communication Champ",
                 subtitle: "You’ve built a strong foundation of open dialogue.",
-                imageName: "CommunicationBadge"
+                imageName: "communicationChampBadge"
             )
 
         case "Rekindle Honeymoon Phase":
             return BadgePopupData(
                 title: "Spark Keeper",
                 subtitle: "You’ve reignited closeness and emotional warmth.",
-                imageName: "SparkKeeperBadge"
+                imageName: "sparkKeeperBadge"
             )
 
         default:
@@ -710,6 +917,22 @@ class DataStore {
                 descriptionLabel: "Closure doesn’t always need more words. This level uses a simple shared action to reset the mood and help both people move forward.",
                clockImageName: "clock",
                 timerLabel: "5 mins")
+            ,
+            SmallModalData(title: "The Battery Check", mainImageName: "noContextReveal", descriptionLabel: "Check their energy before unloading your day.", clockImageName: "clock", timerLabel: "10 mins")
+            ,
+            SmallModalData(title: "No-Gatekeeping Needs", mainImageName: "GuessBeforeYouAreTold", descriptionLabel: "Say what you need—no hints, no guessing.", clockImageName: "clock", timerLabel: "10 mins")
+            ,
+            SmallModalData(title: "The Echo Chamber", mainImageName: "DeletetheGlitch", descriptionLabel: "Repeat to prove you’re really listening.", clockImageName: "clock", timerLabel: "10 mins")
+            ,
+            SmallModalData(title: "Safe Space Protocol", mainImageName:"BacktoUs", descriptionLabel: "Create a no-judgment zone for honesty.", clockImageName:"clock", timerLabel: "5 mins")
+            ,
+            SmallModalData(title: "Love Map Update", mainImageName: "noContextReveal", descriptionLabel: "Update your knowledge of your partner’s world.", clockImageName: "clock", timerLabel: "10 mins")
+            ,
+            SmallModalData(title: "The Dopamine Drop", mainImageName: "GuessBeforeYouAreTold", descriptionLabel: "Do something new to trigger first-date energy.", clockImageName: "clock", timerLabel: "10 mins")
+            ,
+            SmallModalData(title: "Bid-Catching Pro", mainImageName: "DeletetheGlitch", descriptionLabel: "Notice and respond to small connection bids.", clockImageName: "clock", timerLabel: "10 mins")
+            ,
+            SmallModalData(title: "The Intimacy Architect", mainImageName: "BacktoUs", descriptionLabel: "Build a daily ritual that bonds you deeply.", clockImageName: "clock", timerLabel: "10 mins")
             // Add more for other activities
         ]
         
