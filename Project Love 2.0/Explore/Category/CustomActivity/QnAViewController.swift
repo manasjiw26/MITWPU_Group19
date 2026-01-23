@@ -1,132 +1,171 @@
 import UIKit
 
-class QnAViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class QnAViewController: UIViewController {
 
-    var questions: [[String]] = [[""]]
-
-    @IBOutlet weak var backTapped: UIButton!
-    @IBOutlet weak var doneTapped: UIButton!
+    @IBOutlet weak var titleTextView: UITextView!
+    @IBOutlet weak var questionTextView: UITextField!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var addQuestionTextView: UIView!
+    @IBOutlet weak var addOptionTextView: UIView!
+    @IBOutlet weak var doneTapped: UIButton!
+    @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
+    let store = DataStore.shared
+    var currentQuestionIndex = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
+        setupTableView()
+        setupGestures()
+        bindQuestionText()
+    }
 
-        tableView.dataSource = self
-        tableView.delegate = self
-
-        backTapped.configuration = .glass()
+    private func setupUI() {
         doneTapped.configuration = .glass()
         doneTapped.setTitle("Done", for: .normal)
 
-        backTapped.setImage(
-            UIImage(systemName: "chevron.left",
-                    withConfiguration: UIImage.SymbolConfiguration(weight: .medium)),
-            for: .normal
+        [
+            titleTextView,
+            questionTextView,
+            tableView,
+            addOptionTextView,
+            addQuestionTextView
+        ].forEach {
+            $0?.layer.cornerRadius = 10
+            $0?.layer.masksToBounds = true
+        }
+    }
+
+    private func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+    }
+
+    private func setupGestures() {
+
+        let addOptionTap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(addOptionTapped)
         )
+        addOptionTextView.addGestureRecognizer(addOptionTap)
+        addOptionTextView.isUserInteractionEnabled = true
 
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(
-            UITapGestureRecognizer(target: self,
-                                   action: #selector(addNewQuestion))
+        let addQuestionTap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(addQuestionTapped)
+        )
+        addQuestionTextView.addGestureRecognizer(addQuestionTap)
+        addQuestionTextView.isUserInteractionEnabled = true
+    }
+
+    private func bindQuestionText() {
+        questionTextView.addTarget(
+            self,
+            action: #selector(questionTextChanged(_:)),
+            for: .editingChanged
         )
     }
 
-    @objc func addNewQuestion() {
-        questions.append([""])
-        tableView.insertSections(IndexSet(integer: questions.count - 1),
-                                 with: .automatic)
+    // Update this function in your QnAViewController
+    @objc private func addOptionTapped() {
+        let newOption = QnAOption(text: "", isSelected: false)
+        store.currentQnA.questions[currentQuestionIndex].options.append(newOption)
+        
+        tableView.reloadData()
+        
+        // Update the height constraint so the table expands
+        // Assuming a standard row height of 44 or 50
+        tableViewHeightConstraint.constant = CGFloat(store.currentQnA.questions[currentQuestionIndex].options.count * 50)
+        self.view.layoutIfNeeded()
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return questions.count
+    @objc private func addQuestionTapped() {
+        // 1. Save current state (optional, already handled by binding)
+        
+        // 2. Create new question
+        let newQuestion = QnAQuestion(questionText: "", options: [])
+        store.currentQnA.questions.append(newQuestion)
+        
+        // 3. Move to the new index
+        currentQuestionIndex = store.currentQnA.questions.count - 1
+
+        // 4. Reset UI for new question
+        questionTextView.text = ""
+        tableViewHeightConstraint.constant = 0 // Reset height for new question
+        tableView.reloadData()
+        
+        print("Now editing Question: \(currentQuestionIndex + 1)")
+    }
+    @objc private func questionTextChanged(_ sender: UITextField) {
+        store.currentQnA.questions[currentQuestionIndex]
+            .questionText = sender.text ?? ""
     }
 
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
-        return questions[section].count
+    @IBAction func doneButtonTapped(_ sender: UIButton) {
+        store.currentQnA.title = titleTextView.text ?? ""
+        print("FINAL QnA:", store.currentQnA)
+    }
+}
+
+// MARK: - TableView
+
+extension QnAViewController: UITableViewDataSource, UITableViewDelegate {
+
+    func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        store.currentQnA.questions[currentQuestionIndex]
+            .options.count
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "QnACell",
             for: indexPath
+        ) as! QnATableViewCell
+
+        let option = store.currentQnA.questions[currentQuestionIndex]
+            .options[indexPath.row]
+
+        cell.configure(option: option)
+
+        cell.radioTapAction = { [weak self] in
+            self?.selectOption(at: indexPath.row)
+        }
+
+        cell.optionTextField.tag = indexPath.row
+        cell.optionTextField.addTarget(
+            self,
+            action: #selector(optionTextChanged(_:)),
+            for: .editingChanged
         )
-
-        // Question TextView
-        if indexPath.row == 0,
-           let questionTextView = cell.viewWithTag(100) as? UITextView {
-            questionTextView.text = "Enter Question"
-        }
-
-        // Option Text
-        if let optionField = cell.viewWithTag(300) as? UITextView {
-            optionField.text = questions[indexPath.section][indexPath.row]
-            optionField.tag = (indexPath.section * 1000) + indexPath.row
-            optionField.delegate = self
-        }
-
-        // Add Option Button
-        if let addButton = cell.viewWithTag(200) as? UIButton {
-            addButton.isHidden = indexPath.row != 0
-            addButton.tag = indexPath.section
-            addButton.addTarget(self,
-                                action: #selector(addOption(_:)),
-                                for: .touchUpInside)
-        }
 
         return cell
     }
 
-    // Add Option
-    @objc func addOption(_ sender: UIButton) {
-        let section = sender.tag
-        questions[section].append("")
-
-        tableView.insertRows(
-            at: [IndexPath(row: questions[section].count - 1,
-                           section: section)],
-            with: .automatic
-        )
-    }
-
-    // Delete Option
-    func tableView(_ tableView: UITableView,
-                   commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-
-        if editingStyle == .delete {
-            questions[indexPath.section].remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+    private func selectOption(at index: Int) {
+        for i in 0..<store.currentQnA.questions[currentQuestionIndex].options.count {
+            store.currentQnA.questions[currentQuestionIndex]
+                .options[i].isSelected = (i == index)
         }
+        tableView.reloadData()
     }
 
-    func tableView(_ tableView: UITableView,
-                   heightForHeaderInSection section: Int) -> CGFloat {
-        return 16
-    }
+    @objc private func optionTextChanged(_ sender: UITextField) {
+        let index = sender.tag
 
-    func tableView(_ tableView: UITableView,
-                   viewForHeaderInSection section: Int) -> UIView? {
-        UIView()
-    }
+        guard index <
+            store.currentQnA.questions[currentQuestionIndex]
+                .options.count else { return }
 
-    @IBAction func backTapped(_ sender: Any) {
-        dismiss(animated: true)
-    }
-
-    @IBAction func doneTapped(_ sender: Any) {
-        print(questions)
-    }
-}
-
-extension QnAViewController: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        let section = textView.tag / 1000
-        let row = textView.tag % 1000
-        questions[section][row] = textView.text
+        store.currentQnA.questions[currentQuestionIndex]
+            .options[index].text = sender.text ?? ""
     }
 }
 

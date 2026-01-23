@@ -230,3 +230,17 @@ struct PersonalInfoSection {
     let title: String
     var items: [PersonalInfoItem]
 }
+struct QnAOption {
+    var text: String
+    var isSelected: Bool
+}
+
+struct QnAQuestion {
+    var questionText: String
+    var options: [QnAOption]
+}
+
+struct QnAData {
+    var title: String
+    var questions: [QnAQuestion]
+}

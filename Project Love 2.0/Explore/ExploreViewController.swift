@@ -61,8 +61,12 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                 withIdentifier: "QnAViewController"
             ) as! QnAViewController
 
-            vc.modalPresentationStyle = .fullScreen
-            self.present(vc, animated: true)
+            if let nav = self.navigationController {
+                nav.pushViewController(vc, animated: true)
+            } else {
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true)
+            }
         }
 
         // Write an Activity

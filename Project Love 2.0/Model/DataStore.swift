@@ -35,6 +35,8 @@ class DataStore {
     var userProfile: UserProfile?
     var profileSections: [ProfileSection] = []
     
+    var currentQnA: QnAData = QnAData( title: "", questions: [QnAQuestion(questionText: "", options: [] )])
+    
     
     private(set) var allActivities: [Activity] = []
     private var HisMood: Mood?
