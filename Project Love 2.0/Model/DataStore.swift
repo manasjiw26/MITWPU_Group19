@@ -208,6 +208,38 @@ class DataStore {
         ]
         self.activities = sampleActivities
     }
+    func loadSampleMemory()->[Memory] {
+        let memories: [Memory] = [
+            Memory(
+                id: UUID(),
+                date: Date().addingTimeInterval(-86400 * 5),
+                imageName: "Couple1",
+                location: "Bhopal",
+                title: "Our First Hello 💌",
+                description: "The moment everything quietly began.",
+                uiImage: nil
+            ),
+            Memory(
+                id: UUID(),
+                date: Date().addingTimeInterval(-86400 * 2),
+                imageName: "Couple2",
+                location: "Pune",
+                title: "Worth Remembering ✨",
+                description: "One smile that made the whole day better.",
+                uiImage: nil
+            ),
+            Memory(
+                id: UUID(),
+                date: Date(),
+                imageName: "Couple3",
+                location: "Pune",
+                title: "A Random Smile 😊",
+                description: "Some moments deserve to stay forever.",
+                uiImage: nil
+            )
+        ]
+        return memories
+    }
     
     func loadSuggestedActivity () {
         let suggestedActivity: [Activity] = [

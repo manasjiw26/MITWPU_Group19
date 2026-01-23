@@ -54,11 +54,7 @@ final class NotificationViewController: UIViewController {
      }
 
     private func openMemory(_ notification: AppNotification) {
-         let storyboard = UIStoryboard(name: "MemoryJar", bundle: nil)
-         let vc = storyboard.instantiateViewController(
-             withIdentifier: "MemoryJarVC"
-         )
-         navigationController?.pushViewController(vc, animated: true)
+        NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: 0)
      }
 
      private func openActivity(_ notification: AppNotification) {

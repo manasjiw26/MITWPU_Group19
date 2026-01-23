@@ -24,6 +24,7 @@ class MemoryJarScene: SKScene, SKPhysicsContactDelegate {
     // Used when accelerometer move
     
     override func didMove(to view: SKView) {
+        dataStore.savedMemories = dataStore.loadSampleMemory()
         self.backgroundColor = .clear
         glassHaptic.prepare()
         setupJarPhysics()
