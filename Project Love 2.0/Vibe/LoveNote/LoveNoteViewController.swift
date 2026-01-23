@@ -36,7 +36,7 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
     private func presentSchedulePopover(from button: UIButton) {
         let popoverVC = UIViewController()
         popoverVC.modalPresentationStyle = .popover
-        popoverVC.preferredContentSize = CGSize(width: 240, height: 70)
+        popoverVC.preferredContentSize = CGSize(width: 260, height: 70)
         popoverVC.view.backgroundColor = .systemBackground
 
         let datePicker = UIDatePicker()
@@ -85,7 +85,9 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
     }
 
     @IBAction func saveTapped(_ sender: UIButton) {
-        // scheduledDate is available here if needed
+        let haptic = UINotificationFeedbackGenerator()
+            haptic.prepare()
+            haptic.notificationOccurred(.success)
         dismiss(animated: true)
     }
 }
