@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -42,11 +42,10 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W3T-YL-VJ2">
-                                        <rect key="frame" x="0.0" y="199" width="227" height="35"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W3T-YL-VJ2">
+                                        <rect key="frame" x="6" y="199" width="341" height="35"/>
                                         <color key="tintColor" systemColor="systemGrayColor"/>
-                                        <buttonConfiguration key="configuration" style="plain" title=" Schedule your Lovenote" titleAlignment="leading">
+                                        <buttonConfiguration key="configuration" style="plain" imagePlacement="leading" title=" Schedule your Lovenote" titleAlignment="leading">
                                             <imageReference key="image" image="clock.badge.checkmark.fill" catalog="system" symbolScale="medium" renderingMode="template"/>
                                             <fontDescription key="titleFontDescription" type="system" pointSize="16"/>
                                         </buttonConfiguration>
@@ -64,6 +63,8 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="0hl-Jf-agj" firstAttribute="top" secondItem="rXU-G2-7hL" secondAttribute="top" constant="70" id="4h4-Pi-KjY"/>
+                                    <constraint firstItem="W3T-YL-VJ2" firstAttribute="leading" secondItem="rXU-G2-7hL" secondAttribute="leading" constant="6" id="510-rV-PWY"/>
+                                    <constraint firstItem="W3T-YL-VJ2" firstAttribute="top" secondItem="EjB-Xw-lvr" secondAttribute="bottom" constant="29" id="728-Yy-sVK"/>
                                     <constraint firstAttribute="height" constant="260" id="E5J-cy-sLP"/>
                                     <constraint firstItem="BNO-dy-P5K" firstAttribute="top" secondItem="rXU-G2-7hL" secondAttribute="top" constant="20" id="ItG-Oz-2hL"/>
                                     <constraint firstAttribute="trailing" secondItem="EjB-Xw-lvr" secondAttribute="trailing" constant="16" id="NYn-zb-Cb3"/>
@@ -72,6 +73,7 @@
                                     <constraint firstItem="0hl-Jf-agj" firstAttribute="leading" secondItem="rXU-G2-7hL" secondAttribute="leading" constant="20" id="aVL-HF-X2T"/>
                                     <constraint firstAttribute="trailing" secondItem="0hl-Jf-agj" secondAttribute="trailing" constant="20" id="amc-66-I04"/>
                                     <constraint firstItem="EjB-Xw-lvr" firstAttribute="leading" secondItem="rXU-G2-7hL" secondAttribute="leading" constant="16" id="epv-1B-toh"/>
+                                    <constraint firstAttribute="trailing" secondItem="W3T-YL-VJ2" secondAttribute="trailing" constant="6" id="mc3-lp-bhv"/>
                                     <constraint firstAttribute="trailing" secondItem="BNO-dy-P5K" secondAttribute="trailing" symbolic="YES" id="onj-gr-27N"/>
                                 </constraints>
                             </view>

@@ -29,13 +29,14 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
 
 
     @IBAction func scheduleTapped(_ sender: UIButton) {
+        view.endEditing(true)
         presentSchedulePopover(from: sender)
     }
 
     private func presentSchedulePopover(from button: UIButton) {
         let popoverVC = UIViewController()
         popoverVC.modalPresentationStyle = .popover
-        popoverVC.preferredContentSize = CGSize(width: 280, height: 100)
+        popoverVC.preferredContentSize = CGSize(width: 240, height: 70)
         popoverVC.view.backgroundColor = .systemBackground
 
         let datePicker = UIDatePicker()
@@ -54,7 +55,7 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
 
         NSLayoutConstraint.activate([
             datePicker.centerXAnchor.constraint(equalTo: popoverVC.view.centerXAnchor),
-            datePicker.centerYAnchor.constraint(equalTo: popoverVC.view.centerYAnchor)
+            datePicker.topAnchor.constraint(equalTo: popoverVC.view.topAnchor, constant: 28)
         ])
 
         if let popover = popoverVC.popoverPresentationController {
@@ -74,7 +75,7 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
         formatter.dateFormat = "dd MMM, h:mm a"
         let time = formatter.string(from: sender.date)
 
-        scheduleButton.setTitle("Scheduled for \(time)", for: .normal)
+        scheduleButton.setTitle(" Scheduled for \(time)", for: .normal)
     }
 
     
