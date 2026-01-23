@@ -208,7 +208,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             picker.allowsEditing = false
        self.present(picker, animated: true, completion: nil)
         } else {
-            print("Camera not available (simulators don't have cameras)")
+            print("Camera not available")
         }
     }
     
@@ -524,7 +524,7 @@ extension ChatViewController: MessagesLayoutDelegate {
     }
 }
 extension ChatViewController {
-    /// Call this after YOU send a message
+    
     func simulatePartnerReply() {
         let hardcodedReplies = [
             "Hello! How are you?",
@@ -532,13 +532,10 @@ extension ChatViewController {
             "I’ll be back in an hour.",
             "Okay see you later!"
         ]
-
-        // Random reply
+        
         if(i < hardcodedReplies.count) {} else { return }
         let replyText = hardcodedReplies[i]
         i += 1
-
-        // Simulate typing delay (1.5–3 seconds)
         let delay = Double.random(in: 1.5...3.0)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
