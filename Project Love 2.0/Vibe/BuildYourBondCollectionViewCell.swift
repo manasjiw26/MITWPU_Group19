@@ -17,6 +17,13 @@ class BuildYourBondCollectionViewCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
     }
+    override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+        super.apply(layoutAttributes)
+        
+        // This syncs the cell's opacity with the layout attributes
+        // effectively fixing the "faded first card" bug.
+        self.contentView.alpha = layoutAttributes.alpha
+    }
     func configureCell(bond : BuildYourBond) {
         imageView.image = UIImage(named: bond.imageName)
         titleLabel.text = bond.name

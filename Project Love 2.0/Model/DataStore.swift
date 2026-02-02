@@ -4,7 +4,6 @@
 //
 //  Created by SDC-USER on 26/11/25.
 //
-
 import Foundation
 import UIKit
 class DataStore {
@@ -36,8 +35,10 @@ class DataStore {
     var profileSections: [ProfileSection] = []
     
     var currentQnA: QnAData = QnAData( title: "", questions: [QnAQuestion(questionText: "", options: [] )])
+    var dailyCheckInQuestions: [Question] = []
     
     
+   
     private(set) var allActivities: [Activity] = []
     private var HisMood: Mood?
     private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "calm" )
@@ -58,8 +59,12 @@ class DataStore {
         loadPersonalInfoData()
         loadProfileData()
         buildAllActivities()
+        loadDailyCheckInQuestions()
     }
-    
+    func getDailyCheckInQuestion(at index: Int) -> Question? {
+            guard index >= 0 && index < dailyCheckInQuestions.count else { return nil }
+            return dailyCheckInQuestions[index]
+        }
     // Notification
     func addNotification(_ notification: AppNotification) {
         notifications.insert(notification, at: 0)
@@ -210,6 +215,16 @@ class DataStore {
         ]
         self.activities = sampleActivities
     }
+    func loadDailyCheckInQuestions() {
+        let sampleQuestions: [Question] = [
+            Question(title: "What level of connection are you on today?", options: ["Dry","Meh","Synced","Vibing"])
+            ,
+            Question(title: "What’s missing in your relationship rn?", options: ["Reassurance","Quality time","Space","Deep Convo"]),
+            Question(title: "How connected do you feel with your partner today?", options: ["Disconnected","Chill","Attached","Kinda close"])
+        ]
+        self.dailyCheckInQuestions = sampleQuestions
+    }
+    
     func loadSampleMemory()->[Memory] {
         let memories: [Memory] = [
             Memory(

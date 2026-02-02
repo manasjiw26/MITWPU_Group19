@@ -304,33 +304,78 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 section.orthogonalScrollingBehavior = .none
 
                 return section
-            } else { //build your bond
+            } else { // Section 4 - Build Your Bond (Peek Carousel)
+                // 1. Item takes up full width of the group
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .fractionalHeight(1.0)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
+                // 2. Group width is less than 1.0 (e.g., 0.8) to allow "peeking"
+                // Adjust fractionalWidth here: 0.8 means 80% of screen width
                 let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(260),
+                    widthDimension: .fractionalWidth(0.59),
                     heightDimension: .absolute(290)
                 )
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
                 )
- 
+
                 let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
                 
-                section.interGroupSpacing = 16
+                // 3. Carousel behavior: snaps to the center of the group
+                section.orthogonalScrollingBehavior = .groupPagingCentered
                 
+                // 4. Spacing between cards
+                section.interGroupSpacing = 0
+                
+                // 5. Section Insets
                 section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 10,
-                    leading: 16,
-                    bottom: 12,
-                    trailing: 16
+                    top: 16,
+                    leading: 16, // Centered paging handles side insets automatically
+                    bottom: 0,
+                    trailing: 0
                 )
+                // Add this inside the Section 4 else block
+                section.visibleItemsInvalidationHandler = { (items, offset, env) in
+                    let containerWidth = env.container.contentSize.width
+                    let scrollOffset = offset.x
+                    let viewportCenter = scrollOffset + (containerWidth / 2.0)
+
+                    items.forEach { item in
+                        // 1. Determine the 'True' target center (Your existing logic)
+                        var targetCenterX = viewportCenter
+                        
+                        if item.indexPath.item == 0 {
+                            let firstCardRestCenter = item.center.x
+                            let transitionFactor = min(max(scrollOffset / 100, 0), 1)
+                            targetCenterX = firstCardRestCenter + (transitionFactor * (viewportCenter - firstCardRestCenter))
+                        }
+
+                        // 2. Calculate distance and normalization
+                        let distanceFromCenter = abs(item.center.x - targetCenterX)
+                        let range = containerWidth * 0.35
+                        let normalizedDistance = min(distanceFromCenter / range, 1.0)
+                        
+                        item.alpha = 1.0
+                        
+                        if let cell = self.vibeCollectionView.cellForItem(at: item.indexPath) as? BuildYourBondCollectionViewCell {
+                            // --- Keep your Alpha Logic ---
+                            let minAlpha: CGFloat = 0.4
+                            cell.contentView.alpha = 1.0 - (normalizedDistance * (1.0 - minAlpha))
+                            
+                            // --- ADD: Size Logic ---
+                            // 1.0 at center, 0.85 (15% smaller) at the edges
+                            let minScale: CGFloat = 0.85
+                            let scale = 1.0 - (normalizedDistance * (1.0 - minScale))
+                            
+                            // Apply the shrinking transform
+                            cell.contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                        }
+                    }
+                }
                 section.boundarySupplementaryItems = [largeTitleHeader]
                 
                 return section
@@ -341,16 +386,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     }
     
     func didTapGetExercise() {
-        let storyboard = UIStoryboard(name: "onbording", bundle: nil)
-        let nav = storyboard.instantiateViewController(
-            withIdentifier: "QuestionNavController"
-        ) as! UINavigationController
-
-        let vc = nav.viewControllers.first as! QuestionViewController
-        vc.completionDelegate = self
-
-        nav.modalPresentationStyle = .pageSheet
-        present(nav, animated: true)
+            performSegue(withIdentifier: "openQuestions", sender: self)
     }
     func didStartActivity() {
         print("Activity started")
@@ -658,6 +694,12 @@ extension VibeViewController {
                 dest.selectedbondOption = selectedbondOption
             }
         }
+        if segue.identifier == "openQuestions" {
+                if let vc = segue.destination as? Questions_OptionsViewController {
+
+                    vc.flowDelegate = self
+                }
+            }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -694,5 +736,16 @@ extension VibeViewController: LoveTipsSelectionDelegate {
     func didUpdateSelectedTips(_ tips: [Tip]) {
         self.selectedTips = tips
         self.vibeCollectionView.reloadData()
+    }
+}
+// Add this at the bottom of VibeViewController.swift
+extension VibeViewController: DailyExerciseFlowDelegate {
+    func dailyExerciseDidFinish() {
+        // This is what happens when the user finishes all questions
+        self.hasCompletedDailyCheckIn = true
+        
+        DispatchQueue.main.async {
+            self.vibeCollectionView.reloadData()
+        }
     }
 }

@@ -178,7 +178,17 @@ enum NotificationType {
         }
     }
 }
+struct DailyCheckInQuestion {
+    let stepID: Int
+    let title: String
+    let options: [DailyOption]
+}
 
+struct DailyOption {
+    let id: Int
+    let label: String
+    let imageName: String
+}
 
 struct AppNotification {
     let id: UUID
