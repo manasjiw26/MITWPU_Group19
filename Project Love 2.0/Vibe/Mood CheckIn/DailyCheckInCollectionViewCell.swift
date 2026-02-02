@@ -32,8 +32,8 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Default (Not Completed)
     func configureCells() {
-        checkInTitleLabel.text = "Daily check-in"
-        checkInSubTitleLabel.text = "Get personalised exercises based on your relationship"
+        checkInTitleLabel.text = "Quick Vibe check"
+        checkInSubTitleLabel.text = "Questions to plan today's activities for you and your partner!"
         checkInImageView.image = UIImage(named: "DailyCheckIn")
     }
 

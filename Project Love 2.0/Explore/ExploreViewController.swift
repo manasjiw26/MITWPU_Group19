@@ -36,6 +36,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         activity_collection.setCollectionViewLayout(generateLayout(), animated: true)
         activity_collection.dataSource = self
         activity_collection.delegate = self
+
     }
     private func isEmptyState() -> Bool {
         if selectedSegmentIndex == 1 {
@@ -132,6 +133,8 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         
         activity_collection.register(UINib(nibName: "ActivitySectionHeaderViewCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header_cell")
         
+        activity_collection.register( UINib(nibName: "TitleCollectionResuableView", bundle: nil), forSupplementaryViewOfKind: "title", withReuseIdentifier: "title_cell")
+
         activity_collection.register(
             UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "empty_cell"
@@ -176,12 +179,39 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                 
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 group.interItemSpacing = .fixed(24)
-                group.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+                group.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 10, bottom: 10, trailing: 10)
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuous
-                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10)
+
                 
+                let headerSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(70)
+                )
+
+                let titleSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(36)   // ⬅️ increased from 34 → same visual weight as Activities
+                )
+
+                let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: titleSize,
+                    elementKind: "title",
+                    alignment: .top
+                )
+
+                titleHeader.contentInsets = NSDirectionalEdgeInsets(
+                    top: -5,      // small breathing space like other headers
+                    leading: 16,
+                    bottom: 4,
+                    trailing: 16
+                )
+
+                section.boundarySupplementaryItems = [titleHeader]
+
+
                 return section
             } else {  // Activities
                 
@@ -414,33 +444,43 @@ extension ExploreViewController:  UICollectionViewDataSource {
         return UICollectionViewCell()
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        if indexPath.section != 0{
-            let header = activity_collection.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header_cell", for: indexPath) as! ActivitySectionHeaderViewCollectionReusableView
-            
-            switch selectedSegmentIndex {
-            case 0:
-                header.titleLabel.text = "Activities"
-                
-            case 1:
-                header.titleLabel.text = "Ongoing"
-                
-            case 2:
-                header.titleLabel.text = "Completed"
-                
-            case 3:
-                header.titleLabel.text = "Custom"
-                
-            default:
-                break
-            }
-            header.delegate = self
-            header.segmentedControl.selectedSegmentIndex = selectedSegmentIndex
-            return header
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+
+        if kind == "title" {
+            let title = collectionView.dequeueReusableSupplementaryView(
+                ofKind: "title",
+                withReuseIdentifier: "title_cell",
+                for: indexPath
+            ) as! TitleCollectionResuableView
+
+            title.configureTitle(title: "Nudges", subtitle: "")
+            return title
         }
-        return UICollectionReusableView()
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: "header_cell",
+            for: indexPath
+        ) as! ActivitySectionHeaderViewCollectionReusableView
+
+        header.segmentedControl.isHidden = false
+        header.delegate = self
+        header.segmentedControl.selectedSegmentIndex = selectedSegmentIndex
+
+        switch selectedSegmentIndex {
+        case 0: header.titleLabel.text = "Activities"
+        case 1: header.titleLabel.text = "Ongoing"
+        case 2: header.titleLabel.text = "Completed"
+        case 3: header.titleLabel.text = "Custom"
+        default: break
+        }
+
+        return header
     }
+
+
     
 }
 extension ExploreViewController: ActivityHeaderDelegate {

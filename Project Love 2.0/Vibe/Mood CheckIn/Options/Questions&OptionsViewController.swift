@@ -12,6 +12,7 @@ class Questions_OptionsViewController: UIViewController {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var optionsCollectionView: UICollectionView!
     
+    @IBOutlet weak var nextButton: UIButton!
     // MARK: - Properties
     weak var flowDelegate: DailyExerciseFlowDelegate?
     var currentStep = 0
@@ -29,6 +30,8 @@ class Questions_OptionsViewController: UIViewController {
         optionsCollectionView.collectionViewLayout = generateLayout()
         setupCollectionView()
         updateUI()
+        nextButton.configuration = .glass()
+        nextButton.setTitle("Next", for: .normal)
     }
 
     private func setupCollectionView() {

@@ -18,5 +18,7 @@ class TitleCollectionResuableView: UICollectionReusableView {
     func configureTitle(title: String, subtitle: String) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
+        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+
     }
 }
