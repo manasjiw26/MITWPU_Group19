@@ -16,7 +16,8 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         
         MemoryJarView.allowsTransparency = true
         MemoryJarView.backgroundColor = .clear
-        
+        addButton.configuration = .glass()
+        addButton.setTitle("Add", for: .normal)
         NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showMemoryDisplay(_:)), name: NSNotification.Name("OpenMemory"), object: nil)
         memoryLaneCollectionView.alwaysBounceVertical = false

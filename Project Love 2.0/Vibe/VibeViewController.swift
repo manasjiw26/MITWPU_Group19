@@ -54,6 +54,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.register(UINib(nibName: "MoodCheckInCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "mood_checkin_cell")
         vibeCollectionView.register(UINib(nibName: "DailyCheckInCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "daily_CheckIn")
         vibeCollectionView.register(UINib(nibName: "SuggestedActivityCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "suggestedActivity_cell")
+        vibeCollectionView.register(UINib(nibName: "RefreshActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "refresh_cell")
         vibeCollectionView.register(
             UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "scheduleCalendar_cell"
@@ -167,9 +168,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     return section
 
                 }
-            }  else if section == 2 {
+            } else if section == 2 {
                 
-                //  Daily check in
+                // Daily check in
                 if !self.hasCompletedDailyCheckIn {
 
                     let itemSize = NSCollectionLayoutSize(
@@ -177,7 +178,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         heightDimension: .estimated(180)
                     )
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    
 
                     let group = NSCollectionLayoutGroup.vertical(
                         layoutSize: itemSize,
@@ -192,7 +192,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     return section
                 }
 
-                // suggested activity
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(350),
                     heightDimension: .estimated(120)
@@ -209,22 +208,24 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     widthDimension: .absolute(350),
                     heightDimension: .estimated(140)
                 )
+
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
                 )
 
-                let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .continuous
-                section.interGroupSpacing = 2
+                let sectionLayout = NSCollectionLayoutSection(group: group)
+                sectionLayout.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+                sectionLayout.interGroupSpacing = 2
 
-                section.contentInsets = NSDirectionalEdgeInsets(
+                sectionLayout.contentInsets = NSDirectionalEdgeInsets(
                     top: 6,
                     leading: 16,
                     bottom: 12,
                     trailing: 16
                 )
-                section.supplementaryContentInsetsReference = .none
+
+                sectionLayout.supplementaryContentInsetsReference = .none
 
                 let titleSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
@@ -244,10 +245,11 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     trailing: 16
                 )
 
-                section.boundarySupplementaryItems = [titleHeader]
-                return section
-                
-            } else if section == 3 { //make her smile
+                sectionLayout.boundarySupplementaryItems = [titleHeader]
+
+                return sectionLayout
+            }
+            else if section == 3 { //make her smile
 
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(100),
@@ -418,7 +420,12 @@ extension VibeViewController:  UICollectionViewDataSource {
         else if section == 1 {
             return hasCheckedInToday ? 2 : 1
         } else if section == 2{
-            return hasCompletedDailyCheckIn ? suggestedActivities.count : 1
+            if hasCompletedDailyCheckIn {
+                        // Only add the refresh cell (+1) if we have fewer than 6 activities
+                        return suggestedActivities.count < 6 ? (suggestedActivities.count + 1) : suggestedActivities.count
+                    } else {
+                        return 1
+                    }
         } else if section == 3 {
             print("Section 3 files")
             print("\(makeSmileData.count)")
@@ -460,9 +467,8 @@ extension VibeViewController:  UICollectionViewDataSource {
                 cell.configureCells(mood: mood)
                 cell.delegate = self
                 return cell
-            }
-            else {
-                // how are you felling card
+            } else {
+                // how are you feeling card
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "mood_cell",
                     for: indexPath
@@ -471,28 +477,51 @@ extension VibeViewController:  UICollectionViewDataSource {
                 cell.configureCell()
                 return cell
             }
-        } else if indexPath.section == 2 {
+        }
+        
+        else if indexPath.section == 2 {
             if hasCompletedDailyCheckIn {
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: "suggestedActivity_cell",
-                    for: indexPath
-                ) as! SuggestedActivityCollectionViewCell
-
-                cell.configureCells(activity: suggestedActivities[indexPath.row])
-                return cell
-
+                // Only show refresh cell if it's the last item AND we haven't reached 6 yet
+                if indexPath.row == suggestedActivities.count && suggestedActivities.count < 6 {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "refresh_cell", for: indexPath) as! RefreshActivityCollectionViewCell
+                    
+                    cell.onRefreshTapped = { [weak self] in
+                        guard let self = self else { return }
+                        
+                        // 1. Get NEW data from DataStore
+                        let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
+                        
+                        if !newActivities.isEmpty {
+                            // 2. APPEND the new ones to the existing list
+                            self.suggestedActivities.append(contentsOf: newActivities)
+                            
+                            // 3. Reload section 2 with your original transition animation
+                            UIView.transition(with: self.vibeCollectionView, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                                self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
+                            }, completion: { _ in
+                                // Optional: Smooth scroll to the new activities
+                                let firstNewIndex = self.suggestedActivities.count - newActivities.count
+                                self.vibeCollectionView.scrollToItem(at: IndexPath(item: firstNewIndex, section: 2), at: .centeredHorizontally, animated: true)
+                            })
+                        }
+                    }
+                    return cell
+                } else {
+                    // Standard Activity Cell (Handles indices 0-2 initially, and 0-5 after refresh)
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "suggestedActivity_cell", for: indexPath) as! SuggestedActivityCollectionViewCell
+                    cell.configureCells(activity: suggestedActivities[indexPath.row])
+                    return cell
+                }
             } else {
-                let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: "daily_CheckIn",
-                    for: indexPath
-                ) as! DailyCheckInCollectionViewCell
-
+                // Daily check-in logic shown before exercise completion
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
                 cell.configureCells()
                 cell.delegate = self
                 return cell
             }
         }
-        else if indexPath.section == 3{  
+        
+        else if indexPath.section == 3 {
             print("collectionView 3 working")
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "makeSmile_cell",
@@ -501,10 +530,10 @@ extension VibeViewController:  UICollectionViewDataSource {
             
             let item = makeSmileData[indexPath.row]
             cell.configureCell(item: item)
-
             return cell
         }
-        else{
+        
+        else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bond_cell", for: indexPath) as! BuildYourBondCollectionViewCell
             cell.configureCell(bond: BuildBond[indexPath.row])
             return cell
@@ -611,29 +640,24 @@ extension VibeViewController {
         
         // section 2 - daily check in
         if indexPath.section == 2, hasCompletedDailyCheckIn {
+            // Check if the user tapped the "Refresh" card (the last item)
+            if indexPath.row == suggestedActivities.count {
+                // 1. Get new data
+                let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
+                self.suggestedActivities.append(contentsOf: newActivities)
 
-            let selectedActivity = suggestedActivities[indexPath.row]
-
-            let destinationVC = SmallModalViewController(
-                nibName: "SmallModalViewController",
-                bundle: nil
-            )
-            
-            destinationVC.selectedActivity = selectedActivity
-
-            if let modalData = DataStore.shared.smallmodal.first(
-                where: { $0.title == selectedActivity.name }
-            ) {
-                destinationVC.modalData = modalData
+                
+                // 2. Reload the section with animation
+                UIView.transition(with: vibeCollectionView, duration: 0.4, options: .transitionCrossDissolve, animations: {
+                    self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
+                })
+                return
             }
 
-            destinationVC.flowSource = .activitiesForHer
-            destinationVC.modalPresentationStyle = .overFullScreen
-            destinationVC.delegate = self
-            present(destinationVC, animated: false)
-            return
+            
+            let selectedActivity = suggestedActivities[indexPath.row]
+            
         }
-      
         // Section 3- Make Her Smile
         if indexPath.section == 3 {
             switch indexPath.row {

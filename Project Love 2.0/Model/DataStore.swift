@@ -257,15 +257,41 @@ class DataStore {
         ]
         return memories
     }
-    
-    func loadSuggestedActivity () {
-        let suggestedActivity: [Activity] = [
-            Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none ,category : "suggestedActivity",scheduledDate: nil),
-            Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none,category : "suggestedActivity",scheduledDate: nil) ,
-            Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category : "suggestedActivity",scheduledDate: nil)
+ 
+    func getRefreshSuggestedActivities() -> [Activity] {
+        let pool = [
+            Activity(name: "Cozy Cocoon", description: "Escape the noise...", image: "Cozy Cocoon", time: "15 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+            Activity(name: "The Gratitude Glimmer", description: "Trade small joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+            Activity(name: "Story Sprout", description: "Watch a silly tale grow.", image: "Story Sprout", time: "10 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+            Activity(name: "Candlelight Cocoa", description: "Sip and talk in soft light.", image: "Cocoa", time: "20 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+            Activity(name: "Stargazing", description: "Look up and dream together.", image: "Stars", time: "15 min", status: .none, category: "suggestedActivity", scheduledDate: nil)
         ]
-        self.suggestedActivities = suggestedActivity
+        return Array(pool.shuffled().prefix(3))
     }
+    // 1. The full pool of everything available
+    var allSuggestedPool: [Activity] = [
+        Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+        Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+        Activity(name: "Story Sprout", description: "Watch a silly tale grow, one word at a time.", image: "Story Sprout", time: "10 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+        Activity(name: "Candlelight Cocoa", description: "Sip and talk in soft light.", image: "Cocoa", time: "20 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+        Activity(name: "Stargazing", description: "Look up and dream together.", image: "Stars", time: "15 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+        Activity(name: "Dream Journal", description: "Write down your shared goals.", image: "Journal", time: "10 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
+        Activity(name: "Music Mix", description: "Create a playlist for two.", image: "Music", time: "20 min", status: .none, category: "suggestedActivity", scheduledDate: nil)
+    ]
+    
+    func loadSuggestedActivity() {
+        // This starts the app with just the first 3 from the pool
+        self.suggestedActivities = Array(allSuggestedPool.prefix(3))
+    }
+
+    func getMoreActivities(excluding current: [Activity]) -> [Activity] {
+        let remaining = allSuggestedPool.filter { new in
+            !current.contains(where: { $0.name == new.name })
+        }
+        
+        return Array(remaining.prefix(3))
+    }
+
     func getActivities(forCategoryName name: String) -> [Activity] {
             return activities.filter { $0.category == name }
         }

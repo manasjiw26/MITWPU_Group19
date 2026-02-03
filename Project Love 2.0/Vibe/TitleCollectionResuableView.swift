@@ -18,7 +18,12 @@ class TitleCollectionResuableView: UICollectionReusableView {
     func configureTitle(title: String, subtitle: String) {
         titleLabel.text = title
         subtitleLabel.text = subtitle
-        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
 
+        if title == "Nudges" {
+            titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        } else {
+            titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        }
     }
+
 }
