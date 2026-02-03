@@ -13,6 +13,7 @@ class StepsViewController: UIViewController {
     var activity: Activity?
     var selectedActivityIndex: Int?
     var bondName: String?
+    var expandedIndex: Int? = nil
     
     weak var bondDelegate: BondActivityCompletionDelegate?
 
@@ -60,7 +61,9 @@ class StepsViewController: UIViewController {
         setupBackButton()
         backButton.configuration = .glass()
 
-        stepsTable.allowsSelection = false
+        stepsTable.allowsSelection = true
+        stepsTable.separatorStyle = .none
+        stepsTable.backgroundColor = .clear
         stepsTable.tableFooterView = UIView()
         stepsTable.isScrollEnabled = false
         stepsTable.rowHeight = UITableView.automaticDimension
@@ -108,7 +111,6 @@ class StepsViewController: UIViewController {
     
     @IBAction func continueButton(_ sender: Any) {
 
-        //self.dismiss(animated: true, completion: nil)
         let storyboard = UIStoryboard(name: "feedBack", bundle: nil)
         let feedbackVC = storyboard.instantiateViewController(
             withIdentifier: "FeedBackViewController"
@@ -142,60 +144,52 @@ extension StepsViewController: UITableViewDataSource, UITableViewDelegate {
             return steps.count
         }
 
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: "StepCell", for: indexPath) as! StepsTableViewCell
-            let step = steps[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "StepCell", for: indexPath) as! StepsTableViewCell
+        let step = steps[indexPath.row]
+        let isExpanded = (expandedIndex == indexPath.row)
 
-            let fullText = NSMutableAttributedString()
+        cell.configure(with: step, isExpanded: isExpanded)
+        cell.selectionStyle = .none
 
-            // Number
-            let numberText = NSAttributedString(
-                string: "\(step.number). ",
-                attributes: [
-                    .font: UIFont.systemFont(ofSize: 16, weight: .semibold)
-                ]
-            )
+        return cell
+    }
 
-            // Bold Title
-            let titleText = NSAttributedString(
-                string: "\(step.title): ",
-                attributes: [
-                    .font: UIFont.systemFont(ofSize: 16, weight: .semibold)
-                ]
-            )
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-            // Description
-            let descText = NSAttributedString(
-                string: step.descriptionLabel,
-                attributes: [
-                    .font: UIFont.systemFont(ofSize: 16, weight: .regular),
-                    .foregroundColor: UIColor.darkGray
-                ]
-            )
+        let previous = expandedIndex
 
-            // Combine them
-            fullText.append(numberText)
-            fullText.append(titleText)
-            fullText.append(descText)
-
-            // Set final text
-            cell.stepLabel.attributedText = fullText
-            cell.stepLabel.numberOfLines = 0
-            
-            let isLastRow = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
-
-            if isLastRow {
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-            } else {
-                cell.separatorInset = .zero
-            }
-
-            return cell
+        if expandedIndex == indexPath.row {
+            expandedIndex = nil
+        } else {
+            expandedIndex = indexPath.row
         }
+
+        var rowsToReload: [IndexPath] = [indexPath]
+
+        if let previous = previous, previous != indexPath.row {
+            rowsToReload.append(IndexPath(row: previous, section: 0))
+        }
+
+        tableView.reloadRows(at: rowsToReload, with: .automatic)
+
+        tableView.beginUpdates()
+        tableView.endUpdates()
+
+        view.layoutIfNeeded()
+        tableView.layoutIfNeeded()
+
+        tableHeightConstraint.constant = tableView.contentSize.height
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
        
 
-    }
+}
 
     
 
