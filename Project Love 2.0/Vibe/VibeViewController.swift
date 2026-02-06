@@ -717,21 +717,7 @@ extension VibeViewController {
     }
 }
 
-extension VibeViewController: DailyCheckInCompletionDelegate {
 
-    func didCompleteDailyCheckIn() {
-        hasCompletedDailyCheckIn = true
-
-        vibeCollectionView.setCollectionViewLayout(
-            generateLayout(),
-            animated: false
-        )
-
-        DispatchQueue.main.async {
-            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
-        }
-    }
-}
 extension VibeViewController: LoveTipsSelectionDelegate {
     func didUpdateSelectedTips(_ tips: [Tip]) {
         self.selectedTips = tips

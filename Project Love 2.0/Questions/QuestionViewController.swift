@@ -24,7 +24,7 @@ class QuestionViewController: UIViewController, UITableViewDelegate,UITableViewD
            let optionText = questions[currentIndex].options[indexPath.row]
            let isSelected = (selectedIndex == indexPath.row)
 
-           cell.configure(option: optionText, isSelected: isSelected)
+//           cell.configure(option: optionText, isSelected: isSelected)
         
         cell.contentView.backgroundColor = .white
     
