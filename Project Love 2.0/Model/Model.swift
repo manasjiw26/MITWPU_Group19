@@ -254,3 +254,9 @@ struct QnAData {
     var title: String
     var questions: [QnAQuestion]
 }
+//adding special dates
+struct SpecialDate {
+    let title: String
+    let date: Date
+    let note: String
+}

@@ -46,7 +46,6 @@ class Questions_OptionsViewController: UIViewController {
         optionsCollectionView.register(nib, forCellWithReuseIdentifier: "optionCell")
     }
     
-    // MARK: - Layout Generation
     func generateLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(0.5),
@@ -83,7 +82,6 @@ class Questions_OptionsViewController: UIViewController {
         optionsCollectionView.reloadData()
     }
 
-    // MARK: - Actions
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         // Optional: Only allow "Next" if a selection exists for this step
         if userSelections[currentStep] != nil {

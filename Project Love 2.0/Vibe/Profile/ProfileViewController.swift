@@ -92,14 +92,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 
 
         }
-        if item.title == "Status" {
-            let storyboard = UIStoryboard(name: "Activity_Status", bundle: nil)
+        if item.title == "Special Dates" {
+            let storyboard = UIStoryboard(name: "SpecialDates", bundle: nil)
             let vc = storyboard.instantiateViewController(
-                withIdentifier: "ActivityStatsViewController"
-            ) as! ActivityStatsViewController
+                withIdentifier: "SpecialDatesViewController"
+            ) as! SpecialDatesViewController
             navigationController?.pushViewController(vc, animated: true)
-
         }
+
 
     }
     

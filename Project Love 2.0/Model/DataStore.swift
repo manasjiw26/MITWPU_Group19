@@ -37,14 +37,14 @@ class DataStore {
     var currentQnA: QnAData = QnAData( title: "", questions: [QnAQuestion(questionText: "", options: [] )])
     var dailyCheckInQuestions: [Question] = []
     
-    
-   
+    var specialDates: [SpecialDate] = []
+
     private(set) var allActivities: [Activity] = []
     private var HisMood: Mood?
     private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "calm" )
     private(set) var notifications: [AppNotification] = []
     private(set) var savedFeedback: [FeedBackGiven] = []
-    
+  
     init() {
         loadSampleData()
         loadSampleRewards()
@@ -349,7 +349,7 @@ class DataStore {
             ProfileSection(
                 title: "Activity",
                 items: [
-                    ProfileItem(title: "Status", iconName: "slider.horizontal.3", showsChevron: true)
+                    ProfileItem(title: "Special Dates", iconName: "slider.horizontal.3", showsChevron: true)
                     
                 ]
             ),
