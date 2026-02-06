@@ -23,6 +23,9 @@ class StepsViewController: UIViewController {
     @IBOutlet weak var stepsTable: UITableView!
     @IBOutlet weak var tableHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableBackgroundCell: UIView!
+
+    @IBOutlet var subtitle1: UILabel!
+    
     @IBOutlet weak var combinedLabel: UILabel!
  
     private let backButton: UIButton = {

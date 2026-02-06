@@ -8,22 +8,27 @@
 import UIKit
 
 
-class FeedBackViewController: UIViewController {
+class FeedBackViewController: UIViewController, UITextViewDelegate {
     
-    var feedbackItem: FeedBackGiven!
+    var feedbackItem: FeedBackGiven?
     var flowSource: ActivityFlowSource?
     var activity: Activity?
     var bondName: String?
     var selectedActivityIndex: Int?
     weak var bondDelegate: BondActivityCompletionDelegate?
 
-    @IBOutlet weak var UpdateMoodView : UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var messageTextField: UITextField!
+    @IBOutlet weak var messageTextView: UITextView!
     @IBOutlet weak var moodButton: UIButton!
-    @IBOutlet weak var moodLabel: UILabel!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet var optionButtons: [UIButton]!
+    @IBOutlet var question1: UILabel!
+    @IBOutlet var question2: UILabel!
+    @IBOutlet var messageView: UIView!
+    @IBOutlet var backgroundView: UIView!
+    
+    private let placeholderText = "Type here..."
     
     private let backButton: UIButton = {
         let button = UIButton(type: .system)
@@ -41,19 +46,24 @@ class FeedBackViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        optionButtons.forEach { button in
+            button.layer.cornerRadius = 17
+        }
         
-        messageTextField.addTarget(
-            self,
-            action: #selector(textDidChange),
-            for: .editingChanged
-        )
-        UpdateMoodView.layer.cornerRadius = 12
+        backgroundView.layer.cornerRadius = 14
         
-        messageTextField.layer.cornerRadius = 12
-        messageTextField.layer.masksToBounds = true
+        messageTextView.layer.cornerRadius = 12
+        messageTextView.layer.masksToBounds = true
+        messageTextView.delegate = self
+        messageTextView.text = placeholderText
+        messageTextView.textColor = .placeholderText
+        messageTextView.backgroundColor = .clear
         
-        moodLabel.layer.cornerRadius = 8
-        moodLabel.layer.masksToBounds = true
+        messageView.layer.cornerRadius = 14
+        messageView.layer.borderWidth = 1
+        messageView.layer.borderColor = UIColor.systemGray4.cgColor
+        messageView.layer.masksToBounds = true
         
         doneButton.configuration = .glass()
         doneButton.setTitle("Done", for: .normal)
@@ -61,8 +71,8 @@ class FeedBackViewController: UIViewController {
         setupBackButton()
         backButton.configuration = .glass()
         
-        titleLabel.text = feedbackItem.title
-        subtitleLabel.text = feedbackItem.subTitle
+        titleLabel.text = feedbackItem?.title
+        subtitleLabel.text = feedbackItem?.subTitle
         
         let tapGesture = UITapGestureRecognizer(
                 target: self,
@@ -70,15 +80,33 @@ class FeedBackViewController: UIViewController {
             )
             tapGesture.cancelsTouchesInView = false
             view.addGestureRecognizer(tapGesture)
-        moodButton.setTitle(
-            feedbackItem.selectedMood ?? "Update Mood",
-            for: .normal
-        )
+        
+        if let mood = feedbackItem?.selectedMood {
+            moodButton.setTitle("Mood updated: \(mood)", for: .normal)
+        } else {
+            moodButton.setTitle("Update Mood", for: .normal)
+        }
         
     }
-    @objc private func textDidChange() {
-        feedbackItem.userMessage = messageTextField.text
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text != placeholderText {
+            feedbackItem?.userMessage = textView.text
+        }
     }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == placeholderText {
+            textView.text = ""
+            textView.textColor = .label
+        }
+    }
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = placeholderText
+            textView.textColor = .placeholderText
+        }
+    }
+    
     private func setupBackButton() {
         view.addSubview(backButton)
         
@@ -106,11 +134,11 @@ class FeedBackViewController: UIViewController {
         dismiss(animated: true)
     }
     @IBAction func doneTapped(_ sender: UIButton) {
-        // Save feedback
+        
         if let activity = activity {
                DataStore.shared.markActivityCompleted(activity: activity)
            }
-        // unlovk next activity
+      
            guard
                let bondName = bondName,
                let completedIndex = selectedActivityIndex,
@@ -170,6 +198,25 @@ class FeedBackViewController: UIViewController {
         
         present(vc, animated: true)
         
+    }
+    
+    @IBAction func optionTapped(_ sender: UIButton) {
+ 
+        let normalBG = UIColor(red: 118/255, green: 118/255, blue: 128/255, alpha: 0.12)
+        let selectedBG = UIColor(red: 218/255, green: 214/255, blue: 251/255, alpha: 1.0)
+        let purpleText = UIColor(red: 128/255, green: 99/255, blue: 181/255, alpha: 1)
+        let blackText = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.70)
+    
+            sender.isSelected.toggle()
+        if sender.isSelected {
+            sender.backgroundColor = selectedBG
+            sender.setTitleColor(blackText, for: .normal)
+            sender.setTitleColor(blackText, for: .selected)
+        } else {
+            sender.backgroundColor = normalBG
+            sender.setTitleColor(purpleText, for: .normal)
+            sender.setTitleColor(purpleText, for: .selected)
+        }
     }
     
     private func showBadgePopup(from page: BuildYourBondpage) {
@@ -236,10 +283,10 @@ class FeedBackViewController: UIViewController {
 }
 extension FeedBackViewController: TellMoodSelectionDelegate {
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
-        feedbackItem.selectedMood = mood.label
-        moodButton.setTitle(mood.label, for: .normal)
+        feedbackItem?.selectedMood = mood.label
+        moodButton.setTitle("Mood updated: \(mood.label)", for: .normal)
     }
-    }
+}
     
 protocol BondActivityCompletionDelegate: AnyObject {
     func didCompleteBondActivity()

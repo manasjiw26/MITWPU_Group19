@@ -36,7 +36,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Fc-Ra-eK8">
-                                                <rect key="frame" x="16" y="185.33333333333337" width="361" height="321"/>
+                                                <rect key="frame" x="16" y="200.33333333333337" width="361" height="321"/>
                                                 <subviews>
                                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="mfw-bh-xAA">
                                                         <rect key="frame" x="0.0" y="5" width="361" height="300"/>
@@ -108,6 +108,12 @@
                                                     <action selector="continueButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="c5o-MQ-Mks"/>
                                                 </connections>
                                             </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to peek inside!👀" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9X7-vt-zcX">
+                                                <rect key="frame" x="16" y="184.33333333333334" width="361" height="17"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" name="AppBackground"/>
                                         <constraints>
@@ -116,10 +122,13 @@
                                             <constraint firstAttribute="trailing" secondItem="Vlh-pE-RLV" secondAttribute="trailing" constant="16" id="3qo-9u-1kR"/>
                                             <constraint firstItem="NFx-XE-Dbr" firstAttribute="leading" secondItem="vVx-AX-uOS" secondAttribute="leading" constant="24" id="AEy-4x-KOW"/>
                                             <constraint firstAttribute="bottom" secondItem="NFx-XE-Dbr" secondAttribute="bottom" constant="56" id="CD3-8O-ovu"/>
+                                            <constraint firstItem="9X7-vt-zcX" firstAttribute="top" secondItem="Ktr-VS-Cqb" secondAttribute="bottom" constant="4" id="Hb3-6h-9Gl"/>
+                                            <constraint firstItem="9X7-vt-zcX" firstAttribute="leading" secondItem="vVx-AX-uOS" secondAttribute="leading" constant="16" id="TUh-3q-W3g"/>
                                             <constraint firstAttribute="trailing" secondItem="NFx-XE-Dbr" secondAttribute="trailing" constant="24" id="ZfR-DF-SDC"/>
                                             <constraint firstItem="Ktr-VS-Cqb" firstAttribute="leading" secondItem="vVx-AX-uOS" secondAttribute="leading" constant="16" id="a7z-LE-rtg"/>
+                                            <constraint firstAttribute="trailing" secondItem="9X7-vt-zcX" secondAttribute="trailing" constant="16" id="f0B-78-Bdf"/>
                                             <constraint firstAttribute="trailing" secondItem="6Fc-Ra-eK8" secondAttribute="trailing" constant="16" id="moj-HE-s2i"/>
-                                            <constraint firstItem="6Fc-Ra-eK8" firstAttribute="top" secondItem="Ktr-VS-Cqb" secondAttribute="bottom" constant="5" id="nq5-9c-Z4C"/>
+                                            <constraint firstItem="6Fc-Ra-eK8" firstAttribute="top" secondItem="Ktr-VS-Cqb" secondAttribute="bottom" constant="20" id="nq5-9c-Z4C"/>
                                             <constraint firstAttribute="trailing" secondItem="Ktr-VS-Cqb" secondAttribute="trailing" constant="16" id="px4-il-ZEU"/>
                                             <constraint firstItem="Vlh-pE-RLV" firstAttribute="top" secondItem="vVx-AX-uOS" secondAttribute="top" constant="123" id="wWJ-bj-Nvn"/>
                                             <constraint firstItem="Ktr-VS-Cqb" firstAttribute="top" secondItem="vVx-AX-uOS" secondAttribute="top" constant="160" id="zyU-KB-xt9"/>
@@ -152,6 +161,7 @@
                         <outlet property="continueButton" destination="NFx-XE-Dbr" id="WJa-z3-fDL"/>
                         <outlet property="stepsTable" destination="mfw-bh-xAA" id="MB5-Hc-Iw3"/>
                         <outlet property="subtitle" destination="Ktr-VS-Cqb" id="Vxs-YA-Ul3"/>
+                        <outlet property="subtitle1" destination="9X7-vt-zcX" id="96A-Tp-ebZ"/>
                         <outlet property="tableBackgroundCell" destination="6Fc-Ra-eK8" id="AUE-04-HVQ"/>
                         <outlet property="tableHeightConstraint" destination="r6v-6p-m4c" id="sDI-HH-tT7"/>
                     </connections>
@@ -183,6 +193,9 @@
         <namedColor name="AppBackground">
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
