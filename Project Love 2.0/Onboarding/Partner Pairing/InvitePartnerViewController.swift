@@ -136,7 +136,6 @@ class InvitePartnerViewController: UIViewController, UICollectionViewDelegate, U
 }
 
 
-//This allows detecting taps inside a specific word range inside UILabel
         extension UITapGestureRecognizer {
             func didTapAttributedTextInLabel(label: UILabel, inRange targetRange: NSRange) -> Bool {
                 guard let attributedText = label.attributedText else { return false }
@@ -160,17 +159,3 @@ class InvitePartnerViewController: UIViewController, UICollectionViewDelegate, U
                 return NSLocationInRange(index, targetRange)
             }
         }
-        
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-
