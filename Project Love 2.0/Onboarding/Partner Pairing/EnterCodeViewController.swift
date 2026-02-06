@@ -1,42 +1,20 @@
-//
-//  EnterCodeViewController.swift
-//  Project Love 2.0
-//
-//  Created by SDC-USER on 27/11/25.
-//
-
 import UIKit
 
-class EnterCodeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
-    
-    
-    var codeDigits = ["", "", "", "", "", ""]
-    
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return codeDigits.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EnterCodeCell", for: indexPath) as! EnterCodeCollectionViewCell
-        
-        cell.enterCodeLabel.text = codeDigits[indexPath.item]
-        
-        return cell
-    }
-    
+class EnterCodeViewController: UIViewController {
 
     @IBOutlet weak var hiddenTextField: UITextField!
-    
-    
     @IBOutlet weak var codeCollectionView: UICollectionView!
     
-    
+    var enteredCode: String = ""
+    let maxDigits = 6
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupCollectionView()
+        setupTextField()
         
-        
+    }
+    
+    private func setupCollectionView() {
         let nib = UINib(nibName: "EnterCodeCollectionViewCell", bundle: nil)
         codeCollectionView.register(nib, forCellWithReuseIdentifier: "EnterCodeCell")
         
@@ -45,84 +23,72 @@ class EnterCodeViewController: UIViewController, UICollectionViewDelegate, UICol
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(focusTextField))
         view.addGestureRecognizer(tap)
-
-        
-        // Do any additional setup after loading the view.
-        
-//        hiddenTextField.becomeFirstResponder()
-//        hiddenTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        
-        
-        //confirming the outlet is correctly connected
-        print("hiddenTextField:", hiddenTextField as Any)
-
-        
     }
     
+    private func setupTextField() {
+        hiddenTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        hiddenTextField.keyboardType = .asciiCapable
+        hiddenTextField.textContentType = .oneTimeCode
+    }
+
     @objc func textDidChange(_ textField: UITextField) {
-        let text = textField.text ?? ""
+        let text = textField.text?.uppercased() ?? ""
         
-        // Limit to 6 characters
-        if text.count > 6 {
-            textField.text = String(text.prefix(6))
+        if text.count > maxDigits {
+            textField.text = String(text.prefix(maxDigits))
+            return
         }
         
-        // Update array
-        for i in 0..<6 {
-            if i < text.count {
-                let index = text.index(text.startIndex, offsetBy: i)
-                codeDigits[i] = String(text[index])
-            } else {
-                codeDigits[i] = ""
-            }
-        }
-        
+        enteredCode = text
         codeCollectionView.reloadData()
         
-        // When user types all digits → call validation
-        if text.count == 6 {
-            codeCompleted(String(text.prefix(6)))
+        // Auto-action when full
+        if enteredCode.count == maxDigits {
+            codeCompleted(enteredCode)
         }
     }
     
     func codeCompleted(_ code: String) {
-        print("Entered Code:", code)
-        
-        // For now just show an alert
-        let alert = UIAlertController(title: "Code Entered", message: code, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
+        // No alert here!
+        // This is where you call your server or navigate to the next screen.
+        print("Final Code ready for pairing: \(code)")
     }
-    
     
     @objc func focusTextField() {
         hiddenTextField.becomeFirstResponder()
     }
-
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
+    @IBAction func pairWithPartnerButton(_ sender: Any) {
+        // This button can now just call codeCompleted as well
+        if enteredCode.count == maxDigits {
+            codeCompleted(enteredCode)
+        }
+    }
 }
 
-extension EnterCodeViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 52, height: 60)   // Figma-perfect size
+// MARK: - CollectionView Data Source
+extension EnterCodeViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return maxDigits
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 12   // space between boxes
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EnterCodeCell", for: indexPath) as! EnterCodeCollectionViewCell
+        
+        let chars = Array(enteredCode)
+        cell.enterCodeLabel.text = indexPath.item < chars.count ? String(chars[indexPath.item]) : ""
+        
+        return cell
+    }
+}
+
+// MARK: - CollectionView Layout
+extension EnterCodeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 52, height: 60)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 12
     }
 }

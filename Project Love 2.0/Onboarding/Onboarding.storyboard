@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R0E-cC-p1D">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gZ4-G0-rz8">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
@@ -996,21 +996,6 @@ bond together </string>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to Copy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VIz-XF-Va5">
-                                <rect key="frame" x="153" y="582" width="87" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="ECH-at-bhc"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                <color key="textColor" systemColor="secondaryLabelColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rg4-8a-BlI">
-                                <rect key="frame" x="180.66666666666666" y="749" width="31.666666666666657" height="15"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e7q-3i-c5c">
                                 <rect key="frame" x="20" y="692" width="353" height="52"/>
                                 <constraints>
@@ -1026,33 +1011,60 @@ bond together </string>
                                     <action selector="shareMyCodePressed:" destination="udN-E5-ApU" eventType="touchUpInside" id="tqj-J2-yJZ"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S8y-P2-qZA">
+                                <rect key="frame" x="141.33333333333334" y="580" width="110.33333333333334" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="oKQ-Qa-uZf"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Tap to copy " imagePadding="0.0">
+                                    <imageReference key="image" image="doc.on.doc" catalog="system" symbolScale="small"/>
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="12"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="taptocopyButton:" destination="udN-E5-ApU" eventType="touchUpInside" id="16a-N7-lpY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Yu-YP-3y2">
+                                <rect key="frame" x="95.666666666666671" y="749" width="201.66666666666663" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="InV-W5-Fw8"/>
+                                </constraints>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Received an invite? Enter partner’s code">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="9"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="enterPartnerCodeButton:" destination="udN-E5-ApU" eventType="touchUpInside" id="3Dr-lA-deJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="9OK-xm-5aV"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
-                            <constraint firstItem="Rg4-8a-BlI" firstAttribute="top" secondItem="e7q-3i-c5c" secondAttribute="bottom" constant="5" id="Bh0-dA-sjx"/>
                             <constraint firstItem="9OK-xm-5aV" firstAttribute="trailing" secondItem="e7q-3i-c5c" secondAttribute="trailing" constant="20" id="M3j-wR-qIv"/>
                             <constraint firstItem="4NB-h9-vv5" firstAttribute="centerX" secondItem="NR0-3I-vfA" secondAttribute="centerX" id="aUi-9Y-7XP"/>
+                            <constraint firstItem="S8y-P2-qZA" firstAttribute="centerX" secondItem="NR0-3I-vfA" secondAttribute="centerX" id="e22-Nm-8AM"/>
                             <constraint firstItem="e7q-3i-c5c" firstAttribute="leading" secondItem="9OK-xm-5aV" secondAttribute="leading" constant="20" id="eAL-Fw-44e"/>
                             <constraint firstItem="QoW-SZ-LzP" firstAttribute="top" secondItem="4NB-h9-vv5" secondAttribute="bottom" constant="25" id="eIv-ep-usP"/>
                             <constraint firstItem="9OK-xm-5aV" firstAttribute="trailing" secondItem="QoW-SZ-LzP" secondAttribute="trailing" constant="20" id="eg2-h2-DCd"/>
                             <constraint firstItem="4NB-h9-vv5" firstAttribute="top" secondItem="D5I-Zl-eJH" secondAttribute="bottom" constant="100" id="fMu-3Z-SnM"/>
                             <constraint firstItem="D5I-Zl-eJH" firstAttribute="leading" secondItem="9OK-xm-5aV" secondAttribute="leading" constant="16" id="g0P-oB-ftc"/>
-                            <constraint firstItem="Rg4-8a-BlI" firstAttribute="centerX" secondItem="NR0-3I-vfA" secondAttribute="centerX" id="hRu-7K-BzD"/>
                             <constraint firstItem="e7q-3i-c5c" firstAttribute="centerX" secondItem="NR0-3I-vfA" secondAttribute="centerX" id="hV7-ew-1oJ"/>
                             <constraint firstAttribute="bottomMargin" secondItem="e7q-3i-c5c" secondAttribute="bottom" constant="40" id="inY-Z4-8EZ"/>
-                            <constraint firstItem="VIz-XF-Va5" firstAttribute="centerX" secondItem="NR0-3I-vfA" secondAttribute="centerX" id="isq-DG-CEK"/>
-                            <constraint firstItem="VIz-XF-Va5" firstAttribute="top" secondItem="QoW-SZ-LzP" secondAttribute="bottom" constant="12" id="nHl-P1-Wqx"/>
                             <constraint firstItem="D5I-Zl-eJH" firstAttribute="top" secondItem="9OK-xm-5aV" secondAttribute="top" constant="-10" id="qqN-pL-510"/>
                             <constraint firstItem="QoW-SZ-LzP" firstAttribute="leading" secondItem="9OK-xm-5aV" secondAttribute="leading" constant="20" id="rS8-kc-rmy"/>
+                            <constraint firstItem="8Yu-YP-3y2" firstAttribute="centerX" secondItem="NR0-3I-vfA" secondAttribute="centerX" id="t86-VG-TRR"/>
+                            <constraint firstItem="S8y-P2-qZA" firstAttribute="top" secondItem="QoW-SZ-LzP" secondAttribute="bottom" constant="10" id="vqr-ap-3bB"/>
+                            <constraint firstItem="8Yu-YP-3y2" firstAttribute="top" secondItem="e7q-3i-c5c" secondAttribute="bottom" constant="5" id="y5g-zO-dfb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Invite Partner" largeTitleDisplayMode="always" id="V8N-dc-fqK"/>
                     <connections>
                         <outlet property="codeCollectionView" destination="QoW-SZ-LzP" id="ah6-Mz-HNJ"/>
-                        <outlet property="footerLabel" destination="Rg4-8a-BlI" id="68A-Be-z56"/>
                         <outlet property="shareMyCodeButton" destination="e7q-3i-c5c" id="7bn-SG-RCi"/>
-                        <outlet property="tapToCopyLabel" destination="VIz-XF-Va5" id="lsS-27-sLP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Cb-FK-tbA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1067,8 +1079,8 @@ bond together </string>
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HMV-dg-z5o">
-                                <rect key="frame" x="16" y="214" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start your journey, together." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HMV-dg-z5o">
+                                <rect key="frame" x="16" y="214" width="212.33333333333334" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1080,20 +1092,22 @@ bond together </string>
                                     <constraint firstAttribute="width" constant="150" id="B9J-TL-YvJ"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uMW-1m-cTE">
-                                <rect key="frame" x="36" y="544" width="321" height="60"/>
+                            <textField opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uMW-1m-cTE">
+                                <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="CXe-1b-X6a"/>
+                                    <constraint firstAttribute="width" constant="40" id="JWP-oc-gsB"/>
+                                    <constraint firstAttribute="height" constant="40" id="cjc-Kp-3Ph"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" textContentType="one-time-code"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done" textContentType="one-time-code"/>
                             </textField>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TkW-9K-E2l">
                                 <rect key="frame" x="20" y="499" width="353" height="60"/>
                                 <color key="backgroundColor" name="AppBackground"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="DmP-k7-3Vm"/>
-                                    <constraint firstAttribute="height" constant="60" id="ja4-3c-Q3A"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="lHv-bG-MXi">
                                     <size key="itemSize" width="128" height="128"/>
@@ -1107,18 +1121,34 @@ bond together </string>
                                     <outlet property="delegate" destination="Vh1-aP-8AZ" id="dhv-31-bc8"/>
                                 </connections>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="beC-v0-fNV">
+                                <rect key="frame" x="20" y="692" width="353" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="Sdh-Zw-bsN"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Pair with partner" buttonSize="large">
+                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="baseBackgroundColor" red="0.611328125" green="0.5327148438" blue="0.822265625" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="pairWithPartnerButton:" destination="Vh1-aP-8AZ" eventType="touchUpInside" id="OEW-Ts-pSX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ogh-QE-xgB"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="uMW-1m-cTE" secondAttribute="trailing" constant="20" id="67R-2c-mvb"/>
                             <constraint firstItem="jpa-S0-5u5" firstAttribute="centerX" secondItem="Ngf-pS-L9g" secondAttribute="centerX" id="Cyz-Lj-N1Y"/>
+                            <constraint firstItem="uMW-1m-cTE" firstAttribute="top" secondItem="Ngf-pS-L9g" secondAttribute="top" id="EMq-tY-Sef"/>
                             <constraint firstItem="jpa-S0-5u5" firstAttribute="top" secondItem="Ogh-QE-xgB" secondAttribute="top" constant="100" id="ESK-RF-qDM"/>
-                            <constraint firstItem="Ogh-QE-xgB" firstAttribute="bottom" secondItem="uMW-1m-cTE" secondAttribute="bottom" constant="180" id="EpY-zN-rLb"/>
                             <constraint firstItem="Ogh-QE-xgB" firstAttribute="trailing" secondItem="TkW-9K-E2l" secondAttribute="trailing" constant="20" id="Ii1-Ok-UiH"/>
-                            <constraint firstItem="uMW-1m-cTE" firstAttribute="leading" secondItem="Ngf-pS-L9g" secondAttribute="leadingMargin" constant="20" id="SZy-d5-Ydz"/>
+                            <constraint firstItem="Ogh-QE-xgB" firstAttribute="trailing" secondItem="beC-v0-fNV" secondAttribute="trailing" constant="20" id="Tc9-dF-TDU"/>
+                            <constraint firstItem="beC-v0-fNV" firstAttribute="leading" secondItem="Ogh-QE-xgB" secondAttribute="leading" constant="20" id="UvZ-wh-5po"/>
                             <constraint firstItem="TkW-9K-E2l" firstAttribute="top" secondItem="jpa-S0-5u5" secondAttribute="bottom" constant="25" id="atg-Xl-dPl"/>
                             <constraint firstItem="HMV-dg-z5o" firstAttribute="top" secondItem="Ogh-QE-xgB" secondAttribute="top" constant="-10" id="cWP-9X-zo3"/>
+                            <constraint firstItem="Ogh-QE-xgB" firstAttribute="bottom" secondItem="beC-v0-fNV" secondAttribute="bottom" constant="40" id="dk4-yq-8p5"/>
+                            <constraint firstItem="uMW-1m-cTE" firstAttribute="leading" secondItem="Ogh-QE-xgB" secondAttribute="leading" id="oY3-0H-UMR"/>
                             <constraint firstItem="HMV-dg-z5o" firstAttribute="leading" secondItem="Ogh-QE-xgB" secondAttribute="leading" constant="16" id="tnW-Eq-aZ4"/>
                             <constraint firstItem="TkW-9K-E2l" firstAttribute="leading" secondItem="Ogh-QE-xgB" secondAttribute="leading" constant="20" id="vwA-Xv-eZm"/>
                         </constraints>
@@ -1131,7 +1161,7 @@ bond together </string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zzB-lP-BDE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8369" y="1582"/>
+            <point key="canvasLocation" x="9637" y="1520"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="6vO-kw-2Ef">
@@ -1159,6 +1189,7 @@ bond together </string>
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
         <image name="circle" catalog="system" width="128" height="123"/>
+        <image name="doc.on.doc" catalog="system" width="116" height="128"/>
         <image name="envelope" catalog="system" width="128" height="85"/>
         <image name="envelope.fill" catalog="system" width="128" height="85"/>
         <image name="g.circle.fill" catalog="system" width="128" height="123"/>
@@ -1175,10 +1206,10 @@ bond together </string>
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
