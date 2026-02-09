@@ -24,6 +24,7 @@ class SpecialDateCollectionCell: UICollectionViewCell {
         noteTextView.backgroundColor = .clear
         noteTextView.textContainerInset = .zero
         noteTextView.textContainer.lineFragmentPadding = 0
+        noteTextView.textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 4)
     }
 
 }

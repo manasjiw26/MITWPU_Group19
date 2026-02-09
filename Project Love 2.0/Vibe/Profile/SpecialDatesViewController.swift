@@ -1,6 +1,6 @@
 import UIKit
 
-class SpecialDatesViewController: UIViewController {
+class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var addSpecial: UIView!
     @IBOutlet weak var containerCell: UIView!
@@ -23,26 +23,20 @@ class SpecialDatesViewController: UIViewController {
         saveTapped.configuration = .glass()
         saveTapped.setTitle("Save", for: .normal)
 
-        setupDatePicker()
-        addSeparators()
-        setupNotePlaceholder()
-
+        dateField.delegate = self
+        noteTextView.delegate = self
         collectionView.delegate = self
         collectionView.dataSource = self
 
+        setupNotePlaceholder()
+        addSeparators()
+        setupCollectionLayout()
+
         let nib = UINib(nibName: "SpecialDateCollectionCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "SpecialDateCollectionCell")
-        
-        setupCollectionLayout()
+
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
-        
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.minimumLineSpacing = 12
-            layout.sectionInset = UIEdgeInsets(top: 8, left: 0, bottom: 20, right: 0)
-        }
-
-
     }
 
     @IBAction func saveButtonTapped(_ sender: UIButton) {
@@ -66,12 +60,16 @@ class SpecialDatesViewController: UIViewController {
         selectedDate = nil
     }
 
-    // MARK: DATE PICKER
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField == dateField {
+            openDatePicker()
+            return false
+        }
+        return true
+    }
 
-    func setupDatePicker() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(openDatePicker))
-        dateField.addGestureRecognizer(tap)
-        calendarButton.addGestureRecognizer(tap)
+    @IBAction func calendarTapped(_ sender: UIButton) {
+        openDatePicker()
     }
 
     @objc func openDatePicker() {
@@ -95,22 +93,24 @@ class SpecialDatesViewController: UIViewController {
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
             self.dateField.text = formatter.string(from: picker.date)
-            self.selectedDate = picker.date   // ⭐ IMPORTANT
+            self.selectedDate = picker.date
         })
 
         present(alert, animated: true)
     }
+
+    func setupNotePlaceholder() {
+        noteTextView.text = notePlaceholder
+        noteTextView.textColor = .placeholderText
+        noteTextView.textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 4)
+        noteTextView.textContainer.lineFragmentPadding = 0
+    }
+
     private func setupCollectionLayout() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-
-        // spacing between cards
         layout.minimumLineSpacing = 16
-        layout.minimumInteritemSpacing = 0
-
-        // padding left & right of the section
         layout.sectionInset = UIEdgeInsets(top: 12, left: 0, bottom: 24, right: 0)
-
         collectionView.collectionViewLayout = layout
     }
 
@@ -140,15 +140,8 @@ class SpecialDatesViewController: UIViewController {
         ])
     }
 
-    func setupNotePlaceholder() {
-        noteTextView.text = notePlaceholder
-        noteTextView.textColor = .placeholderText
-        noteTextView.delegate = self
-    }
-
     func monthsAgo(from date: Date) -> String {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.month], from: date, to: Date())
+        let components = Calendar.current.dateComponents([.month], from: date, to: Date())
         let months = components.month ?? 0
 
         if months <= 0 { return "This month" }
@@ -156,10 +149,10 @@ class SpecialDatesViewController: UIViewController {
         return "\(months) months ago"
     }
 }
-
 extension SpecialDatesViewController: UITextViewDelegate {
+
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == notePlaceholder {
+        if textView.textColor == .placeholderText {
             textView.text = ""
             textView.textColor = .label
         }
@@ -172,7 +165,6 @@ extension SpecialDatesViewController: UITextViewDelegate {
         }
     }
 }
-
 extension SpecialDatesViewController: UICollectionViewDelegate,
                                      UICollectionViewDataSource {
 
@@ -193,33 +185,24 @@ extension SpecialDatesViewController: UICollectionViewDelegate,
         cell.titleLabel.text = data.title
         cell.noteTextView.text = data.note
 
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day, .year], from: data.date)
-
-        cell.dayLabel.text = "\(components.day ?? 0)"
+        let comps = Calendar.current.dateComponents([.day, .year], from: data.date)
+        cell.dayLabel.text = "\(comps.day ?? 0)"
 
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM"
         cell.monthLabel.text = formatter.string(from: data.date)
 
-        cell.yearLabel.text = "\(components.year ?? 0)"
-
+        cell.yearLabel.text = "\(comps.year ?? 0)"
         cell.timeLabel.text = monthsAgo(from: data.date)
 
         return cell
     }
-
 }
 extension SpecialDatesViewController: UICollectionViewDelegateFlowLayout {
-
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let width = collectionView.bounds.width
-        return CGSize(width: width, height: 100) // choose your card height
+        return CGSize(width: collectionView.bounds.width, height: 100)
     }
-
-
 }
 
