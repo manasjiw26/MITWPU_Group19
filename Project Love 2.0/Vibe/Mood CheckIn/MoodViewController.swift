@@ -372,7 +372,7 @@ extension MoodViewController: UICollectionViewDataSource, UICollectionViewDelega
                 ) as! DailyCheckInCollectionViewCell
 
                 cell.configureCells()
-                cell.delegate = self
+                
                 return cell
             }
 
@@ -446,29 +446,6 @@ extension MoodViewController: TellMoodSelectionDelegate {
         MoodCheckIn.reloadItems(at: [indexPath])
     }
 }
-extension MoodViewController: DailyCheckInCellDelegate {
 
-    func didTapGetExercise() {
-        let storyboard = UIStoryboard(name: "onbording", bundle: nil)
 
-        let nav = storyboard.instantiateViewController(
-            withIdentifier: "QuestionNavController"
-        ) as! UINavigationController
-
-        let vc = nav.viewControllers.first as! QuestionViewController
-        vc.completionDelegate = self
-
-        nav.modalPresentationStyle = .pageSheet
-        present(nav, animated: true)
-    }
-
-}
-extension MoodViewController: DailyCheckInCompletionDelegate {
-
-    func didCompleteDailyCheckIn() {
-        hasCompletedDailyCheckIn = true
-
-        MoodCheckIn.reloadSections(IndexSet(integer: 1))
-    }
-}
 

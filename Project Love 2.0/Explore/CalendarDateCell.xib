@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CalendarDateCell" id="mTX-yz-kz0" customClass="CalendarDateCell" customModule="Project_Love_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="169" height="113"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="169" height="113"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gvh-wj-pr6">
+                        <rect key="frame" x="67" y="39" width="35" height="35"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tah-8f-cD2">
+                                <rect key="frame" x="0.0" y="10" width="35" height="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qyn-Va-5dx" userLabel="dotView">
+                                <rect key="frame" x="14.666666666666671" y="29" width="6" height="6"/>
+                                <color key="backgroundColor" name="MedicationPrimaryColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="6" id="B2K-0I-Pmp"/>
+                                    <constraint firstAttribute="width" constant="6" id="zEC-Dd-h9q"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Tah-8f-cD2" firstAttribute="top" secondItem="Gvh-wj-pr6" secondAttribute="top" constant="10" id="2VN-z3-OG1"/>
+                            <constraint firstAttribute="height" constant="35" id="3bD-Z5-YZ5"/>
+                            <constraint firstAttribute="bottom" secondItem="Qyn-Va-5dx" secondAttribute="bottom" id="7BV-VJ-eFV"/>
+                            <constraint firstAttribute="trailing" secondItem="Tah-8f-cD2" secondAttribute="trailing" id="Age-Jr-Wpr"/>
+                            <constraint firstItem="Qyn-Va-5dx" firstAttribute="centerX" secondItem="Tah-8f-cD2" secondAttribute="centerX" id="EAD-zF-Qcv"/>
+                            <constraint firstItem="Qyn-Va-5dx" firstAttribute="top" secondItem="Tah-8f-cD2" secondAttribute="bottom" constant="5" id="RVQ-mT-W6S"/>
+                            <constraint firstItem="Tah-8f-cD2" firstAttribute="leading" secondItem="Gvh-wj-pr6" secondAttribute="leading" id="nj6-q7-uvy"/>
+                            <constraint firstAttribute="width" constant="35" id="yWZ-hr-aPB"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="aQ7-9u-mP9"/>
+            <constraints>
+                <constraint firstItem="Gvh-wj-pr6" firstAttribute="centerY" secondItem="mTX-yz-kz0" secondAttribute="centerY" id="TeD-3h-OKf"/>
+                <constraint firstItem="Gvh-wj-pr6" firstAttribute="centerX" secondItem="mTX-yz-kz0" secondAttribute="centerX" id="YLE-8A-axX"/>
+                <constraint firstItem="Gvh-wj-pr6" firstAttribute="centerX" secondItem="mTX-yz-kz0" secondAttribute="centerX" id="p6c-TZ-yvY"/>
+                <constraint firstItem="Gvh-wj-pr6" firstAttribute="centerX" secondItem="mTX-yz-kz0" secondAttribute="centerX" id="wZr-U1-JKG"/>
+            </constraints>
+            <size key="customSize" width="169" height="113"/>
+            <connections>
+                <outlet property="dayLabel" destination="Tah-8f-cD2" id="wxL-yw-GPV"/>
+                <outlet property="dotView" destination="Qyn-Va-5dx" id="t34-QP-w3f"/>
+                <outlet property="selectionLayer" destination="Gvh-wj-pr6" id="hh9-CL-q6z"/>
+            </connections>
+            <point key="canvasLocation" x="177.86259541984731" y="122.1830985915493"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="MedicationPrimaryColor">
+            <color red="0.90980392156862744" green="0.41568627450980394" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

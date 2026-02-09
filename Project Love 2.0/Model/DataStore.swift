@@ -60,6 +60,7 @@ class DataStore {
         loadProfileData()
         buildAllActivities()
         loadDailyCheckInQuestions()
+        loadOnboardingQnA()
     }
     func getDailyCheckInQuestion(at index: Int) -> Question? {
             guard index >= 0 && index < dailyCheckInQuestions.count else { return nil }
@@ -78,6 +79,61 @@ class DataStore {
             notifications[index].isRead = true
         }
     }
+    func loadOnboardingQnA() {
+        currentQnA = QnAData(
+            title: "Tell us about you",
+            questions: [
+
+                // Gender
+                QnAQuestion(
+                    questionText: "What’s your gender?",
+                    options: [
+        QnAOption(text: "Male", isSelected: false),
+        QnAOption(text: "Female", isSelected: false)
+                    ]
+                ),
+
+                // Love Language
+                QnAQuestion(
+        questionText: "What’s your love language?",
+        options: [
+        QnAOption(text: "Acts of service", isSelected: false),
+        QnAOption(text: "Small gestures", isSelected: false),
+        QnAOption(text: "Quality time", isSelected: false),
+        QnAOption(text: "Physical touch", isSelected: false),
+        QnAOption(text: "Words of affirmation", isSelected: false)
+        ]
+                ),
+
+                // Relationship Type
+                QnAQuestion(
+                    questionText: "What’s your relationship type?",
+                    options: [
+        QnAOption(text: "Dating", isSelected: false),
+        QnAOption(text: "Situationship", isSelected: false),
+        QnAOption(text: "Live-In relationship", isSelected: false),
+        QnAOption(text: "Long-Distance relationship", isSelected: false),
+        QnAOption(text: "Married", isSelected: false)
+                    ]
+                ),
+
+                // Feeling cared
+                QnAQuestion(
+        questionText: "What makes you feel cared?",
+        options: [
+        QnAOption(text: "Encouragement", isSelected: false),
+        QnAOption(text: "Surprises", isSelected: false),
+        QnAOption(text: "Quality time", isSelected: false),
+        QnAOption(text: "Acts of service", isSelected: false),
+        QnAOption(text: "Validation", isSelected: false),
+        QnAOption(text: "Small gifts", isSelected: false),
+        QnAOption(text: "Compliments", isSelected: false)
+        ]
+                )
+            ]
+        )
+    }
+
     func loadSampleNotifications() {
         notifications = [
             AppNotification(
