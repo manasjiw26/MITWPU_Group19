@@ -24,6 +24,7 @@ class CalendarViewController: UIViewController {
         registerCell()
         filterActivities()
         
+        
     }
     func registerCell() {
         
@@ -31,7 +32,10 @@ class CalendarViewController: UIViewController {
         
         activityCollectionView.register(UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "empty_cell")
         
-        activityCollectionView.register(UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "scheduleCalendar_cell")
+        activityCollectionView.register(
+            UINib(nibName: "CalendarCell", bundle: nil),
+            forCellWithReuseIdentifier: "CalendarCell"
+        )
     }
     
     func filterActivities() {
@@ -68,21 +72,24 @@ extension CalendarViewController: UICollectionViewDataSource {
         // Calendar
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "scheduleCalendar_cell",
+                withReuseIdentifier: "CalendarCell",
                 for: indexPath
-            ) as! ScheduleCalendarCollectionViewCell
+            ) as! CalendarCell
 
-            let activityDates = DataStore.shared.allActivities.compactMap { $0.scheduledDate }
-
-            cell.configure(
-                selectedDate: selectedDate,
-                activityDates: activityDates
+            let activityDates = Set(
+                DataStore.shared.allActivities.compactMap {
+                    $0.scheduledDate.map {
+                        Calendar.current.startOfDay(for: $0)
+                    }
+                }
             )
 
-            cell.onDateChanged = { [weak self] date in
-                self?.selectedDate = date
-                self?.filterActivities()
-            }
+            cell.delegate = self
+            cell.configure(
+                with: selectedDate,
+                exerciseDays: activityDates,
+                selectedDay: selectedDate
+            )
 
             return cell
         }
@@ -116,46 +123,56 @@ extension CalendarViewController: UICollectionViewDataSource {
 }
 extension CalendarViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath ) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath ) -> CGSize {
 
-               let sectionInset = self.collectionView( collectionView, layout: collectionViewLayout, insetForSectionAt: indexPath.section )
+        let sectionInset = self.collectionView(
+            collectionView,
+            layout: collectionViewLayout,
+            insetForSectionAt: indexPath.section
+        )
 
-               let width = collectionView.bounds.width - sectionInset.left - sectionInset.right
+        let width = collectionView.bounds.width
+                   - sectionInset.left
+                   - sectionInset.right
 
-               // calendar
-               if indexPath.section == 0 {
-                   return CGSize(width: width, height: 100)
-               }
+        if indexPath.section == 0 {
+            return CGSize(width: width, height: 360)
+        }
 
-               // empty state
-               if activitiesForSelectedDate.isEmpty {
-                   return CGSize(width: width, height: 400)
-               }
+        if activitiesForSelectedDate.isEmpty {
+            return CGSize(width: width, height: 400)
+        }
 
-               // activity cell
-               return CGSize(width: width, height: 115)
+        return CGSize(width: width, height: 115)
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int ) -> UIEdgeInsets {
+
+        // SAME inset for calendar & activity cells
+        return UIEdgeInsets(top: 0, left: 16, bottom: 24, right: 16)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int ) -> CGFloat {
         return 16
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int ) -> UIEdgeInsets {
-
-        if section == 0 {
-            return UIEdgeInsets(top: 0, left: 8, bottom: 10, right: 0)
-        }
-
-        // Activities section
-        return UIEdgeInsets(top: 0, left: 16, bottom: 24, right: 10)
-    }
 }
-extension CalendarViewController: ScheduleCalendarDelegate {
-    func didSchedule(activity: Activity, on date: Date) {
+extension CalendarViewController: CalendarCellDelegate {
+
+    func calendarCell(_ cell: CalendarCell, didSelectDate date: Date) {
         selectedDate = date
         filterActivities()
+    }
 
-        // reload calendar section to show dot
-        activityCollectionView.reloadSections(IndexSet(integer: 0))
+    func calendarCell(_ cell: CalendarCell, didChangeTo date: Date) {
+        selectedDate = date
+        filterActivities()
+    }
+
+    func calendarCellDidTapHeader(_ cell: CalendarCell) {
+        // optional
     }
 }
