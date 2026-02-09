@@ -99,6 +99,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             ) as! SpecialDatesViewController
             navigationController?.pushViewController(vc, animated: true)
         }
+        if item.title == "Help & Support" {
+            let storyboard = UIStoryboard(name: "Help_Support", bundle: nil)
+            let vc = storyboard.instantiateViewController(
+                withIdentifier: "Help_SupportViewController"
+            ) as! Help_SupportViewController
+            navigationController?.pushViewController(vc, animated: true)
+        }
 
 
     }

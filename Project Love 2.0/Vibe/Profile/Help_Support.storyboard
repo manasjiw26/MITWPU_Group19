@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Help Support View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="Help_SupportViewController" id="Y6W-OH-hqX" customClass="Help_SupportViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ki-eM-Lrz">
+                                <rect key="frame" x="16" y="142" width="361" height="52.333333333333343"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ar8-fg-5eA">
+                                        <rect key="frame" x="16" y="15.999999999999998" width="329" height="20.333333333333329"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" systemColor="placeholderTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="ar8-fg-5eA" secondAttribute="bottom" constant="16" id="8lI-nq-8TL"/>
+                                    <constraint firstItem="ar8-fg-5eA" firstAttribute="top" secondItem="9Ki-eM-Lrz" secondAttribute="top" constant="16" id="TE0-vQ-mpj"/>
+                                    <constraint firstAttribute="trailing" secondItem="ar8-fg-5eA" secondAttribute="trailing" constant="16" id="Tpr-cx-f7O"/>
+                                    <constraint firstItem="ar8-fg-5eA" firstAttribute="leading" secondItem="9Ki-eM-Lrz" secondAttribute="leading" constant="16" id="ZwR-6V-sHl"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="CornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fcc-ZT-Elv">
+                                <rect key="frame" x="16" y="210.33333333333334" width="361" height="56.000000000000028"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="envelope.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="C8s-6f-KRv">
+                                        <rect key="frame" x="16" y="20.333333333333336" width="20" height="16.000000000000007"/>
+                                        <color key="tintColor" name="label"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="KZG-HR-n2W"/>
+                                            <constraint firstAttribute="width" constant="20" id="OCT-K0-ZQF"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="help@apple.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiz-aA-xOL">
+                                        <rect key="frame" x="48" y="17.666666666666657" width="297" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" systemColor="placeholderTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="eiz-aA-xOL" secondAttribute="trailing" constant="16" id="DNu-Ui-TMg"/>
+                                    <constraint firstItem="C8s-6f-KRv" firstAttribute="leading" secondItem="Fcc-ZT-Elv" secondAttribute="leading" constant="16" id="GIV-4M-ymk"/>
+                                    <constraint firstItem="C8s-6f-KRv" firstAttribute="centerY" secondItem="Fcc-ZT-Elv" secondAttribute="centerY" id="SE8-z0-8w1"/>
+                                    <constraint firstItem="eiz-aA-xOL" firstAttribute="centerY" secondItem="Fcc-ZT-Elv" secondAttribute="centerY" id="YBy-ST-vF6"/>
+                                    <constraint firstAttribute="height" constant="56" id="gHN-xz-W9O"/>
+                                    <constraint firstItem="eiz-aA-xOL" firstAttribute="leading" secondItem="C8s-6f-KRv" secondAttribute="trailing" constant="12" id="hTk-gz-C2R"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="CornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" name="AppBackground"/>
+                        <constraints>
+                            <constraint firstItem="Fcc-ZT-Elv" firstAttribute="top" secondItem="9Ki-eM-Lrz" secondAttribute="bottom" constant="16" id="2sr-3N-SFY"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="9Ki-eM-Lrz" secondAttribute="trailing" constant="16" id="BOX-X0-FNB"/>
+                            <constraint firstItem="Fcc-ZT-Elv" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="FfZ-kV-XZU"/>
+                            <constraint firstItem="9Ki-eM-Lrz" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="Qf4-0o-zcc"/>
+                            <constraint firstItem="9Ki-eM-Lrz" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="24" id="aNL-4g-631"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Fcc-ZT-Elv" secondAttribute="trailing" constant="16" id="jE5-F1-7G0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="emailCard" destination="Fcc-ZT-Elv" id="y2U-08-hCp"/>
+                        <outlet property="emailLabel" destination="eiz-aA-xOL" id="nAa-jB-0dQ"/>
+                        <outlet property="textCard" destination="9Ki-eM-Lrz" id="C5O-Wb-lhX"/>
+                        <outlet property="textLabel" destination="ar8-fg-5eA" id="SGZ-En-zzg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="562.59541984732823" y="-309.15492957746483"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="envelope.fill" catalog="system" width="128" height="85"/>
+        <namedColor name="AppBackground">
+            <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="label">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
+        <systemColor name="placeholderTextColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
