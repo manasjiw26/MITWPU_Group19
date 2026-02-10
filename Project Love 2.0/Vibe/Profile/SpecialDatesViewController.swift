@@ -31,12 +31,18 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
         setupNotePlaceholder()
         addSeparators()
         setupCollectionLayout()
-
-        let nib = UINib(nibName: "SpecialDateCollectionCell", bundle: nil)
-        collectionView.register(nib, forCellWithReuseIdentifier: "SpecialDateCollectionCell")
+        registerCells()
 
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+    }
+    
+    private func registerCells() {
+        collectionView.register( UINib(nibName: "SpecialDateCollectionCell", bundle: nil), forCellWithReuseIdentifier: "SpecialDateCollectionCell"
+        )
+        
+        collectionView.register( UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "empty_cell"
+        )
     }
 
     @IBAction func saveButtonTapped(_ sender: UIButton) {
@@ -169,18 +175,36 @@ extension SpecialDatesViewController: UICollectionViewDelegate,
                                      UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return DataStore.shared.specialDates.count
+         
+        let count = DataStore.shared.specialDates.count
+        return count == 0 ? 1 : count
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        let items = DataStore.shared.specialDates
+
+        if items.isEmpty {
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "empty_cell",
+                for: indexPath
+            ) as! EmptyStateCollectioViewCellCollectionViewCell
+
+            cell.configure(
+                title: "No dates added yet",
+                subtitle: "add now",
+                imageName: "empty_dates"
+            )
+            return cell
+        }
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "SpecialDateCollectionCell",
             for: indexPath
         ) as! SpecialDateCollectionCell
 
-        let data = DataStore.shared.specialDates[indexPath.item]
+        let data = items[indexPath.item]
 
         cell.titleLabel.text = data.title
         cell.noteTextView.text = data.note
@@ -202,6 +226,12 @@ extension SpecialDatesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        if DataStore.shared.specialDates.isEmpty {
+            return CGSize(width: collectionView.bounds.width,
+                          height: collectionView.bounds.height * 0.7)
+        }
+
         return CGSize(width: collectionView.bounds.width, height: 100)
     }
 }
