@@ -254,3 +254,40 @@ struct QnAData {
     var title: String
     var questions: [QnAQuestion]
 }
+extension UIView {
+    func applyLiquidGlassEffect(animated: Bool = true) {
+        let existingGlassView = self.subviews.first { $0 is UIVisualEffectView }
+        if existingGlassView != nil {
+            return
+        }
+
+        let glassEffectView = UIVisualEffectView()
+        glassEffectView.isUserInteractionEnabled = false
+        glassEffectView.translatesAutoresizingMaskIntoConstraints = false
+        self.insertSubview(glassEffectView, at: 0)
+
+        NSLayoutConstraint.activate([
+            glassEffectView.topAnchor.constraint(equalTo: self.topAnchor),
+            glassEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            glassEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            glassEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+
+        if #available(iOS 17.0, *) {
+            let glassEffect = UIGlassEffect()
+            if animated {
+                UIView.animate(withDuration: 0.3) {
+                    glassEffectView.effect = glassEffect
+                }
+            } else {
+                glassEffectView.effect = glassEffect
+            }
+        } else {
+            let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+            glassEffectView.effect = blurEffect
+        }
+
+        glassEffectView.layer.cornerRadius = self.layer.cornerRadius
+        glassEffectView.clipsToBounds = true
+    }
+}

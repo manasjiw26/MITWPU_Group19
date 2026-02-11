@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,13 +27,33 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Press and hold both hearts to send a hug!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Udn-HR-TJA">
+                            <rect key="frame" x="53.666666666666657" y="63.333333333333343" width="286" height="18"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TX9-PG-K9T">
+                            <rect key="frame" x="53" y="216" width="75" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Button"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dv3-ua-zf7">
+                            <rect key="frame" x="259" y="216" width="75" height="35"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="Moi-lf-n8O" firstAttribute="leading" secondItem="fuQ-IO-FFo" secondAttribute="leading" constant="16" id="7tb-eE-oab"/>
                         <constraint firstAttribute="height" constant="734" id="8nL-wj-axf"/>
+                        <constraint firstItem="Udn-HR-TJA" firstAttribute="centerX" secondItem="fuQ-IO-FFo" secondAttribute="centerX" id="B1U-54-97y"/>
                         <constraint firstItem="Moi-lf-n8O" firstAttribute="top" secondItem="fuQ-IO-FFo" secondAttribute="top" constant="30" id="Ik7-qN-wzU"/>
                         <constraint firstAttribute="trailing" secondItem="Moi-lf-n8O" secondAttribute="trailing" constant="16" id="Puv-1d-ehS"/>
+                        <constraint firstItem="Udn-HR-TJA" firstAttribute="top" secondItem="Moi-lf-n8O" secondAttribute="bottom" constant="2" id="sk0-Zf-ryH"/>
                     </constraints>
                 </view>
             </subviews>
@@ -46,4 +67,9 @@
             <point key="canvasLocation" x="139" y="154"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
