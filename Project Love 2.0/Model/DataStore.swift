@@ -138,7 +138,7 @@ class DataStore {
                 description: "Facemasks, candles, chill beats — just cozy vibes and glow time",
                 image: "Chill and Glow sesh",
                 time: "5 mins",
-                status: .none,
+                status: .ongoing,
                 category: "Fun & Playful",
                 scheduledDate: nil
             ),
@@ -148,7 +148,7 @@ class DataStore {
                 description: "Pick pretty blooms and build your own bouquet together.",
                 image: "Activityimage",
                 time: "5 mins",
-                status: .none,
+                status: .ongoing,
                 category: "Fun & Playful",
                 scheduledDate: nil
             ),
@@ -825,6 +825,15 @@ class DataStore {
             $0.category == activity.category
         }) {
             activities[index].status = .completed
+            print(" MARKED COMPLETED:", activities[index].name)
+        }
+    }
+    func markActivityNone(activity: Activity) {
+        if let index = activities.firstIndex(where: {
+            $0.name == activity.name &&
+            $0.category == activity.category
+        }) {
+            activities[index].status = .none
             print(" MARKED COMPLETED:", activities[index].name)
         }
     }

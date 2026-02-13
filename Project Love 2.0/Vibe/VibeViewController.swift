@@ -12,9 +12,16 @@ protocol LoveTipsSelectionDelegate: AnyObject {
 }
 
 class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate {
-    
+    var ongoingActivites: [Activity] = []
+    @IBOutlet weak var showAllActivityButton: UIButton!
     @IBOutlet weak var vibeCollectionView: UICollectionView!
     
+    @IBOutlet weak var secondOngoingActivityView: UIView!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var activityImage: UIImageView!
+    @IBOutlet weak var ongoingActivitiesView: UIView!
+    
+    @IBOutlet weak var activityName: UILabel!
     var makeSmileData: [MakeSmile] = []
     var didScrollToMiddle = false
     var BuildBond : [BuildYourBond] = []
@@ -38,9 +45,39 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
         vibeCollectionView.dataSource = self
         vibeCollectionView.delegate = self
-        vibeCollectionView.reloadData()
+        setupOngoing()
     }
     
+    func setupOngoing(){
+        ongoingActivitiesView.layer.cornerRadius = ongoingActivitiesView.layer.frame.height / 2
+        secondOngoingActivityView.layer.cornerRadius = secondOngoingActivityView.layer.frame.height / 2
+        ongoingActivitiesView.layer.masksToBounds = true
+        secondOngoingActivityView.layer.masksToBounds = true
+        ongoingActivitiesView.applyLiquidGlassEffect(animated: false)
+        
+    }
+    func configureOngoingActivity(){
+        ongoingActivites = DataStore.shared.getOngoingActivities()
+        if(ongoingActivites.count > 1){
+            ongoingActivitiesView.isHidden = false
+            showAllActivityButton.isHidden = false
+            secondOngoingActivityView.isHidden = false
+            activityImage.image = UIImage(named: ongoingActivites[0].image)
+            activityName.text = ongoingActivites[0].name
+        }
+        else if (ongoingActivites.count == 1){
+            secondOngoingActivityView.isHidden = true
+            showAllActivityButton.isHidden = true
+            ongoingActivitiesView.isHidden = false
+            activityImage.image = UIImage(named: ongoingActivites[0].image)
+            activityName.text = ongoingActivites[0].name
+        }
+        else{
+            ongoingActivitiesView.isHidden = true
+            secondOngoingActivityView.isHidden = true
+            showAllActivityButton.isHidden = true
+        }
+    }
     
     private var hasCheckedInToday: Bool {
         return DataStore.shared.getHisMood() != nil
@@ -48,7 +85,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     
     func registerCell() {
         vibeCollectionView.register(UINib(nibName: "CalendarCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "calendar_cell")
-        vibeCollectionView.register(UINib(nibName: "HoveringOngoingActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "hovering_activity_cell")
         vibeCollectionView.register(UINib(nibName: "MoodCardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "mood_cell")
         vibeCollectionView.register(UINib(nibName: "MakeHerSmileCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "makeSmile_cell")
         vibeCollectionView.register(UINib(nibName: "BuildYourBondCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "bond_cell")
@@ -61,7 +97,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "scheduleCalendar_cell"
         )
-        
 
     }
     
@@ -69,29 +104,29 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         let layout = UICollectionViewCompositionalLayout { section, env in
             
             let largeTitleSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(56)   // title + subtitle
-            )
-            
-            let compactTitleSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(34)   // title only
-            )
-            
-            let largeTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: largeTitleSize,
-                elementKind: "title",
-                alignment: .top
-            )
-            
-            let compactTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: compactTitleSize,
-                elementKind: "title",
-                alignment: .top
-            )
+                   widthDimension: .fractionalWidth(1.0),
+                   heightDimension: .absolute(56)   // title + subtitle
+               )
+
+               let compactTitleSize = NSCollectionLayoutSize(
+                   widthDimension: .fractionalWidth(1.0),
+                   heightDimension: .absolute(34)   // title only
+               )
+
+               let largeTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                   layoutSize: largeTitleSize,
+                   elementKind: "title",
+                   alignment: .top
+               )
+
+               let compactTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                   layoutSize: compactTitleSize,
+                   elementKind: "title",
+                   alignment: .top
+               )
             
             if section == 0 {
-                
+                                
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(52),heightDimension: .absolute(72)
                 )
@@ -141,24 +176,24 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         heightDimension: .estimated(180)
                     )
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    
+
                     item.contentInsets = NSDirectionalEdgeInsets(
                         top: 0,
                         leading: 4,
                         bottom: 0,
                         trailing: 4
                     )
-                    
+
                     let groupSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1.0),
                         heightDimension: .estimated(220)
                     )
-                    
+
                     let group = NSCollectionLayoutGroup.horizontal(
                         layoutSize: groupSize,
                         subitems: [item, item]
                     )
-                    
+
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(
                         top: 30,
@@ -167,43 +202,43 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         trailing: 16
                     )
                     section.interGroupSpacing = 8
-                    
+
                     return section
-                    
+
                 }
             } else if section == 2 {
                 
                 // Daily check in (before completing exercise)
                 if !self.hasCompletedDailyCheckIn {
-                    
+
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1.0),
                         heightDimension: .estimated(120)
                     )
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    
+
                     let group = NSCollectionLayoutGroup.vertical(
                         layoutSize: itemSize,
                         subitems: [item]
                     )
-                    
+
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(
                         top: 12, leading: 16, bottom: 12, trailing: 16
                     )
-                    
+
                     return section
                 }
                 let normalWidth: CGFloat = 350
                 let smallWidth: CGFloat = 80
                 let spacing: CGFloat = 8
                 let estimatedHeight: CGFloat = 120
-                
+
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .estimated(3000),
                     heightDimension: .estimated(estimatedHeight)
                 )
-                
+
                 let group = NSCollectionLayoutGroup.custom(layoutSize: groupSize) { environment in
                     
                     var items: [NSCollectionLayoutGroupCustomItem] = []
@@ -225,9 +260,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     
                     return items
                 }
-                
+
                 let sectionLayout = NSCollectionLayoutSection(group: group)
-                
+
                 sectionLayout.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 16, bottom: 12, trailing: 16)
                 sectionLayout.interGroupSpacing = 0
@@ -235,91 +270,90 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .absolute(52)
                 )
-                
+
                 let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: titleSize,
                     elementKind: "title",
                     alignment: .top
                 )
-                
+
                 titleHeader.contentInsets = NSDirectionalEdgeInsets(
                     top: 16,
                     leading: 0,
                     bottom: 0,
                     trailing: 16
                 )
-                
+
                 sectionLayout.boundarySupplementaryItems = [titleHeader]
-                
+
                 return sectionLayout
             }
-            
+
             else if section == 3 { //make her smile
-                
+
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(100),
                     heightDimension: .absolute(120)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
+
                 let groupWidth: CGFloat = 332
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(groupWidth),
                     heightDimension: .absolute(120)
                 )
-                
+
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item, item, item]
                 )
                 group.interItemSpacing = .fixed(16)
-                
+
                 let section = NSCollectionLayoutSection(group: group)
-                
+
                 let containerWidth = env.container.effectiveContentSize.width
                 let sideInset = max((containerWidth - groupWidth) / 2, 16)
-                
+
                 section.contentInsets = NSDirectionalEdgeInsets(
                     top: 8,
                     leading: sideInset,
                     bottom: 12,
                     trailing: sideInset
                 )
-                
+
                 section.supplementaryContentInsetsReference = .none
-                
+
                 let titleSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .absolute(34)
                 )
-                
+
                 let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: titleSize,
                     elementKind: "title",
                     alignment: .top
                 )
-                
+
                 titleHeader.contentInsets = NSDirectionalEdgeInsets(
                     top: 0,
                     leading: 16,
                     bottom: 0,
                     trailing: 16
                 )
-                
+
                 section.boundarySupplementaryItems = [titleHeader]
                 section.orthogonalScrollingBehavior = .none
-                
+
                 return section
-            }
-            else if section == 4{ // Section 4 - Build Your Bond (Peek Carousel)
+            } else { // Section 4 - Build Your Bond (Peek Carousel)
                 // 1. Item takes up full width of the group
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .fractionalHeight(1.0)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
+
                 // 2. Group width is less than 1.0 (e.g., 0.8) to allow "peeking"
                 // Adjust fractionalWidth here: 0.8 means 80% of screen width
                 let groupSize = NSCollectionLayoutSize(
@@ -330,7 +364,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     layoutSize: groupSize,
                     subitems: [item]
                 )
-                
+
                 let section = NSCollectionLayoutSection(group: group)
                 
                 // 3. Carousel behavior: snaps to the center of the group
@@ -351,7 +385,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     let containerWidth = env.container.contentSize.width
                     let scrollOffset = offset.x
                     let viewportCenter = scrollOffset + (containerWidth / 2.0)
-                    
+
                     items.forEach { item in
                         // 1. Determine the 'True' target center (Your existing logic)
                         var targetCenterX = viewportCenter
@@ -361,7 +395,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                             let transitionFactor = min(max(scrollOffset / 100, 0), 1)
                             targetCenterX = firstCardRestCenter + (transitionFactor * (viewportCenter - firstCardRestCenter))
                         }
-                        
+
                         // 2. Calculate distance and normalization
                         let distanceFromCenter = abs(item.center.x - targetCenterX)
                         let range = containerWidth * 0.35
@@ -387,38 +421,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 section.boundarySupplementaryItems = [largeTitleHeader]
                 
                 return section
-            }
-            else{
-                let ongoingCount = DataStore.shared.getOngoingActivities().count
-                if ongoingCount == 0 {
-                    let emptySize = NSCollectionLayoutSize(widthDimension: .absolute(0.01), heightDimension: .absolute(0.01))
-                    return NSCollectionLayoutSection(group: NSCollectionLayoutGroup.horizontal(layoutSize: emptySize, subitems: [NSCollectionLayoutItem(layoutSize: emptySize)]))
-                }
-
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(120))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                let sectionLayout = NSCollectionLayoutSection(group: group)
-                sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 16, bottom: 20, trailing: 16)
-
-                sectionLayout.visibleItemsInvalidationHandler = { (items, offset, env) in
-                    let scrollOffset = offset.y
-                    let viewPortHeight = env.container.effectiveContentSize.height
-                    
-                    items.forEach { item in
-                        if item.representedElementKind == nil {
-                            // Fix: Modify center instead of frame
-                            // 140 is the estimated height to stay above the Tab Bar
-                            let hoveringY = scrollOffset + viewPortHeight - 140
-                            item.center = CGPoint(x: env.container.contentSize.width / 2, y: hoveringY)
-                            item.zIndex = 9999
-                        }
-                    }
-                }
-                return sectionLayout
             }
         }
         
@@ -448,7 +450,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
 extension VibeViewController:  UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 6
+        return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -467,16 +469,8 @@ extension VibeViewController:  UICollectionViewDataSource {
             print("Section 3 files")
             print("\(makeSmileData.count)")
             return makeSmileData.count
-        } else if section == 4{
+        } else {
             return BuildBond.count
-        }
-        else {
-            if DataStore.shared.getOngoingActivities().count > 0 {
-                return 1;
-            }
-            else {
-                return 0;
-            }
         }
     }
     
@@ -584,22 +578,10 @@ extension VibeViewController:  UICollectionViewDataSource {
             cell.configureCell(item: item)
             return cell
         }
-        else if indexPath.section == 4 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bond_cell", for: indexPath) as! BuildYourBondCollectionViewCell
-            cell.configureCell(bond: BuildBond[indexPath.row])
-            return cell
-        }
         
         else {
-
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "hovering_activity_cell",
-                for: indexPath
-            ) as! HoveringOngoingActivityCollectionViewCell
-            
-            let ongoingActivities = DataStore.shared.getOngoingActivities()
-            let count = DataStore.shared.getOngoingActivities().count
-            cell.configureCell(activity : ongoingActivities.first!,Activitycount : count)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bond_cell", for: indexPath) as! BuildYourBondCollectionViewCell
+            cell.configureCell(bond: BuildBond[indexPath.row])
             return cell
         }
     }
@@ -806,10 +788,8 @@ extension VibeViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        vibeCollectionView.reloadSections(IndexSet(integer: 1))
-        vibeCollectionView.reloadData()
-        
-        
+        vibeCollectionView.reloadSections(IndexSet(integer: 1))
+        configureOngoingActivity()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -823,21 +803,21 @@ extension VibeViewController {
     }
 }
 
-extension VibeViewController: DailyCheckInCompletionDelegate {
-
-    func didCompleteDailyCheckIn() {
-        hasCompletedDailyCheckIn = true
-
-        vibeCollectionView.setCollectionViewLayout(
-            generateLayout(),
-            animated: false
-        )
-
-        DispatchQueue.main.async {
-            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
-        }
-    }
-}
+//extension VibeViewController: DailyCheckInCompletionDelegate {
+//
+//    func didCompleteDailyCheckIn() {
+//        hasCompletedDailyCheckIn = true
+//
+//        vibeCollectionView.setCollectionViewLayout(
+//            generateLayout(),
+//            animated: false
+//        )
+//
+//        DispatchQueue.main.async {
+//            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
+//        }
+//    }
+//}
 extension VibeViewController: LoveTipsSelectionDelegate {
     func didUpdateSelectedTips(_ tips: [Tip]) {
         self.selectedTips = tips
@@ -854,4 +834,105 @@ extension VibeViewController: DailyExerciseFlowDelegate {
             self.vibeCollectionView.reloadData()
         }
     }
+}
+// MARK: - Ongoing Activity Dismissal Extension
+extension VibeViewController {
+    
+    @IBAction func continueActivityTapped(_ sender: UIButton) {
+            // 1. Ensure there is an active activity to continue
+            guard !ongoingActivites.isEmpty else { return }
+            
+            let activity = ongoingActivites[0]
+            
+            // 2. Load the Steps storyboard
+            let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+            
+            // 3. Instantiate and configure the StepsViewController
+            if let stepsVC = storyboard.instantiateViewController(withIdentifier: "StepsViewController") as? StepsViewController {
+                stepsVC.activitytitle = activity.name
+                stepsVC.activity = activity
+                
+                // Setting flowSource to .vibe (assuming you have this case) or .explore
+                // to ensure the back button/completion logic knows where it came from
+                stepsVC.flowSource = .explore
+                
+                stepsVC.modalPresentationStyle = .fullScreen
+                
+                // 4. Present the steps
+                self.present(stepsVC, animated: true, completion: nil)
+            }
+        }
+    /// Logic for the cross button to remove an activity and update the UI stack
+    @IBAction func cancelActivityTapped(_ sender: UIButton) {
+        // Ensure there is an activity to cancel
+        guard !ongoingActivites.isEmpty else { return }
+        
+        // 1. Identify the current active activity
+        let activityToCancel = ongoingActivites[0]
+        
+        // 2. Update the status in your DataStore to .none
+        // This ensures it won't show up in the ongoing list anymore
+        DataStore.shared.markActivityNone(activity: activityToCancel)
+        
+        // 3. Animate the primary view disappearing
+        // This creates a "sliding" or "fading" effect to reveal what's behind
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            self.ongoingActivitiesView.alpha = 0
+            self.ongoingActivitiesView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }) { _ in
+            // 4. Reset the view properties for the next time it's used
+            self.ongoingActivitiesView.alpha = 1
+            self.ongoingActivitiesView.transform = .identity
+            
+            // 5. Refresh the data and UI to shift the second activity to the front
+            self.configureOngoingActivity()
+            
+            // Optional: Reload collection view if the activity affects other sections
+            // self.vibeCollectionView.reloadData()
+        }
+    }
+    
+    /// Call this inside your configureOngoingActivity() to manage the two-view stack
+    func updateActivityStackVisibility() {
+        let activities = DataStore.shared.getOngoingActivities()
+        
+        if activities.count > 1 {
+            // Two or more activities: show both views for the "stacked" effect
+            ongoingActivitiesView.isHidden = false
+            secondOngoingActivityView.isHidden = false
+            showAllActivityButton.isHidden = false
+        } else if activities.count == 1 {
+            // One activity: hide the background view and "show all" button
+            ongoingActivitiesView.isHidden = false
+            secondOngoingActivityView.isHidden = true
+            showAllActivityButton.isHidden = true
+        } else {
+            // No activities: hide the entire container
+            ongoingActivitiesView.isHidden = true
+            secondOngoingActivityView.isHidden = true
+            showAllActivityButton.isHidden = true
+        }
+    }
+    @IBAction func showAllOngoingTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Vibe", bundle: nil) // Update with your actual storyboard name
+        guard let modalVC = storyboard.instantiateViewController(withIdentifier: "OngoingActivitiesModalViewController") as? OngoingActivitiesModalViewController else { return }
+        
+        modalVC.modalPresentationStyle = .pageSheet
+        
+        if let sheet = modalVC.sheetPresentationController {
+            // We force the layout immediately to get the activity count
+            let activitiesCount = DataStore.shared.getOngoingActivities().prefix(3).count
+            let calculatedHeight = CGFloat(activitiesCount * 115) + CGFloat((activitiesCount - 1) * 12) + 100
+            
+            sheet.detents = [
+                .custom { _ in
+                    return min(calculatedHeight, 600) // Caps the height so it doesn't take the whole screen
+                }
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 28
+        }
+        
+        present(modalVC, animated: true)
+    } 
 }
