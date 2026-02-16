@@ -482,46 +482,25 @@ extension VibeViewController:  UICollectionViewDataSource {
         
         else if indexPath.section == 2 {
             if hasCompletedDailyCheckIn {
-                // Only show refresh cell if it's the last item AND we haven't reached 6 yet
+                // Check if we should show the Refresh Cell (it's the last item and we have < 6 activities)
                 if indexPath.row == suggestedActivities.count && suggestedActivities.count < 6 {
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "refresh_cell", for: indexPath) as! RefreshActivityCollectionViewCell
                     
+                    // This closure handles the tap on the BUTTON specifically
                     cell.onRefreshTapped = { [weak self] in
                         guard let self = self else { return }
-
-                        let startIndex = self.suggestedActivities.count
-                        let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
-                        guard !newActivities.isEmpty else { return }
-
-                        self.suggestedActivities.append(contentsOf: newActivities)
-
-                        let newIndexPaths = (0..<newActivities.count).map {
-                            IndexPath(item: startIndex + $0, section: 2)
-                        }
-
-                        self.vibeCollectionView.performBatchUpdates({
-                            self.vibeCollectionView.deleteItems(at: [IndexPath(item: startIndex, section: 2)])
-                            self.vibeCollectionView.insertItems(at: newIndexPaths)
-                            if self.suggestedActivities.count < 6 {
-                                self.vibeCollectionView.insertItems(at: [IndexPath(item: self.suggestedActivities.count, section: 2)])
-                            }
-
-                        }, completion: { _ in
-                            self.vibeCollectionView.scrollToItem(
-                                at: IndexPath(item: startIndex, section: 2),
-                                at: .right,
-                                animated: true
-                            )
-                        })
+                        // Call the same selection logic manually if the button is pressed
+                        self.collectionView(self.vibeCollectionView, didSelectItemAt: indexPath)
                     }
-
                     return cell
                 } else {
+                    // Show the standard Activity Cell
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "suggestedActivity_cell", for: indexPath) as! SuggestedActivityCollectionViewCell
                     cell.configureCells(activity: suggestedActivities[indexPath.row])
                     return cell
                 }
             } else {
+                // Daily Check-In card (Locked state)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
                 cell.configureCells()
                 cell.delegate = self
@@ -646,40 +625,62 @@ extension VibeViewController {
             return
         }
         //section 2
-        if indexPath.row == suggestedActivities.count {
+        if indexPath.section == 2 {
+                // If daily check-in isn't done, we don't want to open activities yet
+                guard hasCompletedDailyCheckIn else { return }
+                
+                // 1. Check if the Refresh Cell was tapped
+                if indexPath.row == suggestedActivities.count {
+                    // This is the refresh logic you already had
+                    let startIndex = suggestedActivities.count
+                    let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
 
-            let startIndex = suggestedActivities.count
-            let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
+                    self.suggestedActivities.append(contentsOf: newActivities)
 
-            // Update data source FIRST
-            self.suggestedActivities.append(contentsOf: newActivities)
+                    let indexPathsToAdd = (0..<newActivities.count).map {
+                        IndexPath(row: startIndex + $0, section: 2)
+                    }
 
-            let indexPathsToAdd = (0..<newActivities.count).map {
-                IndexPath(row: startIndex + $0, section: 2)
-            }
+                    UIView.performWithoutAnimation {
+                        self.vibeCollectionView.collectionViewLayout.invalidateLayout()
+                    }
 
-            // Let layout prepare outside animation
-            UIView.performWithoutAnimation {
-                self.vibeCollectionView.collectionViewLayout.invalidateLayout()
-            }
-
-            vibeCollectionView.performBatchUpdates({
-
-                // Remove old refresh cell
-                vibeCollectionView.deleteItems(at: [IndexPath(row: startIndex, section: 2)])
-
-                // Insert new activity cells
-                vibeCollectionView.insertItems(at: indexPathsToAdd)
-
-                // Add refresh back if still needed
-                if self.suggestedActivities.count < 6 {
-                    vibeCollectionView.insertItems(at: [IndexPath(row: self.suggestedActivities.count, section: 2)])
+                    vibeCollectionView.performBatchUpdates({
+                        vibeCollectionView.deleteItems(at: [IndexPath(row: startIndex, section: 2)])
+                        vibeCollectionView.insertItems(at: indexPathsToAdd)
+                        if self.suggestedActivities.count < 6 {
+                            vibeCollectionView.insertItems(at: [IndexPath(row: self.suggestedActivities.count, section: 2)])
+                        }
+                    }, completion: nil)
+                    
+                    return
                 }
+                
+                // 2. Handle Activity Selection (This is the part that was missing!)
+                else {
+                    let selectedActivity = suggestedActivities[indexPath.row]
 
-            }, completion: nil)
+                    let destinationVC = SmallModalViewController(
+                        nibName: "SmallModalViewController",
+                        bundle: nil
+                    )
+                    
+                    destinationVC.selectedActivity = selectedActivity
 
-            return
-        }
+                    // Link the modal data (steps/description) from DataStore
+                    if let modalData = DataStore.shared.smallmodal.first(
+                        where: { $0.title == selectedActivity.name }
+                    ) {
+                        destinationVC.modalData = modalData
+                    }
+
+                    destinationVC.flowSource = .activitiesForHer // This ensures the modal knows which flow to use
+                    destinationVC.modalPresentationStyle = .overFullScreen
+                    destinationVC.delegate = self
+                    present(destinationVC, animated: false)
+                    return
+                }
+            }
 
         // Section 3- Make Her Smile
         if indexPath.section == 3 {
