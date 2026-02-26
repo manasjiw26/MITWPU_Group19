@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19DF906C2F39EB5800604C6A /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 19DF906B2F39EB5800604C6A /* Supabase */; };
 		1F1788AC2EF35C9F00976F75 /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1F1788AB2EF35C9F00976F75 /* MessageKit */; };
 		547903A62F2129CF00246001 /* Tink.caf in Resources */ = {isa = PBXBuildFile; fileRef = 547903A32F2129CF00246001 /* Tink.caf */; };
 		547903A72F2129CF00246001 /* GlassSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 547903A42F2129CF00246001 /* GlassSound.mp3 */; };
@@ -44,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19DF906C2F39EB5800604C6A /* Supabase in Frameworks */,
 				1F1788AC2EF35C9F00976F75 /* MessageKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,6 +58,7 @@
 			children = (
 				547903A52F2129CF00246001 /* Resources */,
 				1909FEE92ED5D2B80007823D /* Project Love 2.0 */,
+				19DF906A2F39EB5800604C6A /* Frameworks */,
 				1909FEE82ED5D2B80007823D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,6 +69,13 @@
 				1909FEE72ED5D2B80007823D /* Project Love 2.0.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		19DF906A2F39EB5800604C6A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		547903A52F2129CF00246001 /* Resources */ = {
@@ -98,6 +108,7 @@
 			name = "Project Love 2.0";
 			packageProductDependencies = (
 				1F1788AB2EF35C9F00976F75 /* MessageKit */,
+				19DF906B2F39EB5800604C6A /* Supabase */,
 			);
 			productName = "Project Love 2.0";
 			productReference = 1909FEE72ED5D2B80007823D /* Project Love 2.0.app */;
@@ -130,6 +141,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				1F1788AA2EF35C9F00976F75 /* XCRemoteSwiftPackageReference "MessageKit" */,
+				19DF90692F39EABA00604C6A /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1909FEE82ED5D2B80007823D /* Products */;
@@ -173,7 +185,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9YW76R6Q5C;
+				DEVELOPMENT_TEAM = 6H55S6G6GC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
@@ -189,7 +201,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = loveproject.apple.c;
+				PRODUCT_BUNDLE_IDENTIFIER = loveproject3.apple.c;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -212,7 +224,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9YW76R6Q5C;
+				DEVELOPMENT_TEAM = 6H55S6G6GC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
@@ -228,7 +240,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = loveproject.apple.c;
+				PRODUCT_BUNDLE_IDENTIFIER = loveproject3.apple.c;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -384,6 +396,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		19DF90692F39EABA00604C6A /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
 		1F1788AA2EF35C9F00976F75 /* XCRemoteSwiftPackageReference "MessageKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MessageKit/MessageKit";
@@ -395,6 +415,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		19DF906B2F39EB5800604C6A /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19DF90692F39EABA00604C6A /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
 		1F1788AB2EF35C9F00976F75 /* MessageKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1F1788AA2EF35C9F00976F75 /* XCRemoteSwiftPackageReference "MessageKit" */;

@@ -1,6 +1,7 @@
 import UIKit
 import PhotosUI
 import MapKit
+import Supabase
 
 class NewAddNewViewController: UIViewController {
 
@@ -10,6 +11,8 @@ class NewAddNewViewController: UIViewController {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var memoryImageView: UIImageView!
+    
+    let supabase = SupabaseManager.shared.client
 
     private let datePicker = UIDatePicker()
     private let placeholderText = "Type here..."
@@ -96,51 +99,96 @@ class NewAddNewViewController: UIViewController {
 
     @IBAction func saveButtonTapped(_ sender: Any) {
 
-        let currentImage = memoryImageView.image
-        let placeholderImage = UIImage(named: "Empty_Image1")
+        Task {
+                await saveMemoryToSupabase()
+            }
+    }
 
-        if currentImage == nil || currentImage?.pngData() == placeholderImage?.pngData() {
-            showError(message: "Please select a photo to save this memory.")
+    @MainActor
+    private func saveMemoryToSupabase() async {
+
+        guard let image = memoryImageView.image,
+              let imageData = image.jpegData(compressionQuality: 1.0) else {
+            showError(message: "Please select a photo.")
             return
         }
+        
+        guard let userId = supabase.auth.currentUser?.id else {
+            showError(message: "User not logged in")
+            return
+        }
+        print("Auth user ID:", userId.uuidString)
 
-        let rawTitle = memoryTitleTextField.text?
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let title = rawTitle.isEmpty ? "Memory" : rawTitle
+        do {
+            // Get relationship_id
+            let response = try await supabase
+                .from("users")
+                .select("relationship_id")
+                .eq("user_id", value: userId.uuidString)
+                .single()
+                .execute()
 
-        let location = locationTextField.text ?? ""
-        let description = (descriptionTextView.text == placeholderText)
-            ? ""
-            : descriptionTextView.text ?? ""
+            struct UserRelation: Decodable {
+                let relationship_id: UUID?
+            }
 
-        let newMemory = Memory(
-            date: datePicker.date,
-            imageName: "captured_memory",
-            location: location,
-            title: title,
-            description: description,
-            uiImage: currentImage!
-        )
+            let decoded = try JSONDecoder().decode(UserRelation.self, from: response.data)
+            print("Decoded relationship ID:", decoded.relationship_id as Any)
 
-        dataStore.savedMemories.append(newMemory)
+            guard let relationshipId = decoded.relationship_id else {
+                showError(message: "No relationship found")
+                return
+            }
 
-        let alert = UIAlertController(title: nil,
-                                      message: "Memory Added Successfully!",
-                                      preferredStyle: .alert)
-        present(alert, animated: true)
+            // File path
+            let timestamp = Int(Date().timeIntervalSince1970)
+            let fileName = "\(timestamp)_\(UUID().uuidString).jpg"
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            alert.dismiss(animated: true) {
+            // Upload
+            try await supabase.storage
+                .from("memory-images")
+                .upload(path: fileName, file: imageData)
+            let isoDate = ISO8601DateFormatter().string(from: datePicker.date)
+
+            try await supabase
+                .from("memories")
+                .insert([
+                    [
+                        "relationship_id": relationshipId.uuidString,
+                        "created_by_user_id": userId.uuidString,
+                        "title": memoryTitleTextField.text ?? "",
+                        "description": descriptionTextView.text == placeholderText ? "" : descriptionTextView.text ?? "",
+                        "image_path": fileName,
+                        "memory_date": isoDate
+                    ]
+                ])
+                .execute()
+
+            let alert = UIAlertController(
+                title: "",
+                message: "Memory added successfully!",
+                preferredStyle: .alert
+            )
+
+            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+                
+                //Notify jar screen
                 NotificationCenter.default.post(
                     name: NSNotification.Name("MemoryAdded"),
                     object: nil
                 )
+                
                 self.dismiss(animated: true)
-            }
+            })
+
+            self.present(alert, animated: true)
+
+        } catch {
+            showError(message: error.localizedDescription)
+            print("Memory save error:", error)
         }
     }
-
-
+    
     private func updateDateTextField(date: Date) {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

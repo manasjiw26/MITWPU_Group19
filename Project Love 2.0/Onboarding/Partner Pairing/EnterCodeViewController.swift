@@ -1,4 +1,5 @@
 import UIKit
+import Supabase
 
 class EnterCodeViewController: UIViewController {
 
@@ -7,16 +8,21 @@ class EnterCodeViewController: UIViewController {
     
     var enteredCode: String = ""
     let maxDigits = 6
+    let supabase = SupabaseManager.shared.client
+    let spinner = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
         setupTextField()
+        
+        spinner.center = view.center
+        spinner.hidesWhenStopped = true
+        view.addSubview(spinner)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // CRITICAL: Call this here so the view is in the window hierarchy
         hiddenTextField.becomeFirstResponder()
     }
     
@@ -42,8 +48,7 @@ class EnterCodeViewController: UIViewController {
         hiddenTextField.textContentType = .oneTimeCode
         hiddenTextField.returnKeyType = .done
         hiddenTextField.autocorrectionType = .no
-        
-        // Ensure alpha is 0.01 (Invisible to user, visible to iOS focus system)
+
         hiddenTextField.alpha = 0.01
     }
 
@@ -58,17 +63,69 @@ class EnterCodeViewController: UIViewController {
         enteredCode = text
         codeCollectionView.reloadData()
         
-        if enteredCode.count == maxDigits {
-            codeCompleted(enteredCode)
-        }
     }
     
     func codeCompleted(_ code: String) {
-        print("Final Code ready for pairing: \(code)")
-        // You could dismiss keyboard here if the process is finished
-        // hiddenTextField.resignFirstResponder()
+        hiddenTextField.resignFirstResponder()
+        Task {
+            await pairWithCode(code)
+        }
     }
-    
+    func pairWithCode(_ code: String) async {
+        do {
+            let response = try await supabase
+                .rpc("complete_pairing", params: ["pairing_code_input": code.uppercased()])
+                .execute()
+
+            // if function returns uuid:
+            let relationshipId = try JSONDecoder().decode(UUID.self, from: response.data)
+            print("Paired relationship:", relationshipId)
+
+            showSuccess()
+        } catch {
+            showError("Pairing failed: \(error.localizedDescription)")
+        }
+    }
+
+    func showError(_ message: String) {
+        self.spinner.stopAnimating()
+        self.view.isUserInteractionEnabled = true
+                
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
+    func showSuccess() {
+        DispatchQueue.main.async {
+            self.spinner.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+
+            let alert = UIAlertController(
+                title: "Paired ❤️",
+                message: "You are now connected!",
+                preferredStyle: .alert
+            )
+
+            alert.addAction(UIAlertAction(title: "Continue", style: .default) { _ in
+                
+                let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
+                
+                guard let vc = storyboard.instantiateViewController(withIdentifier: "infoPageViewController") as? infoPageViewController else {
+                    print("❌ Could not instantiate infoPageViewController")
+                    return
+                }
+                
+                if let nav = self.navigationController {
+                    nav.pushViewController(vc, animated: true)
+                } else {
+                    self.present(vc, animated: true)
+                }
+            })
+
+            self.present(alert, animated: true)
+        }
+    }
     @objc func handleScreenTap() {
         if hiddenTextField.isFirstResponder {
             hiddenTextField.resignFirstResponder()
@@ -79,12 +136,40 @@ class EnterCodeViewController: UIViewController {
     
     @IBAction func pairWithPartnerButton(_ sender: Any) {
         if enteredCode.count == maxDigits {
-            codeCompleted(enteredCode)
-        }
+            spinner.startAnimating()
+                codeCompleted(enteredCode)
+            } else {
+                showError("Enter full 6-digit code")
+            }
     }
+    
+    @IBAction func skipTapped(_ sender: Any) {
+        print("Skip tapped")
+        spinner.stopAnimating()
+        view.isUserInteractionEnabled = true
+            
+            // Optional: Save skip state
+        UserDefaults.standard.set(true, forKey: "didSkipPairing")
+            
+        let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
+            
+        guard let vc = storyboard.instantiateViewController(
+                withIdentifier: "infoPageViewController"
+            ) as? infoPageViewController else {
+                print("❌ Could not instantiate infoPageViewController")
+                return
+            }
+            
+            if let nav = navigationController {
+                nav.pushViewController(vc, animated: true)
+            } else {
+                present(vc, animated: true)
+            }
+        
+    }
+    
 }
 
-// MARK: - TextField Delegate
 extension EnterCodeViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Handles the "Done" button tap on keyboard
@@ -93,7 +178,6 @@ extension EnterCodeViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - CollectionView Data Source
 extension EnterCodeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return maxDigits
@@ -109,7 +193,6 @@ extension EnterCodeViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - CollectionView Layout
 extension EnterCodeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Keeping your original sizes

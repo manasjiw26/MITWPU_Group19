@@ -14,10 +14,10 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
     var questions: [QnAQuestion] = []
     var currentIndex = 0
     var selectedIndex: Int? = nil
-    
     // Change to store multiple indices for the multi-choice question
     // Key: Question Index, Value: Set of selected option indices
     var selectedAnswers: [Int: Set<Int>] = [:]
+    var isEditingMode: Bool = false
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -26,10 +26,8 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
         questions = DataStore.shared.currentQnA.questions
-        
+        selectedAnswers = DataStore.shared.userProfile?.savedPreferences ?? [:]
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -56,13 +54,8 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
         let totalQuestions = Float(questions.count)
         let progressValue = Float(currentIndex + 1) / totalQuestions
         progressBar.setProgress(progressValue, animated: true)
-        
         backButton.isHidden = (currentIndex == 0)
-        
-        // Update Table Selection Mode
-        // Last question = Multiple selection, others = Single selection
         tableView.allowsMultipleSelection = (currentIndex == questions.count - 1)
-        
         tableView.reloadData()
 
         DispatchQueue.main.async {
@@ -72,8 +65,13 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
         tableView.layer.cornerRadius = 20
         tableView.layer.masksToBounds = true
         tableView.backgroundColor = .white
+        if isEditingMode && currentIndex == questions.count - 1 {
+            nextButton.setTitle("Save", for: .normal)
+        } else {
+            nextButton.setTitle("Next", for: .normal)
+        }
     }
-
+    
     // MARK: - Actions
     @IBAction func backPressed(_ sender: Any) {
         if currentIndex > 0 {
@@ -83,45 +81,39 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
     }
 
     @IBAction func NextPressed(_ sender: Any) {
-        // MANDATORY CHECK: Ensure at least one item is selected
-        let currentSelections = selectedAnswers[currentIndex] ?? []
-        
-        if currentSelections.isEmpty {
-            // Shake the table or show an alert to tell user it's mandatory
-            let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-            animation.timingFunction = CAMediaTimingFunction(name: .linear)
-            animation.duration = 0.6
-            animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
-            tableView.layer.add(animation, forKey: "shake")
-            return
-        }
-        
-        if currentIndex < questions.count - 1 {
-            currentIndex += 1
-            updateUI()
-        } else {
-            print("partnervc")
-//            let vc = self.storyboard?.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
-//            let navController = UINavigationController(rootViewController: vc)
-//            navController.modalPresentationStyle = .fullScreen
-//            self.present(navController, animated: true, completion: nil)
-            //self.navigationController?.pushViewController(vc, animated: true)
-   
-            guard let parentNavController = self.presentingViewController as? UINavigationController ?? self.presentingViewController?.navigationController else {
+            let currentSelections = selectedAnswers[currentIndex] ?? []
+            if currentSelections.isEmpty {
+                let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+                animation.timingFunction = CAMediaTimingFunction(name: .linear)
+                animation.duration = 0.6
+                animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
+                tableView.layer.add(animation, forKey: "shake")
                 return
             }
+            if currentIndex < questions.count - 1 {
+                currentIndex += 1
+                updateUI()
+            } else {
+                DataStore.shared.userProfile?.savedPreferences = self.selectedAnswers
+                if isEditingMode {
+                    self.navigationController?.setNavigationBarHidden(false, animated: true)
+                    if let nav = self.navigationController {
+                        nav.popViewController(animated: true)
+                    } else {
+                        self.dismiss(animated: true)
+                    }
+                } else {
+                    guard let parentNavController = self.presentingViewController as? UINavigationController ?? self.presentingViewController?.navigationController else {
+                        return
+                    }
 
-            self.dismiss(animated: true) {
-       
-                let vc = self.storyboard?.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
-                vc.view.backgroundColor = UIColor(named: "AppBackground")
-                
-            
-                parentNavController.pushViewController(vc, animated: true)
+                    self.dismiss(animated: true) {
+                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
+                        vc.view.backgroundColor = UIColor(named: "AppBackground")
+                        parentNavController.pushViewController(vc, animated: true)
+                    }
+                }
             }
-
-            
-        }
     }
 
     // MARK: - TableView Methods
@@ -153,20 +145,21 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         let isLastQuestion = (currentIndex == questions.count - 1)
-        
+
         if isLastQuestion {
-            // MULTI-CHOICE: Add to the set
             if selectedAnswers[currentIndex] == nil {
-                selectedAnswers[currentIndex] = [indexPath.row]
+                selectedAnswers[currentIndex] = []
+            }
+            if selectedAnswers[currentIndex]!.contains(indexPath.row) {
+                selectedAnswers[currentIndex]!.remove(indexPath.row)
             } else {
-                selectedAnswers[currentIndex]?.insert(indexPath.row)
+                selectedAnswers[currentIndex]!.insert(indexPath.row)
             }
         } else {
-            // SINGLE-CHOICE: Replace the set
             selectedAnswers[currentIndex] = [indexPath.row]
         }
-        
         tableView.reloadData()
     }
     

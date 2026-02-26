@@ -23,6 +23,26 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
         setupHeader()
         setupEditButton()
     }
+
+    private func setupTableView() {
+        Table.delegate = self
+        Table.dataSource = self
+        Table.tableFooterView = UIView()
+
+        if #available(iOS 15.0, *) {
+            Table.sectionHeaderTopPadding = 0
+        }
+    }
+
+    private func setupHeader() {
+        guard let user = user else { return }
+
+        Imageview.image = UIImage(named: user.profileImageName)
+        Imageview.layer.cornerRadius = Imageview.frame.height / 2
+        Imageview.clipsToBounds = true
+        Imageview.contentMode = .scaleAspectFill
+    }
+
     private func setupEditButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Edit",
@@ -31,6 +51,7 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
             action: #selector(editButtonTapped)
         )
     }
+
     private func saveProfileData() {
         for cell in Table.visibleCells {
             guard let indexPath = Table.indexPath(for: cell),
@@ -49,58 +70,52 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
         }
     }
 
-
     @objc private func editButtonTapped() {
         if isEditingProfile {
-               view.endEditing(true)
-               saveProfileData()
-           }
+            view.endEditing(true)
+            saveProfileData()
+        }
 
-           isEditingProfile.toggle()
+        isEditingProfile.toggle()
 
-           if isEditingProfile {
-               navigationItem.rightBarButtonItem = UIBarButtonItem(
-                   image: UIImage(systemName: "checkmark"),
-                   style: .plain,
-                   target: self,
-                   action: #selector(editButtonTapped)
-               )
-           } else {
-               setupEditButton()
-           }
+        navigationItem.rightBarButtonItem = isEditingProfile
+        ? UIBarButtonItem(image: UIImage(systemName: "checkmark"),
+                          style: .plain,
+                          target: self,
+                          action: #selector(editButtonTapped))
+        : UIBarButtonItem(title: "Edit",
+                          style: .plain,
+                          target: self,
+                          action: #selector(editButtonTapped))
 
-           Table.reloadData()
+        Table.reloadData()
     }
 
-    private func setupTableView() {
-        Table.delegate = self
-        Table.dataSource = self
-        Table.tableFooterView = UIView()
-        Table.tableHeaderView = Cellview
-
-    }
-
-    private func setupHeader() {
-        guard let user = user else { return }
-
-        Imageview.image = UIImage(named: user.profileImageName)
-        Imageview.layer.cornerRadius = Imageview.frame.height / 2
-        Imageview.clipsToBounds = true
-        Imageview.contentMode = .scaleAspectFill
-
-    }
+    // MARK: - Table
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        sections.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].items.count
+        sections[section].items.count
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title
+    func tableView(_ tableView: UITableView,
+                   titleForHeaderInSection section: Int) -> String? {
+        sections[section].title
     }
+
+    func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
+        return 34
+    }
+
+    func tableView(_ tableView: UITableView,
+                   heightForFooterInSection section: Int) -> CGFloat {
+        return 8
+    }
+
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -114,20 +129,31 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
         cell.configure(
             title: item.title,
             value: item.value,
-            isEditing: isEditingProfile, showsChevron: item.showsChevron
+            isEditing: isEditingProfile,
+            showsChevron: item.showsChevron
         )
 
         cell.selectionStyle = .none
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+
         tableView.deselectRow(at: indexPath, animated: true)
 
         let item = sections[indexPath.section].items[indexPath.row]
-        print("\(item.title) tapped")
-       
-    }
-    
-}
 
+        if item.title == "Edit Preferences" {
+            let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
+
+            if let vc = storyboard.instantiateViewController(
+                withIdentifier: "questions"
+            ) as? onboardingQuestionViewController {
+
+                vc.isEditingMode = true
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+    }
+}

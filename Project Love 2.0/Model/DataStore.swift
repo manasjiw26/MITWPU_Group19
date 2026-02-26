@@ -5,6 +5,7 @@
 //  Created by SDC-USER on 26/11/25.
 //
 import Foundation
+import Supabase
 import UIKit
 class DataStore {
     
@@ -41,9 +42,13 @@ class DataStore {
 
     private(set) var allActivities: [Activity] = []
     private var HisMood: Mood?
-    private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "calm" )
+    private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "Calm" )
     private(set) var notifications: [AppNotification] = []
     private(set) var savedFeedback: [FeedBackGiven] = []
+    
+    lazy var groupedSuggestedActivities: [SuggestionGroup: [Activity]] = makeGroupedSuggestedActivities()
+    private var lastSuggestionGroup: SuggestionGroup?
+
   
     init() {
         loadSampleData()
@@ -62,6 +67,200 @@ class DataStore {
         loadDailyCheckInQuestions()
         loadOnboardingQnA()
     }
+    private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
+        return [
+            .A: [
+                Activity(name: "Steal My Day", description: "Live one tiny part of your partner’s day as if it’s yours.", image: "Fun&Playful", time: "20 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "Us vs The World (Mini Edition)", description: "Turn a boring errand into a shared mission.", image: "DailyDoseOfUs", time: "30 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "Memory Remix", description: "Revisit a shared memory, but change the vibe.", image: "DailyDoseOfUs", time: "30 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "Question, But Make It Spicy", description: "Ask questions you normally skip when things are good.", image: "SpiceItUp", time: "20 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "No-Plan Date", description: "Spend time together with zero structure.", image: "Fun&Playful", time: "45 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "Tiny Appreciation Drop", description: "Say the small things before they disappear.", image: "ActsOfLove", time: "10 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "The One-Song Rule", description: "Express your vibe with music, one song at a time.", image: "DailyDoseOfUs", time: "10 min", status: .none, category: "Group A", scheduledDate: nil),
+                Activity(name: "Micro Date Jar", description: "Tiny dates, zero planning stress.", image: "Fun&Playful", time: "20 min", status: .none, category: "Group A", scheduledDate: nil)
+            ],
+            .B: [
+                Activity(name: "Soft Check-In", description: "A low-pressure way to see how each other actually feels today.", image: "NoFilterChats", time: "10 min", status: .none, category: "Group B", scheduledDate: nil),
+                Activity(name: "Quiet Walk", description: "Walk together without trying to fill the silence.", image: "Meaning&Growth", time: "20 min", status: .none, category: "Group B", scheduledDate: nil),
+                Activity(name: "Same Room, Same Energy", description: "Be together without doing the same thing.", image: "DailyDoseOfUs", time: "20 min", status: .none, category: "Group B", scheduledDate: nil),
+                Activity(name: "Gratitude, But Casual", description: "Appreciation without making it a big emotional moment.", image: "ActsOfLove", time: "10 min", status: .none, category: "Group B", scheduledDate: nil),
+                Activity(name: "Mood Sync", description: "Align your emotional pace for the rest of the day.", image: "Meaning&Growth", time: "10 min", status: .none, category: "Group B", scheduledDate: nil),
+                Activity(name: "End-of-Day Recap", description: "Close the day gently, without deep processing.", image: "DailyDoseOfUs", time: "15 min", status: .none, category: "Group B", scheduledDate: nil),
+                Activity(name: "The Evening Anchor", description: "Create a predictable end-of-day habit.", image: "ActsOfLove", time: "10 min", status: .none, category: "Group B", scheduledDate: nil)
+            ],
+            .C: [
+                Activity(name: "What If We...", description: "Explore possibilities you’ve never actually talked about.", image: "NoFilterChats", time: "20 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "Future Snapshot", description: "Picture one tiny moment from a shared future.", image: "Meaning&Growth", time: "20 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "Habit Trade", description: "Try one small habit from each other’s life.", image: "Meaning&Growth", time: "20 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "How Do You Think?", description: "Understand how your partner’s mind works.", image: "NoFilterChats", time: "20 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "Values, Not Goals", description: "Talk about what matters without pressure to plan.", image: "Meaning&Growth", time: "20 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "Skill Share Mini", description: "Teach each other something tiny you’re good at.", image: "Fun&Playful", time: "20 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "10-Minute Sweat", description: "Short, shared burst of physical effort.", image: "SpiceItUp", time: "10 min", status: .none, category: "Group C", scheduledDate: nil),
+                Activity(name: "Try-Once Movement", description: "Test a new physical activity without commitment.", image: "Fun&Playful", time: "20 min", status: .none, category: "Group C", scheduledDate: nil)
+            ],
+            .D: [
+                Activity(name: "The 5-Minute Game", description: "A daily mini game whenever things feel slightly off.", image: "BacktoUs", time: "5 min", status: .none, category: "Group D", scheduledDate: nil),
+                Activity(name: "Us Playlist Game", description: "Build a shared playlist, one song at a time.", image: "BacktoUs", time: "10 min", status: .none, category: "Group D", scheduledDate: nil),
+                Activity(name: "Scoreboard Life", description: "Turn everyday moments into a playful shared game.", image: "Fun&Playful", time: "15 min", status: .none, category: "Group D", scheduledDate: nil),
+                Activity(name: "The Ongoing Challenge", description: "Pick one tiny challenge for 7 days.", image: "Meaning&Growth", time: "10 min", status: .none, category: "Group D", scheduledDate: nil),
+                Activity(name: "Guess What I’d Pick", description: "A game that reminds you how well you know each other.", image: "NoFilterChats", time: "15 min", status: .none, category: "Group D", scheduledDate: nil),
+                Activity(name: "The Shared Thing", description: "Decide one small thing that’s only yours as a couple.", image: "ActsOfLove", time: "10 min", status: .none, category: "Group D", scheduledDate: nil)
+            ],
+            .E: [
+                Activity(name: "Pressure Release Note", description: "Let thoughts out without turning them into a discussion.", image: "NoFilterChats", time: "10 min", status: .none, category: "Group E", scheduledDate: nil),
+                Activity(name: "Solo-But-Together Time", description: "Be near each other while doing your own thing.", image: "DailyDoseOfUs", time: "20 min", status: .none, category: "Group E", scheduledDate: nil),
+                Activity(name: "Quiet Game Window", description: "Play a game together without conversation.", image: "Fun&Playful", time: "15 min", status: .none, category: "Group E", scheduledDate: nil),
+                Activity(name: "Boundary Reset", description: "Set temporary limits so no one feels crowded.", image: "BacktoUs", time: "10 min", status: .none, category: "Group E", scheduledDate: nil),
+                Activity(name: "Body Shake-Out", description: "Release built-up tension through movement.", image: "Meaning&Growth", time: "5 min", status: .none, category: "Group E", scheduledDate: nil),
+                Activity(name: "Low-Stakes Challenge", description: "Compete lightly without emotional investment.", image: "Fun&Playful", time: "10 min", status: .none, category: "Group E", scheduledDate: nil)
+            ],
+            .F: [
+                Activity(name: "Reassurance Round", description: "Ask directly for reassurance instead of hinting.", image: "NoFilterChats", time: "10 min", status: .none, category: "Group F", scheduledDate: nil),
+                Activity(name: "Build the Fort", description: "Create a temporary shared space that feels safe.", image: "ActsOfLove", time: "15 min", status: .none, category: "Group F", scheduledDate: nil),
+                Activity(name: "Comfort Contact", description: "Use physical closeness to calm the nervous system.", image: "ActsOfLove", time: "5 min", status: .none, category: "Group F", scheduledDate: nil),
+                Activity(name: "The Safety Game", description: "Name safety indirectly through choices, not feelings.", image: "NoFilterChats", time: "10 min", status: .none, category: "Group F", scheduledDate: nil),
+                Activity(name: "Body Double Time", description: "Do parallel movement to feel less alone.", image: "DailyDoseOfUs", time: "20 min", status: .none, category: "Group F", scheduledDate: nil),
+                Activity(name: "Return Point", description: "Create a ritual for coming back together after distance.", image: "BacktoUs", time: "5 min", status: .none, category: "Group F", scheduledDate: nil),
+                Activity(name: "Tag Team Game", description: "Work together instead of against each other.", image: "Fun&Playful", time: "20 min", status: .none, category: "Group F", scheduledDate: nil)
+            ],
+            .G: [
+                Activity(name: "DIY Photo Frame Reset", description: "Channel tension into making something physical.", image: "Conflict", time: "20 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "Silent Scrap Page", description: "Process the day without explaining it.", image: "Conflict", time: "15 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "Card Stack Challenge", description: "Focus tension into a shared physical goal.", image: "Fun&Playful", time: "10 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "Clay Mood Objects", description: "Shape how you feel without naming it directly.", image: "Meaning&Growth", time: "15 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "Puzzle Without Talking", description: "Let your hands cooperate even if words can’t.", image: "BacktoUs", time: "20 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "Recreate a Memory Table", description: "Revisit a good memory using objects around you.", image: "DailyDoseOfUs", time: "20 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "One-Minute Vent", description: "Say what’s bothering you without debate.", image: "NoFilterChats", time: "5 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "What I Meant vs What You Heard", description: "Clear misunderstanding in a controlled way.", image: "NoFilterChats", time: "10 min", status: .none, category: "Group G", scheduledDate: nil),
+                Activity(name: "The Line Sentence", description: "Say what crossed a boundary once and clearly.", image: "Conflict", time: "5 min", status: .none, category: "Group G", scheduledDate: nil)
+            ],
+            .H: [
+                Activity(name: "Parallel Scrap Page", description: "Be in the same space while working separately on the same thing.", image: "BacktoUs", time: "20 min", status: .none, category: "Group H", scheduledDate: nil),
+                Activity(name: "Quiet Card Build", description: "Focus together on a neutral physical task.", image: "Fun&Playful", time: "15 min", status: .none, category: "Group H", scheduledDate: nil),
+                Activity(name: "Side Quest", description: "Do a tiny task together with zero emotional meaning.", image: "DailyDoseOfUs", time: "10 min", status: .none, category: "Group H", scheduledDate: nil),
+                Activity(name: "Same Song, Different Space", description: "Be emotionally aligned without physical closeness.", image: "BacktoUs", time: "10 min", status: .none, category: "Group H", scheduledDate: nil),
+                Activity(name: "Silent Trade", description: "Exchange objects instead of words.", image: "ActsOfLove", time: "10 min", status: .none, category: "Group H", scheduledDate: nil),
+                Activity(name: "Leave It There", description: "Acknowledge something without responding to it.", image: "NoFilterChats", time: "5 min", status: .none, category: "Group H", scheduledDate: nil)
+            ],
+            .I: [
+                Activity(name: "No-Contact Coexistence", description: "Share a space without interacting at all.", image: "BacktoUs", time: "20 min", status: .none, category: "Group I", scheduledDate: nil),
+                Activity(name: "Side-by-Side Task", description: "Be near each other while focusing on something else.", image: "DailyDoseOfUs", time: "15 min", status: .none, category: "Group I", scheduledDate: nil),
+                Activity(name: "Object Boundary", description: "Use objects to signal emotional limits.", image: "NoFilterChats", time: "10 min", status: .none, category: "Group I", scheduledDate: nil),
+                Activity(name: "Third-Thing Focus", description: "Redirect attention away from each other.", image: "Meaning&Growth", time: "15 min", status: .none, category: "Group I", scheduledDate: nil),
+                Activity(name: "Background Presence", description: "Let sound replace interaction.", image: "BacktoUs", time: "20 min", status: .none, category: "Group I", scheduledDate: nil)
+            ],
+            .J: [
+                Activity(name: "Public Mission, Private Team", description: "Complete a small mission in public as a silent team.", image: "Fun&Playful", time: "30 min", status: .none, category: "Group J", scheduledDate: nil),
+                Activity(name: "Spend 200 Like It’s a Game", description: "Use money as a constraint, not a reward.", image: "Fun&Playful", time: "30 min", status: .none, category: "Group J", scheduledDate: nil),
+                Activity(name: "Different Lives Date", description: "Pretend to be strangers with invented backstories.", image: "SpiceItUp", time: "20 min", status: .none, category: "Group J", scheduledDate: nil),
+                Activity(name: "Witness Something Together", description: "Attend something as observers, not participants.", image: "DailyDoseOfUs", time: "30 min", status: .none, category: "Group J", scheduledDate: nil),
+                Activity(name: "Rank Things That Don’t Matter", description: "Argue safely about nonsense.", image: "NoFilterChats", time: "15 min", status: .none, category: "Group J", scheduledDate: nil),
+                Activity(name: "Judge Fictional Characters", description: "Project opinions safely.", image: "NoFilterChats", time: "15 min", status: .none, category: "Group J", scheduledDate: nil)
+            ]
+        ]
+    }
+
+
+    private func normalize(_ value: String) -> String {
+        value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+
+    func resolveSuggestionGroup(selection: DailyCheckInSelection) -> SuggestionGroup {
+        let mood = normalize(selection.mood)
+        let closeness = normalize(selection.closeness) // disconnected/chill/attached/kinda close
+        let vibe = normalize(selection.vibe)           // dry/meh/synced/vibing
+        let need = normalize(selection.need)           // reassurance/quality time/space/deep convo
+
+        let isVeryClose = (closeness == "attached")
+        let isSomewhatClose = (closeness == "kinda close" || closeness == "chill")
+        let isVeryDistant = (closeness == "disconnected")
+
+        let isSmooth = (vibe == "synced" || vibe == "vibing")
+        let isNeutral = (vibe == "meh")
+        let isLittleOff = (vibe == "dry")
+        let isTense = false // your UI has no "tense" option
+
+        let isComfort = (need == "reassurance")
+        let isConnection = (need == "quality time" || need == "deep convo")
+        let isFun = false   // your UI has no direct "fun" option
+        let isSpace = (need == "space")
+
+        if ["angry", "regretful", "disappointed"].contains(mood),
+           (isVeryClose || isSomewhatClose),
+           isTense {
+            return .G
+        }
+
+        if isSpace,
+           (isVeryClose || isSomewhatClose),
+           (isNeutral || isSmooth),
+           ["drained", "peaceful", "attached"].contains(mood) {
+            return .E
+        }
+
+        if isVeryDistant {
+            if isFun, isNeutral, ["playful", "curious", "calm"].contains(mood) {
+                return .J
+            }
+            return .I
+        }
+
+        if isConnection,
+           (isNeutral || isLittleOff),
+           ["sad", "curious", "regretful"].contains(mood),
+           closeness == "disconnected" {
+            return .H
+        }
+
+        if mood == "attached",
+           isSomewhatClose,
+           (isNeutral || isLittleOff),
+           (isComfort || isConnection) {
+            return .F
+        }
+
+        if isVeryClose,
+           isLittleOff,
+           (isConnection || isComfort),
+           ["calm", "curious", "regretful", "attached"].contains(mood) {
+            return .D
+        }
+
+        if ["joyful", "playful", "satisfied", "adventurous"].contains(mood),
+           (isVeryClose || isSomewhatClose),
+           isSmooth,
+           (isFun || isConnection) {
+            return .A
+        }
+
+        if ["calm", "peaceful", "productive"].contains(mood),
+           (isSmooth || isNeutral),
+           isConnection {
+            return .B
+        }
+
+        if ["curious", "determined", "productive", "drained"].contains(mood),
+           isNeutral,
+           (isConnection || isFun) {
+            return .C
+        }
+
+        if isSpace { return .E }
+        if isTense { return .G }
+        return .B
+    }
+
+    @discardableResult
+    func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection, limit: Int = 3) -> [Activity] {
+        let group = resolveSuggestionGroup(selection: selection)
+        lastSuggestionGroup = group
+        let pool = groupedSuggestedActivities[group] ?? allSuggestedPool
+        let result = Array(pool.prefix(limit))
+        self.suggestedActivities = result
+        return result
+    }
+
+
     func getDailyCheckInQuestion(at index: Int) -> Question? {
             guard index >= 0 && index < dailyCheckInQuestions.count else { return nil }
             return dailyCheckInQuestions[index]
@@ -324,6 +523,29 @@ class DataStore {
         ]
         return Array(pool.shuffled().prefix(3))
     }
+    func getSmallModalData(for activity: Activity) -> SmallModalData {
+        if let existing = smallmodal.first(where: { $0.title == activity.name }) {
+            return existing
+        }
+        return SmallModalData(
+            title: activity.name,
+            mainImageName: activity.image,
+            descriptionLabel: activity.description,
+            clockImageName: "clock",
+            timerLabel: activity.time
+        )
+    }
+    func getSteps(for activity: Activity) -> [StepsToFollow] {
+        let mapped = loadSteps(for: activity.name)
+        if !mapped.isEmpty { return mapped }
+
+        return [
+            StepsToFollow(number: 1, title: "Set intention", descriptionLabel: "Start with: \"What do we need right now?\""),
+            StepsToFollow(number: 2, title: "Do the activity", descriptionLabel: activity.description),
+            StepsToFollow(number: 3, title: "Reflect", descriptionLabel: "Share one line: \"This felt ___ for me.\"")
+        ]
+    }
+
     // 1. The full pool of everything available
     var allSuggestedPool: [Activity] = [
         Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
@@ -341,12 +563,14 @@ class DataStore {
     }
 
     func getMoreActivities(excluding current: [Activity]) -> [Activity] {
-        let remaining = allSuggestedPool.filter { new in
+        guard let group = lastSuggestionGroup else { return [] }
+        let sourcePool = groupedSuggestedActivities[group] ?? []
+        let remaining = sourcePool.filter { new in
             !current.contains(where: { $0.name == new.name })
         }
-        
         return Array(remaining.prefix(3))
     }
+
 
     func getActivities(forCategoryName name: String) -> [Activity] {
             return activities.filter { $0.category == name }
@@ -377,9 +601,8 @@ class DataStore {
                 ]
             ),
             PersonalInfoSection(
-                title: "RelationShip Profile",
+                title: "Onboarding Details",
                 items: [
-                    PersonalInfoItem(title: "Partner Pairing", value: "", showsChevron: true),
                     PersonalInfoItem(title: "Edit Preferences", value: "", showsChevron: true)
                 ]
             )
@@ -391,11 +614,12 @@ class DataStore {
         userProfile = UserProfile(
             name: "Name",
             email: "name@email.com",
-            profileImageName: "Profile"
+            profileImageName: "Profile",
+            savedPreferences: [:]
         )
 
         profileSections = [
-           
+            
             ProfileSection(
                 title: "Account",
                 items: [
@@ -403,13 +627,13 @@ class DataStore {
                 ]
             ),
             ProfileSection(
-                title: "Activity",
+                title: "Relationship Profile",
                 items: [
-                    ProfileItem(title: "Special Dates", iconName: "slider.horizontal.3", showsChevron: true)
-                    
+        ProfileItem(title: "Special Dates", iconName: "slider.horizontal.3", showsChevron: true),
+        ProfileItem(title: "Partner Pairing", iconName: "slider.horizontal.3", showsChevron: true)
                 ]
             ),
-           
+            
             ProfileSection(
                 title: "Support",
                 items: [
@@ -511,8 +735,8 @@ class DataStore {
     
     func sampleMoods() -> [MoodCheckIn] {
         let mood: [MoodCheckIn] = [
-            MoodCheckIn(label: "Me", imageName: "calm", moodLabel: "Calm"),
-            MoodCheckIn(label: "Her", imageName: "drained", moodLabel: "Drained")
+            MoodCheckIn(label: "Me", imageName: "Calm", moodLabel: "Calm"),
+            MoodCheckIn(label: "Her", imageName: "Drained", moodLabel: "Drained")
         ]
         return mood
     }
@@ -893,6 +1117,16 @@ class DataStore {
             activities[index].status = .ongoing
         }
     }
+    func markActivityNone(activity: Activity) {
+        if let index = activities.firstIndex(where: {
+            $0.name == activity.name &&
+            $0.category == activity.category
+        }) {
+            activities[index].status = .none
+            print(" MARKED COMPLETED:", activities[index].name)
+        }
+    }
+
     func startActivity(_ activity: Activity) {
 
         if let index = activities.firstIndex(where: {
@@ -1078,7 +1312,7 @@ class DataStore {
             Mood(id: 3, title: "Peaceful", imageName: "Peaceful"),
 
             Mood(id: 4, title: "Satisfied", imageName: "Satisfied"),
-            Mood(id: 5, title: "Calm", imageName: "calm"),
+            Mood(id: 5, title: "Calm", imageName: "Calm"),
             Mood(id: 6, title: "Productive", imageName: "Productive"),
 
             Mood(id: 7, title: "Determined", imageName: "Determined"),
@@ -1090,7 +1324,7 @@ class DataStore {
             Mood(id: 12, title: "Sad", imageName: "Sad"),
 
             Mood(id: 13, title: "Disappointed", imageName: "Disappointed"),
-            Mood(id: 14, title: "Drained", imageName: "drained"),
+            Mood(id: 14, title: "Drained", imageName: "Drained"),
             Mood(id: 15, title: "Angry", imageName: "Angry")
         ]
     }
@@ -1116,3 +1350,41 @@ class DataStore {
 
 // Create one shared instance
 let dataStore = DataStore()
+
+extension UIView {
+    func applyLiquidGlassEffect(animated: Bool = true) {
+        let existingGlassView = self.subviews.first { $0 is UIVisualEffectView }
+        if existingGlassView != nil {
+            return
+        }
+
+        let glassEffectView = UIVisualEffectView()
+        glassEffectView.isUserInteractionEnabled = false
+        glassEffectView.translatesAutoresizingMaskIntoConstraints = false
+        self.insertSubview(glassEffectView, at: 0)
+
+        NSLayoutConstraint.activate([
+            glassEffectView.topAnchor.constraint(equalTo: self.topAnchor),
+            glassEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            glassEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            glassEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+
+        if #available(iOS 17.0, *) {
+            let glassEffect = UIGlassEffect()
+            if animated {
+                UIView.animate(withDuration: 0.3) {
+                    glassEffectView.effect = glassEffect
+                }
+            } else {
+                glassEffectView.effect = glassEffect
+            }
+        } else {
+            let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+            glassEffectView.effect = blurEffect
+        }
+
+        glassEffectView.layer.cornerRadius = self.layer.cornerRadius
+        glassEffectView.clipsToBounds = true
+    }
+}

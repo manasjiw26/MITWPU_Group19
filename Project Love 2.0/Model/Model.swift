@@ -218,6 +218,7 @@ struct UserProfile {
     var name: String
     var email: String
     var profileImageName: String
+    var savedPreferences: [Int: Set<Int>]
 }
 
 struct ProfileSection {
@@ -235,7 +236,6 @@ struct PersonalInfoItem {
     var value: String
     let showsChevron: Bool
 }
-
 struct PersonalInfoSection {
     let title: String
     var items: [PersonalInfoItem]
@@ -259,4 +259,73 @@ struct SpecialDate {
     let title: String
     let date: Date
     let note: String
+}
+
+//Database model
+struct DBUser: Codable {
+    let user_id: UUID
+    let name: String
+    let profile_image: String?
+    let created_at: Date?
+    let birth_date: Date
+    
+    let partner_id: UUID?
+    let relationship_id: UUID?
+}
+struct DBRelationship: Codable {
+    let relationship_id: UUID
+    let user1_id: UUID
+    let user2_id: UUID
+    let started_at: Date
+    let status: String
+}
+struct PairingCodeInsert: Codable {
+    let code: String
+    let created_by: UUID
+    let expires_at: Date
+    let used: Bool?
+}
+struct DBMood: Codable {
+    let mood_id: UUID
+    let title: String
+    let image: String
+}
+
+struct DBMoodLogWithMood: Codable {
+    let created_at: String
+    let moods: DBMood
+}
+
+
+//Datatstore activites according to mood
+enum SuggestionGroup: String, CaseIterable {
+    case A, B, C, D, E, F, G, H, I, J
+}
+
+struct DailyCheckInSelection {
+    let mood: String
+    let closeness: String
+    let vibe: String
+    let need: String
+}
+
+struct MemoryModel: Decodable {
+    let id: UUID
+    let relationship_id: UUID
+    let created_by_user_id: UUID
+    let title: String
+    let description: String?
+    let image_path: String
+    let memory_date: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "memory_id"
+        case relationship_id
+        case created_by_user_id
+        case title
+        case description
+        case image_path
+        case memory_date
+    }
+    
 }

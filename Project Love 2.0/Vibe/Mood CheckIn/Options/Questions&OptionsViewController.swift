@@ -83,16 +83,30 @@ class Questions_OptionsViewController: UIViewController {
     }
 
     @IBAction func nextButtonTapped(_ sender: UIButton) {
-        // Optional: Only allow "Next" if a selection exists for this step
         if userSelections[currentStep] != nil {
-            if currentStep < questionsList.count - 1 {
-                currentStep += 1
-                updateUI()
-            } else {
-                flowDelegate?.dailyExerciseDidFinish()
-                dismiss(animated: true)
+                if currentStep < questionsList.count - 1 {
+                    currentStep += 1
+                    updateUI()
+                } else {
+                    let selectedMood = DataStore.shared.getHerMood()?.title ?? "Calm"
+
+                    let vibeAnswer = questionsList[0].options[userSelections[0] ?? 0]
+                    let needAnswer = questionsList[1].options[userSelections[1] ?? 0]
+                    let closenessAnswer = questionsList[2].options[userSelections[2] ?? 0]
+
+                    let selection = DailyCheckInSelection(
+                        mood: selectedMood,
+                        closeness: closenessAnswer,
+                        vibe: vibeAnswer,
+                        need: needAnswer
+                    )
+
+                    _ = DataStore.shared.getSuggestedActivitiesForDailyCheckIn(selection: selection, limit: 3)
+                    flowDelegate?.dailyExerciseDidFinish()
+                    dismiss(animated: true)
+
+                }
             }
-        }
     }
 
     @IBAction func backButtonTapped(_ sender: UIButton) {

@@ -1,12 +1,14 @@
 import UIKit
 import SpriteKit
-
+import Supabase
 
 class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var memoryLaneCollectionView: UICollectionView!
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var MemoryJarView: SKView!
+    
+    private var memoryChannel: RealtimeChannelV2?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +20,9 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         MemoryJarView.backgroundColor = .clear
         addButton.configuration = .glass()
         addButton.setTitle("Add", for: .normal)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+        
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(showMemoryDisplay(_:)), name: NSNotification.Name("OpenMemory"), object: nil)
         memoryLaneCollectionView.alwaysBounceVertical = false
         memoryLaneCollectionView.showsVerticalScrollIndicator = false
@@ -29,13 +33,21 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         MemoryJarView.isPaused = false
-        memoryLaneCollectionView.reloadData()
-        syncJarHearts()
+
+        Task {
+            await fetchMemoriesFromSupabase()
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         MemoryJarView.isPaused = true
+
+        if let channel = memoryChannel {
+            Task {
+                await SupabaseManager.shared.client.removeChannel(channel)
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -65,18 +77,171 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
 
-    @objc func handleNewMemory() {
-        //UI work must be done on the main thread to Prevents crashes and visual glitches
-        DispatchQueue.main.async {
-            self.memoryLaneCollectionView.reloadData()
+//    @objc func handleNewMemory() {
+//        DispatchQueue.main.async {
+//            
+//            guard !dataStore.savedMemories.isEmpty else {
+//                print("No memories to display")
+//                return
+//            }
+//            
+//            self.memoryLaneCollectionView.reloadData()
+//            
+//            if let scene = self.MemoryJarView.scene as? MemoryJarScene {
+//                let newIndex = dataStore.savedMemories.count - 1
+//                
+//                guard newIndex >= 0 else { return }
+//                
+//                let memory = dataStore.savedMemories[newIndex]
+//                scene.addHeart(index: newIndex, memoryID: memory.id, animate: true)
+//                
+//                let indexPath = IndexPath(item: newIndex, section: 0)
+//                self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
+//            }
+//        }
+//    }
+//    
+    @MainActor
+    func fetchMemoriesFromSupabase() async {
+        guard let userId = SupabaseManager.shared.client.auth.currentUser?.id else { return }
+
+        do {
+            // 1️⃣ Get relationship_id
+            let response = try await SupabaseManager.shared.client
+                .from("users")
+                .select("relationship_id")
+                .eq("user_id", value: userId.uuidString)
+                .single()
+                .execute()
+
+            struct UserRelation: Decodable {
+                let relationship_id: UUID?
+            }
+
+            let decodedRelation = try JSONDecoder().decode(UserRelation.self, from: response.data)
+            guard let relationshipId = decodedRelation.relationship_id else { return }
             
-            if let scene = self.MemoryJarView.scene as? MemoryJarScene {
-                let newIndex = dataStore.savedMemories.count - 1
-                let memory = dataStore.savedMemories[newIndex]
-                scene.addHeart(index: newIndex, memoryID: memory.id, animate: true)
-                // To scroll to last index where memory is added
-                let indexPath = IndexPath(item: newIndex, section: 0)
-                self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
+            print("Fetched relationship_id:", decodedRelation.relationship_id as Any)
+
+            let memoryResponse = try await SupabaseManager.shared.client
+                .from("memories")
+                .select()
+                .eq("relationship_id", value: relationshipId.uuidString)
+                .order("memory_date", ascending: true)
+                .execute()
+
+            let decoded = try JSONDecoder().decode([MemoryModel].self, from: memoryResponse.data)
+
+            var convertedMemories: [Memory] = []
+
+            for item in decoded {
+
+                let date = ISO8601DateFormatter().date(from: item.memory_date) ?? Date()
+
+                let imageData = try await SupabaseManager.shared.client
+                    .storage
+                    .from("memory-images")
+                    .download(path: item.image_path)
+
+                let uiImage = UIImage(data: imageData)
+
+                let memory = Memory(
+                    id: item.id,
+                    date: date,
+                    imageName: item.image_path,
+                    location: "",
+                    title: item.title,
+                    description: item.description ?? "",
+                    uiImage: uiImage
+                )
+
+                convertedMemories.append(memory)
+            }
+
+            await MainActor.run {
+                dataStore.savedMemories.removeAll()
+                dataStore.savedMemories = convertedMemories
+            }
+
+            memoryLaneCollectionView.reloadData()
+            syncJarHearts()
+            await listenForPartnerMemory(relationshipId: relationshipId)
+
+        } catch {
+            print("Fetch error:", error)
+        }
+    }
+    
+    func listenForPartnerMemory(relationshipId: UUID) async {
+        
+        if let existingChannel = memoryChannel {
+            await SupabaseManager.shared.client.removeChannel(existingChannel)
+        }
+
+        self.memoryChannel = SupabaseManager.shared.client.channel("memory_updates")
+        guard let channel = self.memoryChannel else { return }
+
+        let insertionStream = channel.postgresChange(
+            AnyAction.self,
+            schema: "public",
+            table: "memories",
+            filter: "relationship_id=eq.\(relationshipId)"
+        )
+
+        await channel.subscribe()
+
+        Task {
+            do {
+                for await change in insertionStream {
+                    switch change {
+
+                    case .insert(let action):
+
+                        // Convert record dictionary into Data
+                        let jsonData = try JSONEncoder().encode(action.record)
+
+                        // Decode into your model
+                        let item = try JSONDecoder().decode(MemoryModel.self, from: jsonData)
+
+                        if dataStore.savedMemories.contains(where: { $0.id == item.id }) {
+                            continue
+                        }
+
+                        let imageData = try await SupabaseManager.shared.client
+                            .storage
+                            .from("memory-images")
+                            .download(path: item.image_path)
+
+                        await MainActor.run {
+
+                            let date = ISO8601DateFormatter().date(from: item.memory_date) ?? Date()
+
+                            let newMemory = Memory(
+                                id: item.id,
+                                date: date,
+                                imageName: item.image_path,
+                                location: "",
+                                title: item.title,
+                                description: item.description ?? "",
+                                uiImage: UIImage(data: imageData)
+                            )
+
+                            dataStore.savedMemories.append(newMemory)
+
+                            self.memoryLaneCollectionView.reloadData()
+
+                            if let scene = self.MemoryJarView.scene as? MemoryJarScene {
+                                let newIndex = dataStore.savedMemories.count - 1
+                                scene.addHeart(index: newIndex, memoryID: newMemory.id, animate: true)
+                            }
+                        }
+
+                    default:
+                        break
+                    }
+                }
+            } catch {
+                print("Realtime error:", error)
             }
         }
     }

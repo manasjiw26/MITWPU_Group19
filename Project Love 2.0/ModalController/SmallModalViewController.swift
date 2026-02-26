@@ -56,7 +56,15 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
             clockImage.tintColor = .black
             
         }
-        
+        else if let activity = selectedActivity {
+            titleLabel.text = activity.name
+            DesciptionLabel.text = activity.description
+            timerLabel.text = activity.time
+            mainImage.image = UIImage(named: activity.image)
+            clockImage.image = UIImage(systemName: "clock")
+            clockImage.tintColor = .black
+        }
+
         //  Dim background
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         

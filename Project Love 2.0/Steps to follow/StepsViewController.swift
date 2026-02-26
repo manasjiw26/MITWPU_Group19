@@ -55,7 +55,8 @@ class StepsViewController: UIViewController {
         activityTitle.text = activitytitle
         subtitle.text = "Set the Scene with these steps"
 
-        steps = DataStore.shared.loadSteps(for: activity.name)
+        steps = DataStore.shared.getSteps(for: activity)
+
 
         stepsTable.dataSource = self
         stepsTable.delegate = self

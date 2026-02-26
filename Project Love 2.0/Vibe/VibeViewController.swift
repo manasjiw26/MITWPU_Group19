@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Supabase
 
 protocol LoveTipsSelectionDelegate: AnyObject {
     func didUpdateSelectedTips(_ tips: [Tip])
@@ -14,7 +15,14 @@ protocol LoveTipsSelectionDelegate: AnyObject {
 class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate {
     
     @IBOutlet weak var vibeCollectionView: UICollectionView!
+    @IBOutlet weak var showAllActivityButton: UIButton!
+    @IBOutlet weak var secondOngoingActivityView: UIView!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var activityImage: UIImageView!
+    @IBOutlet weak var ongoingActivitiesView: UIView!
+    @IBOutlet weak var activityName: UILabel!
     
+    var ongoingActivites: [Activity] = []
     var makeSmileData: [MakeSmile] = []
     var didScrollToMiddle = false
     var BuildBond : [BuildYourBond] = []
@@ -23,14 +31,29 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var suggestedActivities: [Activity] = []
     var selectedTips: [Tip] = []
     
+    let supabase = SupabaseManager.shared.client
+    var partnerMoodTitle: String = "Waiting"
+    var partnerMoodImage: String = "waiting"
+    var myMoodTitle: String = "Not set"
+    var myMoodImage: String = "neutral"
+    
+    var moodChannel: RealtimeChannelV2?
+    
+    private var partnerDisplayText: String {
+        let userGender = UserDefaults.standard.string(forKey: "userGender") ?? ""
+
+        switch userGender {
+        case "Female":
+            return "Him"
+        case "Male":
+            return "Her"
+        default:
+            return "Partner"
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        makeSmileData = [
-            MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
-            MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
-            MakeSmile(types: "Activities for Her", imageName: "checklist")
-        ]
 
         BuildBond = dataStore.loadBuildYourbond()
         suggestedActivities = DataStore.shared.getSuggestedActivities()
@@ -38,8 +61,40 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
         vibeCollectionView.dataSource = self
         vibeCollectionView.delegate = self
+        setupOngoing()
+        configureOngoingActivity()
     }
     
+    func setupOngoing(){
+            ongoingActivitiesView.layer.cornerRadius = ongoingActivitiesView.layer.frame.height / 2
+            secondOngoingActivityView.layer.cornerRadius = secondOngoingActivityView.layer.frame.height / 2
+            ongoingActivitiesView.layer.masksToBounds = true
+            secondOngoingActivityView.layer.masksToBounds = true
+            ongoingActivitiesView.applyLiquidGlassEffect(animated: false)
+            
+        }
+        func configureOngoingActivity(){
+            ongoingActivites = DataStore.shared.getOngoingActivities()
+            if(ongoingActivites.count > 1){
+                ongoingActivitiesView.isHidden = false
+                showAllActivityButton.isHidden = false
+                secondOngoingActivityView.isHidden = false
+                activityImage.image = UIImage(named: ongoingActivites[0].image)
+                activityName.text = ongoingActivites[0].name
+            }
+            else if (ongoingActivites.count == 1){
+                secondOngoingActivityView.isHidden = true
+                showAllActivityButton.isHidden = true
+                ongoingActivitiesView.isHidden = false
+                activityImage.image = UIImage(named: ongoingActivites[0].image)
+                activityName.text = ongoingActivites[0].name
+            }
+            else{
+                ongoingActivitiesView.isHidden = true
+                secondOngoingActivityView.isHidden = true
+                showAllActivityButton.isHidden = true
+            }
+        }
     
     private var hasCheckedInToday: Bool {
         return DataStore.shared.getHisMood() != nil
@@ -400,6 +455,106 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         }
     }
     
+    func fetchPartnerMood() async {
+        guard let currentUserId = supabase.auth.currentUser?.id else { return }
+
+        do {
+            
+            let relationships: [DBRelationship] = try await supabase
+                .from("relationships")
+                .select()
+                .or("user1_id.eq.\(currentUserId),user2_id.eq.\(currentUserId)")
+                .limit(1)
+                .execute()
+                .value
+
+            guard let relationship = relationships.first else {
+                print(" No relationship found")
+                return
+            }
+
+            // Use DBMoodLogWithMood (the struct you defined earlier)
+            let moods: [DBMoodLogWithMood] = try await supabase
+                .from("user_mood_logs")
+                .select("*, moods(*)")
+                .eq("relationship_id", value: relationship.relationship_id)
+                .neq("user_id", value: currentUserId)
+                .order("created_at", ascending: false)
+                .limit(1)
+                .execute()
+                .value
+
+            if let moodLog = moods.first {
+                await MainActor.run {
+                
+                    self.updateMoodUI(with: moodLog)
+                }
+            }
+
+        } catch {
+            print("Partner mood fetch error:", error)
+        }
+    }
+
+    // 2. Realtime listener
+    func listenForPartnerMoodUpdates() async {
+        guard let currentUserId = supabase.auth.currentUser?.id else { return }
+
+        do {
+            let relationships: [DBRelationship] = try await supabase
+                .from("relationships")
+                .select()
+                .or("user1_id.eq.\(currentUserId),user2_id.eq.\(currentUserId)")
+                .limit(1)
+                .execute()
+                .value
+
+            guard let relationship = relationships.first else { return }
+
+            let channel = supabase.channel("mood-updates")
+
+            let moodChanges = channel.postgresChange(
+                AnyAction.self,
+                schema: "public",
+                table: "user_mood_logs",
+                filter: "relationship_id=eq.\(relationship.relationship_id)"
+            )
+
+            try await channel.subscribe()
+            self.moodChannel = channel
+
+            Task {
+                for await change in moodChanges {
+                    print("Realtime Mood Change Detected")
+                    
+                    switch change {
+                    case .insert(let action):
+                        let newRecord = action.record
+                       
+                        if let changedUserId = newRecord["user_id"]?.value as? String,
+                           changedUserId != currentUserId.uuidString {
+                            print("Partner updated mood, fetching details...")
+                            await self.fetchPartnerMood()
+                        }
+                    default:
+                        break
+                    }
+                }
+            }
+
+        } catch {
+            print("Realtime setup error:", error)
+        }
+    }
+
+    private func updateMoodUI(with log: DBMoodLogWithMood) {
+        self.partnerMoodTitle = log.moods.title
+        self.partnerMoodImage = log.moods.image
+        print("Partner mood updated to: \(log.moods.title)")
+        
+        self.vibeCollectionView.reloadData()
+    }
+    
     @IBAction func profileTapped(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
         let profileVC = storyboard.instantiateInitialViewController()!
@@ -448,20 +603,17 @@ extension VibeViewController:  UICollectionViewDataSource {
                 let mood: MoodCheckIn
 
                 if indexPath.item == 0 {
-                    // ME card
-                    let hisMood = dataStore.getHisMood()
                     mood = MoodCheckIn(
                         label: "Me",
-                        imageName: hisMood?.imageName ?? "neutral",
-                        moodLabel: hisMood?.title ?? "Not set"
+                        imageName: myMoodImage,
+                        moodLabel: myMoodTitle
                     )
+                    
                 } else {
-                    // HER card
-                    let herMood = dataStore.getHerMood()
                     mood = MoodCheckIn(
-                        label: "Her",
-                        imageName: herMood?.imageName ?? "waiting",
-                        moodLabel: herMood?.title ?? "Waiting"
+                        label: partnerDisplayText,
+                        imageName: partnerMoodImage,
+                        moodLabel: partnerMoodTitle
                     )
                 }
 
@@ -482,50 +634,27 @@ extension VibeViewController:  UICollectionViewDataSource {
         
         else if indexPath.section == 2 {
             if hasCompletedDailyCheckIn {
-                // Only show refresh cell if it's the last item AND we haven't reached 6 yet
-                if indexPath.row == suggestedActivities.count && suggestedActivities.count < 6 {
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "refresh_cell", for: indexPath) as! RefreshActivityCollectionViewCell
-                    
-                    cell.onRefreshTapped = { [weak self] in
-                        guard let self = self else { return }
-
-                        let startIndex = self.suggestedActivities.count
-                        let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
-                        guard !newActivities.isEmpty else { return }
-
-                        self.suggestedActivities.append(contentsOf: newActivities)
-
-                        let newIndexPaths = (0..<newActivities.count).map {
-                            IndexPath(item: startIndex + $0, section: 2)
-                        }
-
-                        self.vibeCollectionView.performBatchUpdates({
-                            self.vibeCollectionView.deleteItems(at: [IndexPath(item: startIndex, section: 2)])
-                            self.vibeCollectionView.insertItems(at: newIndexPaths)
-                            if self.suggestedActivities.count < 6 {
-                                self.vibeCollectionView.insertItems(at: [IndexPath(item: self.suggestedActivities.count, section: 2)])
-                            }
-
-                        }, completion: { _ in
-                            self.vibeCollectionView.scrollToItem(
-                                at: IndexPath(item: startIndex, section: 2),
-                                at: .right,
-                                animated: true
-                            )
-                        })
-                    }
-
-                    return cell
-                } else {
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "suggestedActivity_cell", for: indexPath) as! SuggestedActivityCollectionViewCell
-                    cell.configureCells(activity: suggestedActivities[indexPath.row])
-                    return cell
-                }
+                       // Check if we should show the Refresh Cell (it's the last item and we have < 6 activities)
+                       if indexPath.row == suggestedActivities.count && suggestedActivities.count < 6 {
+                           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "refresh_cell", for: indexPath) as! RefreshActivityCollectionViewCell
+                           // This closure handles the tap on the BUTTON specifically
+                           cell.onRefreshTapped = { [weak self] in
+                               guard let self = self else { return }
+                               // Call the same selection logic manually if the button is pressed
+                               self.collectionView(self.vibeCollectionView, didSelectItemAt: indexPath)    }
+                           return cell
+                       } else {
+                           // Show the standard Activity Cell
+                           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "suggestedActivity_cell", for: indexPath) as! SuggestedActivityCollectionViewCell
+                           cell.configureCells(activity: suggestedActivities[indexPath.row])
+                           return cell
+                       }
             } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
-                cell.configureCells()
-                cell.delegate = self
-                return cell
+                       // Daily Check-In card (Locked state)
+                       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
+                       cell.configureCells()
+                       cell.delegate = self
+                       return cell
             }
         }
         
@@ -554,7 +683,7 @@ extension VibeViewController:  UICollectionViewDataSource {
         if indexPath.section == 2 {
             title.configureTitle(title: "Suggested Activity", subtitle: "")
         } else if indexPath.section == 3 {
-            title.configureTitle(title: "Make Her Smile", subtitle: "")
+            title.configureTitle(title: "Make \(partnerDisplayText) Smile", subtitle: "")
         } else if indexPath.section == 4 {
             title.configureTitle(title: "Build Your Bond", subtitle: "Focus on one theme, grow as a couple.")
         }
@@ -566,10 +695,10 @@ extension VibeViewController:  UICollectionViewDataSource {
         guard cell.label.text == "Me",
               let indexPath = vibeCollectionView.indexPath(for: cell) else { return }
 
-        if !MoodManager.shared.canChangeMood() {
-            showAlert()
-            return
-        }
+//        if !MoodManager.shared.canChangeMood() {
+//            showAlert()
+//            return
+//        }
 
         let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
         let vc = storyboard.instantiateViewController(
@@ -584,34 +713,78 @@ extension VibeViewController:  UICollectionViewDataSource {
     }
 
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
-        
-        MoodManager.shared.registerMoodChange()
 
-        // Layout switches from one card to two cards
-        vibeCollectionView.setCollectionViewLayout(
-            generateLayout(),
-            animated: false
-        )
+        guard let currentUserId = supabase.auth.currentUser?.id else {
+            print("No current user")
+            return
+        }
 
-        // Reload entire section
-        vibeCollectionView.performBatchUpdates {
-            vibeCollectionView.reloadSections(IndexSet(integer: 1))
+        self.myMoodTitle = mood.moodLabel
+        self.myMoodImage = mood.imageName
+
+        self.vibeCollectionView.reloadSections(IndexSet(integer: 1))
+
+        Task {
+            do {
+                // Get relationship
+                let relationships: [DBRelationship] = try await supabase
+                    .from("relationships")
+                    .select()
+                    .or("user1_id.eq.\(currentUserId),user2_id.eq.\(currentUserId)")
+                    .limit(1)
+                    .execute()
+                    .value
+
+                guard let relationship = relationships.first else {
+                    print("No relationship found")
+                    return
+                }
+
+                // Get mood_id
+                let moods: [DBMood] = try await supabase
+                    .from("moods")
+                    .select()
+                    .eq("title", value: mood.moodLabel)
+                    .limit(1)
+                    .execute()
+                    .value
+
+                guard let selectedMood = moods.first else {
+                    print("Mood not found in DB")
+                    return
+                }
+
+                // Insert
+                try await supabase
+                    .from("user_mood_logs")
+                    .insert([
+                        "relationship_id": relationship.relationship_id,
+                        "user_id": currentUserId,
+                        "mood_id": selectedMood.mood_id
+                    ])
+                    .execute()
+
+                print("Mood inserted successfully")
+
+            } catch {
+                print("Insert failed:", error)
+            }
         }
     }
     
-    func showAlert() {
-
-        let message = MoodManager.shared.remainingTimeText()
-
-        let alert = UIAlertController(
-            title: "Mood Locked",
-            message: message,
-            preferredStyle: .alert
-        )
-
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
+//    func showAlert() {
+//
+//        let message = MoodManager.shared.remainingTimeText()
+//
+//        let alert = UIAlertController(
+//            title: "Mood Locked",
+//            message: message,
+//            preferredStyle: .alert
+//        )
+//
+//        alert.addAction(UIAlertAction(title: "OK", style: .default))
+//        present(alert, animated: true)
+//    }
 }
 
 extension VibeViewController {
@@ -646,40 +819,55 @@ extension VibeViewController {
             return
         }
         //section 2
-        if indexPath.row == suggestedActivities.count {
+        if indexPath.section == 2 {
+            // If daily check-in isn't done, we don't want to open activities yet
+                        guard hasCompletedDailyCheckIn else { return }
+                        
+            
+                        // 1. Check if the Refresh Cell was tapped
+                        if indexPath.row == suggestedActivities.count {
+                            // This is the refresh logic you already had
+                            let startIndex = suggestedActivities.count
+                            let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
+                            guard !newActivities.isEmpty else { return }
 
-            let startIndex = suggestedActivities.count
-            let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
+                            self.suggestedActivities.append(contentsOf: newActivities)
 
-            // Update data source FIRST
-            self.suggestedActivities.append(contentsOf: newActivities)
+                            let indexPathsToAdd = (0..<newActivities.count).map {
+                            IndexPath(row: startIndex + $0, section: 2)
+                            }
 
-            let indexPathsToAdd = (0..<newActivities.count).map {
-                IndexPath(row: startIndex + $0, section: 2)
+                            UIView.performWithoutAnimation {
+                                self.vibeCollectionView.collectionViewLayout.invalidateLayout()
+                            }
+
+                            vibeCollectionView.performBatchUpdates({
+                                vibeCollectionView.deleteItems(at: [IndexPath(row: startIndex, section: 2)])
+                                vibeCollectionView.insertItems(at: indexPathsToAdd)
+                                if self.suggestedActivities.count < 6 {
+                                    vibeCollectionView.insertItems(at: [IndexPath(row: self.suggestedActivities.count, section: 2)])
+                                }
+                            }, completion: nil)
+                            
+                            return
+                        }
+                        
+                        // 2. Handle Activity Selection (This is the part that was missing!)
+                        else {
+                            let selectedActivity = suggestedActivities[indexPath.row]
+
+                        let destinationVC = SmallModalViewController( nibName: "SmallModalViewController", bundle: nil )
+                            destinationVC.selectedActivity = selectedActivity
+                            // Link the modal data (steps/description) from DataStore
+                            destinationVC.modalData = DataStore.shared.getSmallModalData(for: selectedActivity)
+                            destinationVC.flowSource = .activitiesForHer // This ensures the modal knows which flow to use
+                            destinationVC.modalPresentationStyle = .overFullScreen
+                            destinationVC.delegate = self
+                            present(destinationVC, animated: false)
+                            return
+                        }
             }
 
-            // Let layout prepare outside animation
-            UIView.performWithoutAnimation {
-                self.vibeCollectionView.collectionViewLayout.invalidateLayout()
-            }
-
-            vibeCollectionView.performBatchUpdates({
-
-                // Remove old refresh cell
-                vibeCollectionView.deleteItems(at: [IndexPath(row: startIndex, section: 2)])
-
-                // Insert new activity cells
-                vibeCollectionView.insertItems(at: indexPathsToAdd)
-
-                // Add refresh back if still needed
-                if self.suggestedActivities.count < 6 {
-                    vibeCollectionView.insertItems(at: [IndexPath(row: self.suggestedActivities.count, section: 2)])
-                }
-
-            }, completion: nil)
-
-            return
-        }
 
         // Section 3- Make Her Smile
         if indexPath.section == 3 {
@@ -748,14 +936,41 @@ extension VibeViewController {
                 }
             }
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        vibeCollectionView.reloadSections(IndexSet(integer: 1))
-    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("HIS MOOD =", DataStore.shared.getHisMood())
 
+        // Prevent duplicate channel creation
+        if moodChannel != nil { return }
+
+        Task {
+            await listenForPartnerMoodUpdates()
+        }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        makeSmileData = [
+            MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
+            MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
+            MakeSmile(types: "Activities for \(partnerDisplayText)", imageName: "checklist")
+        ]
+
+        Task {
+            await fetchPartnerMood()
+        }
+        if hasCompletedDailyCheckIn {
+            self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+        }
+
+        configureOngoingActivity()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        Task {
+            await moodChannel?.unsubscribe()
+            moodChannel = nil
+        }
     }
 
     func reloadData() {
@@ -764,35 +979,119 @@ extension VibeViewController {
     }
 }
 
-//extension VibeViewController: DailyCheckInCompletionDelegate {
-//
-//    func didCompleteDailyCheckIn() {
-//        hasCompletedDailyCheckIn = true
-//
-//        vibeCollectionView.setCollectionViewLayout(
-//            generateLayout(),
-//            animated: false
-//        )
-//
-//        DispatchQueue.main.async {
-//            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
-//        }
-//    }
-//}
 extension VibeViewController: LoveTipsSelectionDelegate {
     func didUpdateSelectedTips(_ tips: [Tip]) {
         self.selectedTips = tips
         self.vibeCollectionView.reloadData()
     }
 }
-// Add this at the bottom of VibeViewController.swift
 extension VibeViewController: DailyExerciseFlowDelegate {
     func dailyExerciseDidFinish() {
-        // This is what happens when the user finishes all questions
         self.hasCompletedDailyCheckIn = true
-        
+        self.suggestedActivities = DataStore.shared.getSuggestedActivities() // IMPORTANT
         DispatchQueue.main.async {
-            self.vibeCollectionView.reloadData()
+            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
         }
+    }
+}
+
+extension VibeViewController {
+    
+    @IBAction func continueActivityTapped(_ sender: UIButton) {
+            // 1. Ensure there is an active activity to continue
+            guard !ongoingActivites.isEmpty else { return }
+            
+            let activity = ongoingActivites[0]
+            
+            // 2. Load the Steps storyboard
+            let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+            
+            // 3. Instantiate and configure the StepsViewController
+            if let stepsVC = storyboard.instantiateViewController(withIdentifier: "StepsViewController") as? StepsViewController {
+                stepsVC.activitytitle = activity.name
+                stepsVC.activity = activity
+                
+                // Setting flowSource to .vibe (assuming you have this case) or .explore
+                // to ensure the back button/completion logic knows where it came from
+                stepsVC.flowSource = .explore
+                
+                stepsVC.modalPresentationStyle = .fullScreen
+                
+                // 4. Present the steps
+                self.present(stepsVC, animated: true, completion: nil)
+            }
+        }
+    /// Logic for the cross button to remove an activity and update the UI stack
+    @IBAction func cancelActivityTapped(_ sender: UIButton) {
+        // Ensure there is an activity to cancel
+        guard !ongoingActivites.isEmpty else { return }
+        
+        // 1. Identify the current active activity
+        let activityToCancel = ongoingActivites[0]
+        
+        // 2. Update the status in your DataStore to .none
+        // This ensures it won't show up in the ongoing list anymore
+        DataStore.shared.markActivityNone(activity: activityToCancel)
+        
+        // 3. Animate the primary view disappearing
+        // This creates a "sliding" or "fading" effect to reveal what's behind
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            self.ongoingActivitiesView.alpha = 0
+            self.ongoingActivitiesView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }) { _ in
+            // 4. Reset the view properties for the next time it's used
+            self.ongoingActivitiesView.alpha = 1
+            self.ongoingActivitiesView.transform = .identity
+            
+            // 5. Refresh the data and UI to shift the second activity to the front
+            self.configureOngoingActivity()
+            
+            // Optional: Reload collection view if the activity affects other sections
+            // self.vibeCollectionView.reloadData()
+        }
+    }
+    
+    /// Call this inside your configureOngoingActivity() to manage the two-view stack
+    func updateActivityStackVisibility() {
+        let activities = DataStore.shared.getOngoingActivities()
+        
+        if activities.count > 1 {
+            // Two or more activities: show both views for the "stacked" effect
+            ongoingActivitiesView.isHidden = false
+            secondOngoingActivityView.isHidden = false
+            showAllActivityButton.isHidden = false
+        } else if activities.count == 1 {
+            // One activity: hide the background view and "show all" button
+            ongoingActivitiesView.isHidden = false
+            secondOngoingActivityView.isHidden = true
+            showAllActivityButton.isHidden = true
+        } else {
+            // No activities: hide the entire container
+            ongoingActivitiesView.isHidden = true
+            secondOngoingActivityView.isHidden = true
+            showAllActivityButton.isHidden = true
+        }
+    }
+    @IBAction func showAllOngoingTapped(_ sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Vibe", bundle: nil) // Update with your actual storyboard name
+        guard let modalVC = storyboard.instantiateViewController(withIdentifier: "OngoingActivitiesModalViewController") as? OngoingActivitiesModalViewController else { return }
+        
+        modalVC.modalPresentationStyle = .pageSheet
+        
+        if let sheet = modalVC.sheetPresentationController {
+            // We force the layout immediately to get the activity count
+            let activitiesCount = DataStore.shared.getOngoingActivities().prefix(3).count
+            let calculatedHeight = CGFloat(activitiesCount * 115) + CGFloat((activitiesCount - 1) * 12) + 100
+            
+            sheet.detents = [
+                .custom { _ in
+                    return min(calculatedHeight, 600) // Caps the height so it doesn't take the whole screen
+                }
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 28
+        }
+        
+        present(modalVC, animated: true)
     }
 }

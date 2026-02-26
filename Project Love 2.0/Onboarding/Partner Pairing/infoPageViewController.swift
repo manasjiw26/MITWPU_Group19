@@ -2,27 +2,25 @@ import UIKit
 
 class infoPageViewController: UIViewController {
 
-    // MARK: - Outlets
-    // Connect these to your Storyboard elements
     @IBOutlet weak var slideImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var continueButton: UIButton!
-    
-    // MARK: - Properties
+    @IBOutlet weak var pageControl: UIPageControl!
+
     private var currentPage = 0
-    private let pageControl = UIPageControl()
     
     struct OnboardingSlide {
         let title: String
         let description: String
         let imageName: String
     }
+    
     private let slides: [OnboardingSlide] = [
         OnboardingSlide(
             title: "Current Energy",
             description: "Share your mood, so your partner knows exactly how to be there for you today.",
-            imageName: "DeletetheGlitch"
+            imageName: "screen1"
         ),
         OnboardingSlide(
             title: "Our Little Rituals",
@@ -39,43 +37,18 @@ class infoPageViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // As per your requirement: Hide the back button
         self.navigationItem.hidesBackButton = true
         
         setupUI()
-        setupPageControl()
         setupGestures()
         updateUI(animated: false)
     }
     
     // MARK: - Setup
     private func setupUI() {
-        // Styling the button
-        continueButton.layer.cornerRadius = 25
-        continueButton.backgroundColor = .systemPink
-        continueButton.setTitleColor(.white, for: .normal)
-        
-        // Ensuring text wraps correctly
-        titleLabel.numberOfLines = 0
-        titleLabel.textAlignment = .center
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.textAlignment = .center
-    }
-    
-    private func setupPageControl() {
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(pageControl)
-        
         pageControl.numberOfPages = slides.count
-        pageControl.currentPage = 0
-        pageControl.pageIndicatorTintColor = .systemGray4
-        pageControl.currentPageIndicatorTintColor = .systemPink
-        
-        NSLayoutConstraint.activate([
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: continueButton.topAnchor, constant: -20)
-        ])
+        titleLabel.numberOfLines = 0
+        descriptionLabel.numberOfLines = 0
     }
     
     private func setupGestures() {
@@ -88,17 +61,32 @@ class infoPageViewController: UIViewController {
         view.addGestureRecognizer(swipeRight)
     }
     
-    // MARK: - Actions
     
-    @IBAction func continueButtonTapped(_ sender: UIButton) {
+    @IBAction func continueButtonTapped(_ sender: Any) {
         if currentPage < slides.count - 1 {
-            currentPage += 1
-            updateUI(animated: true, transitionSubtype: .fromRight)
-        } else {
-            // Logic for when onboarding is finished
-            print("Onboarding Finished!")
-            // e.g., navigate to your pairing/home screen
-        }
+               currentPage += 1
+               updateUI(animated: true, transitionSubtype: .fromRight)
+           } else {
+               // Save onboarding completion
+               UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+
+               // Load Main storyboard
+               let storyboard = UIStoryboard(name: "Main", bundle: nil)
+               
+               guard let mainVC = storyboard.instantiateInitialViewController() else {
+                   print("❌ Could not load Main storyboard")
+                   return
+               }
+
+             
+               if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                  let window = sceneDelegate.window {
+                   
+                   window.rootViewController = mainVC
+                   window.makeKeyAndVisible()
+               }
+           }
     }
     
     @objc private func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
@@ -114,6 +102,7 @@ class infoPageViewController: UIViewController {
     // MARK: - UI Update Logic
     private func updateUI(animated: Bool, transitionSubtype: CATransitionSubtype? = nil) {
         let slide = slides[currentPage]
+        
         pageControl.currentPage = currentPage
         
         if animated {
@@ -123,7 +112,6 @@ class infoPageViewController: UIViewController {
             transition.subtype = transitionSubtype ?? .fromRight
             transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             
-            // Animating the content for a "page turn" feel
             slideImageView.layer.add(transition, forKey: nil)
             titleLabel.layer.add(transition, forKey: nil)
             descriptionLabel.layer.add(transition, forKey: nil)
@@ -133,7 +121,7 @@ class infoPageViewController: UIViewController {
         descriptionLabel.text = slide.description
         slideImageView.image = UIImage(named: slide.imageName)
         
-        let buttonTitle = (currentPage == slides.count - 1) ? "Get Started" : "Next"
+        let buttonTitle = (currentPage == slides.count - 1) ? "Lets Begin" : "Next"
         continueButton.setTitle(buttonTitle, for: .normal)
     }
 }

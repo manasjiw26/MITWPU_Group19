@@ -56,35 +56,27 @@ class MoodCheckInCollectionViewCell: UICollectionViewCell {
     func configureCells(mood: MoodCheckIn) {
 
         label.text = mood.label
+        moodImage.image = UIImage(named: mood.imageName)
+        moodLabel.text = mood.moodLabel
+
         moodImage.gestureRecognizers?.forEach {
             moodImage.removeGestureRecognizer($0)
         }
 
         if mood.label == "Me" {
 
-            if let hisMood = DataStore.shared.getHisMood() {
-                moodImage.image = UIImage(named: hisMood.imageName)
-                moodLabel.text = hisMood.title
-            } else {
-                moodImage.image = UIImage(named: "neutral")
-                moodLabel.text = "Not set"
-            }
-
             moodImage.isUserInteractionEnabled = true
+
             let tap = UITapGestureRecognizer(
                 target: self,
                 action: #selector(moodTapped)
             )
             moodImage.addGestureRecognizer(tap)
+
             circleView.alpha = 1.0
 
         } else {
 
-            let herMood = DataStore.shared.getHerMood()
-            moodImage.image = UIImage(
-                named: herMood?.imageName ?? "calm"
-            )
-            moodLabel.text = herMood?.title ?? "Calm"
             moodImage.isUserInteractionEnabled = false
             circleView.alpha = 0.85
         }
