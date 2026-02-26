@@ -15,6 +15,8 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
     @IBOutlet weak var scheduleButton: UIButton!
 
     private var scheduledDate: Date?
+    var onSave: ((LoveNote) -> Void)?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,11 +87,24 @@ class LoveNoteViewController: UIViewController, UIPopoverPresentationControllerD
     }
 
     @IBAction func saveTapped(_ sender: UIButton) {
-        let haptic = UINotificationFeedbackGenerator()
-            haptic.prepare()
-            haptic.notificationOccurred(.success)
+
+        guard let text = textField.text, !text.isEmpty else { return }
+
+        let isScheduled = scheduledDate != nil
+
+        let note = LoveNote(
+            message: text,
+            status: isScheduled ? .scheduled : .sent,
+            createdAt: Date(),
+            scheduledDate: scheduledDate,
+            reaction: nil
+        )
+
+        onSave?(note)
+
         dismiss(animated: true)
     }
+
 }
 
 

@@ -183,7 +183,7 @@
                         <outlet property="vibeCollectionView" destination="oI6-dO-ppR" id="0dA-rw-oZq"/>
                         <segue destination="u20-Lp-xdK" kind="show" identifier="ActivityForHerShow" id="05H-8F-4DH"/>
                         <segue destination="jqO-aQ-Pbo" kind="presentation" identifier="LoveTipsModal" id="Gdm-8W-dHt"/>
-                        <segue destination="Mdy-XV-tmR" kind="presentation" identifier="openLoveNote" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="L8B-gV-jIB"/>
+                        <segue destination="Mdy-XV-tmR" kind="push" identifier="LoveNotePage" id="L8B-gV-jIB"/>
                         <segue destination="nF5-Uc-ocE" kind="show" identifier="goToMood" id="pMr-8h-faO"/>
                         <segue destination="83A-fx-1Oy" kind="show" identifier="BUBSheet" id="tPx-Ew-RGS"/>
                         <segue destination="5Jb-0T-u6G" kind="presentation" identifier="openQuestions" id="1RP-dR-0Gs"/>
@@ -237,13 +237,15 @@
             </objects>
             <point key="canvasLocation" x="2692" y="102"/>
         </scene>
-        <!--LoveNote-->
+        <!--LoveNotePage-->
         <scene sceneID="M1e-Sl-QlV">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="LoveNoteViewController" storyboardName="LoveNote" id="Mdy-XV-tmR" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="LoveNoteViewController" storyboardName="LoveNote" referencedIdentifier="LoveNotePage" id="Mdy-XV-tmR" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="fik-SW-eIC"/>
+                </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="peF-Mi-hxd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2723" y="294"/>
+            <point key="canvasLocation" x="2723" y="292"/>
         </scene>
         <!--Mood Check_In-->
         <scene sceneID="Osa-DT-wFc">

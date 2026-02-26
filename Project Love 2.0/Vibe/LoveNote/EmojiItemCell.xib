@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="emojiCell" id="gTV-IL-0wX" customClass="EmojiItemCell" customModule="Project_Love_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="289" height="188"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="289" height="188"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DxW-aX-9wF">
+                        <rect key="frame" x="0.0" y="0.0" width="289" height="188"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bEm-fT-0Jr">
+                                <rect key="frame" x="106.66666666666666" y="75" width="75.666666666666657" height="38.333333333333343"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                        <constraints>
+                            <constraint firstItem="bEm-fT-0Jr" firstAttribute="centerY" secondItem="DxW-aX-9wF" secondAttribute="centerY" id="5VN-lq-LwP"/>
+                            <constraint firstItem="bEm-fT-0Jr" firstAttribute="centerX" secondItem="DxW-aX-9wF" secondAttribute="centerX" id="hO8-Xi-0jG"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="DxW-aX-9wF" secondAttribute="trailing" id="0VQ-cf-3la"/>
+                <constraint firstItem="DxW-aX-9wF" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="UMQ-TI-tYd"/>
+                <constraint firstItem="DxW-aX-9wF" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="X7U-vE-H1R"/>
+                <constraint firstAttribute="bottom" secondItem="DxW-aX-9wF" secondAttribute="bottom" id="ja2-iA-ZUp"/>
+            </constraints>
+            <size key="customSize" width="289" height="188"/>
+            <connections>
+                <outlet property="containerView" destination="DxW-aX-9wF" id="Rqo-tY-rjy"/>
+                <outlet property="emojiLabel" destination="bEm-fT-0Jr" id="T01-sX-gqf"/>
+            </connections>
+            <point key="canvasLocation" x="185.49618320610685" y="178.16901408450704"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

@@ -5,7 +5,8 @@ class MemoryLaneViewController: UIViewController,
                                 UICollectionViewDelegate {
 
     @IBOutlet weak var memoryLaneItemCollectionView: UICollectionView!
-
+    var autoOpenIndex: Int?
+    private var hasAutoOpened = false
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -15,7 +15,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         
         memoryLaneCollectionView.dataSource = self
         memoryLaneCollectionView.collectionViewLayout = generateLayout()
-        
+        memoryLaneCollectionView.delegate = self
         MemoryJarView.allowsTransparency = true
         MemoryJarView.backgroundColor = .clear
         addButton.configuration = .glass()
@@ -255,6 +255,14 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         let memory = dataStore.savedMemories[indexPath.item]
         cell.ImageView.image = memory.uiImage ?? UIImage(named: memory.imageName)
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.item < dataStore.savedMemories.count else { return }
+
+        let storyboard = UIStoryboard(name: "MemoryJar", bundle: nil)
+        let laneVC = storyboard.instantiateViewController(withIdentifier: "MemoryLaneVC") as! MemoryLaneViewController
+        laneVC.autoOpenIndex = indexPath.item
+        navigationController?.pushViewController(laneVC, animated: false)
     }
 
     private func generateLayout() -> UICollectionViewLayout {

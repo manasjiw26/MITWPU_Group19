@@ -873,7 +873,7 @@ extension VibeViewController {
         if indexPath.section == 3 {
             switch indexPath.row {
             case 0:
-                performSegue(withIdentifier: "openLoveNote", sender: nil)
+                performSegue(withIdentifier: "LoveNotePage", sender: nil)
             case 1:
                 let vc: UIViewController
 

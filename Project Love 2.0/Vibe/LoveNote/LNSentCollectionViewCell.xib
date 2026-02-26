@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LNSentCollectionViewCell" id="gTV-IL-0wX" customClass="LNSentCollectionViewCell" customModule="Project_Love_2_0" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="360" height="120"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="360" height="120"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IvC-uk-uAe">
+                        <rect key="frame" x="16" y="81.666666666666671" width="328" height="21"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="😘" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVd-2m-gnM">
+                        <rect key="frame" x="143" y="15" width="64" height="70.666666666666686"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="49"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="IvC-uk-uAe" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="594-PC-xzc"/>
+                <constraint firstItem="IvC-uk-uAe" firstAttribute="top" secondItem="rVd-2m-gnM" secondAttribute="bottom" constant="8" id="Xaz-f5-Qcw"/>
+                <constraint firstItem="rVd-2m-gnM" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="Zyd-PT-6W1"/>
+                <constraint firstAttribute="trailing" secondItem="IvC-uk-uAe" secondAttribute="trailing" constant="16" id="fBt-7N-1Pb"/>
+                <constraint firstItem="rVd-2m-gnM" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="15" id="vOS-BB-V9T"/>
+            </constraints>
+            <size key="customSize" width="382" height="96"/>
+            <connections>
+                <outlet property="emojiLabel" destination="rVd-2m-gnM" id="k3v-XW-3wM"/>
+                <outlet property="titleLabel" destination="IvC-uk-uAe" id="g97-HW-BKe"/>
+            </connections>
+            <point key="canvasLocation" x="267.17557251908397" y="126.05633802816902"/>
+        </collectionViewCell>
+    </objects>
+</document>

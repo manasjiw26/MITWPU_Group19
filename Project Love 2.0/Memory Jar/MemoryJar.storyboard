@@ -778,8 +778,20 @@
                                     <constraint firstAttribute="width" secondItem="QcD-ni-3W3" secondAttribute="height" multiplier="1:1" id="xrm-go-bq4"/>
                                 </constraints>
                             </imageView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NTq-F4-ANM">
+                                <rect key="frame" x="0.0" y="736" width="393" height="48"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="EYh-aw-AZt"/>
+                                    <barButtonItem id="LSR-D3-9HB">
+                                        <imageReference key="image" image="info.circle" catalog="system" symbolScale="large"/>
+                                        <connections>
+                                            <action selector="infobutton:" destination="RSR-nT-0or" id="CNr-wf-8QM"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="EwR-Vy-6rQ">
-                                <rect key="frame" x="0.0" y="752" width="393" height="50"/>
+                                <rect key="frame" x="0.0" y="676" width="393" height="50"/>
                                 <color key="backgroundColor" name="AppBackground"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="eq7-nc-Wzh"/>
@@ -820,15 +832,20 @@
                         <viewLayoutGuide key="safeArea" id="ov1-vC-br8"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
+                            <constraint firstItem="NTq-F4-ANM" firstAttribute="top" secondItem="EwR-Vy-6rQ" secondAttribute="bottom" constant="10" id="1lb-3Q-nNZ"/>
                             <constraint firstItem="QcD-ni-3W3" firstAttribute="leading" secondItem="ov1-vC-br8" secondAttribute="leading" id="6FD-vW-u7q"/>
                             <constraint firstItem="chz-6h-XFm" firstAttribute="trailing" secondItem="ov1-vC-br8" secondAttribute="trailing" id="6hK-D0-c0p"/>
+                            <constraint firstItem="EwR-Vy-6rQ" firstAttribute="trailing" secondItem="ov1-vC-br8" secondAttribute="trailing" id="7TN-fn-Zuq"/>
                             <constraint firstItem="ov1-vC-br8" firstAttribute="trailing" secondItem="EwR-Vy-6rQ" secondAttribute="trailing" id="AUs-S4-i4W"/>
                             <constraint firstItem="QcD-ni-3W3" firstAttribute="centerY" secondItem="EtJ-D3-u8J" secondAttribute="centerY" id="Ejq-3e-yVE"/>
                             <constraint firstItem="ov1-vC-br8" firstAttribute="trailing" secondItem="QcD-ni-3W3" secondAttribute="trailing" id="KU3-lO-bxF"/>
                             <constraint firstItem="chz-6h-XFm" firstAttribute="top" secondItem="ov1-vC-br8" secondAttribute="top" constant="-90" id="V2K-iB-jOJ"/>
                             <constraint firstItem="EwR-Vy-6rQ" firstAttribute="leading" secondItem="ov1-vC-br8" secondAttribute="leading" id="YCC-DH-It6"/>
-                            <constraint firstAttribute="bottom" secondItem="EwR-Vy-6rQ" secondAttribute="bottom" constant="50" id="bgO-pC-LJN"/>
+                            <constraint firstItem="ov1-vC-br8" firstAttribute="bottom" secondItem="NTq-F4-ANM" secondAttribute="bottom" id="Yww-aH-riG"/>
+                            <constraint firstItem="NTq-F4-ANM" firstAttribute="leading" secondItem="ov1-vC-br8" secondAttribute="leading" id="bXq-va-hJG"/>
+                            <constraint firstItem="NTq-F4-ANM" firstAttribute="trailing" secondItem="ov1-vC-br8" secondAttribute="trailing" id="inY-sj-2nD"/>
                             <constraint firstItem="chz-6h-XFm" firstAttribute="leading" secondItem="ov1-vC-br8" secondAttribute="leading" id="oLZ-31-N4Z"/>
+                            <constraint firstItem="EwR-Vy-6rQ" firstAttribute="leading" secondItem="ov1-vC-br8" secondAttribute="leading" id="uEd-n6-Vhe"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -859,6 +876,7 @@
         <image name="chevron.backward" catalog="system" width="97" height="128"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
+        <image name="info.circle" catalog="system" width="128" height="123"/>
         <image name="jar" width="1624" height="1624"/>
         <image name="location.fill" catalog="system" width="128" height="119"/>
         <image name="mappin.and.ellipse" catalog="system" width="110" height="128"/>
@@ -869,16 +887,16 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="separatorColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.12" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

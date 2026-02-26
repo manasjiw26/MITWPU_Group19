@@ -31,6 +31,26 @@ class memoryPhotoViewController: UIViewController,
         // disabling left swipe to back
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
+    @IBAction func infobutton(_ sender: Any) {guard !dataStore.savedMemories.isEmpty else { return }
+        let memory = dataStore.savedMemories[currentIndex]
+
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+
+        let location = memory.location.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Not set" : memory.location
+        let desc = memory.description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "No description" : memory.description
+
+        let alert = UIAlertController(
+            title: memory.title.isEmpty ? "Memory Info" : memory.title,
+            message: "Date: \(formatter.string(from: memory.date))\nLocation: \(location)\n\nDescription:\n\(desc)",
+            preferredStyle: .actionSheet
+        )
+        alert.addAction(UIAlertAction(title: "Close", style: .cancel))
+        alert.popoverPresentationController?.barButtonItem = sender as! UIBarButtonItem
+        present(alert, animated: true)
+    }
+    
     
     // tap bar hidden when memory is opened
     override func viewWillDisappear(_ animated: Bool) {
@@ -66,28 +86,119 @@ class memoryPhotoViewController: UIViewController,
     
     func setupMenu() {
 
+        let editTitle = UIAction(
+            title: "Edit Title",
+            image: UIImage(systemName: "pencil")
+        ) { [weak self] _ in
+            self?.showEditTitleAlert()
+        }
+
+        let editDescription = UIAction(
+            title: "Edit Description",
+            image: UIImage(systemName: "text.alignleft")
+        ) { [weak self] _ in
+            self?.showEditDescriptionAlert()
+        }
+
+        let editDate = UIAction(
+            title: "Adjust Date",
+            image: UIImage(systemName: "calendar")
+        ) { [weak self] _ in
+            self?.showEditDateAlert()
+        }
+
         let adjustLocation = UIAction(
             title: "Adjust Location",
             image: UIImage(systemName: "mappin")
-        ) { _ in
-            self.performSegue(withIdentifier: "goToLocation", sender: nil)
+        ) { [weak self] _ in
+            self?.performSegue(withIdentifier: "goToLocation", sender: nil)
         }
 
         let delete = UIAction(
             title: "Delete",
             image: UIImage(systemName: "trash"),
             attributes: .destructive
-        ) { _ in
-            self.deleteMemory()
+        ) { [weak self] _ in
+            self?.deleteMemory()
         }
 
         menuButton.menu = UIMenu(children: [
-            UIAction(title: "Edit Title", image: UIImage(systemName: "pencil")) { _ in },
-            UIAction(title: "Edit Description", image: UIImage(systemName: "text.alignleft")) { _ in },
-            UIAction(title: "Adjust Date", image: UIImage(systemName: "calendar")) { _ in },
+            editTitle,
+            editDescription,
+            editDate,
             adjustLocation,
             delete
         ])
+    }
+    private func showEditTitleAlert() {
+        guard !dataStore.savedMemories.isEmpty else { return }
+
+        let alert = UIAlertController(title: "Edit Title", message: nil, preferredStyle: .alert)
+        alert.addTextField { [weak self] tf in
+            tf.placeholder = "Memory title"
+            tf.text = self.map { dataStore.savedMemories[$0.currentIndex].title }
+        }
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self, weak alert] _ in
+            guard let self,
+                  let text = alert?.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !text.isEmpty else { return }
+
+            dataStore.savedMemories[self.currentIndex].title = text
+            self.updateUI()
+        })
+
+        present(alert, animated: true)
+    }
+
+    private func showEditDescriptionAlert() {
+        guard !dataStore.savedMemories.isEmpty else { return }
+
+        let alert = UIAlertController(title: "Edit Description", message: nil, preferredStyle: .alert)
+        alert.addTextField { [weak self] tf in
+            tf.placeholder = "Memory description"
+            tf.text = self.map { dataStore.savedMemories[$0.currentIndex].description }
+        }
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self, weak alert] _ in
+            guard let self else { return }
+
+            let text = alert?.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            dataStore.savedMemories[self.currentIndex].description = text
+            self.updateUI()
+        })
+
+        present(alert, animated: true)
+    }
+
+    private func showEditDateAlert() {
+        guard !dataStore.savedMemories.isEmpty else { return }
+
+        let memory = dataStore.savedMemories[currentIndex]
+        let alert = UIAlertController(title: "Adjust Date", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+
+        let datePicker = UIDatePicker(frame: CGRect(x: 10, y: 45, width: 250, height: 160))
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.maximumDate = Date()
+        datePicker.date = memory.date
+        alert.view.addSubview(datePicker)
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { [weak self] _ in
+            guard let self else { return }
+            dataStore.savedMemories[self.currentIndex].date = datePicker.date
+            self.updateUI()
+        })
+
+        present(alert, animated: true)
+    }
+    private func showSimpleError(_ message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
     
     // Ti open location view controler

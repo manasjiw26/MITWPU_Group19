@@ -9,39 +9,70 @@ import UIKit
 
 class WriteActivityViewController: UIViewController {
 
-    
     @IBOutlet weak var saveTapped: UIButton!
     @IBOutlet weak var activityTitle: UITextField!
-    
-  
     @IBOutlet weak var descriptionActivity: UITextView!
-    
     @IBOutlet weak var dateText: UITextField!
-    
-    @IBOutlet weak var calenderImage: UIImageView!
+
+    private let datePicker = UIDatePicker()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
         saveTapped.configuration = .glass()
         saveTapped.setTitle("Save", for: .normal)
-        activityTitle.layer.cornerRadius = 10
-        activityTitle.layer.masksToBounds = true
+
+        styleField(activityTitle)
+        styleField(dateText)
+
         descriptionActivity.layer.cornerRadius = 10
         descriptionActivity.layer.masksToBounds = true
-        dateText.layer.cornerRadius = 10
-        dateText.layer.masksToBounds = true
+        
+        setupDatePicker()
+
+    }
+    private func setupDatePicker() {
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.minimumDate = Date()
+        
+        datePicker.addTarget(self,
+                             action: #selector(dateChanged),
+                             for: .valueChanged)
+        
+        dateText.inputView = datePicker
+    }
+    
+    @objc private func dateChanged() {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        dateText.text = formatter.string(from: datePicker.date)
+    }
+    private func styleField(_ textField: UITextField) {
+        textField.layer.cornerRadius = 10
+        textField.layer.masksToBounds = true
+        textField.setLeftPaddingPoints(8)
     }
 
     @IBAction func saveTapped(_ sender: Any) {
-        // Capture the text from your descriptionActivity text field
-            guard let title = activityTitle.text, !title.isEmpty,
-                  let desc = descriptionActivity.text, // This is your 'Description' input
-                  let date = dateText.text else { return }
-                    
-            // 1. Save to DataStore: Ensure 'desc' is passed to the description parameter
-            DataStore.shared.addCustomActivity(name: title, description: desc, date: date)
-                    
-            // 2. Dismiss back to Explore
-        self.navigationController?.popViewController(animated: true)
-        
+        guard let title = activityTitle.text, !title.isEmpty,
+              let desc = descriptionActivity.text, !desc.isEmpty,
+              let date = dateText.text, !date.isEmpty else { return }
+
+        DataStore.shared.addCustomActivity(name: title, description: desc, date: date)
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func calendarTapped(_ sender: Any) {
+        dateText.becomeFirstResponder()
     }
 }
+
+extension UITextField {
+    func setLeftPaddingPoints(_ amount: CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: frame.height))
+        leftView = paddingView
+        leftViewMode = .always
+    }
+}
+

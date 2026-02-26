@@ -30,7 +30,7 @@ class DataStore {
     var questions: [Question] = []
     
     var savedMemories: [Memory] = []
-    
+    var loveNotes: [LoveNote] = []
     var personalInfoSections: [PersonalInfoSection] = []
     var userProfile: UserProfile?
     var profileSections: [ProfileSection] = []
@@ -66,6 +66,76 @@ class DataStore {
         buildAllActivities()
         loadDailyCheckInQuestions()
         loadOnboardingQnA()
+        loadSampleLoveNotes()
+
+    }
+    func setReaction(_ reaction: String, for note: LoveNote) {
+        if let index = loveNotes.firstIndex(where: { $0.id == note.id }) {
+            loveNotes[index].reaction = reaction
+        }
+    }
+    func didUpdateDate(for note: LoveNote, to newDate: Date) {
+        if let index = loveNotes.firstIndex(where: { $0.id == note.id }) {
+            loveNotes[index].scheduledDate = newDate
+        }
+    }
+    func addLoveNote(_ note: LoveNote) {
+        loveNotes.insert(note, at: 0)
+    }
+    func loadSampleLoveNotes() {
+
+        let now = Date()
+        let calendar = Calendar.current
+
+        loveNotes = [
+
+            LoveNote(
+                message: "I hope today made you smile ❤️",
+                status: .sent,
+                createdAt: calendar.date(byAdding: .minute, value: -5, to: now)!,
+                scheduledDate: nil,
+                reaction: nil
+            ),
+            LoveNote(
+                message: "Just wanted to remind you how amazing you are.",
+                status: .sent,
+                createdAt: calendar.date(byAdding: .hour, value: -2, to: now)!,
+                scheduledDate: nil,
+                reaction: "😍"
+            ),
+
+            //RECEIVED
+            LoveNote(
+                message: "This made my day more than you know 💜",
+                status: .received,
+                createdAt: calendar.date(byAdding: .minute, value: -30, to: now)!,
+                scheduledDate: nil,
+                reaction: "🥹"
+            ),
+            LoveNote(
+                message: "Thinking about you while reading this.",
+                status: .received,
+                createdAt: calendar.date(byAdding: .hour, value: -6, to: now)!,
+                scheduledDate: nil,
+                reaction: nil
+            ),
+
+            //SCHEDULED
+            LoveNote(
+                message: "Good morning 🌸 I hope today treats you gently.",
+                status: .scheduled,
+                createdAt: now,
+                scheduledDate: calendar.date(byAdding: .hour, value: 8, to: now),
+                reaction: nil
+            ),
+            LoveNote(
+                message: "Sweet dreams 💫 honey! I miss you and I'll be thinking of you.",
+                status: .scheduled,
+                createdAt: now,
+                scheduledDate: calendar.date(byAdding: .day, value: 1, to: now),
+                reaction: nil
+            )
+        ]
     }
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
         return [

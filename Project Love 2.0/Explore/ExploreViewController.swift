@@ -48,52 +48,17 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         return false
     }
     private func showCustomActivityAlert() {
+        let storyboard = UIStoryboard(name: "WriteActivity", bundle: nil)
+        let vc = storyboard.instantiateViewController(
+            withIdentifier: "WriteActivity"
+        ) as! WriteActivityViewController
 
-        let alert = UIAlertController(
-            title: "Choose Your Activity type",
-            message: nil,
-            preferredStyle: .actionSheet
-        )
-
-        // Create Your Own Q&A
-        let createQA = UIAlertAction(title: "Create Your Own Q&A", style: .default) { _ in
-            let storyboard = UIStoryboard(name: "QnAViewController", bundle: nil)
-            let vc = storyboard.instantiateViewController(
-                withIdentifier: "QnAViewController"
-            ) as! QnAViewController
-
-            if let nav = self.navigationController {
-                nav.pushViewController(vc, animated: true)
-            } else {
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
-            }
+        if let nav = self.navigationController {
+            nav.pushViewController(vc, animated: true)
+        } else {
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
         }
-
-        // Write an Activity
-        let writeActivity = UIAlertAction(title: "Write an Activity", style: .default) { _ in
-            let storyboard = UIStoryboard(name: "WriteActivity", bundle: nil)
-            let vc = storyboard.instantiateViewController(
-                withIdentifier: "WriteActivity"
-            ) as! WriteActivityViewController
-
-            if let nav = self.navigationController {
-                nav.pushViewController(vc, animated: true)
-            } else {
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
-            }
-        }
-
-        // Cancel
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
-
-        alert.addAction(createQA)
-        alert.addAction(writeActivity)
-        alert.addAction(cancel)
-        
-
-        present(alert, animated: true)
     }
     private func openActivity(_ activity: Activity) {
         let modalVC = CustomModalViewController(

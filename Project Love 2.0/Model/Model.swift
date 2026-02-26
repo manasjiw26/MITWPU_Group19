@@ -178,6 +178,80 @@ enum NotificationType {
         }
     }
 }
+enum LoveNoteStatus {
+    case sent
+    case received
+    case scheduled
+
+    var displayText: String {
+        switch self {
+            case .sent:
+            return "SENT"
+            case .received:
+            return "RECEIVED"
+            case .scheduled:
+            return "SCHEDULED"
+        }
+    }
+}
+
+
+struct LoveNote {
+    let id = UUID()
+    let message: String
+    let status: LoveNoteStatus
+    let createdAt: Date
+    var scheduledDate: Date?
+    var reaction: String?
+    
+}
+
+
+extension LoveNote {
+
+    var statusText: String {
+            switch status {
+            case .sent: return "SENT"
+            case .received: return "RECEIVED"
+            case .scheduled: return "SCHEDULED"
+            }
+    }
+
+    //Time (Sent / Received)
+    var timeText: String {
+            switch status {
+            case .scheduled:
+                return scheduledRelativeText
+            default:
+                return createdAt.timeAgoText
+            }
+    }
+
+    // Scheduled (Top-right)
+    var scheduledRelativeText: String {
+            guard let date = scheduledDate else { return "" }
+            let calendar = Calendar.current
+
+            if calendar.isDateInToday(date) {
+                return "Today"
+            } else if calendar.isDateInTomorrow(date) {
+                return "Tomorrow"
+            } else if calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear) {
+    return "This Week"
+            } else {
+                return "Later"
+            }
+    }
+
+    // Scheduled (Bottom text)
+    var scheduledFullDateText: String {
+            guard let date = scheduledDate else { return "" }
+            let formatter = DateFormatter()
+    formatter.dateFormat = "dd MMM, h:mm a"
+    return formatter.string(from: date)
+}
+}
+
 struct DailyCheckInQuestion {
     let stepID: Int
     let title: String
