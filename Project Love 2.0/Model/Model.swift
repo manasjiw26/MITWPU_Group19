@@ -8,7 +8,9 @@
 import Foundation
 import UIKit
 
-struct Activity{
+struct Activity: Codable {
+    var id: Int?
+    var coupleActivityId: UUID?
     var name : String
     var description : String
     var image : String
@@ -18,7 +20,7 @@ struct Activity{
     var scheduledDate: Date?
 }
 
-enum ActivityStatus {
+enum ActivityStatus: Codable {
     case none
     case ongoing
     case completed
@@ -146,38 +148,6 @@ struct Memory {
     var uiImage: UIImage?
 }
 
-enum NotificationType {
-    case memory
-    case activity
-    case loveNote
-    case mood
-
-    var titleText: String {
-        switch self {
-        case .memory:
-            return "MEMORY ALERT"
-        case .activity:
-            return "ACTIVITY ALERT"
-        case .loveNote:
-            return "LOVE NOTE"
-        case .mood:
-            return "MOOD UPDATE"
-        }
-    }
-
-    var iconName: String {
-        switch self {
-        case .memory:
-            return "photo.on.rectangle"
-        case .activity:
-            return "checklist"
-        case .loveNote:
-            return "heart.text.square"
-        case .mood:
-            return "face.smiling"
-        }
-    }
-}
 enum LoveNoteStatus {
     case sent
     case received
@@ -195,63 +165,6 @@ enum LoveNoteStatus {
     }
 }
 
-
-struct LoveNote {
-    let id = UUID()
-    let message: String
-    let status: LoveNoteStatus
-    let createdAt: Date
-    var scheduledDate: Date?
-    var reaction: String?
-    
-}
-
-
-extension LoveNote {
-
-    var statusText: String {
-            switch status {
-            case .sent: return "SENT"
-            case .received: return "RECEIVED"
-            case .scheduled: return "SCHEDULED"
-            }
-    }
-
-    //Time (Sent / Received)
-    var timeText: String {
-            switch status {
-            case .scheduled:
-                return scheduledRelativeText
-            default:
-                return createdAt.timeAgoText
-            }
-    }
-
-    // Scheduled (Top-right)
-    var scheduledRelativeText: String {
-            guard let date = scheduledDate else { return "" }
-            let calendar = Calendar.current
-
-            if calendar.isDateInToday(date) {
-                return "Today"
-            } else if calendar.isDateInTomorrow(date) {
-                return "Tomorrow"
-            } else if calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear) {
-    return "This Week"
-            } else {
-                return "Later"
-            }
-    }
-
-    // Scheduled (Bottom text)
-    var scheduledFullDateText: String {
-            guard let date = scheduledDate else { return "" }
-            let formatter = DateFormatter()
-    formatter.dateFormat = "dd MMM, h:mm a"
-    return formatter.string(from: date)
-}
-}
-
 struct DailyCheckInQuestion {
     let stepID: Int
     let title: String
@@ -264,25 +177,6 @@ struct DailyOption {
     let imageName: String
 }
 
-struct AppNotification {
-    let id: UUID
-    let senderName: String
-    let message: String
-    let type: NotificationType
-    let createdAt: Date
-    var isRead: Bool
-    var titleText: String { type.titleText }
-    var iconName: String { type.iconName }
-    var timeAgoText: String { createdAt.timeAgoText }
-}
-
-extension Date {
-    var timeAgoText: String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .short
-        return formatter.localizedString(for: self, relativeTo: Date())
-    }
-}
 
 struct PhysicsCategory {
     static let jar: UInt32 = 0b1
@@ -402,4 +296,231 @@ struct MemoryModel: Decodable {
         case memory_date
     }
     
+}
+struct DBLoveNote: Codable {
+    let love_note_id: UUID
+    let relationship_id: UUID
+    let sender_user_id: UUID
+    let receiver_user_id: UUID
+    let message: String
+    let created_at: Date
+    let reaction: String?
+    let reacted_at: Date?
+    let scheduled_for: Date?
+    let is_sent: Bool
+}
+
+struct LoveNoteInsert: Encodable {
+    let relationship_id: UUID
+    let sender_user_id: UUID
+    let receiver_user_id: UUID
+    let message: String
+    let scheduled_for: Date?
+    let is_sent: Bool
+}
+
+struct LoveNote {
+    let id: UUID
+    let relationshipId: UUID
+    let senderUserId: UUID
+    let receiverUserId: UUID
+    let message: String
+    let createdAt: Date
+    var scheduledDate: Date?
+    var reaction: String?
+    var reactedAt: Date?
+    var isSent: Bool
+    let status: LoveNoteStatus
+}
+extension LoveNote {
+    static func fromDB(_ row: DBLoveNote, currentUserId: UUID) -> LoveNote {
+        let status: LoveNoteStatus = row.is_sent
+            ? (row.sender_user_id == currentUserId ? .sent : .received)
+            : .scheduled
+
+        return LoveNote(
+            id: row.love_note_id,
+            relationshipId: row.relationship_id,
+            senderUserId: row.sender_user_id,
+            receiverUserId: row.receiver_user_id,
+            message: row.message,
+            createdAt: row.created_at,
+            scheduledDate: row.scheduled_for,
+            reaction: row.reaction,
+            reactedAt: row.reacted_at,
+            isSent: row.is_sent,
+            status: status
+        )
+    }
+}
+extension LoveNote {
+    var statusText: String {
+        status.displayText
+    }
+
+    var timeText: String {
+        switch status {
+        case .scheduled:
+            return scheduledRelativeText
+        default:
+            return createdAt.timeAgoText
+        }
+    }
+
+    var scheduledRelativeText: String {
+        guard let date = scheduledDate else { return "" }
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) { return "Today" }
+        if calendar.isDateInTomorrow(date) { return "Tomorrow" }
+        if calendar.isDate(date, equalTo: Date(), toGranularity: .weekOfYear) { return "This Week" }
+        return "Later"
+    }
+
+    var scheduledFullDateText: String {
+        guard let date = scheduledDate else { return "" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM, h:mm a"
+        return formatter.string(from: date)
+    }
+}
+struct LoveNoteReactionUpdate: Encodable {
+    let reaction: String
+    let reacted_at: String
+}
+
+struct LoveNoteScheduleUpdate: Encodable {
+    let scheduled_for: String
+    let is_sent: Bool
+}
+struct NotificationRow: Decodable {
+    let notification_id: UUID
+    let sent_by_user_id: UUID
+    let received_user_id: UUID
+    let type: String
+    let message: String
+    let is_read: Bool
+    let created_at: Date
+    let sender_name: String?
+}
+enum NotificationType: String {
+    case activityStarted = "activity_started"
+    case loveNoteSent = "love_note_sent"
+    case memoryAdded = "memory_added"
+    case moodUpdated = "mood_updated"
+
+    var titleText: String {
+        switch self {
+        case .activityStarted: return "ACTIVITY ALERT"
+        case .loveNoteSent: return "LOVE NOTE"
+        case .memoryAdded: return "MEMORY ALERT"
+        case .moodUpdated: return "MOOD UPDATE"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .activityStarted: return "checklist"
+        case .loveNoteSent: return "heart.text.square"
+        case .memoryAdded: return "photo.on.rectangle"
+        case .moodUpdated: return "face.smiling"
+        }
+    }
+}
+struct AppNotification {
+    let id: UUID
+    let senderName: String
+    let message: String
+    let type: NotificationType
+    let createdAt: Date
+    var isRead: Bool
+
+    var titleText: String { type.titleText }
+    var iconName: String { type.iconName }
+    var timeAgoText: String { createdAt.timeAgoText }
+}
+
+extension Date {
+    var timeAgoText: String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .short
+        return formatter.localizedString(for: self, relativeTo: Date())
+    }
+}
+
+struct DBCoupleActivity: Codable {
+    let coupleActivityId: UUID
+    let relationshipId: UUID
+    let activityId: Int
+    let activityName: String
+    let status: String
+    let startedBy: UUID
+    let startedAt: Date
+    let scheduledDate: Date?
+    let feedbackADone: Bool
+    let feedbackBDone: Bool
+    let completedAt: Date?
+
+    enum CodingKeys: String, CodingKey {
+        case coupleActivityId = "couple_activity_id"
+        case relationshipId = "relationship_id"
+        case activityId = "activity_id"
+        case activityName = "activity_name"
+        case status
+        case startedBy = "started_by"
+        case startedAt = "started_at"
+        case scheduledDate = "scheduled_date"
+        case feedbackADone = "feedback_a_done"
+        case feedbackBDone = "feedback_b_done"
+        case completedAt = "completed_at"
+    }
+}
+
+struct DBActivityFeedback: Codable {
+    let feedbackId: UUID
+    let coupleActivityId: UUID
+    let userId: UUID
+    let mood: String
+    let message: String?
+    let createdAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case feedbackId = "feedback_id"
+        case coupleActivityId = "couple_activity_id"
+        case userId = "user_id"
+        case mood
+        case message
+        case createdAt = "created_at"
+    }
+}
+
+struct CoupleActivityInsert: Encodable {
+    let relationshipId: UUID
+    let activityId: Int
+    let activityName: String
+    let status: String
+    let startedBy: UUID
+    let scheduledDate: Date?
+
+    enum CodingKeys: String, CodingKey {
+        case relationshipId = "relationship_id"
+        case activityId = "activity_id"
+        case activityName = "activity_name"
+        case status
+        case startedBy = "started_by"
+        case scheduledDate = "scheduled_date"
+    }
+}
+
+struct ActivityFeedbackInsert: Encodable {
+    let coupleActivityId: UUID
+    let userId: UUID
+    let mood: String
+    let message: String?
+
+    enum CodingKeys: String, CodingKey {
+        case coupleActivityId = "couple_activity_id"
+        case userId = "user_id"
+        case mood
+        case message
+    }
 }

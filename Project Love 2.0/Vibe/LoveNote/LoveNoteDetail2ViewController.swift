@@ -9,6 +9,9 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
     private var originalReaction: String?
     private var actionHeightConstraint: NSLayoutConstraint?
 
+    var onReact: ((UUID, String) -> Void)?
+    var onReschedule: ((UUID, Date) -> Void)?
+    
     @IBOutlet weak var headerTitle: UILabel!
     @IBOutlet weak var headerDate: UILabel!
     @IBOutlet weak var checkmarkButton: UIButton!
@@ -138,13 +141,13 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
         guard let updatedNote = self.note else { return }
         
         if let reaction = updatedNote.reaction, reaction != originalReaction {
-            DataStore.shared.setReaction(reaction, for: updatedNote)
+            onReact?(updatedNote.id, reaction)
         }
         
         if updatedNote.scheduledDate != originalDate {
             if let newDate = updatedNote.scheduledDate {
                 // Fixed: Matches the method name in your DataStore.swift file
-                DataStore.shared.didUpdateDate(for: updatedNote, to: newDate)
+                onReschedule?(updatedNote.id, newDate)
             }
         }
         
@@ -193,7 +196,7 @@ extension LoveNoteDetail2ViewController: LNScheduleCellDelegate {
 extension LoveNoteDetail2ViewController: LNReceiveCellDelegate {
     func didSelectEmoji(_ emoji: String, for note: LoveNote) {
         self.note?.reaction = emoji
-        DataStore.shared.setReaction(emoji, for: self.note!)
+        onReact?(note.id, emoji)
         
         UIView.animate(withDuration: 0.3) {
             self.updateActionHeight()

@@ -1,5 +1,6 @@
 
 import UIKit
+import Supabase
 
 final class NotificationViewController: UIViewController {
 
@@ -29,28 +30,28 @@ final class NotificationViewController: UIViewController {
          }
      }
 
-     private func loadNotifications() {
-         notifications = DataStore.shared.getNotifications()
-         collectionView.reloadData()
-     }
-    
-    //tap handling
-    
+    private func loadNotifications() {
+        Task { @MainActor in
+            do {
+                let session = try await SupabaseManager.shared.client.auth.session
+                let userId = session.user.id
+
+                notifications = try await NotificationService.shared.fetchNotifications(for: userId)
+                collectionView.reloadData()
+            } catch {
+                print("Failed to load notifications: \(error)")
+            }
+        }
+    }
+
      private func handleNotificationTap(_ notification: AppNotification) {
          switch notification.type {
-
-         case .memory:
-             openMemory(notification)
-
-         case .activity:
-             openActivity(notification)
-
-         case .loveNote:
-             openLoveNote(notification)
-
-         case .mood:
-             openMoodUpdate(notification)
+         case .memoryAdded: openMemory(notification)
+         case .activityStarted: openActivity(notification)
+         case .loveNoteSent: openLoveNote(notification)
+         case .moodUpdated: openMoodUpdate(notification)
          }
+
      }
 
     private func openMemory(_ notification: AppNotification) {
@@ -112,18 +113,22 @@ final class NotificationViewController: UIViewController {
          cell.configure(with: notifications[indexPath.item])
          return cell
      }
-
      func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-         let notification = notifications[indexPath.item]
-
-         // Visual feedback
+         var notification = notifications[indexPath.item]
          collectionView.deselectItem(at: indexPath, animated: true)
 
-         // marked as read
-         DataStore.shared.markNotificationAsRead(id: notification.id)
+         Task { @MainActor in
+             do {
+                 try await NotificationService.shared.markAsRead(notificationId: notification.id)
+                 notification.isRead = true
+                 notifications[indexPath.item] = notification
+                 collectionView.reloadItems(at: [indexPath])
+             } catch {
+                 print("Failed to mark notification as read: \(error)")
+             }
+         }
 
-         // Handle tap
          handleNotificationTap(notification)
      }
+
  }

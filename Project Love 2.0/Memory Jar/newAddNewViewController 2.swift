@@ -163,30 +163,41 @@ class NewAddNewViewController: UIViewController {
                     ]
                 ])
                 .execute()
-
+            do {
+                try await NotificationService.shared.sendPartnerNotification(
+                    relationshipId: relationshipId,
+                    type: "memory_added",
+                    message: "Your partner added a new memory for you 💌",
+                    entityType: "memory",
+                    entityId: nil
+                )
+            } catch {
+                print("Memory notification insert failed: \(error)")
+            }
             let alert = UIAlertController(
                 title: "",
                 message: "Memory added successfully!",
                 preferredStyle: .alert
             )
 
-            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-                
-                //Notify jar screen
-                NotificationCenter.default.post(
-                    name: NSNotification.Name("MemoryAdded"),
-                    object: nil
-                )
-                
-                self.dismiss(animated: true)
-            })
-
             self.present(alert, animated: true)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                alert.dismiss(animated: true) {
+                    // Notify jar screen
+                    NotificationCenter.default.post(
+                        name: NSNotification.Name("MemoryAdded"),
+                        object: nil
+                    )
+                    self.dismiss(animated: true)
+                }
+            }
 
         } catch {
             showError(message: error.localizedDescription)
             print("Memory save error:", error)
         }
+        
     }
     
     private func updateDateTextField(date: Date) {

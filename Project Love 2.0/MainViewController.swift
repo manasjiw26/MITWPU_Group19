@@ -23,9 +23,7 @@ class MainViewController: UITabBarController {
             
             viewControllers[2].tabBarItem.title = "Memory Jar"
             viewControllers[2].tabBarItem.image = UIImage(systemName: "archivebox")
-            
-            viewControllers[3].tabBarItem.title = "Chat"
-            viewControllers[3].tabBarItem.image = UIImage(systemName: "bubble.left")
+         
         }
     }
     
