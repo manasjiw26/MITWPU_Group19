@@ -185,7 +185,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6H55S6G6GC;
+				DEVELOPMENT_TEAM = 9YW76R6Q5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
@@ -201,7 +201,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = loveproject3.apple.c;
+				PRODUCT_BUNDLE_IDENTIFIER = loveproject.apple.c;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -224,7 +224,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6H55S6G6GC;
+				DEVELOPMENT_TEAM = 9YW76R6Q5C;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
@@ -240,7 +240,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = loveproject3.apple.c;
+				PRODUCT_BUNDLE_IDENTIFIER = loveproject.apple.c;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
