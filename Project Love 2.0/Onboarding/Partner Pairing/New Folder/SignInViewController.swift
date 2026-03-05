@@ -75,6 +75,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
 
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
+                UserDefaults.standard.set(true, forKey: "hasCompletedAuth")
                 let vc = UIStoryboard(name: "Onboarding", bundle: nil)
                     .instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
 

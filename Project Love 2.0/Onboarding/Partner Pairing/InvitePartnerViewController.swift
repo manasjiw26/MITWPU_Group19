@@ -148,6 +148,7 @@ class InvitePartnerViewController: UIViewController {
         }
     }
     func showPartnerJoinedAlert() {
+        UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
         let alert = UIAlertController(
             title: "Paired ❤️",
             message: "Your partner has joined!",
@@ -175,6 +176,7 @@ class InvitePartnerViewController: UIViewController {
     
     @IBAction func skipTapped(_ sender: Any) {
         UserDefaults.standard.set(true, forKey: "didSkipPairing")
+        UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
             
             // Stop realtime listener if active
             Task {

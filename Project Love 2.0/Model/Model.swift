@@ -8,11 +8,28 @@
 import Foundation
 import UIKit
 
+// JSON wrapper for decoding activities.json
+struct ActivitiesJSON: Codable {
+    let activities: [JSONActivity]
+}
+
+struct JSONActivity: Codable {
+    let id: Int
+    let name: String
+    let description: String
+    let detailedDescription: String?
+    let image: String
+    let category: String
+    let time: String
+    let steps: [String]
+}
+
 struct Activity: Codable {
     var id: Int?
     var coupleActivityId: UUID?
     var name : String
     var description : String
+    var detailedDescription: String?
     var image : String
     var time : String
     var status: ActivityStatus

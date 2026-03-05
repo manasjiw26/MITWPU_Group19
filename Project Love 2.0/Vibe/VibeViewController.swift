@@ -40,17 +40,17 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var moodChannel: RealtimeChannelV2?
     
     private var partnerDisplayText: String {
-        let userGender = UserDefaults.standard.string(forKey: "userGender") ?? ""
+        let userGender = UserDefaults.standard.string(forKey: "userGender")?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased() ?? ""
 
         switch userGender {
-        case "Female":
-            return "Him"
-        case "Male":
-            return "Her"
-        default:
-            return "Partner"
+        case "female": return "Him"
+        case "male": return "Her"
+        default: return "Partner"
         }
     }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +63,13 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.delegate = self
         setupOngoing()
         configureOngoingActivity()
+
+        // Load user/relationship context from Supabase, then sync activities
+        Task {
+            await DataStore.shared.loadUserContext()
+            DataStore.shared.syncActivitiesFromSupabase()
+            await fetchPartnerMood()
+        }
     }
     
     func setupOngoing(){
@@ -251,9 +258,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 let spacing: CGFloat = 8
                 let estimatedHeight: CGFloat = 120
 
+                let activityCount = self.suggestedActivities.count
+                let totalItems = activityCount < 6 ? activityCount + 1 : activityCount
+                let totalWidth = (CGFloat(max(totalItems - 1, 0)) * spacing)
+                + (CGFloat(activityCount) * normalWidth)
+                + (activityCount < 6 ? smallWidth : 0)
+
                 let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .estimated(3000),
-                    heightDimension: .estimated(estimatedHeight)
+                    widthDimension: .absolute(totalWidth),
+                    heightDimension: .absolute(estimatedHeight)
                 )
 
                 let group = NSCollectionLayoutGroup.custom(layoutSize: groupSize) { environment in
@@ -280,7 +293,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
 
-                sectionLayout.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+                sectionLayout.orthogonalScrollingBehavior = .continuous
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 16, bottom: 12, trailing: 16)
                 sectionLayout.interGroupSpacing = 0
                 let titleSize = NSCollectionLayoutSize(
@@ -832,7 +845,7 @@ extension VibeViewController {
                             guard !newActivities.isEmpty else { return }
 
                             self.suggestedActivities.append(contentsOf: newActivities)
-
+                            DataStore.shared.suggestedActivities = self.suggestedActivities
                             let indexPathsToAdd = (0..<newActivities.count).map {
                             IndexPath(row: startIndex + $0, section: 2)
                             }
@@ -954,16 +967,17 @@ extension VibeViewController {
             MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
             MakeSmile(types: "Activities for \(partnerDisplayText)", imageName: "checklist")
         ]
-
+        vibeCollectionView.reloadSections(IndexSet(integer: 3))
         Task {
             await fetchPartnerMood()
         }
-        if hasCompletedDailyCheckIn {
+        if hasCompletedDailyCheckIn && self.suggestedActivities.isEmpty{
             self.suggestedActivities = DataStore.shared.getSuggestedActivities()
         }
 
         configureOngoingActivity()
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 

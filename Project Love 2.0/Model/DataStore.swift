@@ -15,6 +15,7 @@ class DataStore {
     var rewards: [Reward] = []
     var customActivities: [Activity] = []
     var activityCategory: [ActivityCategory] = []
+    var coupleActivities: [DBCoupleActivity] = []
     
     var suggestedActivities: [Activity] = []
     var buildYourBond : [BuildYourBond] = []
@@ -44,6 +45,8 @@ class DataStore {
     var partnerUserId: UUID?
 
     private(set) var allActivities: [Activity] = []
+    private var bondJSONActivities: [JSONActivity] = []
+    private var exploreJSONActivities: [JSONActivity] = []
     private var HisMood: Mood?
     private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "Calm" )
     private(set) var notifications: [AppNotification] = []
@@ -360,89 +363,39 @@ class DataStore {
     }
     
     func loadSampleData() {
-        let sampleActivities: [Activity] = [
+        // Load from activities.json ONLY
+        guard let url = Bundle.main.url(forResource: "activities", withExtension: "json") else {
+            print("❌ Could not find activities.json")
+            return
+        }
 
-            Activity(
-                name: "Chill & Glow Sesh",
-                description: "Facemasks, candles, chill beats — just cozy vibes and glow time",
-                image: "Chill and Glow sesh",
-                time: "5 mins",
-                status: .none,
-                category: "Fun & Playful",
-                scheduledDate: nil
-            ),
+        let parsed: ActivitiesJSON
+        do {
+            let data = try Data(contentsOf: url)
+            parsed = try JSONDecoder().decode(ActivitiesJSON.self, from: data)
+        } catch {
+            print("❌ Could not load activities.json")
+            return
+        }
 
-            Activity(
-                name: "Petal Hunt",
-                description: "Pick pretty blooms and build your own bouquet together.",
-                image: "Activityimage",
-                time: "5 mins",
-                status: .none,
-                category: "Fun & Playful",
-                scheduledDate: nil
-            ),
+        // Store raw JSON activities (with steps) for loadSteps() lookups
+        self.exploreJSONActivities = parsed.activities
 
+        self.activities = parsed.activities.map { json in
             Activity(
-                name: "Wholesome Craft Challenge",
-                description: "Make a doodle / note / digital collage for her",
-                image: "Activityimage",
-                time: "5 mins",
+                id: json.id,
+                coupleActivityId: nil,
+                name: json.name,
+                description: json.description,
+                detailedDescription: json.detailedDescription,
+                image: json.image,
+                time: json.time,
                 status: .none,
-                category: "Fun & Playful",
-                scheduledDate: nil
-            ),
-
-            Activity(
-                name: "Memory Lane Marathon",
-                description: "Make a mini reel using your photos and favorite audio",
-                image: "Activityimage",
-                time: "5 mins",
-                status: .none,
-                category: "Daily Dose of Us",
-                scheduledDate: nil
-            ),
-
-            Activity(
-                name: "Stuff-A-Memory Day",
-                description: "Buy a tiny plush, both name it and take care of it together",
-                image: "Activityimage",
-                time: "5 mins",
-                status: .none,
-                category: "Acts of Love",
-                scheduledDate: nil
-            ),
-
-            Activity(
-                name: "Wholesome Craft Challenge",
-                description: "Make a doodle / note / digital collage for her",
-                image: "Activityimage",
-                time: "5 mins",
-                status: .none,
-                category: "Meaning & Growth",
-                scheduledDate: nil
-            ),
-
-            Activity(
-                name: "Memory Lane Marathon",
-                description: "Make a mini reel using your photos and favorite audio",
-                image: "Activityimage",
-                time: "5 mins",
-                status: .none,
-                category: "Daily Dose of Us",
-                scheduledDate: nil
-            ),
-
-            Activity(
-                name: "Stuff-A-Memory Day",
-                description: "Buy a tiny plush, both name it and take care of it together",
-                image: "Activityimage",
-                time: "5 mins",
-                status: .none,
-                category: "Acts of Love",
+                category: json.category,
                 scheduledDate: nil
             )
-        ]
-        self.activities = sampleActivities
+        }
+        print("✅ Loaded \(self.activities.count) activities from activities.json")
     }
     func loadDailyCheckInQuestions() {
         let sampleQuestions: [Question] = [
@@ -453,39 +406,8 @@ class DataStore {
         ]
         self.dailyCheckInQuestions = sampleQuestions
     }
-    
-    func loadSampleMemory()->[Memory] {
-        let memories: [Memory] = [
-            Memory(
-                id: UUID(),
-                date: Date().addingTimeInterval(-86400 * 5),
-                imageName: "Couple1",
-                location: "Bhopal",
-                title: "Our First Hello 💌",
-                description: "The moment everything quietly began.",
-                uiImage: nil
-            ),
-            Memory(
-                id: UUID(),
-                date: Date().addingTimeInterval(-86400 * 2),
-                imageName: "Couple2",
-                location: "Pune",
-                title: "Worth Remembering ✨",
-                description: "One smile that made the whole day better.",
-                uiImage: nil
-            ),
-            Memory(
-                id: UUID(),
-                date: Date(),
-                imageName: "Couple3",
-                location: "Pune",
-                title: "A Random Smile 😊",
-                description: "Some moments deserve to stay forever.",
-                uiImage: nil
-            )
-        ]
-        return memories
-    }
+
+
  
     func getRefreshSuggestedActivities() -> [Activity] {
         let pool = [
@@ -498,9 +420,23 @@ class DataStore {
         return Array(pool.shuffled().prefix(3))
     }
     func getSmallModalData(for activity: Activity) -> SmallModalData {
+        // If activity has a detailedDescription (from JSON), use it for the modal
+        if let detailed = activity.detailedDescription, !detailed.isEmpty {
+            return SmallModalData(
+                title: activity.name,
+                mainImageName: activity.image,
+                descriptionLabel: detailed,
+                clockImageName: "clock",
+                timerLabel: activity.time
+            )
+        }
+
+        // Otherwise check hardcoded smallmodal data
         if let existing = smallmodal.first(where: { $0.title == activity.name }) {
             return existing
         }
+
+        // Fallback: use activity.description
         return SmallModalData(
             title: activity.name,
             mainImageName: activity.image,
@@ -519,8 +455,6 @@ class DataStore {
             StepsToFollow(number: 3, title: "Reflect", descriptionLabel: "Share one line: \"This felt ___ for me.\"")
         ]
     }
-
-    // 1. The full pool of everything available
     var allSuggestedPool: [Activity] = [
         Activity(name: "Cozy Cocoon", description: "Escape the noise and sink into your cozy little cocoon.", image: "Cozy Cocoon", time: "15 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
         Activity(name: "The Gratitude Glimmer", description: "Trade small thank yous for today's quiet joys.", image: "The Gratitude Glimmer", time: "10 min", status: .none, category: "suggestedActivity", scheduledDate: nil),
@@ -532,7 +466,6 @@ class DataStore {
     ]
     
     func loadSuggestedActivity() {
-        // This starts the app with just the first 3 from the pool
         self.suggestedActivities = Array(allSuggestedPool.prefix(3))
     }
 
@@ -698,13 +631,30 @@ class DataStore {
     }
     
     //build your bond
-    func loadBuildYourbond() -> [BuildYourBond]{
-        let sampleBuildYourBond: [BuildYourBond] = [
-            BuildYourBond(name: "Navigate Conflict Together", imageName: "Conflict"),
-            BuildYourBond(name: "Rekindle Honeymoon Phase", imageName: "Rekindle"),
-            BuildYourBond(name: "Establishing Good Communication", imageName: "Communication")]
-        
-            return sampleBuildYourBond
+    func loadBuildYourbond() -> [BuildYourBond] {
+        // Derive BUB category cards from bondActivities.json
+        let categoryImageMap: [String: String] = [
+            "Navigate Conflict Together": "Conflict",
+            "Rekindle Honeymoon Phase": "Rekindle",
+            "Establishing Good Communication": "Communication"
+        ]
+
+        // Extract unique categories preserving order of first appearance
+        var seen = Set<String>()
+        var categories: [String] = []
+        for activity in bondJSONActivities {
+            if !seen.contains(activity.category) {
+                seen.insert(activity.category)
+                categories.append(activity.category)
+            }
+        }
+
+        return categories.map { category in
+            BuildYourBond(
+                name: category,
+                imageName: categoryImageMap[category] ?? "Conflict"
+            )
+        }
     }
     
     func sampleMoods() -> [MoodCheckIn] {
@@ -717,191 +667,38 @@ class DataStore {
 
     //steps to follow
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {
+        // Check bondActivities JSON first for BUB activities
+        if let jsonActivity = bondJSONActivities.first(where: { $0.name == activityTitle }),
+           !jsonActivity.steps.isEmpty {
+            return parseJSONSteps(jsonActivity.steps)
+        }
 
-        switch activityTitle {
+        // Check explore activities JSON (activities.json) for explore/her/him activities
+        if let jsonActivity = exploreJSONActivities.first(where: { $0.name == activityTitle }),
+           !jsonActivity.steps.isEmpty {
+            return parseJSONSteps(jsonActivity.steps)
+        }
 
-        case "Chill & Glow Sesh":
-            return [
-                StepsToFollow(number: 1, title: "Set the mood",
-                              descriptionLabel: "Dim the lights, light candles, and let the soft glow set your cozy vibe."),
-                StepsToFollow(number: 2, title: "Glow Prep",
-                              descriptionLabel: "Lay out your facemasks and favorite skincare treats for two."),
-                StepsToFollow(number: 3, title: "Chill & Connect",
-                              descriptionLabel: "Put on beats, sip something soothing, and enjoy the calm together."),
-                StepsToFollow(number: 4, title: "Mask & Mingle",
-                              descriptionLabel: "Apply your masks, relax side by side, and let the glow sink in.")
-            ]
+        return []
+    }
 
-        case "Petal Hunt":
-            return [
-                StepsToFollow(number: 1, title: "Choose a Garden",
-                              descriptionLabel: "Find a peaceful garden or park filled with flowers."),
-                StepsToFollow(number: 2, title: "Petal Mission",
-                              descriptionLabel: "Search for your favorite flowers together."),
-                StepsToFollow(number: 3, title: "Capture Moments",
-                              descriptionLabel: "Take photos of petals and smiles."),
-                StepsToFollow(number: 4, title: "Reflect",
-                              descriptionLabel: "Share how the experience made you feel.")
-            ]
-            
-        case "Cozy Cocoon":
-            return [
-                StepsToFollow(number: 1, title: "Build Your Hideout",
-                              descriptionLabel: "Use chairs,blankets and pillows to create a cozy fort."),
-                StepsToFollow(number: 2, title: "Queue the Audio",
-                              descriptionLabel: "Pick a relaxing movie or podcast and have it ready to go."),
-                StepsToFollow(number: 3, title: "Gather Provisions",
-                              descriptionLabel: "Bring in simple snacks and drinks so you don't have to leave."),
-                StepsToFollow(number: 4, title: "Cocoon & Connect",
-                              descriptionLabel: "Get comfortable inside, press play, and enjoy.")
-            ]
-        case "The Soft Start-Up":
-            return [
-                StepsToFollow(number: 1, title: "Sit Together",
-                         descriptionLabel: "Sit next to each other or face the same direction."),
-                     StepsToFollow(number: 2, title: "Pick One Word",
-                         descriptionLabel: "Choose one word that captures what hurt."),
-                     StepsToFollow(number: 3, title: "Reveal Together",
-                         descriptionLabel: "Count to three and reveal the words at the same time."),
-                     StepsToFollow(number: 4, title: "Pause",
-                         descriptionLabel: "Pause and take in both words without reacting.")
-            ]
-            
-        case "The Empathy Bridge":
-            return [
-                StepsToFollow(number: 1, title: "Look at the Word",
-                    descriptionLabel: "Read your partner’s chosen word."),
-                StepsToFollow(number: 2, title: "Make a Guess",
-                    descriptionLabel: "Share your guess in one sentence."),
-                StepsToFollow(number: 3, title: "Confirm",
-                    descriptionLabel: "Partner responds with Yes or Not Quite."),
-                StepsToFollow(number: 4, title: "Clarify",
-                    descriptionLabel: "Clarify in one short sentence if needed.")
-            ]
-            
-            
-        case "Collaborative Sprint":
-            return [
-                StepsToFollow(number: 1, title: "Recall the Moment",
-                        descriptionLabel: "Think about when things escalated."),
-                StepsToFollow(number: 2, title: "Name the Behavior",
-                        descriptionLabel: "Each name one behavior that made it worse."),
-                StepsToFollow(number: 3, title: "Choose One Change",
-                        descriptionLabel: "Agree on one behavior to stop next time."),
-                StepsToFollow(number: 4, title: "Say It Together",
-                        descriptionLabel: "Say the change out loud together.")
-            ]
-            
-        case "The Pattern Interrupt":
-            return [
-                StepsToFollow(number: 1, title: "Pick an Activity",
-                        descriptionLabel: "Choose a neutral activity you can do immediately."),
-                StepsToFollow(number: 2, title: "Do It Together",
-                        descriptionLabel: "Do the activity without discussing the conflict."),
-                StepsToFollow(number: 3, title: "Closure Line",
-                        descriptionLabel: "One person says: ‘We’re good.’"),
-                StepsToFollow(number: 4, title: "Move On",
-                        descriptionLabel: "Continue the day without reopening the issue.")
-            ]
-            
-        case "The Battery Check":
-            return [
-                StepsToFollow(number: 1, title: "Check Energy",
-                    descriptionLabel: "Rate your energy from 1–10 before starting the conversation."),
-                StepsToFollow(number: 2, title: "Share Why",
-                    descriptionLabel: "Briefly explain why your energy feels this way."),
-                StepsToFollow(number: 3, title: "Set Boundary",
-                    descriptionLabel: "If energy is low, agree to pause deep talk."),
-                StepsToFollow(number: 4, title: "Offer Support",
-                    descriptionLabel: "Ask what small thing could help them recharge.")
-            ]
-            
-        case "No-Gatekeeping Needs":
-            return [
-                StepsToFollow(number: 1, title: "Identify Need",
-                    descriptionLabel: "Pick one small thing you’ve been wanting."),
-                StepsToFollow(number: 2, title: "Ask Directly",
-                    descriptionLabel: "Say it clearly without hints or sarcasm."),
-                StepsToFollow(number: 3, title: "Be Specific",
-                    descriptionLabel: "Explain exactly what would help."),
-                StepsToFollow(number: 4, title: "Appreciate",
-                    descriptionLabel: "Thank them for hearing you out.")
-            ]
-            
-        case "The Echo Chamber":
-            return [
-                StepsToFollow(number: 1, title: "Invite Sharing",
-                    descriptionLabel: "Ask what’s been on their mind."),
-                StepsToFollow(number: 2, title: "Reflect Back",
-                    descriptionLabel: "Repeat what you heard in your own words."),
-                StepsToFollow(number: 3, title: "Confirm",
-                    descriptionLabel: "Ask if you understood them correctly."),
-                StepsToFollow(number: 4, title: "Respond",
-                    descriptionLabel: "Only share your thoughts after confirmation.")
-            ]
-
-        case "Safe Space Protocol":
-            return [
-                StepsToFollow(number: 1, title: "Choose Spot",
-                    descriptionLabel: "Sit in your agreed safe-space location."),
-                StepsToFollow(number: 2, title: "Set Rule",
-                    descriptionLabel: "Agree nothing said will be used later."),
-                StepsToFollow(number: 3, title: "Share Vulnerability",
-                    descriptionLabel: "Share one honest fear or thought."),
-                StepsToFollow(number: 4, title: "Seal It",
-                    descriptionLabel: "End with a 10-second hug.")
-            ]
-
-        case "Love Map Update":
-            return [
-                StepsToFollow(number: 1, title: "Ask Curiously",
-                    descriptionLabel: "Ask about a current favorite or interest."),
-                StepsToFollow(number: 2, title: "Listen",
-                    descriptionLabel: "Focus fully without interrupting."),
-                StepsToFollow(number: 3, title: "Note It",
-                    descriptionLabel: "Save the detail mentally or in notes."),
-                StepsToFollow(number: 4, title: "Switch Roles",
-                    descriptionLabel: "Now let them ask about you.")
-            ]
-        case "The Dopamine Drop":
-            return [
-                StepsToFollow(number: 1, title: "Choose New",
-                    descriptionLabel: "Pick an activity neither of you has done."),
-                StepsToFollow(number: 2, title: "Stay Present",
-                    descriptionLabel: "No phones during the activity."),
-                StepsToFollow(number: 3, title: "Embrace Awkward",
-                    descriptionLabel: "Laugh through mistakes."),
-                StepsToFollow(number: 4, title: "Reflect",
-                    descriptionLabel: "Talk about the most fun moment.")
-            ]
-        case "Bid-Catching Pro":
-            return [
-                StepsToFollow(number: 1, title: "Notice Bids",
-                    descriptionLabel: "Watch for small bids for attention."),
-                StepsToFollow(number: 2, title: "Turn Toward",
-                    descriptionLabel: "Pause what you’re doing and respond."),
-                StepsToFollow(number: 3, title: "Validate",
-                    descriptionLabel: "Acknowledge them warmly."),
-                StepsToFollow(number: 4, title: "Repeat",
-                    descriptionLabel: "Catch at least 3 bids today.")
-            ]
-            
-        case "The Intimacy Architect":
-            return [
-                StepsToFollow(number: 1, title: "Reunion Moment",
-                    descriptionLabel: "Do this when you first see each other."),
-                StepsToFollow(number: 2, title: "Hold",
-                    descriptionLabel: "Share a 6-second kiss."),
-                StepsToFollow(number: 3, title: "Breathe",
-                    descriptionLabel: "Stay present during the moment."),
-                StepsToFollow(number: 4, title: "Commit",
-                    descriptionLabel: "Make this a daily ritual.")
-            ]
-
-            
-
-        default:
-            return []
+    /// Parses step strings in "1. Title. Description" format into StepsToFollow objects
+    private func parseJSONSteps(_ steps: [String]) -> [StepsToFollow] {
+        return steps.enumerated().map { index, stepString in
+            let parts = stepString.components(separatedBy: ". ")
+            let title: String
+            let description: String
+            if parts.count >= 3 {
+                title = parts[1]
+                description = parts.dropFirst(2).joined(separator: ". ")
+            } else if parts.count == 2 {
+                title = parts[1]
+                description = ""
+            } else {
+                title = stepString
+                description = ""
+            }
+            return StepsToFollow(number: index + 1, title: title, descriptionLabel: description)
         }
     }
     
@@ -910,134 +707,76 @@ class DataStore {
     }
     
     func loadsampleBuildYourBond() {
-        let bond :[BuildYourBondpage] = [
+        // Try loading bond activities from bondActivities.json
+        if let url = Bundle.main.url(forResource: "bondActivities", withExtension: "json"),
+           let data = try? Data(contentsOf: url),
+           let parsed = try? JSONDecoder().decode(ActivitiesJSON.self, from: data) {
+            self.bondJSONActivities = parsed.activities
+            print("✅ Loaded \(bondJSONActivities.count) bond activities from bondActivities.json")
+        } else {
+            print("⚠️ Could not load bondActivities.json, using fallback data")
+        }
+
+        // Helper to get activities for a specific category from JSON
+        func activitiesFor(_ category: String) -> [Activity] {
+            let jsonFiltered = bondJSONActivities.filter { $0.category == category }
+            if !jsonFiltered.isEmpty {
+                return jsonFiltered.map { json in
+                    Activity(
+                        id: json.id,
+                        coupleActivityId: nil,
+                        name: json.name,
+                        description: json.description,
+                        detailedDescription: json.detailedDescription,
+                        image: json.image,
+                        time: json.time,
+                        status: .none,
+                        category: category,
+                        scheduledDate: nil
+                    )
+                }
+            }
+            return [] // will use fallback below
+        }
+
+        let conflictActivities = activitiesFor("Navigate Conflict Together")
+        let communicationActivities = activitiesFor("Establishing Good Communication")
+        let rekindleActivities = activitiesFor("Rekindle Honeymoon Phase")
+
+        let bond: [BuildYourBondpage] = [
             BuildYourBondpage(
-        Name: "Navigate Conflict Together",
-    SubHeading: "Take each step together to rebuild your connection.",
-        stepLabel:  "You are currently on Step 1: Identifying the Conflict.",
-        step: ["Identify","Empathize","Solution","Sustain"],
-        activity: [
-        Activity(name: "The Soft Start-Up", description: "Learn to bring up a complaint without blame or criticism.", image: "noContextReveal", time: "5mins", status: .none,category: "Navigate Conflict Together"),
-        Activity(name: "The Empathy Bridge", description: "Understand your partner's experience and perspective.", image: "GuessBeforeYouAreTold", time: "5mins", status: .none,category: "Navigate Conflict Together"),
-        Activity(name: "Collaborative Sprint", description: "Shift from 'me vs you' to 'us vs the problem", image: "DeletetheGlitch", time: "5mins", status: .none,category: "Navigate Conflict Together"),
-        Activity(name: "The Pattern Interrupt", description: "Identify and break negative communication cycles.", image: "BacktoUs", time: "5mins", status: .none,category: "Navigate Conflict Together")
-    ],
-        badge: "Harmony Seeker",
-        badgesubHeading: "Master the art of peaceful resolution.", badgeImageName: "HarmonySeekerBadge",
-        HIWStep: ["Identify the Conflict","Empathizing with Perspectives","Crafting Joint Solutions","Sustaining Harmony"]
-            
-            
+                Name: "Navigate Conflict Together",
+                SubHeading: "Take each step together to rebuild your connection.",
+                stepLabel: "You are currently on Step 1: Identifying the Conflict.",
+                step: ["Identify", "Empathize", "Solution", "Sustain"],
+                activity: conflictActivities,
+                badge: "Harmony Seeker",
+                badgesubHeading: "Master the art of peaceful resolution.",
+                badgeImageName: "HarmonySeekerBadge",
+                HIWStep: ["Identify the Conflict", "Empathizing with Perspectives", "Crafting Joint Solutions", "Sustaining Harmony"]
             ),
-        BuildYourBondpage(
-        Name: "Establishing Good Communication",
-        SubHeading: "Clear the static and really hear each other.",
-        stepLabel: "You are currently on Step 1: The Battery Check.",
-        step: [
-            "Check-in",
-            "Express",
-            "Reflect",
-            "Trust"
-            ],
-        activity: [
-            Activity(
-                name: "The Battery Check",
-                description: "Check their energy before unloading your day.",
-                image: "noContextReveal",
-                time: "5 mins",
-                status: .none,
-                category: "Establishing Good Communication"
-                ),
-            Activity(
-                name: "No-Gatekeeping Needs",
-                description: "Say what you need—no hints, no guessing.",
-                image: "GuessBeforeYouAreTold",
-                time: "5 mins",
-                status: .none,
-                category: "Establishing Good Communication"
-                ),
-            Activity(
-                name: "The Echo Chamber",
-                description: "Repeat to prove you’re really listening.",
-                image: "DeletetheGlitch",
-                time: "5 mins",
-                status: .none,
-                category: "Establishing Good Communication"
-                ),
-            Activity(
-                name: "Safe Space Protocol",
-                description: "Create a no-judgment zone for honesty.",
-                image: "BacktoUs",
-                time: "5 mins",
-                status: .none,
-                category: "Establishing Good Communication"
-                )
-                ],
+            BuildYourBondpage(
+                Name: "Establishing Good Communication",
+                SubHeading: "Clear the static and really hear each other.",
+                stepLabel: "You are currently on Step 1: The Battery Check.",
+                step: ["Check-in", "Express", "Reflect", "Trust"],
+                activity: communicationActivities,
                 badge: "Communication Champ",
-                badgesubHeading: "You’ve built a strong foundation of open dialogue.",
+                badgesubHeading: "You've built a strong foundation of open dialogue.",
                 badgeImageName: "communicationChampBadge",
-                HIWStep: [
-                    "Checking emotional bandwidth",
-                    "Expressing needs clearly",
-                    "Active listening",
-                    "Creating emotional safety"
-                ]
+                HIWStep: ["Checking emotional bandwidth", "Expressing needs clearly", "Active listening", "Creating emotional safety"]
             ),
             BuildYourBondpage(
                 Name: "Rekindle Honeymoon Phase",
                 SubHeading: "Bring back the spark and beat roommate mode.",
                 stepLabel: "You are currently on Step 1: Love Map Update.",
-                step: [
-                    "Explore",
-                    "Spark",
-                    "Notice",
-                    "Bond"
-                ],
-                activity: [
-                    Activity(
-                        name: "Love Map Update",
-                        description: "Update your knowledge of your partner’s world.",
-                        image: "noContextReveal",
-                        time: "5 mins",
-                        status: .none,
-                        category: "Rekindle Honeymoon Phase"
-                    ),
-                    Activity(
-                        name: "The Dopamine Drop",
-                        description: "Do something new to trigger first-date energy.",
-                        image: "GuessBeforeYouAreTold",
-                        time: "10 mins",
-                        status: .none,
-                        category: "Rekindle Honeymoon Phase"
-                    ),
-                    Activity(
-                        name: "Bid-Catching Pro",
-                        description: "Notice and respond to small connection bids.",
-                        image: "DeletetheGlitch",
-                        time: "5 mins",
-                        status: .none,
-                        category: "Rekindle Honeymoon Phase"
-                    ),
-                    Activity(
-                        name: "The Intimacy Architect",
-                        description: "Build a daily ritual that bonds you deeply.",
-                        image: "BacktoUs",
-                        time: "5 mins",
-                        status: .none,
-                        category: "Rekindle Honeymoon Phase"
-                    )
-                ],
+                step: ["Explore", "Spark", "Notice", "Bond"],
+                activity: rekindleActivities,
                 badge: "Spark Keeper",
-                badgesubHeading: "You’ve reignited closeness and emotional warmth.",
+                badgesubHeading: "You've reignited closeness and emotional warmth.",
                 badgeImageName: "sparkKeeperBadge",
-                HIWStep: [
-                    "Updating love maps",
-                    "Introducing novelty",
-                    "Catching connection bids",
-                    "Daily bonding rituals"
-                ]
-            ),
-
-
+                HIWStep: ["Updating love maps", "Introducing novelty", "Catching connection bids", "Daily bonding rituals"]
+            )
         ]
         self.bondpage = bond
     }
@@ -1108,14 +847,53 @@ class DataStore {
             $0.category == activity.category
         }) {
             activities[index].status = .ongoing
+        } else {
+            var newActivity = activity
+            newActivity.status = .ongoing
+            activities.append(newActivity)
+            print("Added new ongoing activity:", newActivity.name)
+        }
+
+        // Also insert into Supabase so partner's device sees it
+        guard let relationshipId = currentRelationshipId,
+              let userId = currentUserId else {
+            print("⚠️ startActivity: missing relationshipId or userId for Supabase sync")
             return
         }
 
-        var newActivity = activity
-        newActivity.status = .ongoing
-        activities.append(newActivity)
+        Task {
+            do {
+                let coupleActivity = try await SupabaseManager.shared.startActivityForCouple(
+                    relationshipId: relationshipId,
+                    userId: userId,
+                    activity: activity
+                )
+                print("✅ Supabase: activity started → \(coupleActivity.coupleActivityId)")
 
-        print("Added new ongoing activity:", newActivity.name)
+                // Store the coupleActivityId back on the local activity
+                if let index = self.activities.firstIndex(where: {
+                    $0.name == activity.name && $0.category == activity.category
+                }) {
+                    self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
+                }
+
+                // Send notification to partner (same pattern as Love Notes & Memories)
+                do {
+                    try await NotificationService.shared.sendPartnerNotification(
+                        relationshipId: relationshipId,
+                        type: "activity_started",
+                        message: "Your partner started an activity: \(activity.name) 💫",
+                        entityType: "activity",
+                        entityId: coupleActivity.coupleActivityId.uuidString
+                    )
+                    print("✅ Activity notification sent to partner")
+                } catch {
+                    print("⚠️ Activity notification failed: \(error)")
+                }
+            } catch {
+                print("❌ Supabase startActivity failed: \(error)")
+            }
+        }
     }
 
     func getBuildYourBondPages(name : String) -> BuildYourBondpage? {
@@ -1145,6 +923,114 @@ class DataStore {
     }
     func getCompletedActivities() -> [Activity] {
         return activities.filter { $0.status == .completed }
+    }
+
+    // MARK: - Supabase Context
+
+    /// Fetch and store the current user's ID, relationship ID, and partner's ID from Supabase.
+    /// Must be called once after login (e.g. from VibeViewController.viewDidLoad).
+    func loadUserContext() async {
+        do {
+            let session = try await SupabaseManager.shared.client.auth.session
+            let authUserId = session.user.id
+            self.currentUserId = authUserId
+            print("✅ DataStore: currentUserId = \(authUserId)")
+
+            // Find the active relationship
+            let rows: [DBRelationship] = try await SupabaseManager.shared.client
+                .from("relationships")
+                .select()
+                .or("user1_id.eq.\(authUserId.uuidString),user2_id.eq.\(authUserId.uuidString)")
+                .eq("status", value: "active")
+                .limit(1)
+                .execute()
+                .value
+
+            if let relationship = rows.first {
+                self.currentRelationshipId = relationship.relationship_id
+                self.partnerUserId = (relationship.user1_id == authUserId)
+                    ? relationship.user2_id
+                    : relationship.user1_id
+                print("✅ DataStore: relationshipId = \(relationship.relationship_id)")
+                print("✅ DataStore: partnerUserId = \(self.partnerUserId?.uuidString ?? "nil")")
+            } else {
+                print("⚠️ DataStore: no active relationship found")
+            }
+        } catch {
+            print("❌ DataStore.loadUserContext failed: \(error)")
+        }
+    }
+
+    // MARK: - Supabase Sync
+
+    /// Fetch all couple_activities from Supabase and update local activity statuses
+    func syncActivitiesFromSupabase() {
+        guard let relationshipId = currentRelationshipId else {
+            print("⚠️ syncActivities: no currentRelationshipId")
+            return
+        }
+
+        Task {
+            do {
+                let remote = try await SupabaseManager.shared.fetchAllCoupleActivities(
+                    relationshipId: relationshipId
+                )
+                self.coupleActivities = remote
+
+                for coupleActivity in remote {
+                    // Try to find a matching local activity by name
+                    if let index = self.activities.firstIndex(where: {
+                        $0.name == coupleActivity.activityName
+                    }) {
+                        // Update local status to match Supabase
+                        switch coupleActivity.status {
+                        case "ongoing":
+                            self.activities[index].status = .ongoing
+                        case "completed":
+                            self.activities[index].status = .completed
+                        case "scheduled":
+                            self.activities[index].status = .scheduled
+                            self.activities[index].scheduledDate = coupleActivity.scheduledDate
+                        default:
+                            break
+                        }
+                        self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
+                    } else {
+                        // Activity not in local list yet — add it
+                        let newStatus: ActivityStatus = {
+                            switch coupleActivity.status {
+                            case "ongoing": return .ongoing
+                            case "completed": return .completed
+                            case "scheduled": return .scheduled
+                            default: return .none
+                            }
+                        }()
+
+                        let newActivity = Activity(
+                            id: coupleActivity.activityId,
+                            coupleActivityId: coupleActivity.coupleActivityId,
+                            name: coupleActivity.activityName,
+                            description: "",
+                            image: "Activityimage",
+                            time: "",
+                            status: newStatus,
+                            category: "",
+                            scheduledDate: coupleActivity.scheduledDate
+                        )
+                        self.activities.append(newActivity)
+                    }
+                }
+
+                print("✅ Synced \(remote.count) couple activities from Supabase")
+
+                // Post notification so UI can reload
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+                }
+            } catch {
+                print("❌ syncActivitiesFromSupabase failed: \(error)")
+            }
+        }
     }
     func getTips() -> [Tip] {
         return tips
@@ -1185,77 +1071,9 @@ class DataStore {
         }
     }
     
-    //small modal data
+    //small modal data — now fully driven by JSON via getSmallModalData()
     func loadSmallModalData() {
-        let sample: [SmallModalData] = [
-            SmallModalData(
-                title: "Chill & Glow Sesh",
-                mainImageName: "Chill and Glow sesh",
-                descriptionLabel: "Light up your calm with candles, a facemask, and your favorite tunes. Then breathe, smile, and just flow.",
-                clockImageName: "clock",
-                timerLabel: "5 mins"
-            ),
-            
-            SmallModalData(
-                title: "Petal Hunt",
-                mainImageName: "Activityimage",
-                descriptionLabel: "Pick pretty blooms and build your own bouquet together.",
-               clockImageName: "clock",
-                timerLabel: "5 mins"
-            ),
-            SmallModalData(
-                title: "Cozy Cocoon",
-                mainImageName: "Cozy Cocoon",
-                descriptionLabel: "Create a comfy little fort, grab snacks and play something relaxing. Settle in and enjoy your cozy escape.",
-               clockImageName: "clock",
-                timerLabel: "15 mins")
-            ,
-            SmallModalData(
-                title: "The Soft Start-Up",
-                mainImageName: "noContextReveal",
-                descriptionLabel: "One word can cut through a lot of noise. This level creates a quiet reveal that often makes the real issue obvious without restarting the fight.",
-               clockImageName: "clock",
-                timerLabel: "5 mins")
-            ,
-            SmallModalData(
-                title: "The Empathy Bridge",
-                mainImageName: "GuessBeforeYouAreTold",
-                descriptionLabel: "Understanding becomes a small challenge here. Guessing first brings curiosity into the moment and often softens tension before anything is explained.",
-               clockImageName: "clock",
-                timerLabel: "10 mins")
-            ,
-            SmallModalData(
-                title: "Collaborative Sprint",
-                mainImageName: "DeletetheGlitch",
-                descriptionLabel: "A simple upgrade that removes one move that keeps causing friction, helping future conflicts play out more smoothly.",
-                clockImageName: "clock",
-                timerLabel: "10 mins")
-            ,
-            SmallModalData(
-                title: "The Pattern Interrupt",
-                mainImageName: "BacktoUs",
-                descriptionLabel: "Closure doesn’t always need more words. This level uses a simple shared action to reset the mood and help both people move forward.",
-               clockImageName: "clock",
-                timerLabel: "5 mins")
-            ,
-            SmallModalData(title: "The Battery Check", mainImageName: "noContextReveal", descriptionLabel: "Check their energy before unloading your day.", clockImageName: "clock", timerLabel: "10 mins")
-            ,
-            SmallModalData(title: "No-Gatekeeping Needs", mainImageName: "GuessBeforeYouAreTold", descriptionLabel: "Say what you need—no hints, no guessing.", clockImageName: "clock", timerLabel: "10 mins")
-            ,
-            SmallModalData(title: "The Echo Chamber", mainImageName: "DeletetheGlitch", descriptionLabel: "Repeat to prove you’re really listening.", clockImageName: "clock", timerLabel: "10 mins")
-            ,
-            SmallModalData(title: "Safe Space Protocol", mainImageName:"BacktoUs", descriptionLabel: "Create a no-judgment zone for honesty.", clockImageName:"clock", timerLabel: "5 mins")
-            ,
-            SmallModalData(title: "Love Map Update", mainImageName: "noContextReveal", descriptionLabel: "Update your knowledge of your partner’s world.", clockImageName: "clock", timerLabel: "10 mins")
-            ,
-            SmallModalData(title: "The Dopamine Drop", mainImageName: "GuessBeforeYouAreTold", descriptionLabel: "Do something new to trigger first-date energy.", clockImageName: "clock", timerLabel: "10 mins")
-            ,
-            SmallModalData(title: "Bid-Catching Pro", mainImageName: "DeletetheGlitch", descriptionLabel: "Notice and respond to small connection bids.", clockImageName: "clock", timerLabel: "10 mins")
-            ,
-            SmallModalData(title: "The Intimacy Architect", mainImageName: "BacktoUs", descriptionLabel: "Build a daily ritual that bonds you deeply.", clockImageName: "clock", timerLabel: "10 mins")
-        ]
-        
-        self.smallmodal = sample
+        self.smallmodal = []
     }
 
     

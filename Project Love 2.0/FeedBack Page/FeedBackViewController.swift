@@ -137,6 +137,27 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
         
         if let activity = activity {
                DataStore.shared.markActivityCompleted(activity: activity)
+
+               // Submit feedback to Supabase (dual-user sync)
+               if let coupleActivityId = activity.coupleActivityId,
+                  let userId = DataStore.shared.currentUserId {
+                   let mood = feedbackItem?.selectedMood ?? "None"
+                   let message = feedbackItem?.userMessage
+
+                   Task {
+                       do {
+                           try await SupabaseManager.shared.submitFeedback(
+                               coupleActivityId: coupleActivityId,
+                               userId: userId,
+                               mood: mood,
+                               message: message
+                           )
+                           print("✅ Feedback submitted to Supabase")
+                       } catch {
+                           print("❌ Supabase submitFeedback failed: \(error)")
+                       }
+                   }
+               }
            }
       
            guard

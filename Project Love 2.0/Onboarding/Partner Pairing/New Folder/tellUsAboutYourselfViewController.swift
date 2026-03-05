@@ -22,6 +22,11 @@ class tellUsAboutYourselfViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Fallback: if userId wasn't passed (e.g. resumed from SceneDelegate), get from Supabase session
+        if userId == nil {
+            userId = SupabaseManager.shared.client.auth.currentUser?.id
+        }
+        
         textboxUi()
         
         let datePicker = UIDatePicker()
@@ -96,6 +101,7 @@ class tellUsAboutYourselfViewController: UIViewController {
             
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
+                UserDefaults.standard.set(true, forKey: "hasCompletedBasicInfo")
                 let vc = UIStoryboard(name: "Onboarding", bundle: nil)
                     .instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
                 

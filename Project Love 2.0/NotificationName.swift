@@ -12,4 +12,7 @@ extension Notification.Name {
 
     static let returnToExplore =
         Notification.Name("returnToExplore")
+
+    static let activitiesSynced =
+        Notification.Name("activitiesSynced")
 }

@@ -262,7 +262,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Bx-KX-CCj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3973" y="-164"/>
+            <point key="canvasLocation" x="3971.7557251908397" y="-164.08450704225353"/>
         </scene>
         <!--Create Account-->
         <scene sceneID="1Bv-yr-qpj">
@@ -965,7 +965,7 @@ bond together </string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z3r-vA-FzV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8475.5725190839694" y="803.52112676056345"/>
+            <point key="canvasLocation" x="8082" y="773"/>
         </scene>
         <!--Invite Partner-->
         <scene sceneID="CcV-Qg-Qdf">
@@ -1078,7 +1078,7 @@ bond together </string>
                     </view>
                     <navigationItem key="navigationItem" title="Invite Partner" largeTitleDisplayMode="always" id="V8N-dc-fqK">
                         <barButtonItem key="rightBarButtonItem" style="plain" id="i3B-qe-4xo">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="U3n-ct-urh">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="U3n-ct-urh">
                                 <rect key="frame" x="316" y="4.6666666666666687" width="57" height="34.666666666666664"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
@@ -1182,7 +1182,7 @@ bond together </string>
                     </view>
                     <navigationItem key="navigationItem" title="Enter Partner's code" largeTitleDisplayMode="always" id="nQ3-5g-tgq">
                         <barButtonItem key="rightBarButtonItem" style="plain" id="hTd-1d-BVf">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="cFO-OI-v2c">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="cFO-OI-v2c">
                                 <rect key="frame" x="316" y="4.6666666666666687" width="57" height="34.666666666666664"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
@@ -1218,7 +1218,7 @@ bond together </string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OmS-0j-buT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7548.8549618320603" y="803.52112676056345"/>
+            <point key="canvasLocation" x="7065" y="784"/>
         </scene>
         <!--Info Page View Controller-->
         <scene sceneID="BLc-nD-Nmg">

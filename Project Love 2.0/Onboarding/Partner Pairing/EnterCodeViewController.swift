@@ -97,6 +97,7 @@ class EnterCodeViewController: UIViewController {
     }
 
     func showSuccess() {
+        UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
         DispatchQueue.main.async {
             self.spinner.stopAnimating()
             self.view.isUserInteractionEnabled = true
@@ -145,6 +146,7 @@ class EnterCodeViewController: UIViewController {
     
     @IBAction func skipTapped(_ sender: Any) {
         print("Skip tapped")
+        UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
         spinner.stopAnimating()
         view.isUserInteractionEnabled = true
             

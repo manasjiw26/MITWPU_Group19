@@ -260,9 +260,17 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         guard indexPath.item < dataStore.savedMemories.count else { return }
 
         let storyboard = UIStoryboard(name: "MemoryJar", bundle: nil)
-        let laneVC = storyboard.instantiateViewController(withIdentifier: "MemoryLaneVC") as! MemoryLaneViewController
+        guard let laneVC = storyboard.instantiateViewController(withIdentifier: "MemoryLaneVC") as? MemoryLaneViewController else { return }
+
         laneVC.autoOpenIndex = indexPath.item
-        navigationController?.pushViewController(laneVC, animated: false)
+
+        if let nav = navigationController {
+            nav.pushViewController(laneVC, animated: true)
+        } else {
+            laneVC.modalPresentationStyle = .fullScreen
+            laneVC.modalTransitionStyle = .coverVertical
+            present(laneVC, animated: true)
+        }
     }
 
     private func generateLayout() -> UICollectionViewLayout {

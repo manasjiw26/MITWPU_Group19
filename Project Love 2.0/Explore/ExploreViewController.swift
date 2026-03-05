@@ -37,6 +37,17 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         activity_collection.dataSource = self
         activity_collection.delegate = self
 
+        // Listen for Supabase sync completions
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleActivitiesSynced),
+            name: .activitiesSynced,
+            object: nil
+        )
+    }
+
+    @objc private func handleActivitiesSynced() {
+        activity_collection.reloadData()
     }
     private func isEmptyState() -> Bool {
         if selectedSegmentIndex == 1 {
@@ -123,6 +134,15 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        // Ensure user context is loaded before syncing
+        Task {
+            if DataStore.shared.currentRelationshipId == nil {
+                await DataStore.shared.loadUserContext()
+            }
+            DataStore.shared.syncActivitiesFromSupabase()
+        }
+
         activity_collection.reloadData()
     }
     

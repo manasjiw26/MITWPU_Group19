@@ -5,7 +5,7 @@ import Supabase
 final class NotificationViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    var activities = dataStore.getSuggestedActivities()
+  
     private var notifications: [AppNotification] = []
 
      override func viewDidLoad() {
@@ -58,18 +58,55 @@ final class NotificationViewController: UIViewController {
         NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: 0)
      }
 
-     private func openActivity(_ notification: AppNotification) {
-         let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
+    private func openActivity(_ notification: AppNotification) {
+        guard
+            let activityName = extractActivityName(from: notification.message),
+            let selectedActivity = findActivity(named: activityName)
+        else {
+            print("Could not resolve activity from notification: \(notification.message)")
+            return
+        }
 
-         let selectedActivity = activities[0]
-         destinationVC.selectedActivity = selectedActivity
-         if let modalData = dataStore.smallmodal.first(where: { $0.title == selectedActivity.name }) {
-             destinationVC.modalData = modalData
-         }
-         destinationVC.flowSource = .activitiesForHer
-         destinationVC.modalPresentationStyle = .overFullScreen
-         present(destinationVC, animated: false)
-     }
+        let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
+        destinationVC.selectedActivity = selectedActivity
+        destinationVC.modalData = DataStore.shared.getSmallModalData(for: selectedActivity)
+        destinationVC.flowSource = .explore
+        destinationVC.modalPresentationStyle = .overFullScreen
+        present(destinationVC, animated: false)
+    }
+    private func extractActivityName(from message: String) -> String? {
+        let prefix = "Your partner started an activity:"
+        var candidate = message
+
+        if let range = candidate.range(of: prefix) {
+            candidate = String(candidate[range.upperBound...])
+        } else if let colonIndex = candidate.firstIndex(of: ":") {
+            candidate = String(candidate[candidate.index(after: colonIndex)...])
+        }
+
+        candidate = candidate.replacingOccurrences(of: "💫", with: "")
+        candidate = candidate.trimmingCharacters(
+            in: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
+        )
+
+        return candidate.isEmpty ? nil : candidate
+    }
+
+    private func findActivity(named name: String) -> Activity? {
+        let target = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let store = DataStore.shared
+
+        let knownActivities =
+            store.getActivities() +
+            store.getSuggestedActivities() +
+            store.allSuggestedPool +
+            store.bondpage.flatMap { $0.activity }
+
+        return knownActivities.first {
+            $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == target
+        }
+    }
+
 
      private func openLoveNote(_ notification: AppNotification) {
          let alert = UIAlertController(

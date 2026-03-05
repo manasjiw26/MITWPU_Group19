@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Supabase
 
 class assesmentBeginViewController: UIViewController {
 
@@ -13,6 +14,10 @@ class assesmentBeginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Fallback: if userId wasn't passed (e.g. resumed from SceneDelegate), get from Supabase session
+        if userId == nil {
+            userId = SupabaseManager.shared.client.auth.currentUser?.id
+        }
     }
     
 

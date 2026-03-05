@@ -81,7 +81,7 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
     }
 
     @IBAction func NextPressed(_ sender: Any) {
-            let currentSelections = selectedAnswers[currentIndex] ?? []
+        let currentSelections = selectedAnswers[currentIndex] ?? []
             if currentSelections.isEmpty {
                 let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
                 animation.timingFunction = CAMediaTimingFunction(name: .linear)
@@ -90,11 +90,14 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
                 tableView.layer.add(animation, forKey: "shake")
                 return
             }
+
             if currentIndex < questions.count - 1 {
                 currentIndex += 1
                 updateUI()
             } else {
                 DataStore.shared.userProfile?.savedPreferences = self.selectedAnswers
+                persistUserGender() // add this line
+
                 if isEditingMode {
                     self.navigationController?.setNavigationBarHidden(false, animated: true)
                     if let nav = self.navigationController {
@@ -103,6 +106,7 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
                         self.dismiss(animated: true)
                     }
                 } else {
+                    UserDefaults.standard.set(true, forKey: "hasCompletedAssessment")
                     guard let parentNavController = self.presentingViewController as? UINavigationController ?? self.presentingViewController?.navigationController else {
                         return
                     }
@@ -114,6 +118,19 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
                     }
                 }
             }
+    }
+    
+    private func persistUserGender() {
+        guard
+            let genderQuestionIndex = questions.firstIndex(where: { $0.questionText.lowercased().contains("gender") }),
+            let selectedOptionIndex = selectedAnswers[genderQuestionIndex]?.first,
+            questions[genderQuestionIndex].options.indices.contains(selectedOptionIndex)
+        else { return }
+
+        let gender = questions[genderQuestionIndex].options[selectedOptionIndex].text
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        UserDefaults.standard.set(gender, forKey: "userGender")
     }
 
     // MARK: - TableView Methods

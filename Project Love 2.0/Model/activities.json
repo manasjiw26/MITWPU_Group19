@@ -1,0 +1,3203 @@
+{
+  "activities": [
+    {
+      "id": 1,
+      "name": "Cook for Us Night",
+      "description": "Prepare a meal together as a symbol of teamwork and care.",
+      "image": "Activityimage",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Comfort Dish You Both Love. Pick something meaningful — not just easy. Something that feels like home.",
+        "2. Divide Responsibilities Thoughtfully. One handles chopping, one handles cooking, or switch midway. Stay physically close in the kitchen.",
+        "3. No Phones During Cooking. Use the time to talk about your day, laugh, and move slowly.",
+        "4. Sit and Eat Intentionally. Before the first bite, one person says: Thank you for building this with me."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Home Spa Assembly",
+      "description": "A collaborative effort to transform your bathroom into a luxury.",
+      "image": "Activityimage",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. The Luxury Setup. Together, gather all the spa elements: thick towels, candles, a bowl of ice water, and skin-care products. One handles lighting and music, the other prepares treatments.",
+        "2. The Head-and-Hand Session. One partner sits comfortably while the other performs a 10-minute scalp massage followed by a moisturizing hand treatment.",
+        "3. The Role Reversal. Switch positions immediately. The person who was just pampered now takes the lead, ensuring their partner receives the exact same level of care.",
+        "4. The Sanctuary Cleanup. End by working together to put everything back. The Act is finished only when the room is clean and you are both in a state of total, shared calm."
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Petal Meaning Ceremony",
+      "description": "Choose flowers together and assign meaning to your relationship.",
+      "image": "Fun&Playful",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. Each Choose 3 Flowers. Pick flowers that remind you of your partner's traits.",
+        "2. Explain Your Choices. Say why you chose each one — This reminds me of your calmness.",
+        "3. Build the Bouquet Together. Arrange them as a symbol of your bond.",
+        "4. Press One Flower. Save one petal in a book and write today's date with one sentence about your current season."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Feed & Affirm Ritual",
+      "description": "A playful yet intimate act of mutual care.",
+      "image": "DeletetheGlitch",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. Prepare Small Snacks Together. Strawberries, cake, chocolate — simple but intentional.",
+        "2. Take Turns Feeding Each Other. Slow, eye contact maintained.",
+        "3. Say One Affirmation Per Bite. You're patient. You're strong. You're gentle.",
+        "4. End with Laughter or a Hug. Keep it light and warm."
+      ]
+    },
+    {
+      "id": 5,
+      "name": "The Month of Small Things",
+      "description": "For one month, give your partner one small, unprompted gift per week.",
+      "image": "DeletetheGlitch",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. Observe and Take Notes. Spend two weeks quietly studying your partner to identify small annoyances they face, items they've run out of, or guilty pleasures they rarely buy for themselves.",
+        "2. Stick to a Tiny Budget. Cap each gift at the price of a coffee and pastry; the goal is to prove that precise observation carries more emotional weight than expensive, generic items.",
+        "3. Deliver Without Fanfare. Place the gifts in unexpected spots—like a bag or a pillow—on random weekdays to show they are on your mind even when there is no special occasion.",
+        "4. Reveal the Why at Month's End. Share the logic behind each gift to show your partner the depth of your attention, turning the debrief into its own powerful moment of intimacy."
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Scavenger Hunt",
+      "description": "Design a personal journey through meaningful locations and objects.",
+      "image": "DeletetheGlitch",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. Map Out Meaningful Locations. Identify 5-7 spots that hold a specific story or inside joke, ensuring each location acts as a revelation of a shared memory.",
+        "2. Write Clues in Your Own Voice. Create clues that read like miniature love letters, referencing specific conversations and lore only you two share.",
+        "3. Leave a Token at Every Stop. Place a small, thoughtful item at each location—like a printed photo, a favorite snack, or a handwritten note.",
+        "4. Become the Final Destination. Wait at the final stop with a prepared meal or a heartfelt letter, transitioning from showing your love to telling it directly."
+      ]
+    },
+    {
+      "id": 7,
+      "name": "The Printed Memory",
+      "description": "Select 20 photos that capture the true feeling of your.",
+      "image": "Activityimage",
+      "category": "Acts of Love",
+      "time": "10 mins",
+      "steps": [
+        "1. Search for Feeling Over Perfection. Spend an afternoon scrolling through your camera roll looking for photos that trigger a specific, warm emotion, prioritizing candid shots.",
+        "2. Curate and Identify Patterns. Narrow your selection down to exactly 20 images, noting the common themes or versions of your partner that appear most.",
+        "3. Commit to a Physical Format. Print the photos as a high-quality book, a boxed set with handwritten notes, or a framed collage.",
+        "4. Share the Why Behind Each Choice. Present the collection by explaining the stories behind the unexpected or blurry shots, revealing why those specific moments felt so significant."
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Hidden Lore Challenge",
+      "description": "A classic game of deception and discovery. Take turns sharing three.",
+      "image": "Activityimage",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab a Drink and Sit Face-to-Face. Set the scene for a comfortable, honest conversation.",
+        "2. Share Three Statements. One partner shares three statements about their past, family, or secret habits—two truths and one lie.",
+        "3. The Detective Asks Follow-Ups. The other partner asks up to two follow-up questions to try and catch a tell or slip-up.",
+        "4. Make the Final Guess. If the Detective is right, the speaker tells the full story behind one of the truths. If wrong, the speaker picks the next topic."
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Me Him Me Her Sign-Off",
+      "description": "A fast-paced, funny trivia game where you use signs to decide who.",
+      "image": "Rekindle",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Create Two Signs Each. The wife gets ME and HIM, while the husband gets ME and HER.",
+        "2. Sit Back-to-Back. So you cannot see each other's answers.",
+        "3. Read Who Is Most Likely To Questions. Have a third party or random generator read prompts.",
+        "4. Use Fun Prompts. Like: Who is most likely to start a fight with a customer service bot? or Who said I love you first?"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "The Sandwich Shackles",
+      "description": "A physical cooperation challenge where you must complete a mundane.",
+      "image": "Activityimage",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Stand Side-by-Side and Tie Inner Arms. So you each only have one free hand.",
+        "2. Attempt to Make a Meal Together. Such as a peanut butter and jam sandwich, from start to finish.",
+        "3. Complete the Full Task. Properly spread ingredients, cut the sandwich into triangles, and seal it in a bag using only your two available hands.",
+        "4. Ask a Deep Question During the Struggle. If we had to survive on a deserted island with only one hand each, what would be our first big argument?"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "The Sketch Challenge",
+      "description": "A creative communication game where one person describes an object.",
+      "image": "Activityimage",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Back-to-Back. One partner has an object or drawing, the other has pen and paper.",
+        "2. Describe Using Only Shapes. Explain the object using only shapes, textures, and sizes—never the name.",
+        "3. Draw Based on Description. For example, describe an apple as a crunchy green sphere with a tiny stick on top.",
+        "4. Compare and Reflect. Compare the final drawing to the original and ask: What is the weirdest way I've ever tried to explain something to you?"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Blindfolded Observation",
+      "description": "A test of how well you know your partner's physical details and.",
+      "image": "Activityimage",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Blindfold One Partner. While the other stands quietly in front of them.",
+        "2. Change One Small Thing. The non-blindfolded person changes something about their appearance (unties a shoe, removes a ring).",
+        "3. Ask Random Questions. Like: What color socks are you wearing? or Which earring is in which ear?",
+        "4. Switch Roles. Ask: What is the first thing you noticed about me the very first day we met?"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Uncommon Questions Night",
+      "description": "A game of curiosity that uses weird prompts to break out of routine.",
+      "image": "DeletetheGlitch",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Comfortably Without Distractions. No digital distractions allowed.",
+        "2. Take Turns Asking Uncommon Questions. Questions you wouldn't normally ask in a regular check-in.",
+        "3. Use Creative Prompts. Like: If you had a magic wand, what minor inconvenience would you vanish from the world forever?",
+        "4. Follow Up with Adventure. If you could teleport us anywhere for just one hour right now, where would we go and what would we eat?"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "The Yes And Game",
+      "description": "Build a ridiculous story together by always saying Yes, and... to.",
+      "image": "DeletetheGlitch",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Start with a Simple Sentence. One person begins: We woke up this morning and found a penguin in our bathtub. It can be mundane or absurd.",
+        "2. Always Respond with Yes, And.... Accept what was said and add to it: Yes, and the penguin was wearing a tiny top hat. No contradicting, no but.",
+        "3. Keep It Going for 10 Rounds. Go back and forth at least 10 times. The story will get weird. That's the point.",
+        "4. Laugh and Reflect. Talk about what it felt like to build something together without shutting each other down. This mirrors healthy communication."
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Reaction Prediction",
+      "description": "A game of social strategy where you guess exactly how your partner.",
+      "image": "Activityimage",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab Two Notebooks. Write down five bizarre or stressful situations.",
+        "2. Write Down Predictions. Individually write how you think your partner would react and how you would react.",
+        "3. Compare Notes and Reveal. See how well you predicted each other.",
+        "4. Ask the Deep Prompt. When have I completely misjudged your reaction to something in the past?"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "The Darkness Conversation",
+      "description": "Spend an evening talking in total darkness to remove visual.",
+      "image": "DeletetheGlitch",
+      "category": "No Filter Chats",
+      "time": "10 mins",
+      "steps": [
+        "1. Eliminate All Light Sources. Settle into a comfortable spot with blankets and water, then turn off every light, phone, and screen.",
+        "2. Speak Without Filters. Notice how the lack of facial feedback makes you less self-conscious; say the things you usually hold back.",
+        "3. Embrace the Deep Silences. Resist the urge to fill every gap, allowing long silences where your most honest thoughts can emerge.",
+        "4. Transition Back Together. Turn the lights back on as a shared moment, reflecting on what was easier to say in the dark."
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Sensory Exploration Trail",
+      "description": "Using various objects with different temperatures to trace a trail of.",
+      "image": "Rekindle",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Gather Items. Collect warm towels, ice cubes, and colorful feathers.",
+        "2. Blindfold Your Partner. Take turns tracing their body with the objects.",
+        "3. Explore Contrasting Sensations. Heighten pleasure and intimacy through temperature play.",
+        "4. Reward the Loser. The loser offers a massage or a loving gesture as a reward."
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Fantasy Date Night",
+      "description": "A magical journey into roleplay where you explore your deepest.",
+      "image": "DeletetheGlitch",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Discuss Fantasies Together. Sit down together to discuss your fantasies and preferences; choose a scenario and roles that excite both.",
+        "2. Set the Scene. Gather props, decorations, and outfits to transform your space into your chosen world.",
+        "3. Dive Into Your Fantasy. Fully dive in, letting go of your everyday selves to embrace your chosen characters.",
+        "4. Playful Consequence. If someone breaks character, they must perform a romantic gesture or a silly act for the other."
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Body Exploration",
+      "description": "An intimate sensory journey where you take turns appreciating each.",
+      "image": "Rekindle",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Comfortable Space. Set up an intimate space free of distractions and gather sensory tools (hands, feathers, or soft brushes).",
+        "2. Take Turns Exploring. Focus on gentle, sensual touches with your chosen tool.",
+        "3. Maintain Open Communication. Share what feels good and encourage your partner to slow down and stay present.",
+        "4. Make It Up. If a partner rushed or missed a spot, they offer a relaxing massage or extra attention as a playful consequence."
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Massage Exchange",
+      "description": "A therapeutic and sensory experience where you take turns being the.",
+      "image": "Fun&Playful",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Set the Mood. Dim the lights, play soft music, and warm up a high-quality scented massage oil between your palms.",
+        "2. Give a Focused Massage. One partner uses long, rhythmic strokes to target tension in the back, shoulders, or neck.",
+        "3. Switch Roles. Ensure the second partner receives the same level of focus and unhurried attention.",
+        "4. Penalty for Shortcuts. If a partner short-changes the time or gets distracted, they owe an extra 5 minutes of focused foot or hand massage."
+      ]
+    },
+    {
+      "id": 21,
+      "name": "The Kissing Dice Game",
+      "description": "An exciting game of chance where the roll of a die determines the.",
+      "image": "Activityimage",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab a Die and Sit Close. In a relaxed setting together.",
+        "2. Create a Legend Together. Assign a specific type of kiss to each number: 1=Sweet cheek kiss, 2=Forehead kiss, 3=Butterfly kiss, 4=Hand kiss, 5=Eskimo kiss, 6=Long romantic kiss.",
+        "3. Take Turns Rolling. Immediately perform the action associated with that number.",
+        "4. Penalty for Hesitation. If a partner forgets the legend or hesitates, they must roll again and do the action twice."
+      ]
+    },
+    {
+      "id": 22,
+      "name": "The Sensory Map",
+      "description": "An elevated, duo-only version of the classic game that uses a Sensory.",
+      "image": "DeletetheGlitch",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Create a Sensory Circle. Place 6 sticky notes or Action Cards in a ring around an empty glass bottle.",
+        "2. Label the Cards. Neck & Jawline, Hands & Fingers, Forehead & Eyes, Lover's Choice, Slow-Mo Make-out, and The Surprise Spot.",
+        "3. Spin and Commit. Commit to a 60-second focused session on whichever target the bottle neck points to.",
+        "4. Double the Intensity. If the bottle lands on the same spot twice in a row, the intensity must double."
+      ]
+    },
+    {
+      "id": 23,
+      "name": "7 Minutes in Heaven Reset",
+      "description": "A refined, adult version of the teenage game, focused on a timed.",
+      "image": "Rekindle",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a Timer for 7 Minutes. Enter a completely dark, small space where you are forced to be physically close.",
+        "2. No Talking Allowed. Communicate only through touch and breathing.",
+        "3. Use the Small Space. Use the walls or door to create different angles and levels of closeness.",
+        "4. Cool Down. When the timer goes off, immediately separate and go to different rooms for 5 minutes to build even more craving."
+      ]
+    },
+    {
+      "id": 24,
+      "name": "The Slow-Burn Timer",
+      "description": "This challenge is about denial and buildup. Engage in high-intensity.",
+      "image": "Fun&Playful",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. First 10 Minutes: Hands Only. Set a timer. During this time, you can only use your hands (no lips).",
+        "2. Next 10 Minutes: Lips Only. Now you can only use your lips (no hands).",
+        "3. Final 10 Minutes: Both with Eye Contact. You can use both, but you must maintain eye contact the entire time.",
+        "4. Rule Break Penalty. If anyone breaks a rule or rushes, the timer resets to the beginning of that stage."
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Cinematic Roleplay",
+      "description": "A high-effort Main Character Energy challenge where you choose a.",
+      "image": "Fun&Playful",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Select a Movie Scene. Choose in advance (like Eyes Wide Shut masks, Mr. & Mrs. Smith dance, or Titanic drawing scene).",
+        "2. Set the Scene. Dim lights, play the movie's score, and gather simple props or costumes.",
+        "3. Rehearse Dramatically. Don't be afraid to be over-the-top or clumsy—humor is the best icebreaker for intense intimacy.",
+        "4. Shift from Script to Reality. Once acting is done, shift to slow, teasing touches, letting cinematic tension turn into real-life chemistry."
+      ]
+    },
+    {
+      "id": 26,
+      "name": "The Mmms and Ahhhs Map",
+      "description": "A high-sensory challenge that replaces words with primal sounds to.",
+      "image": "DeletetheGlitch",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Begin Exploration. One partner closes their eyes while the other begins a slow, full-body exploration using hands, lips, and breath.",
+        "2. Use Sound Cues Only. The receiver uses a low Mmmm for I like this and a sharper Ahhh for That's a sweet spot, stay there.",
+        "3. Vary Your Pace. The active partner switches from light, fluttery touches to firm, slow pressure to see how the sounds change.",
+        "4. Move if Silent. If the receiver makes no sound, the active partner must move to a completely different area to find a new reaction."
+      ]
+    },
+    {
+      "id": 27,
+      "name": "The Mirror Touch",
+      "description": "A psychological and physical challenge where you sit face-to-face and.",
+      "image": "DeletetheGlitch",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Facing Each Other. About a foot apart. Partner A begins by touching their own neck, collarbone, or lips slowly.",
+        "2. Mirror the Touch. Partner B must reach out and mimic that exact touch on Partner A at the same time and pace.",
+        "3. Swap Roles After 5 Minutes. Partner B touches themselves, and Partner A must follow the lead.",
+        "4. Achieve Synchronization. Move in perfect synchronization, creating a mirror effect that builds intense visual attraction."
+      ]
+    },
+    {
+      "id": 28,
+      "name": "The Body-Plate Buffet",
+      "description": "A sensual and trust-building exercise that turns your partner's body.",
+      "image": "Fun&Playful",
+      "category": "Spice It Up!",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy a Variety of Snacks. Get snacks with distinct flavors: sweet, salty, spicy, sour.",
+        "2. Blindfold One Partner. The other places a small amount of food on various body parts (shoulders, wrists, etc.).",
+        "3. Guess the Food and Location. The blindfolded partner must guess using only taste and touch.",
+        "4. Discuss the Experience. Ask: Which part of your body do you feel the most confident about today?"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "No Judgment Challenge",
+      "description": "Say mildly embarrassing truths without reacting negatively.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Facing Each Other. Get comfortable and make eye contact.",
+        "2. One Says: We Listen and We Don't Judge. Set the tone for honest, no-judgment sharing.",
+        "3. Share One Funny Confession. Be honest and vulnerable. No defending allowed.",
+        "4. Switch Roles. Take turns confessing. Keep it light and fun."
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Of Course We Couple Trend",
+      "description": "Complete the sentence Of course we... with inside jokes and funny.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Record a Video Walking Together. Set up the camera or phone to capture the moment.",
+        "2. Take Turns Saying Of Course We.... Each person completes the sentence with something true and funny.",
+        "3. Finish with a True but Funny Statement. Keep it relatable and authentic.",
+        "4. End with One Wholesome Line. Close on a sweet, genuine note."
+      ]
+    },
+    {
+      "id": 31,
+      "name": "The Target Swap Challenge",
+      "description": "Go to a store and buy items for each other based on specific humorous.",
+      "image": "Rekindle",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Head to a Store with a Budget. Set a $20-$30 budget.",
+        "2. Find Items for Categories. Their favorite snack, Something that reminds you of them, and Something they need.",
+        "3. Blind Reveal. Meet at the checkout or car and do a blind reveal.",
+        "4. Rate the Choices. Prompt: Which item shows I know you best?"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "Blindfolded Makeup",
+      "description": "One partner tries to do the other's full face of makeup while.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Lay Out All Makeup Products. On a flat surface within reach.",
+        "2. Put On a Tight Blindfold. The makeup artist cannot see anything.",
+        "3. Set a 5-Minute Timer. Attempt a full look: foundation, blush, and lipstick.",
+        "4. Reveal the Look. Check the mirror together. Prompt: On a scale of 1-10, how editorial is this?"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "Snack Color Challenge",
+      "description": "Pick a color and you can only buy snacks and drinks that have that.",
+      "image": "Fun&Playful",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Each Pick a Color. E.g., Pink vs. Blue.",
+        "2. Race to Find 5 Items. Enter a convenience store and find items matching your color.",
+        "3. Present Your Monochrome Haul. Meet in the car and show off your finds.",
+        "4. Taste-Test the Items. Example: Is Blue Gatorade actually better than Pink Lemonade?"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "Paint Each Other Blindly",
+      "description": "Set up two canvases back-to-back and paint portraits of each other.",
+      "image": "Fun&Playful",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Set Up Two Chairs with Easels. Facing each other with canvases blocked from view.",
+        "2. Set a 15-Minute Timer. Try to paint your partner's face as realistically as possible.",
+        "3. No Peeking Until Time Is Up. Stay focused on your own canvas.",
+        "4. Dramatic 3-2-1 Reveal. See the masterpieces. Prompt: Which feature did I get surprisingly right?"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "The Rainbow Swap",
+      "description": "A vibrant scavenger-hunt challenge where you each curate a collection.",
+      "image": "Fun&Playful",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Head to a Store and Set Budget Per Color. E.g., $5 per color.",
+        "2. Split Up and Race. Find one item for each color: Red, Orange, Yellow, Green, Blue, and Purple.",
+        "3. Color-by-Color Reveal. Explain why you chose each specific item for the other.",
+        "4. Record the Rainbow Reveal. See how your colors look together."
+      ]
+    },
+    {
+      "id": 36,
+      "name": "Put a Finger Down",
+      "description": "Viral honesty game where you both reveal funny truths by putting.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Side by Side. Optionally facing a camera for recording.",
+        "2. Hold Up 10 Fingers. Both partners start with all fingers up.",
+        "3. One Reads Statements. Like: Put a finger down if you stalked them before dating, if you said I'm fine but weren't.",
+        "4. Count Remaining Fingers. The person with fewer fingers up wins (or loses!)."
+      ]
+    },
+    {
+      "id": 37,
+      "name": "Who's More Likely To",
+      "description": "Point to the partner most likely to do something.",
+      "image": "Rekindle",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Back-to-Back. So you can't see each other's answers.",
+        "2. Ask a Question. Like: Who apologizes first? Who gets jealous faster?",
+        "3. On 3, Point to Who Fits. Reveal your answers simultaneously.",
+        "4. Explain Your Answers. Discuss and debate your choices."
+      ]
+    },
+    {
+      "id": 38,
+      "name": "Rapid Fire 30 Questions",
+      "description": "Answer 30 random questions in 3 minutes.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a 3-Minute Timer. Keep the pressure on.",
+        "2. One Asks Quick Questions. Favorite memory? Biggest red flag? Most annoying habit?",
+        "3. Other Answers Instantly. No thinking allowed — just say the first thing that comes to mind.",
+        "4. Switch Roles. Now the other person answers rapid-fire questions."
+      ]
+    },
+    {
+      "id": 39,
+      "name": "Guess My Cravings",
+      "description": "Test how well you know your partner's taste.",
+      "image": "Rekindle",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. One Writes 3 Food Cravings. Be specific about what you're craving right now.",
+        "2. Other Guesses. Try to nail all three cravings.",
+        "3. Reveal Answers. See how well you know each other's taste.",
+        "4. Winner Gets Chosen Snack. The better guesser gets their craving fulfilled."
+      ]
+    },
+    {
+      "id": 40,
+      "name": "The 60-Minute MasterChef",
+      "description": "A high-speed culinary battle where you both cook the same comfort.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Dish and Set 60-Minute Timer. Pick something you both love, like Tacos, Pasta, or Smash Burgers.",
+        "2. Assign Each Partner a Station. Clear counters and set up ingredients and tools.",
+        "3. Cook and Record a Time-Lapse. Focus on the chopping, sizzling, and frantic plating in the final 5 minutes.",
+        "4. Blind Taste Test. Plate aesthetically and do a scorecard review for each other."
+      ]
+    },
+    {
+      "id": 41,
+      "name": "The Yes Day Challenge",
+      "description": "Inspired by the Netflix film — one partner plans the entire day.",
+      "image": "Fun&Playful",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. The Planner Builds a Full Day Itinerary. At least 5 activities, one of which must make the other nervous.",
+        "2. The Yes Partner Commits. Zero complaining and must engage fully with each activity.",
+        "3. Switch Roles the Following Weekend. Both partners get a turn at planning and saying yes.",
+        "4. Reflect Together. What's the bravest yes you said today? What did it feel like to surrender control?"
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Karaoke Living Room Show",
+      "description": "No bar needed — set up a full karaoke show at home, audience of two.",
+      "image": "Fun&Playful",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Use a Karaoke App or YouTube. Each person secretly prepares one song to perform and one duet suggestion.",
+        "2. Perform Your Solo with Full Commitment. Props, staging, and dramatic delivery required.",
+        "3. Do the Duet Together. Film it. Rate each other on: performance, stage presence, and pure boldness.",
+        "4. Reflect with Prompts. What song describes your relationship right now? What song did you secretly want your partner to pick?"
+      ]
+    },
+    {
+      "id": 43,
+      "name": "The Scrapbook Challenge",
+      "description": "Build a physical or digital scrapbook of your relationship in 60.",
+      "image": "DeletetheGlitch",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a 60-Minute Timer. Use old photos, receipts, tickets, screenshots — anything that represents your relationship.",
+        "2. Each Person Builds Their Own Page. Write captions for each item.",
+        "3. Present Your Pages to Each Other. Explain the significance of each item.",
+        "4. Reflect Together. What moment do you wish you had a photo of? What's a small memory you didn't know the other person kept?"
+      ]
+    },
+    {
+      "id": 44,
+      "name": "Minefield Navigation",
+      "description": "A high-stakes trust exercise where one partner is blindfolded and the.",
+      "image": "Activityimage",
+      "category": "Fun & Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Scatter Mines Across the Floor. Use shoes, pillows, or toys as obstacles.",
+        "2. Blindfold One Partner. They stand at one end of the room.",
+        "3. Navigator Gives Verbal Instructions. Guide your partner across without hitting a single obstacle.",
+        "4. Ask an Unfiltered Prompt. On a scale of 1-10, how much did you want to scream at my directions just now?"
+      ]
+    },
+    {
+      "id": 45,
+      "name": "The Color-of-the-Day Text",
+      "description": "Replace the boring How's your day? with a single daily text.",
+      "image": "Activityimage",
+      "category": "Daily Dose of Us",
+      "time": "10 mins",
+      "steps": [
+        "1. Use Metaphor to Avoid Autopilot Answers. Instead of saying I'm busy, choose a color that matches your mood.",
+        "2. Send During a Loose Time Window. Agree to send between noon and 5 PM rather than a set time, making it genuine rather than a chore.",
+        "3. Get Specific and Strange with Colors. Avoid basic colors. Use descriptions like the grey of a rainy sidewalk or neon electric green.",
+        "4. Review the Archive Monthly. Look back at your text history once a month to spot emotional patterns and spark deeper talks."
+      ]
+    },
+    {
+      "id": 46,
+      "name": "The Three-Thing Debrief",
+      "description": "Replace the generic How was your day? with a structured nightly.",
+      "image": "DeletetheGlitch",
+      "category": "Daily Dose of Us",
+      "time": "10 mins",
+      "steps": [
+        "1. Focus on Specifics Over Summaries. Avoid executive summaries like fine or busy. The three-item rule forces you to pick actual moments.",
+        "2. Prioritize the Surprise Category. Pay extra attention to the unexpected—a stranger's kindness or a surprising self-realization.",
+        "3. Listen to Track, Not to Task. Give full focus without planning your response. Ask one genuine follow-up question.",
+        "4. Engage Before the Digital Drift. Complete this 10-minute ritual before the TV or phones take over your mental energy."
+      ]
+    },
+    {
+      "id": 47,
+      "name": "Parallel Creative Night",
+      "description": "Spend an evening working on separate creative projects side-by-side.",
+      "image": "Fun&Playful",
+      "category": "Meaning & Growth",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick Individual, Non-Collaborative Projects. Choose something you've each wanted to make—drawing, writing, or a puzzle.",
+        "2. Set the Ritual Space Together. Arrange a shared table with instrumental music and snacks.",
+        "3. Work with Intentional Presence. Focus on making rather than consuming. Witness each other's interior life in action.",
+        "4. Share Without Self-Criticism. Show what you've created without making excuses, allowing curious questions and observations."
+      ]
+    },
+    {
+      "id": 48,
+      "name": "The Shared Reading Night",
+      "description": "Turn your living room into a private, two-person book club by reading.",
+      "image": "Activityimage",
+      "category": "Meaning & Growth",
+      "time": "10 mins",
+      "steps": [
+        "1. Select a Neutral, Engaging Text. Choose a book or short story collection new to both of you that invites conversation.",
+        "2. Establish a Comfortable Reading Rhythm. Alternate by page or chapter, staying physically close and ready to pause when something resonates.",
+        "3. Prioritize the Digressions. Follow every conversational thread the book triggers—confessions, disagreements, or random memories.",
+        "4. Build a Recurring Ritual. Protect this time weekly to accumulate shared references and inside lore."
+      ]
+    },
+    {
+      "id": 49,
+      "name": "Retro Arcade Challenge",
+      "description": "Head to a bar-arcade or use an emulator to compete for the high score.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose Three Games. A fighter (Street Fighter), a racer (Mario Kart), and a classic (Pac-Man).",
+        "2. Play Three Rounds of Each. Record your scores or wins on a phone note.",
+        "3. Winner Picks the Next Treat. Drinks, snacks, or the next date.",
+        "4. Finish with a Co-op Game. Work as a team on Metal Slug after the competition."
+      ]
+    },
+    {
+      "id": 50,
+      "name": "Chess & Coffee in the",
+      "description": "A classic quiet luxury activity that focuses on strategy and presence.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack a Portable Chess Set. Grab two high-quality black coffees.",
+        "2. Find a Public Spot. A stone table or blanket in a quiet corner of a park.",
+        "3. Play Best of Three. Use a 10-minute timer per player.",
+        "4. Analyze the Winning Move. Discuss strategy while finishing your drinks."
+      ]
+    },
+    {
+      "id": 51,
+      "name": "High-Stakes Mario Party",
+      "description": "Elevate a gaming night by adding real-world consequences to the.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Set Up the Console. Choose a map you both know well.",
+        "2. Assign Real Consequences. E.g., the loser does the dishes for a week.",
+        "3. Play with Full Focus. Use every item and trap to your advantage.",
+        "4. Claim Your Prize. Take a winner's selfie with the trophy on screen."
+      ]
+    },
+    {
+      "id": 52,
+      "name": "Professional Dart",
+      "description": "Focus on the physics of the throw and the geometry of the scoring.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Dartboard. A local pub or set one up at home.",
+        "2. Practice Your Stance. Lean slightly forward with a consistent elbow height.",
+        "3. Play Cricket or 301. Aim for specific triples to boost your score.",
+        "4. Track Your Progress. Keep a running tally of bullseyes over a month."
+      ]
+    },
+    {
+      "id": 53,
+      "name": "Poker Night for Two",
+      "description": "Learn the art of the bluff and reading the room in a private card.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Use Real Chips and Fresh Deck. For that casino feel.",
+        "2. Deal Texas Hold'em Hands. Bet with matches, candies, or favor tokens.",
+        "3. Maintain a Poker Face. Even when you have a terrible hand.",
+        "4. Reveal Your Bluffs. See who is the better actor."
+      ]
+    },
+    {
+      "id": 54,
+      "name": "Signature Haircut Date",
+      "description": "Visit a high-end barber together for a consultation on a style reset.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Research Classic Hairstyles. Taper fades, pompadours that suit his face shape.",
+        "2. Book a Full Service Appointment. Include a hot towel treatment.",
+        "3. Browse Grooming Products. Look for a new scent while he gets the cut.",
+        "4. Debut the New Look. Go for a walk afterward in natural light."
+      ]
+    },
+    {
+      "id": 55,
+      "name": "Shoe Shining & Leather",
+      "description": "A meditative, tactile activity that preserves the life of.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Remove Surface Dust. Use a horsehair brush on the leather.",
+        "2. Apply Matching Cream Polish. In small circular motions with a soft cloth.",
+        "3. Let Polish Sit, Then Buff. Wait 10 minutes, then buff vigorously.",
+        "4. Spit-Shine the Toe Box. A drop of water plus wax for a mirror finish."
+      ]
+    },
+    {
+      "id": 56,
+      "name": "Cologne Scent Profile",
+      "description": "Moving past designer scents to find a niche fragrance that matches.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit a High-End Boutique. Request samples of woody, citrus, and tobacco notes.",
+        "2. Apply One Scent to Each Wrist. Wait 30 minutes for the dry down.",
+        "3. Smell Again Later. See how they react with his skin chemistry.",
+        "4. Purchase a Travel-Size Bottle. Use as his evening only scent."
+      ]
+    },
+    {
+      "id": 57,
+      "name": "Capsule Wardrobe Curation",
+      "description": "Decluttering the closet to focus on quality over quantity and a.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Pull Everything Out. Sort into Keep, Donate, and Repair.",
+        "2. Focus on a Neutral Palette. Navy, olive, grey, cream that all mix and match.",
+        "3. Identify 3 Missing Pieces. Like a perfect white tee or a denim jacket.",
+        "4. Re-hang with Matching Hangers. Wooden hangers for instant luxury."
+      ]
+    },
+    {
+      "id": 58,
+      "name": "The Traditional Wet Shave",
+      "description": "Learning the old-school ritual of using a safety razor and a.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Build a Lather. Soak a shaving brush and use sandalwood soap.",
+        "2. Apply in Circular Motions. Lift the facial hair with thick lather.",
+        "3. Shave at a 30-Degree Angle. Let the weight of the metal do the work.",
+        "4. Finish with Cold Water Splash. Apply an alcohol-free balm."
+      ]
+    },
+    {
+      "id": 59,
+      "name": "Backyard Fire-Building",
+      "description": "Mastering the one-match fire without using chemical fire-starters.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Gather Materials. Tinder (dry grass), kindling (small twigs), and fuel (large logs).",
+        "2. Build a Teepee Structure. Place kindling around a small pile of tinder.",
+        "3. Light from the Windward Side. Gently blow on the base to feed it oxygen.",
+        "4. Roast Something Simple. Sausages or corn on the cob once logs catch."
+      ]
+    },
+    {
+      "id": 60,
+      "name": "The Gear Loadout Hike",
+      "description": "A physical hike focused on testing outdoor equipment and endurance.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack 15 lbs of Essential Gear. Water, first aid, stove in a backpack.",
+        "2. Choose a Trail with Elevation. At least 500ft of elevation gain.",
+        "3. Make Trail Coffee. Stop halfway to set up a portable stove.",
+        "4. Review Gear Performance. Was anything too heavy or unnecessary?"
+      ]
+    },
+    {
+      "id": 61,
+      "name": "Basic Knot Tying Workshop",
+      "description": "Learn five essential knots useful for life and camping.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy Two Lengths of Rope. Different colors to make crossings easier to see.",
+        "2. Master the Bowline. The king of knots — practice until you can do it blindfolded.",
+        "3. Practice Square and Taut-Line Knots. For joining ropes and creating tension.",
+        "4. Test the Knots. Hang a heavy object or secure a tarp."
+      ]
+    },
+    {
+      "id": 62,
+      "name": "Night Sky Navigation",
+      "description": "Learn how to find North and navigate using only the stars.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Dark Spot. Locate the Big Dipper (Ursa Major).",
+        "2. Follow the Pointer Stars. To find Polaris (The North Star).",
+        "3. Verify with a Compass. Note how the stars move over an hour.",
+        "4. Discuss the History. How sailors navigated for thousands of years before GPS."
+      ]
+    },
+    {
+      "id": 63,
+      "name": "Binocular Bird Watching",
+      "description": "A focus-based activity that requires patience, silence, and.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab 8x42 Binoculars. And a local field guide to birds.",
+        "2. Find a Hidden Spot Near Water. Sit perfectly still for 10 minutes.",
+        "3. Scan the Treeline. Focus on movement rather than color.",
+        "4. Identify Three Species. Check off their names in the guide."
+      ]
+    },
+    {
+      "id": 64,
+      "name": "The Smash Burger Science",
+      "description": "Learning the Maillard reaction to get the perfect crust on a burger.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Roll 80/20 Ground Beef. Into loose balls — don't overwork the meat.",
+        "2. Smash on a Hot Griddle. Use a heavy press to smash them paper-thin.",
+        "3. Season and Wait. Salt and pepper; wait for dark brown crispy edges.",
+        "4. Flip and Serve. Add cheese, serve on a toasted brioche bun."
+      ]
+    },
+    {
+      "id": 65,
+      "name": "Knife Skills Training",
+      "description": "Mastering the rock chop and batonnet cuts to speed up meal prep.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Sharpen a 10-inch Chef's Knife. Using a whetstone or pull-through sharpener.",
+        "2. Practice the Claw Grip. On a potato to keep your fingers safe.",
+        "3. Aim for Even Cubes. 1cm x 1cm cubes so everything cooks evenly.",
+        "4. Make a Stir Fry. Use your chopped veggies."
+      ]
+    },
+    {
+      "id": 66,
+      "name": "The Dry Rub Workshop",
+      "description": "Experimenting with spices to create a signature BBQ rub.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Start with a Base. Brown sugar and kosher salt.",
+        "2. Add Heat, Smoke, and Earth. Cayenne, paprika, and cumin in different ratios.",
+        "3. Test on Chicken or Pork. See how flavors change when heated.",
+        "4. Bottle the Winner. Label it His Signature Rub."
+      ]
+    },
+    {
+      "id": 67,
+      "name": "Cast Iron Seasoning",
+      "description": "Taking care of the most important tool in the kitchen through heat.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Scrub and Dry the Pan. Warm water, then dry on the stovetop.",
+        "2. Apply a Thin Layer of Oil. Grapeseed or flaxseed oil on the entire surface.",
+        "3. Bake Upside Down at 450F. For one hour in the oven.",
+        "4. Cool Inside the Oven. Build a permanent non-stick carbon layer."
+      ]
+    },
+    {
+      "id": 68,
+      "name": "Perfect Omelet Challenge",
+      "description": "Learn the French Style omelet — no browning, just smooth, custardy.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Whisk 3 Eggs Until Smooth. No streaks of white; use non-stick pan on medium-low.",
+        "2. Constantly Move the Eggs. Use a silicone spatula like scrambled eggs.",
+        "3. Fold at 80% Set. Smooth out and fold into a tight cigar shape.",
+        "4. Plate with Chef Finish. Top with fresh chives and cold butter."
+      ]
+    },
+    {
+      "id": 69,
+      "name": "Documentary & Debate",
+      "description": "Watching a thought-provoking doc and discussing the takeaways.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a 90-Minute Documentary. On a topic neither of you knows much about.",
+        "2. Keep a Question Log. On your phone for things to look up later.",
+        "3. Share the Most Surprising Fact. After the credits roll.",
+        "4. Rabbit-Hole the Topic. Spend 15 minutes on Wikipedia finding missing pieces."
+      ]
+    },
+    {
+      "id": 70,
+      "name": "Lego Architecture Build",
+      "description": "A focus-heavy, collaborative project that results in grown-up decor.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy a Lego Icons or Architecture Set. Like London skyline or a Porsche.",
+        "2. Divide the Bags. One finds pieces, the other assembles.",
+        "3. Work in a Flow State. In silence or with a focus playlist.",
+        "4. Display the Build. Find a permanent shelf as a reminder of teamwork."
+      ]
+    },
+    {
+      "id": 71,
+      "name": "The Financial Future Sync",
+      "description": "Getting organized about savings, investments, and big goals.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Open Banking Apps Together. Look at shared goal progress.",
+        "2. Research One Investment Type. Index funds, HYSA — spend 20 minutes.",
+        "3. Set a No-Spend Week Challenge. See how much you can redirect.",
+        "4. Celebrate with Home-Cooked Meal. Honor the wealth-building mindset."
+      ]
+    },
+    {
+      "id": 72,
+      "name": "Vinyl Record Care",
+      "description": "Maintaining a collection and using Discogs to see its market value.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Clean the Grooves. Use a velvet brush and specialized solution.",
+        "2. Scan Barcodes into Discogs. Build a digital library.",
+        "3. Check the Median Value. It's often higher than you think!",
+        "4. Re-Sleeve in Anti-Static Sleeves. High-quality inner sleeves for protection."
+      ]
+    },
+    {
+      "id": 73,
+      "name": "Model Kit Assembly",
+      "description": "Patience-testing work with small parts, glue, and paint for a.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Level 1 Model. Plane or car, plus precision nippers.",
+        "2. Sand Down the Nubs. On each plastic piece so they fit perfectly.",
+        "3. Use Minimal Model Cement. Too much will melt the plastic!",
+        "4. Apply Decals. Using water and a toothpick for professional touch."
+      ]
+    },
+    {
+      "id": 74,
+      "name": "Perfect Setup",
+      "description": "Cable management and aesthetic desk-scaping for his workspace.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Unplug Everything. Use velcro ties to bundle cables.",
+        "2. Clean Monitors and Keyboard. Wipe down and use compressed air.",
+        "3. Add a Felt Desk Mat. And a monitor bar to reduce eye strain.",
+        "4. Hide Remaining Wires. Behind desk legs for a floating tech look."
+      ]
+    },
+    {
+      "id": 75,
+      "name": "Curating a Driving",
+      "description": "A high-energy playlist designed for long road trips or night drives.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Add Heavy Bass Songs. With consistent BPM like Synthwave or Classic Rock.",
+        "2. Order by Energy Build. Build energy over the first 30 minutes.",
+        "3. Include Sing-Along Classics. At least three for late-night stretches.",
+        "4. Test on a Drive. A 20-minute trip to the grocery store."
+      ]
+    },
+    {
+      "id": 76,
+      "name": "Smart Home Automation Lab",
+      "description": "Using IFTTT or HomeKit to make your living space feel futuristic.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Program Lights to Auto-Dim. When the TV turns on.",
+        "2. Set a Morning Routine. Coffee maker starts when alarm goes off.",
+        "3. Install a Smart Button. By the bed to turn off every light.",
+        "4. Share the Shortcuts. So you both know how to control the command center."
+      ]
+    },
+    {
+      "id": 77,
+      "name": "Film Look Tutorial",
+      "description": "Learn how to make iPhone photos look like 35mm film.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Download Lightroom Mobile. Import a recent landscape photo.",
+        "2. Adjust Settings. Lower Contrast, increase Grain and Shadow Tint.",
+        "3. Save as a Preset. Apply to all future photos with one tap.",
+        "4. Post the Best One. See if anyone asks what camera you used."
+      ]
+    },
+    {
+      "id": 78,
+      "name": "Digital Map Hidden Gems",
+      "description": "Using Google Maps Save to create a map of secret spots in your city.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Search for Hidden Spots. Hole-in-the-wall restaurants and unique architecture.",
+        "2. Save to a Shared List. Called The City Recon.",
+        "3. Add Notes to Each Spot. Like Best espresso or Good sunset view.",
+        "4. Pick One and Go. Visit immediately without a plan."
+      ]
+    },
+    {
+      "id": 79,
+      "name": "Basketball HORSE",
+      "description": "A game of trick shots that tests creativity and shooting skill.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Court and Warm Up. 10 free throws each.",
+        "2. Take Turns Calling Shots. Left-handed layup or Off the backboard.",
+        "3. Copy or Get a Letter. H-O-R-S-E rules apply.",
+        "4. Winner Picks Post-Game Drink. Choose the hydration reward."
+      ]
+    },
+    {
+      "id": 80,
+      "name": "The 5K Pacing Run",
+      "description": "A run focused on a specific target time rather than just finishing.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a Goal. E.g., finishing in 28 minutes and calculate split per kilometer.",
+        "2. Track Live Pace. Use a running app, call out times every 1km.",
+        "3. Synchronized Breathing. Stay in rhythm with each other.",
+        "4. Sprint Finish. End with a 200m sprint to the finish line."
+      ]
+    },
+    {
+      "id": 81,
+      "name": "Intro to Bouldering",
+      "description": "A problem-solving workout that requires both strength and strategy.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit a Climbing Gym. Rent aggressive rubber-soled shoes.",
+        "2. Pick V0 or V1 Route. Map out the beta before climbing.",
+        "3. Take Turns Spotting. Give beta from the ground.",
+        "4. Celebrate with Protein Shake. High-five after finishing a project route."
+      ]
+    },
+    {
+      "id": 82,
+      "name": "Tennis/Pickleball Rally",
+      "description": "A high-speed game that improves reflexes and provides cardio.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Rent a Court for One Hour. Grab two rackets and fresh balls.",
+        "2. Rally for 10 Minutes. Hit back and forth to get the feel.",
+        "3. Play a 3-Set Match. Focus on serving with power and accuracy.",
+        "4. Record a Slow-Mo. Analyze your swing form afterward."
+      ]
+    },
+    {
+      "id": 83,
+      "name": "The Rucking Walk",
+      "description": "Walking with a weighted pack to build functional strength and cardio.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack 10-20 lbs of Weight. Books or water in a sturdy backpack.",
+        "2. Choose a 3-Mile Route. Through a hilly area or local park.",
+        "3. Maintain Brisk Pace. Keep shoulders back and posture straight.",
+        "4. Enjoy the Lightness After. Take the pack off and feel light as air."
+      ]
+    },
+    {
+      "id": 84,
+      "name": "Timeline Teleportation",
+      "description": "A low-prep way to teleport into each other's past using your phone.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Open the Photos App. On your phone.",
+        "2. Scroll to Earliest Photos. Find some of your first photos.",
+        "3. Find a Fun Story Photo. Something with a weird or fun story behind it.",
+        "4. Share the Photo and Story. Explain the vibe you were going for."
+      ]
+    },
+    {
+      "id": 85,
+      "name": "Co-op Gaming Quest",
+      "description": "Build teamwork and handle challenges together in a digital world.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Couch Co-op Game. Something you both enjoy.",
+        "2. Set a Specific Goal. Finish one level or beat a boss.",
+        "3. Communicate Tactically. During the gameplay.",
+        "4. Celebrate or Laugh. At the win or game over screen."
+      ]
+    },
+    {
+      "id": 86,
+      "name": "Social Media Laugh",
+      "description": "A quick way to bond over shared humor without leaving the bed.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Bookmark Funny Content. Throughout the week.",
+        "2. Set Aside 15 Minutes. Sit together.",
+        "3. Take Turns Showing Best Finds. Share your favorite reels and memes.",
+        "4. Discuss Relationship Memes. Which ones perfectly describe your relationship?"
+      ]
+    },
+    {
+      "id": 87,
+      "name": "The Question Swap",
+      "description": "Skip the small talk and jump into things that actually matter.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Use a Digital Deck. Or list of powerful questions.",
+        "2. Take Turns Asking. One question each.",
+        "3. Choose Your Depth. You have autonomy in how deep you answer.",
+        "4. Swap to a New Topic. Once the conversation feels natural."
+      ]
+    },
+    {
+      "id": 88,
+      "name": "Tool Store Treasure Hunt",
+      "description": "A casual errand that serves as an undercover date.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Head to a Hardware Store. Browse aisles of gadgets you don't need.",
+        "2. Challenge Each Other. Find the weirdest-looking tool.",
+        "3. Grab a Checkout Snack. On the way out.",
+        "4. Imagine Home Projects. What you'd do if you had a house."
+      ]
+    },
+    {
+      "id": 89,
+      "name": "Car Maintenance & Coffee",
+      "description": "Combine a necessary task with quality time.",
+      "image": "Fun&Playful",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Plan a Car Task. Fill up gas or go through a car wash.",
+        "2. Grab Coffee First. Your favorite coffee or energy drinks.",
+        "3. Clean the Car Together. Clean out the door pocket trash during the wash.",
+        "4. Play a High-Energy Playlist. For the drive home."
+      ]
+    },
+    {
+      "id": 90,
+      "name": "Arcade Battle Royale",
+      "description": "High-energy competition that feels like being a kid again.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Local Arcade. Or barcade.",
+        "2. Split Credits or Tokens. Set a fair amount for each.",
+        "3. Compete Shoulder-to-Shoulder. Air hockey or racing games.",
+        "4. Buy a Silly Prize. Use tickets for a couple's prize."
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Drive-In Headlamp Dance",
+      "description": "A rugged, private alternative to a crowded dance floor.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Drive to a Quiet Spot. With a view.",
+        "2. Leave the Headlamps On. Turn off the car engine.",
+        "3. Turn Up a Guilty Pleasure Playlist. Something fun and nostalgic.",
+        "4. Do Crazy Wild Dancing. In front of the car headlights."
+      ]
+    },
+    {
+      "id": 92,
+      "name": "Hidden Figurine Mission",
+      "description": "A long-term game of stealth that adds playfulness to the mundane.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Get a Small Plastic Toy. Like a Lego man or figurine.",
+        "2. Hide It for Your Partner. Somewhere they'll eventually find it.",
+        "3. When Found, They Hide for You. Keep the cycle going.",
+        "4. Pair with a Small Treat. Occasionally add a chocolate or candy."
+      ]
+    },
+    {
+      "id": 93,
+      "name": "The Goldmine of Goodness",
+      "description": "Share life hacks or advice you've picked up along the way.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Think of One Genius Piece of Advice. From a mentor or parent.",
+        "2. Share While Doing Something Else. Like folding laundry or cooking.",
+        "3. Discuss How It Worked for You. Did you follow the advice?",
+        "4. Ask for Their Best Life Lesson. Exchange wisdom."
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Living Room Base Camp",
+      "description": "A cozy, low-effort way to watch movies that feels like an adventure.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Build a Fort. Use pillows and blankets in the living room.",
+        "2. Set Up a Screen Inside. Laptop or TV.",
+        "3. Order Takeout. So you don't have to clean the kitchen.",
+        "4. Watch a Nostalgic Movie. Like Transformers or Star Wars."
+      ]
+    },
+    {
+      "id": 95,
+      "name": "Acts of Service Sweep",
+      "description": "A major turn-on that involves zero talking and high impact.",
+      "image": "Activityimage",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Notice a Stressful Chore. Something that usually stresses your partner out.",
+        "2. Do It Without Mentioning. And without asking for praise.",
+        "3. Leave a No-Pressure Note. Saying you handled it.",
+        "4. Use the Saved Time. To just chill together."
+      ]
+    },
+    {
+      "id": 96,
+      "name": "2-2-2 Planning Session",
+      "description": "Take the lead on future logistics to remove emotional labor.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab Your Calendars. And a snack.",
+        "2. Pick a Date Night. For two weeks from now.",
+        "3. Research a Cool Airbnb. For two months from now.",
+        "4. Offer Two Specific Choices. Don't ask What do you want to do — give vetted options."
+      ]
+    },
+    {
+      "id": 97,
+      "name": "Yard Game Bracket",
+      "description": "Casual outdoor competition that pairs well with a cold drink.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Set Up a Yard Game. Cornhole or Horseshoes.",
+        "2. Play Best of Three. Keep it competitive.",
+        "3. Chat Between Turns. Maintain the shoulder-to-shoulder vibe.",
+        "4. Winner Picks the Movie. For later."
+      ]
+    },
+    {
+      "id": 98,
+      "name": "Reading the Room Together",
+      "description": "A quiet, low-effort way to be in each other's presence.",
+      "image": "Rekindle",
+      "category": "Activities for Him",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Book or Article. Graphic novel, book, or long-form article.",
+        "2. Sit Back-to-Back or Side-by-Side. Get comfortable.",
+        "3. Read Quietly for 20 Minutes. No talking needed.",
+        "4. Share One Mind-Blowing Thing. The most interesting thing you just read."
+      ]
+    },
+    {
+      "id": 99,
+      "name": "Blooms & Bonding",
+      "description": "A chance to bring the vibrant colors and scents of nature into your.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select Fresh Blooms. From a garden or florist.",
+        "2. Choose a Vessel. That matches the room's aesthetic.",
+        "3. Trim Stems Together. Remove excess leaves together.",
+        "4. Arrange by Color, Texture, and Height. Create a beautiful centerpiece."
+      ]
+    },
+    {
+      "id": 100,
+      "name": "The Sculptor's Touch",
+      "description": "Use your hands to mold something beautiful from raw earth.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit a Pottery Studio. Or use air-dry clay at home.",
+        "2. Practice Hand-Building. Using coils or slabs.",
+        "3. Shape a Functional Item. Like a tea cup or vase.",
+        "4. Paint Together. Allow it to dry or fire it, then paint."
+      ]
+    },
+    {
+      "id": 101,
+      "name": "Captured Radiance",
+      "description": "Celebrate her beauty and your connection through the lens of a camera.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Beautiful Venue. A park or cozy home setting.",
+        "2. Select Meaningful Outfits. Two or three outfits to wear.",
+        "3. Take Turns Posing and Directing. Guide each other.",
+        "4. Review and Select Favorites. For a physical album."
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Candlelit Alchemy",
+      "description": "Craft a signature scent for your home that promotes relaxation.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select a Wax Type. Soy or beeswax.",
+        "2. Choose Feminine Scents. Lavender or rose.",
+        "3. Melt and Stir. Carefully stir in the fragrances.",
+        "4. Pour and Let Set. Into decorated jars."
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Watercolor Emotions",
+      "description": "Express your inner worlds through the fluid beauty of paint.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Lay Out Canvases and Brushes. Various sizes and types.",
+        "2. Choose a Theme or Follow Intuition. Paint freely.",
+        "3. Blend Colors to Represent Feelings. Express how you feel in the moment.",
+        "4. Share the Meaning. Explain your creation once finished."
+      ]
+    },
+    {
+      "id": 104,
+      "name": "Pressed Memory Keepsakes",
+      "description": "Lock a moment in time by preserving gifted blooms.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Collect Flowers from a Special Date. Or any meaningful occasion.",
+        "2. Place Between Heavy Book Pages. Press carefully.",
+        "3. Wait Several Weeks. For them to dry and flatten.",
+        "4. Arrange in a Glass Frame. With a love note."
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Calligraphy of the Heart",
+      "description": "Elevate your communication through the art of beautiful lettering.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Get Dip Pens or Brush Pens. Start with basic tools.",
+        "2. Practice Basic Strokes and Alphabets. Together.",
+        "3. Write Out a Favorite Quote or Poem. Something meaningful.",
+        "4. Write a Formal Love Letter. Using your new skills."
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Jewelry of Intent",
+      "description": "Design wearable art that reflects her unique essence.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select Materials. Gemstones, wire, or beads.",
+        "2. Discuss Symbolism. Meaning behind certain colors or stones.",
+        "3. Assemble Necklaces or Bracelets. Help each other.",
+        "4. Gift the Finished Piece. To one another."
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Interior Sanctuary Design",
+      "description": "Collaboratively reimagine a space to reflect harmony and soul.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose One Room to Refresh. A corner or full room.",
+        "2. Browse Pinterest for Aesthetic. Find a feminine or Siren aesthetic.",
+        "3. Move Furniture and Add Mementos. Personal touches and photos.",
+        "4. Add Soft Lighting or Plants. Complete the vibe."
+      ]
+    },
+    {
+      "id": 108,
+      "name": "Soap Making for Self-Care",
+      "description": "Transform simple ingredients into nourishing, artisanal bars.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Gather Natural Oils and Botanicals. Plus lye for soap making.",
+        "2. Choose a Spa-Like Scent. Evokes relaxation.",
+        "3. Mix and Pour into Molds. Decorative molds work best.",
+        "4. Allow Bars to Cure. Before your next ritual bath."
+      ]
+    },
+    {
+      "id": 109,
+      "name": "The Ritual Bath for Two",
+      "description": "A sacred practice to cleanse the body and spirit with mindfulness.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Prepare a Warm Bath. With Epsom salts.",
+        "2. Add Rose Petals and Essential Oils. Or bubbles.",
+        "3. Set a Mood. Soft music and dim lighting.",
+        "4. Relax and Converse. Without rush."
+      ]
+    },
+    {
+      "id": 110,
+      "name": "Syncing Souls Breathwork",
+      "description": "A gentle way to regulate your nervous systems together.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Back-to-Back or Face-to-Face. Get comfortable.",
+        "2. Place Hands on Each Other's Hearts. Feel the heartbeat.",
+        "3. Close Your Eyes and Breathe Deeply. Slow, intentional breaths.",
+        "4. Notice Synchronization. Your breaths naturally begin to align."
+      ]
+    },
+    {
+      "id": 111,
+      "name": "Sensual Massage Journey",
+      "description": "Focus on the gift of touch without expectation.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Warm Up Coconut or Avocado Oil. Body temperature.",
+        "2. Add a Drop of Lavender. For relaxation.",
+        "3. Use Slow, Attentive Strokes. Ask about pressure.",
+        "4. Focus on the Journey. And the contour of the body."
+      ]
+    },
+    {
+      "id": 112,
+      "name": "Partners' Yoga Flow",
+      "description": "Use each other for support while discovering new muscles.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set Up Mats Side-by-Side. In a comfortable space.",
+        "2. Practice Supportive Poses. Like Tree Pose together.",
+        "3. Try Seated Twists Back-to-Back. Deepen the stretch.",
+        "4. End with Quiet Meditation. Focused on a shared memory."
+      ]
+    },
+    {
+      "id": 113,
+      "name": "Garden of Growth",
+      "description": "Nurture life together from the ground up.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select a Patch or Pots. For the balcony or garden.",
+        "2. Pick Out Seeds. For her favorite flowers or herbs.",
+        "3. Plant and Water Together. Spend time nurturing.",
+        "4. Watch the Daily Miracle. Of growth and renewal."
+      ]
+    },
+    {
+      "id": 114,
+      "name": "I Love You Because Mirror",
+      "description": "A daily visual reminder of her worth and your appreciation.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy Colorful Dry-Erase Markers. For the bathroom mirror.",
+        "2. Write One Specific Thing Daily. That you love about her.",
+        "3. Leave It for Her to Find. As she starts her day.",
+        "4. Rotate Who Writes. Each day alternate."
+      ]
+    },
+    {
+      "id": 115,
+      "name": "Shared Journaling Ritual",
+      "description": "Create a safe space to explore emotions and deepest desires.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy Two Beautiful Journals. One for each.",
+        "2. Use Guided Prompts or Free-Write. For 10 minutes.",
+        "3. Discuss What You're Comfortable Sharing. From your entries.",
+        "4. Celebrate Triumphs and Unload Burdens. Together."
+      ]
+    },
+    {
+      "id": 116,
+      "name": "Afternoon Tea Era",
+      "description": "A refined, caffeine-free alternative to late nights out.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a Table with Nice Cloth. Napkins, and fresh flowers.",
+        "2. Prepare Finger Sandwiches and Scones. Dainty desserts.",
+        "3. Brew a Pot of Herbal Tea. Specialty tea.",
+        "4. Dress Up and Enjoy Slow Conversation. Without phones."
+      ]
+    },
+    {
+      "id": 117,
+      "name": "Guided Imagery Meditation",
+      "description": "Travel to an epic destination using only your imagination.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Facing Each Other and Hold Hands. Get comfortable.",
+        "2. Close Eyes, One Person Describes a Day. A perfect, detailed day.",
+        "3. Get Detailed. About sights, sounds, and feelings.",
+        "4. Open Eyes and Discuss. What you both saw."
+      ]
+    },
+    {
+      "id": 118,
+      "name": "Wildcrafting Walk",
+      "description": "Reconnect with the land by foraging for nature's hidden gifts.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Go for a Slow Hike. In a local nature spot.",
+        "2. Identify Wild Plants or Herbs. Together.",
+        "3. Harvest a Small Amount. Like wildflowers for tea.",
+        "4. Create a Tonic or Skincare Product. At home."
+      ]
+    },
+    {
+      "id": 119,
+      "name": "The Thrift Shop Challenge",
+      "description": "A creative and affordable way to explore fashion styles.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a Small Budget. E.g., $20.",
+        "2. Head to a Local Thrift Store. Explore together.",
+        "3. Find the Most Unique Item. Or elegant item.",
+        "4. Model at Home. Buy the items and try them on."
+      ]
+    },
+    {
+      "id": 120,
+      "name": "Nostalgic Movie Marathon",
+      "description": "Revisit the stories that shaped you when you were younger.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Build a Fort. Pillows and blankets in the living room.",
+        "2. Pick a Series. Harry Potter or classic Disney films.",
+        "3. Prepare Girl-Favorite Snacks. Popcorn and mimosas.",
+        "4. Cuddle Up Without Phones. Spend the day together."
+      ]
+    },
+    {
+      "id": 121,
+      "name": "Culinary Collaboration",
+      "description": "Experiment in the kitchen to create a single masterpiece.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a New Recipe. New to both of you.",
+        "2. Divide Tasks. One preps, one measures.",
+        "3. Cook Together. Focus on the sensory experience.",
+        "4. Plate Beautifully. Enjoy by candlelight."
+      ]
+    },
+    {
+      "id": 122,
+      "name": "The Traveling Journal",
+      "description": "A secret way to communicate love when busy or apart.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Designate One Notebook. As your traveling journal.",
+        "2. Write a Short Note. A joke, or a reason you're proud of her.",
+        "3. Hide the Journal. For her to find, like under her pillow.",
+        "4. She Writes Back and Hides. For you."
+      ]
+    },
+    {
+      "id": 123,
+      "name": "Stargazing Indoors or Out",
+      "description": "A magical way to feel connected to the vastness of the universe.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. If Outdoors, Get a Blanket. If indoors, use a star projector.",
+        "2. Identify Constellations. Or just watch the sky.",
+        "3. Share Dreams and Aspirations. For the future.",
+        "4. Stay Close and Enjoy Silence. Together."
+      ]
+    },
+    {
+      "id": 124,
+      "name": "Throwback First Date",
+      "description": "Recreate the spark by revisiting where it all began.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit the Exact Spot. Where you first met or had your first date.",
+        "2. Wear Similar Clothes. Or do the same activity.",
+        "3. Talk About What You Were Thinking. At that very moment.",
+        "4. Reflect on Growth. How much you've grown since then."
+      ]
+    },
+    {
+      "id": 125,
+      "name": "Themed Date Night Jar",
+      "description": "Remove the emotional labor of planning by letting fate decide.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Write Date Ideas on Popsicle Sticks. Different ideas.",
+        "2. Color-Code by Cost. Green for free, red for $100+.",
+        "3. Put in a Decorated Jar. Ready to go.",
+        "4. Pull One Out. Whenever you need a surprise activity."
+      ]
+    },
+    {
+      "id": 126,
+      "name": "Feminine Fitness",
+      "description": "Explore movements that emphasize grace and strength.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sign Up for a New Class. Barre or Pilates.",
+        "2. Focus on Elegance. Rather than just the workout.",
+        "3. Be Accountability Partners. For each other.",
+        "4. Enjoy a Healthy Smoothie. Post-workout together."
+      ]
+    },
+    {
+      "id": 127,
+      "name": "Art Gallery Inspiration",
+      "description": "Soak up creativity and talk about how different art makes you feel.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Museum or Exhibition. Modern Art or Fashion.",
+        "2. Walk Through Slowly. Getting lost in the exhibits.",
+        "3. Ask What Do You See. In this painting?",
+        "4. Discuss Artist Personality. Which style matches yours?"
+      ]
+    },
+    {
+      "id": 128,
+      "name": "Volunteer Together",
+      "description": "Giving back to the community while bonding over shared values.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Identify a Cause She's Passionate About. Something meaningful.",
+        "2. Find a Local Event. That needs help.",
+        "3. Spend a Few Hours Working Together. For others.",
+        "4. Discuss How It Felt. To contribute to something larger."
+      ]
+    },
+    {
+      "id": 129,
+      "name": "Love Note Scavenger Hunt",
+      "description": "Lead her on a trail of affection through the house.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Write Several Small Notes. Each with a reason you love her.",
+        "2. Place Where She'll Find Them. Mirror, car, book.",
+        "3. Make Each Note a Clue. To the location of the next.",
+        "4. End with a Personalized Gift. A surprise at the final stop."
+      ]
+    },
+    {
+      "id": 130,
+      "name": "Memory Lane Decorating",
+      "description": "Surround her with visual reminders of your journey together.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Print Out Favorite Photos. Your best moments.",
+        "2. Add Small Notes. Explaining why each memory matters.",
+        "3. Decorate the Room. Bedroom or living area with photos and notes.",
+        "4. Reminisce Over Wine or Tea. Spend the evening together."
+      ]
+    },
+    {
+      "id": 131,
+      "name": "Slow Dance in the Dark",
+      "description": "A tender way to get lost in each other's embrace.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Create a Playlist. Of slow, meaningful songs.",
+        "2. Clear a Small Space. Bedroom or living room.",
+        "3. Turn Off Lights. Use only candles.",
+        "4. Hold Her Close and Sway. Without worrying about steps."
+      ]
+    },
+    {
+      "id": 132,
+      "name": "Reading to Each Other",
+      "description": "A simple, sweet gesture that builds deep connection.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Book of Poetry. Or a novel you both enjoy.",
+        "2. Cuddle in Bed. Or on a cozy chair.",
+        "3. Take Turns Reading Aloud. Chapters or poems.",
+        "4. Use a Slow, Calm Voice. Make occasional eye contact."
+      ]
+    },
+    {
+      "id": 133,
+      "name": "Custom Mood Playlist",
+      "description": "A multi-sensory gift that uses music to tell your story.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select Songs That Remind You. Of her or special moments.",
+        "2. Mix Slow and Uplifting Tracks. Comforting and favorite.",
+        "3. Give It a Personal Title. The Soundtrack of Us.",
+        "4. Play Softly in Background. During dinner or a bath."
+      ]
+    },
+    {
+      "id": 134,
+      "name": "The 2-2-2 Rule Planning",
+      "description": "Establish a rhythm to ensure your relationship stays a priority.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Down with Calendars. And a shared treat.",
+        "2. Schedule a Date Every 2 Weeks. Consistent dating.",
+        "3. Plan a Weekend Getaway. For 2 months from now.",
+        "4. Dream Up a Big Trip. For the 2-year mark."
+      ]
+    },
+    {
+      "id": 135,
+      "name": "Acts of Service Day",
+      "description": "Take the burden off her plate so she can fully relax.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Identify Chores She Handles. Like laundry, dishes.",
+        "2. Do Them All Without Being Asked. Or mentioning it.",
+        "3. Fill Up Her Car. And run it through the wash.",
+        "4. Order Her Favorite Takeout. End the day right."
+      ]
+    },
+    {
+      "id": 136,
+      "name": "Morning Beverage Ritual",
+      "description": "A small, consistent detail that says I thought of you.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Learn Exactly How She Likes It. Coffee or tea.",
+        "2. Wake Up Slightly Before Her. To prepare it.",
+        "3. Bring It to Her in Bed. While it's still hot.",
+        "4. Chat for 5 Minutes. Before the day starts."
+      ]
+    },
+    {
+      "id": 137,
+      "name": "Hidden Figurine Game",
+      "description": "Add a playful, childish spark to your daily routine.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Get a Small Figurine. Plastic toy or figurine.",
+        "2. Hide It Unexpectedly. For her to find.",
+        "3. When Found, She Hides for You. Keep the cycle.",
+        "4. Pair with a Treat. Occasionally add a chocolate kiss."
+      ]
+    },
+    {
+      "id": 138,
+      "name": "Tarot or Oracle Card",
+      "description": "Access intuition and gain insight into your journey together.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a Mystical Mood. Candles and soft music.",
+        "2. Use a Divine Feminine Deck. Or traditional Tarot.",
+        "3. Draw Cards for Relationship Energy. See what comes up.",
+        "4. Discuss the Symbolism. How it resonates with your life."
+      ]
+    },
+    {
+      "id": 139,
+      "name": "Picnic with a View",
+      "description": "A simple, low-cost way to enjoy each other's company outside.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack a Blanket and Pillows. And her favorite sandwiches.",
+        "2. Find a Scenic Spot. Park or waterfall.",
+        "3. Add Portable Lights. Twinkle lights or electric candles for ambiance.",
+        "4. Spend the Afternoon Talking. Or people-watching."
+      ]
+    },
+    {
+      "id": 140,
+      "name": "Horseback Riding Trail",
+      "description": "Reconnect with nature through majestic creatures.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Local Stable. That offers guided trail rides.",
+        "2. Choose a Scenic Area. Forest or beach.",
+        "3. Focus on the Rhythm. Of the horse and the landscape.",
+        "4. Discuss the Art of Being. Rather than just the activity."
+      ]
+    },
+    {
+      "id": 141,
+      "name": "Birdwatching Walk",
+      "description": "Cultivate presence and precision while observing nature.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab Binoculars. And a local bird guide.",
+        "2. Walk Quietly Through Wooded Area. Or nursery.",
+        "3. Spot and Identify Unique Species. Together.",
+        "4. Practice Being Observant. And empathetic to surroundings."
+      ]
+    },
+    {
+      "id": 142,
+      "name": "Digital Detox Weekend",
+      "description": "Rent a cabin or tent and leave the modern world behind.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Remote Location. Forest or beach.",
+        "2. Turn Off All Devices for 48 Hours. Complete detox.",
+        "3. Focus Solely on Nature. Deep conversations, and each other.",
+        "4. Engage in Learning Adventures. Like a multi-day trek."
+      ]
+    },
+    {
+      "id": 143,
+      "name": "Garden Nursery Date",
+      "description": "A sensory-rich outing to pick out future beauty for your home.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit a Local Plant Nursery. Or botanical garden.",
+        "2. Walk Through the Aisles. Smelling flowers and touching leaves.",
+        "3. Choose a New Plant Together. To take home.",
+        "4. Name the Plant. And decide on its personality."
+      ]
+    },
+    {
+      "id": 144,
+      "name": "The Fashion Show",
+      "description": "Help her explore her style while celebrating her beauty.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick Out Several Outfits. She's been wanting to wear.",
+        "2. Put On Fun, Uplifting Music. Set the vibe.",
+        "3. Act as the Emcee. Complimenting her on each look.",
+        "4. Take Polaroid-Style Photos. Of each outfit for a lookbook."
+      ]
+    },
+    {
+      "id": 145,
+      "name": "Makeup Tutorial",
+      "description": "A playful way to try something new and build confidence.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Feminine Makeup Tutorial. On YouTube.",
+        "2. Set Up Mirrors and Products. Together.",
+        "3. Recreate the Look. On each other or yourselves.",
+        "4. Laugh Through the Mistakes. Enjoy the transformation."
+      ]
+    },
+    {
+      "id": 146,
+      "name": "Joke and Laughter Session",
+      "description": "Keep things playful by intentionally seeking out humor.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Bookmark Funny Videos. Throughout the week.",
+        "2. Keep a Note of Ridiculous Jokes. That you hear.",
+        "3. Sit Together and Share. During a dull moment.",
+        "4. Read Jokes Until Laughing. Off the internet."
+      ]
+    },
+    {
+      "id": 147,
+      "name": "Throwback Playlist Dance",
+      "description": "Revisit the songs from your early days to spark nostalgia.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Find Songs from When You Started Dating. The popular ones.",
+        "2. Turn Them On While Doing Laundry. Or another mundane task.",
+        "3. Stop and Twirl Her Around. Like a queen.",
+        "4. Do Crazy Wild Dancing. To shake off the day."
+      ]
+    },
+    {
+      "id": 148,
+      "name": "Dream Day Envisioning",
+      "description": "A mental escape where anything becomes possible.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Find a Quiet Spot. And hold hands.",
+        "2. Close Your Eyes and Describe. The most epic day together.",
+        "3. Include Every Detail. Where you are, what you're eating, how you feel.",
+        "4. Open Eyes and Make It Happen. See which parts you can do this weekend."
+      ]
+    },
+    {
+      "id": 149,
+      "name": "Soft Life Sunday Reset",
+      "description": "A slow, cozy day where she feels emotionally safe and taken care of.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Clean the Room Together. Create a calm space with dim lights, candles, soft music.",
+        "2. Do Skincare Together. Face masks, under-eye patches, lip balm. Make it playful.",
+        "3. Make Tea, Coffee, or Matcha. Sit on the floor or bed together.",
+        "4. Share One Stress and One Joy. Take turns sharing what stressed you and what made you happy this week.",
+        "5. End with Long Hugs. Minimum 30 seconds."
+      ]
+    },
+    {
+      "id": 150,
+      "name": "Why I Chose You Letter",
+      "description": "A vulnerable, emotional bonding activity.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit in Separate Corners for 10-15 Minutes. Write a handwritten letter answering: Why did I choose you?",
+        "2. Include Specific Memories. First laugh, first date, a hard moment you survived.",
+        "3. Exchange Letters and Read Aloud. Slowly and intentionally.",
+        "4. Highlight the Hardest-Hitting Sentences. Underline them.",
+        "5. Keep Them Safe. To re-read on tough days."
+      ]
+    },
+    {
+      "id": 151,
+      "name": "Dress Her Up Date",
+      "description": "He styles her for a cute outing and puts effort into her vibe.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. She Lays Out 4-5 Options. Clothing choices to pick from.",
+        "2. He Picks a Full Outfit. Including accessories, bag, shoes, hair suggestion.",
+        "3. She Tries It On. And gives honest feedback.",
+        "4. Take Mirror Selfies Together. Capture the look.",
+        "5. Go Out for Dessert or a Walk. Dressed up together."
+      ]
+    },
+    {
+      "id": 152,
+      "name": "Main Character Photoshoot",
+      "description": "She's the star of the day.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose Golden Hour Timing. Best lighting.",
+        "2. Let Her Pick Location and Outfit. Her choice entirely.",
+        "3. He Takes Multiple Angles. Close-up, walking shot, laughing shot.",
+        "4. Hype Her Up During the Shoot. No silence allowed.",
+        "5. She Chooses Her Top 3 Favorites. No complaining about retakes."
+      ]
+    },
+    {
+      "id": 153,
+      "name": "Future Wife Interview",
+      "description": "A playful but intentional conversation about the future.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. One Person Acts as Interviewer. Set up the scenario.",
+        "2. Ask 10 Future Questions. Where do you see us living? What traditions will we create?",
+        "3. Record Answers on Video. For memories.",
+        "4. Switch Roles Halfway. Both get a turn."
+      ]
+    },
+    {
+      "id": 154,
+      "name": "Flower Princess Date",
+      "description": "A soft, romantic outing centered around beauty.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit a Flower Market. Or store together.",
+        "2. Let Her Choose Her Favorite Colors. Full freedom.",
+        "3. Arrange the Bouquet Together. At home.",
+        "4. Press One Flower in a Book. Write today's date.",
+        "5. Tell Her Why That Flower Reminds You of Her. Be specific."
+      ]
+    },
+    {
+      "id": 155,
+      "name": "Deep Talk Candle Night",
+      "description": "A no-distraction emotional intimacy session.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Turn Off Phones Completely. Full digital detox.",
+        "2. Sit Facing Each Other. With soft lighting.",
+        "3. Ask 8-10 Deep Questions. What fear don't you tell people? When do you feel most loved by me?",
+        "4. Listen Fully — No Interrupting. Give full attention.",
+        "5. End with One Appreciation Each. Close on a positive note."
+      ]
+    },
+    {
+      "id": 156,
+      "name": "He Does My Makeup",
+      "description": "A chaotic but bonding activity.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Lay Out Full Makeup Kit. Everything accessible.",
+        "2. He Explains Each Product First. Before using it.",
+        "3. She Cannot Guide Him. No help allowed.",
+        "4. Final Reveal in Mirror Together. Take photos — serious and funny.",
+        "5. Go Out in Public for 10 Minutes. If she agrees!"
+      ]
+    },
+    {
+      "id": 157,
+      "name": "Compliment Jar Creation",
+      "description": "Create emotional security she can return to anytime.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Write 20-30 Specific Compliments. Not generic — be detailed.",
+        "2. Fold and Place in a Jar. Make it look pretty.",
+        "3. She Pulls One Whenever She Feels Low. Instant mood boost.",
+        "4. Refill Every Few Months. Keep it fresh."
+      ]
+    },
+    {
+      "id": 158,
+      "name": "Love Language Day",
+      "description": "Speak only her primary love language all day.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Identify Her Top Love Language. Words, touch, acts, gifts, or time.",
+        "2. Spend the Day Expressing It. Intentionally throughout.",
+        "3. Ask Her at Night How It Felt. Get her honest feedback.",
+        "4. Discuss and Reflect. Did today make you feel more understood?"
+      ]
+    },
+    {
+      "id": 159,
+      "name": "Childhood Memory Cook",
+      "description": "Recreate something from her childhood.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Ask Her Favorite Childhood Dish. Be curious.",
+        "2. Watch Recipe Together. Find the recipe online.",
+        "3. Cook as a Team. Split the tasks.",
+        "4. While Eating, Ask About Childhood. What did love look like in your home growing up?"
+      ]
+    },
+    {
+      "id": 160,
+      "name": "Aesthetic Picnic Date",
+      "description": "Soft outdoor bonding.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack Fruits, Desserts, Juice. Keep it aesthetic.",
+        "2. Bring Blanket and Speaker. Set the vibe.",
+        "3. Sit Close and Share Food. Be intentional.",
+        "4. Take Candid Photos. And share one dream each."
+      ]
+    },
+    {
+      "id": 161,
+      "name": "Our Firsts Memory Night",
+      "description": "Revisit your early relationship.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Talk About First Impression. What you first noticed.",
+        "2. Discuss First Fight. And what you learned from it.",
+        "3. Share First Moment You Felt Secure. When you knew.",
+        "4. Recreate Your First Selfie Pose. For fun."
+      ]
+    },
+    {
+      "id": 162,
+      "name": "Scent Memory Date",
+      "description": "Choose a scent for this phase of your relationship.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Visit a Perfume Store. Browse together.",
+        "2. Smell Options Slowly. Take your time.",
+        "3. Pick One Scent for This Year. That represents your current phase.",
+        "4. Name It Something Cute. Your own signature scent name."
+      ]
+    },
+    {
+      "id": 163,
+      "name": "Princess Treatment",
+      "description": "She plans nothing. He handles everything.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. He Secretly Plans a Mini Date. Full surprise.",
+        "2. Small Thoughtful Details. Favorite snack, song, color.",
+        "3. No Asking Her to Decide Anything. He handles it all.",
+        "4. End by Asking How She Felt. Get her genuine reaction."
+      ]
+    },
+    {
+      "id": 164,
+      "name": "Future House Vision Night",
+      "description": "Design your dream home together.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sketch Layout or Use Pinterest. Visualize together.",
+        "2. Decide Bedroom Vibe, Kitchen Style. Room by room.",
+        "3. Pick One Non-Negotiable Each. What matters most.",
+        "4. Discuss Budget Dreams vs Reality. Be honest and dream big."
+      ]
+    },
+    {
+      "id": 165,
+      "name": "Emotional Check-In Date",
+      "description": "Relationship maintenance conversation.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Rate Relationship Happiness Out of 10. Be honest.",
+        "2. Share One Improvement Area. Something to work on.",
+        "3. Share One Gratitude. Something you appreciate.",
+        "4. Hug After Difficult Topics. Physical reassurance."
+      ]
+    },
+    {
+      "id": 166,
+      "name": "Golden Hour Walk",
+      "description": "Slow walk with intentional conversation.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. No Phones Allowed. Leave them behind.",
+        "2. Walk Side by Side. At a slow pace.",
+        "3. Hold Hands. Physical connection.",
+        "4. Ask Reflective Questions. About life and your relationship."
+      ]
+    },
+    {
+      "id": 167,
+      "name": "Dream Trip Planning",
+      "description": "Plan a fantasy vacation together.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick Country/City. Your dream destination.",
+        "2. Plan 3 Activities Per Day. Be detailed.",
+        "3. Estimate Budget. How much would it cost?",
+        "4. Save It for Future Goal. Make it a real plan."
+      ]
+    },
+    {
+      "id": 168,
+      "name": "Romantic Affirmation",
+      "description": "Affirm her while she looks in the mirror.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Stand Behind Her Gently. Both facing the mirror.",
+        "2. Say Affirmations. While she looks at herself.",
+        "3. Make Eye Contact After Each One. Through the reflection.",
+        "4. Let Her Feel Seen. Truly appreciated."
+      ]
+    },
+    {
+      "id": 169,
+      "name": "Things I Notice Night",
+      "description": "Appreciation of small details.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Each List 10 Subtle Things. That you notice about the other.",
+        "2. Share Slowly. One at a time.",
+        "3. Explain Why It Matters. What makes it special.",
+        "4. Appreciate Each Other. The details matter."
+      ]
+    },
+    {
+      "id": 170,
+      "name": "Relationship Time Capsule",
+      "description": "Capture your current phase.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Write a Note to Future Selves. What you want to say.",
+        "2. Add One Small Object. Movie ticket, photo, etc.",
+        "3. Seal with Future Open Date. Pick a date in the future.",
+        "4. Store It Safely. Until the opening date."
+      ]
+    },
+    {
+      "id": 171,
+      "name": "Safe Space Night",
+      "description": "Talk about insecurities without judgment.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. One Speaks, One Listens. Full attention.",
+        "2. No Fixing, Just Listening. Just be present.",
+        "3. Switch Roles. Both get a turn.",
+        "4. End with Reassurance. Comfort and support."
+      ]
+    },
+    {
+      "id": 172,
+      "name": "Soft Music Floor Date",
+      "description": "Sit on floor with fairy lights and music.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Play Calm Playlist. Soft, relaxing music.",
+        "2. Slow Dance Casually. No pressure.",
+        "3. Sit Close and Talk. About anything.",
+        "4. Enjoy the Moment. Just being together."
+      ]
+    },
+    {
+      "id": 173,
+      "name": "What If We Met Later Game",
+      "description": "Hypothetical reflection activity.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Ask: If We Met 5 Years Later. What would be different?",
+        "2. Discuss Maturity and Growth. How you've changed.",
+        "3. Appreciate Current Timing. Why now is right.",
+        "4. Reflect on Your Journey. How far you've come."
+      ]
+    },
+    {
+      "id": 174,
+      "name": "Pressed Flower Phone",
+      "description": "Carry a piece of nature by preserving delicate blooms behind clear.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Source Small Pressed Flowers. And a clear hard-shell phone case.",
+        "2. Arrange with Tweezers. Find a layout you love.",
+        "3. Apply Clear Adhesive. Secure each flower.",
+        "4. Snap the Case On. Press flowers flat for a permanent botanical look."
+      ]
+    },
+    {
+      "id": 175,
+      "name": "Hand-Painted Taper",
+      "description": "Transform plain dinner candles into whimsical decor using coquette.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Purchase Pastel Taper Candles. And non-toxic acrylic paint pens.",
+        "2. Sketch Small Motifs. Tiny red cherries, blue bows, or stars.",
+        "3. Fill In with Paint Pens. Layer colors once first coat is dry.",
+        "4. Place in Vintage Holders. Display on your vanity or dining table."
+      ]
+    },
+    {
+      "id": 176,
+      "name": "Vision Board for Our Era",
+      "description": "A collaborative collage mapping your shared goals and aesthetic vibes.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Find Images on Pinterest. That represent your dream life.",
+        "2. Print in Various Sizes. Including textures like silk or ocean waves.",
+        "3. Layer on a Foam Board. Using double-sided tape.",
+        "4. Add Physical Elements. Like a dried flower or movie ticket."
+      ]
+    },
+    {
+      "id": 177,
+      "name": "DIY Charm Jewelry",
+      "description": "Create custom, personalized jewelry that tells your relationship.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy a Starter Kit. Chains, clasps, and variety of charms.",
+        "2. Lay Out Chains. Decide on spacing pattern for charms.",
+        "3. Use Needle-Nose Pliers. Open jump rings, attach charms, pinch shut.",
+        "4. Swap the Finished Pieces. As a romantic friendship-style gesture."
+      ]
+    },
+    {
+      "id": 178,
+      "name": "Lace-Trimmed Tote Bag",
+      "description": "Elevate a basic canvas tote into a chic French-market-style accessory.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sketch a Design on Plain Tote. Fruit or flower design with a pencil.",
+        "2. Use Fabric Paints. Fill in with soft, muted colors.",
+        "3. Attach White Lace Ribbon. Using a hot glue gun along edges or handles.",
+        "4. Iron to Set the Paint. On the reverse side."
+      ]
+    },
+    {
+      "id": 179,
+      "name": "Mirror Decal Decorating",
+      "description": "Turn your daily reflection into a source of positivity with.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Clean Your Mirror. Streak-free and ready for art.",
+        "2. Use Pastel Glass Markers. Write affirmations like You look stunning.",
+        "3. Draw Small Corner Doodles. Vines or sparkling stars to frame your reflection.",
+        "4. Reset Weekly. Wipe off and write new affirmations each Monday."
+      ]
+    },
+    {
+      "id": 180,
+      "name": "Aesthetic Scrapbooking",
+      "description": "A physical feed of your relationship capturing small moments.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select 10-15 Photos. Of small, cozy moments.",
+        "2. Print in Square Format. Glue into a linen-bound journal.",
+        "3. Decorate with Washi Tape. Receipts from dates, and handwritten notes.",
+        "4. Leave Blank Pages at the End. Your story is still being written."
+      ]
+    },
+    {
+      "id": 181,
+      "name": "Cozy Clay Ring Dishes",
+      "description": "Sculpting delicate organic-shaped trays for precious jewelry.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Roll Out White Air-Dry Clay. Half a centimeter thick.",
+        "2. Cut a Circle, Pinch Edges Up. Create a wavy rim.",
+        "3. Let Dry for 48 Hours. Then paint center with glossy pastel acrylic.",
+        "4. Add a Gold Metallic Rim. With a paint pen for high-end boutique look."
+      ]
+    },
+    {
+      "id": 182,
+      "name": "Custom Perfume Blending",
+      "description": "Craft a signature scent as a sensory memory of your time together.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Research Scent Notes. How vanilla and jasmine interact.",
+        "2. Use Glass Roller Bottles. Add 10 drops base oil, 5 drops middle note.",
+        "3. Fill with Carrier Oil. Like Jojoba to make it skin-safe.",
+        "4. Apply to Pulse Points. Name the scent after a shared memory."
+      ]
+    },
+    {
+      "id": 183,
+      "name": "Botanical Sun-Catchers",
+      "description": "Window art made from real pressed petals catching golden hour light.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Gather Thin Flat Petals. Press inside a heavy book for a few days.",
+        "2. Buy Two Small Glass Frames. With a hanging chain.",
+        "3. Arrange Botanicals. Sandwich between the two panes.",
+        "4. Hang in a Sunny Window. See the glow through the petals."
+      ]
+    },
+    {
+      "id": 184,
+      "name": "At-Home Facial Bar",
+      "description": "A professional-grade skincare ritual to reset your skin and mind.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Dim Lights and Play Spa Playlist. Low volume.",
+        "2. Steam Your Pores. Boil water, lean over with a towel.",
+        "3. Apply Matching Masks. Use chilled ice rollers to massage face.",
+        "4. Finish with Moisturizer. Give each other a 2-minute temple massage."
+      ]
+    },
+    {
+      "id": 185,
+      "name": "Candlelit Pilates",
+      "description": "A low-impact, mindful workout that feels like a moving meditation.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Clear Floor Space. Lay out two mats side-by-side.",
+        "2. Light at Least Five Candles. Create a warm, flickering glow.",
+        "3. Follow a Slow Burn Video. Focus on stretching and core.",
+        "4. End with 5 Minutes of Deep Breathing. In Savasana to fully relax."
+      ]
+    },
+    {
+      "id": 186,
+      "name": "Matcha & Morning Pages",
+      "description": "A grounding morning ritual combining focused writing with matcha.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sift and Whisk Matcha. Until a thick froth forms.",
+        "2. Pour Over Ice and Milk. Add strawberry puree for aesthetic.",
+        "3. Free-Write for 15 Minutes. Stream of consciousness, no overthinking.",
+        "4. Share One Intention. For the rest of the day."
+      ]
+    },
+    {
+      "id": 187,
+      "name": "Silk Scarf Styling",
+      "description": "Learning the art of feminine accessorizing to elevate your OOTD.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Gather All Silk Scarves. Find a large, well-lit mirror.",
+        "2. Search Vintage Scarf Styling. Pick three styles to master.",
+        "3. Practice Knots on Each Other. Adjust folds to look effortless.",
+        "4. Take OOTD Photos. Remember styles for future brunch dates."
+      ]
+    },
+    {
+      "id": 188,
+      "name": "Everything Shower Prep",
+      "description": "A collaborative effort to create the ultimate restorative shower.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Prep the Bathroom. Hang eucalyptus, lay out fluffy towels.",
+        "2. Apply Deep-Conditioning Treatment. Hair mask or scalp oil for 30 minutes.",
+        "3. Put on Matching Silk Robes. Make spa water with cucumber and mint.",
+        "4. Take a Slow Shower. Using favorite body scrubs and lotions."
+      ]
+    },
+    {
+      "id": 189,
+      "name": "Color Analysis Date",
+      "description": "Finding your seasonal palette to understand which colors make you.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit in Natural Light. Pull hair back.",
+        "2. Use an App or Colored Fabrics. Hold different colors to your chin.",
+        "3. Observe Which Colors Glow. Versus which make you look tired.",
+        "4. Create a Digital Swatch. Of your 5 best colors for shopping."
+      ]
+    },
+    {
+      "id": 190,
+      "name": "Aesthetic Tea Party",
+      "description": "A slow afternoon dedicated to delicate treats and deep conversation.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Use a Floral Tablecloth. Bring out your nicest teacups.",
+        "2. Prepare Petite Snacks. Cucumber sandwiches and tiny macarons.",
+        "3. Brew Herbal Tea. Like rose or hibiscus.",
+        "4. Talk Without Phones. Use convo cards about your dreams."
+      ]
+    },
+    {
+      "id": 191,
+      "name": "Gua Sha Exchange",
+      "description": "Traditional facial massage to sculpt features and release tension.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Apply Facial Oil. So the stone slides without pulling.",
+        "2. Follow the Jawline Upward. 5 times with rose quartz Gua Sha.",
+        "3. Move to Cheekbones and Forehead. Light pressure to drain puffiness.",
+        "4. Clean the Stones. Enjoy the snatched and relaxed feeling."
+      ]
+    },
+    {
+      "id": 192,
+      "name": "Foot Soak & Pedicure",
+      "description": "Pampering feet with a spa-like soak followed by a fresh pop of color.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Fill Basins with Warm Water. Epsom salts and lavender oil.",
+        "2. Soak for 15 Minutes. Listen to a chill podcast or jazz.",
+        "3. Exfoliate and Polish. Sugar scrub, then ballet pink polish.",
+        "4. Put on Cloud Socks. To lock in moisture."
+      ]
+    },
+    {
+      "id": 193,
+      "name": "Manifestation Nap",
+      "description": "A guided visualization using the state between sleep and.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a Cozy Environment. Weighted blanket and lavender room spray.",
+        "2. Find a 20-Minute Meditation Audio. On Spotify.",
+        "3. Visualize Your Ideal Life. In vivid detail while audio plays.",
+        "4. Wake Up and Write. The most vibrant thing you saw."
+      ]
+    },
+    {
+      "id": 194,
+      "name": "Cottagecore Picnic",
+      "description": "A highly aesthetic lunch in a meadow that prioritizes the vibes.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack a Wicker Basket. Baguette, grapes, brie, and sparkling cider.",
+        "2. Find a Secluded Spot. Under a tree with a lace or checkered blanket.",
+        "3. Use Wooden Boards. Instead of plastic plates for aesthetic.",
+        "4. Cloud-Watch or Sketch. Spend an hour in a shared notebook."
+      ]
+    },
+    {
+      "id": 195,
+      "name": "Sunset Flower Foraging",
+      "description": "A gentle walk to gather wildflowers for your home.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Grab Shears and Twine. Head out an hour before sunset.",
+        "2. Pick 3-5 Different Types. Flowers or tall grasses.",
+        "3. Tie Together Loosely with Twine. Create a wild, unstructured bouquet.",
+        "4. Place in a Clear Glass Vase. To catch the morning light."
+      ]
+    },
+    {
+      "id": 196,
+      "name": "Visit a Botanical Garden",
+      "description": "A sophisticated walk through greenhouses for visual inspiration.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Dress in Garden Girl Outfit. Bring a camera.",
+        "2. Walk Through Greenhouses. Read names of exotic plants.",
+        "3. Find the Quietest Bench. Sit in silence for 5 minutes.",
+        "4. Take a Macro Photo. Of a petal texture for phone wallpaper."
+      ]
+    },
+    {
+      "id": 197,
+      "name": "Bouquet Challenge",
+      "description": "A fun, budget-friendly game to build the most aesthetic arrangement.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Head to Market with $15 Limit. And 20 minutes on the clock.",
+        "2. Scout for Unique Fillers. Eucalyptus and one statement flower.",
+        "3. Combine at a Cafe. Into one collaborative masterpiece.",
+        "4. Ask for Brown Paper Wrap. And ribbon for a Parisian look."
+      ]
+    },
+    {
+      "id": 198,
+      "name": "Lakeside Poetry Reading",
+      "description": "A calming, intellectual date by the water.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Each Pick a Poetry Book. Mary Oliver or Rupi Kaur.",
+        "2. Set Up by a Lake. Away from loud crowds.",
+        "3. Read One Poem Aloud. That reminds you of a specific feeling.",
+        "4. Discuss Why It Resonated. While watching ripples on the water."
+      ]
+    },
+    {
+      "id": 199,
+      "name": "Rooftop Yoga at Golden",
+      "description": "A spiritual wind-down as the sky transitions into sunset colors.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Carry Mats to a Rooftop. As the sky starts turning orange.",
+        "2. Start with Child's Pose. 5 minutes to ground yourself.",
+        "3. Follow a Heart Opening Flow. 15 minutes to invite positive energy.",
+        "4. End in Seated Meditation. Facing the sun, visualize golden light."
+      ]
+    },
+    {
+      "id": 200,
+      "name": "Outdoor Painting Session",
+      "description": "Capturing the vibe of a landscape using portable watercolors.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pack a Watercolor Tin. Two jars of water, thick paper pads.",
+        "2. Pick a Simple Subject. A single tree or the horizon colors.",
+        "3. Paint Without Perfection. Focus on blobs of color and light.",
+        "4. Sign, Date, and Swap. Keep each other's paintings as mementos."
+      ]
+    },
+    {
+      "id": 201,
+      "name": "Feeding Ducks with Grapes",
+      "description": "A nostalgic, gentle activity that connects you with wildlife.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy Seedless Grapes. Cut into halves or quarters.",
+        "2. Walk to a Local Pond. Find where ducks are congregating.",
+        "3. Toss Fruit Slowly. Notice the different personalities of the birds.",
+        "4. Walk Around the Pond. Discuss childhood memories."
+      ]
+    },
+    {
+      "id": 202,
+      "name": "Seashell or Crystal",
+      "description": "A treasure hunt for natural objects matching your room's palette.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Head to a Beach or Rocky Trail. With a linen bag or pretty jar.",
+        "2. Look for Soft Textures. Smooth stones, sea glass, or white shells.",
+        "3. Clean in Warm Water. Dry in the sun at home.",
+        "4. Place in a Clear Memory Jar. On your nightstand."
+      ]
+    },
+    {
+      "id": 203,
+      "name": "Stargazing with a Wishes",
+      "description": "A dreamy night speaking intentions into existence under the stars.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Drive to Low Light Pollution Spot. Lay out a thick warm blanket.",
+        "2. Use a Star Chart App. Identify at least three constellations.",
+        "3. Share Big Dreams per Bright Star. One big dream for the next year.",
+        "4. Write One Shared Wish. Tuck it into your phone case."
+      ]
+    },
+    {
+      "id": 204,
+      "name": "Focaccia Art",
+      "description": "Turning a simple loaf into a garden canvas using colorful vegetables.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Prepare Focaccia Dough. Dimple it with fingertips in a baking pan.",
+        "2. Slice Vegetables into Shapes. Bell peppers, onions, herbs to look like flowers and stems.",
+        "3. Arrange the Vegetable Garden. On top of the dough, pressing gently.",
+        "4. Bake Until Golden. Drizzle with olive oil and salt. Take a reveal video."
+      ]
+    },
+    {
+      "id": 205,
+      "name": "Heart-Shaped Pizza Night",
+      "description": "A romantic twist on classic comfort food.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Split Pizza Dough. Stretch into exaggerated heart shapes.",
+        "2. Top with Marinara and Mozzarella. Add heart-cut pepperoni.",
+        "3. Bake at High Temperature. Until edges are crispy and cheese is bubbly.",
+        "4. Eat While Watching a Rom-Com. Your favorite comfort show."
+      ]
+    },
+    {
+      "id": 206,
+      "name": "Aesthetic Mocktail Bar",
+      "description": "Creating sophisticated, alcohol-free drinks with visual focus.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Make Fancy Ice. Freeze pomegranate seeds or flowers inside trays.",
+        "2. Mix Sparkling Water with Lavender Syrup. In a stemmed glass.",
+        "3. Add Garnishes. Cucumber ribbons or lemon twists.",
+        "4. Dust the Rim. With sugar and dried rose petals."
+      ]
+    },
+    {
+      "id": 207,
+      "name": "Vintage Cake Decorating",
+      "description": "Victorian-inspired Lambeth piping to create a rilly, coquette cake.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Buy or Bake a Small 6-inch Cake. Simple vanilla sponge.",
+        "2. Use Star-Shaped Piping Tip. Create swags and ruffles along edges.",
+        "3. Place a Cherry or Pink Bow. In the center.",
+        "4. Take Photos Before Cutting. Against a plain background."
+      ]
+    },
+    {
+      "id": 208,
+      "name": "Charcuterie Competition",
+      "description": "A creative challenge to build themed boards like still-life paintings.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Theme. All Pink Foods or French Patisserie.",
+        "2. Gather 5-7 Items. That fit the color palette and texture.",
+        "3. Arrange on a Marble Board. Focus on flow and filling gaps.",
+        "4. Rate Each Other's Boards. Creativity and Aesthetic out of 10."
+      ]
+    },
+    {
+      "id": 209,
+      "name": "Handmade Pasta Date",
+      "description": "A slow food experience making pasta with natural vegetable dyes.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Mix Flour and Eggs. Add beet juice for pink or turmeric for yellow.",
+        "2. Knead Until Smooth. Rest for 30 minutes while prepping sauce.",
+        "3. Roll and Cut into Tagliatelle. Thin sheets into long ribbons.",
+        "4. Boil 2 Minutes and Toss. In butter and sage, serve in shallow bowls."
+      ]
+    },
+    {
+      "id": 210,
+      "name": "Tea Sandwich Tasting",
+      "description": "A delicate lunch with tiny, crustless sandwiches.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Prepare Three Fillings. Cucumber & cream cheese, egg salad, strawberry balsamic.",
+        "2. Flatten Bread, Spread, and Cut. Into perfect triangles.",
+        "3. Arrange on a Tiered Stand. With sprigs of fresh mint.",
+        "4. Try Each and Decide. Which would be your signature cafe sandwich."
+      ]
+    },
+    {
+      "id": 211,
+      "name": "Baking Bento Cakes",
+      "description": "Creating tiny minimalist cakes for just two people.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Bake a Small Batch. Use a cookie cutter for 4-inch layers.",
+        "2. Stack with Jam or Frosting. Keep layers steady.",
+        "3. Apply Crumb Coat and Final Smooth Layer. In a muted pastel.",
+        "4. Write an Inside Joke on Top. With a toothpick."
+      ]
+    },
+    {
+      "id": 212,
+      "name": "Infused Water Workshop",
+      "description": "Prep a week's worth of beautiful hydrating spa water.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Line Up Glass Jars. Fill with filtered water.",
+        "2. Experiment with Combos. Cucumber & Mint or Strawberry & Basil.",
+        "3. Muddle the Herbs Lightly. Release their flavor.",
+        "4. Chill for 4 Hours. Enjoy a glass every morning."
+      ]
+    },
+    {
+      "id": 213,
+      "name": "Candlelight Dessert",
+      "description": "Elevating store-bought pastries with the right atmosphere.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Stop by a Local Bakery. Pick up 3 exquisite pastries.",
+        "2. Plate on Fine Ceramics. Dust with powdered sugar or cocoa.",
+        "3. Turn Off All Lights. Use only taper candles.",
+        "4. Share Each Pastry Slowly. Discuss textures like food critics."
+      ]
+    },
+    {
+      "id": 214,
+      "name": "Co-Curate a Pinterest",
+      "description": "A collaborative digital session to align future goals and aesthetics.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Create a Shared Board. Titled The Future Us.",
+        "2. Pin 10 Items Each. For Home Design and Travel.",
+        "3. Look for Patterns. In your mutual styles.",
+        "4. Pick One Image to Make Real. Within the next 6 months."
+      ]
+    },
+    {
+      "id": 215,
+      "name": "Aesthetic Digital Cleanse",
+      "description": "Organizing your phone to reduce digital noise.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Delete Unused Apps. Clear the clutter.",
+        "2. Choose a Cohesive Color Palette. Find matching widget images.",
+        "3. Group Apps into Folders. With minimalist names like Create.",
+        "4. Set a Focus Mode at 9 PM. Ensure time offline."
+      ]
+    },
+    {
+      "id": 216,
+      "name": "Relationship Wrapped",
+      "description": "Creating a short montage of favorite memories from the month.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Select 10-15 Short Clips. 3 seconds each from favorites album.",
+        "2. Sync to Dreamy Audio. Using CapCut or similar.",
+        "3. Add Text Overlays. Like Pov: A soft Saturday in clean serif font.",
+        "4. Share to Close Friends. Or keep as a private digital scrapbook."
+      ]
+    },
+    {
+      "id": 217,
+      "name": "Kindness Text Spams",
+      "description": "Spread positive energy to the women in your lives.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Each List 5 Inspiring Women. Friends, sisters, moms.",
+        "2. Write a Short Appreciation Text. One specific thing you appreciate.",
+        "3. Hit Send on the Count of Three. All messages at the same time.",
+        "4. Talk About Your Circle. Spend 20 minutes discussing their importance."
+      ]
+    },
+    {
+      "id": 218,
+      "name": "Online Thrifting Race",
+      "description": "A competitive search for hidden gems on resale apps.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Vibe. Like 70s Crochet with a $25 budget.",
+        "2. Race for 15 Minutes. Find the most unique item.",
+        "3. Show Each Other Your Carts. Explain why your find is the winner.",
+        "4. Save to a Shared Wishlist. For future gift ideas."
+      ]
+    },
+    {
+      "id": 219,
+      "name": "Desktop Wallpaper Design",
+      "description": "Custom high-resolution mood boards for computer backgrounds.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Open Canva at Laptop Resolution. Blank canvas.",
+        "2. Arrange Soft Images and Calendar. Plus a positive quote.",
+        "3. Use a Grain Filter. Slight blur for vintage feel.",
+        "4. Set as Background. Notice the calm when you open your laptop."
+      ]
+    },
+    {
+      "id": 220,
+      "name": "ASMR Get Ready",
+      "description": "Recording satisfying sounds of your evening routine.",
+      "image": "Rekindle",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set Phone on Tripod. In the bathroom during quiet time.",
+        "2. Record the Sounds. Tink of glass jars, sound of brushing hair.",
+        "3. Don't Talk. Focus on sensations and sounds of products.",
+        "4. Watch It Back Together. See how peaceful your everyday habits look."
+      ]
+    },
+    {
+      "id": 221,
+      "name": "Playlist for Our Movie",
+      "description": "A deep dive into music finding songs for your big moments.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Create a Shared Spotify Playlist. Title it The Soundtrack.",
+        "2. Add 5 Songs Each. For First Date, First Fight, and the Future.",
+        "3. Listen from Start to Finish. While driving or relaxing.",
+        "4. Upload a Grainy Photo. As the playlist cover art."
+      ]
+    },
+    {
+      "id": 222,
+      "name": "Digital Journaling",
+      "description": "Keeping a running digital list of favorite memories.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Set Up a Shared Page. Like Notion with Date and Activity columns.",
+        "2. Every Sunday Add One Entry. From the week.",
+        "3. Include Inside Jokes. And new foods you tried.",
+        "4. Look Back Monthly. See how much life you've lived together."
+      ]
+    },
+    {
+      "id": 223,
+      "name": "The Main Character Walk",
+      "description": "A walk through a picturesque neighborhood for visual inspiration.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Drive to the Prettiest Neighborhood. With old trees.",
+        "2. Walk at a Slow Pace. Look at gardens and door colors.",
+        "3. Pick One House You'd Live In. Describe how you'd decorate it.",
+        "4. Finish at a Local Corner Cafe. Order the most aesthetic drink."
+      ]
+    },
+    {
+      "id": 224,
+      "name": "Chill & Glow Sesh",
+      "description": "A cozy self-care date with facemasks, candles, soft music, and.",
+      "image": "DeletetheGlitch",
+      "category": "Activities for Her",
+      "time": "5 mins",
+      "steps": [
+        "1. Set the Mood. Dim the lights, light 2-3 candles, and play a soft chill playlist.",
+        "2. Skincare Together. Apply facemasks or under-eye patches. No phones allowed.",
+        "3. Glow & Talk. While masks sit, ask: What made you smile this week? What do you need more of right now?",
+        "4. Seal with Softness. Rinse off, apply moisturizer, end with a long hug or slow dance to one song."
+      ]
+    },
+    {
+      "id": 225,
+      "name": "Petal Hunt",
+      "description": "Pick flowers together and create a bouquet that represents your.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "5 mins",
+      "steps": [
+        "1. Flower Selection. Visit a flower market. Each partner chooses 3 flowers that remind them of the other.",
+        "2. Meaning Moment. Before arranging, explain why you chose each flower.",
+        "3. Build the Bouquet Together. Arrange at home, wrap neatly with ribbon or paper.",
+        "4. Memory Lock-In. Take one flower and press it inside a book. Write today's date and one sentence."
+      ]
+    },
+    {
+      "id": 226,
+      "name": "Wholesome Craft Challenge",
+      "description": "Create something handmade (doodle, note, or digital collage) for.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "5 mins",
+      "steps": [
+        "1. Pick Your Medium. Handwritten note, doodle/sketch, Canva-style digital collage, or printed photo page.",
+        "2. Add Personal Details. 3 things you love about her, 1 favorite memory, 1 inside joke.",
+        "3. Presentation Matters. Fold neatly, add a small sticker or envelope, give it intentionally.",
+        "4. Read It Together. Let her read it while you watch her reaction. Ask: Which part meant the most?"
+      ]
+    },
+    {
+      "id": 227,
+      "name": "Sweet Treat Assembly",
+      "description": "Build cute desserts together and feed each other slowly.",
+      "image": "Fun&Playful",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Gather Ingredients. Strawberries, chocolate sauce, whipped cream, biscuits — simple but cute.",
+        "2. Build for Each Other. Each person assembles one dessert for their partner.",
+        "3. Presentation Moment. Present it like a mini surprise: I made this for you.",
+        "4. Slow Taste Ritual. Feed each other one bite and describe the flavor dramatically."
+      ]
+    },
+    {
+      "id": 228,
+      "name": "Bake for Her Mini Date",
+      "description": "Bake or assemble something simple just for her.",
+      "image": "Activityimage",
+      "category": "Activities for Her",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick One Easy Recipe. Mug cake, brownies, or cookies.",
+        "2. Handle Most of the Work Yourself. She can relax.",
+        "3. Plate It Nicely. Add powdered sugar, drizzle, or cute plating.",
+        "4. Serve It With a Compliment. I wanted to make something sweet for someone sweet."
+      ]
+    }
+  ]
+}

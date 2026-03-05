@@ -13,10 +13,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+
+        let window = UIWindow(windowScene: windowScene)
+        self.window = window
+
+        let defaults = UserDefaults.standard
+        let onboardingStoryboard = UIStoryboard(name: "Onboarding", bundle: nil)
+
+        if defaults.bool(forKey: "hasCompletedOnboarding") {
+            // All onboarding done → go to main app
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            window.rootViewController = mainStoryboard.instantiateInitialViewController()
+
+        } else if defaults.bool(forKey: "hasCompletedPairing") {
+            // Pairing done → go to app brief (infoPageVC)
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
+            window.rootViewController = UINavigationController(rootViewController: vc)
+
+        } else if defaults.bool(forKey: "hasCompletedAssessment") {
+            // Assessment done → go to partner pairing
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
+            vc.view.backgroundColor = UIColor(named: "AppBackground")
+            window.rootViewController = UINavigationController(rootViewController: vc)
+
+        } else if defaults.bool(forKey: "hasCompletedBasicInfo") {
+            // Basic info done → go to assessment
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
+            window.rootViewController = UINavigationController(rootViewController: vc)
+
+        } else if defaults.bool(forKey: "hasCompletedAuth") {
+            // Auth done → go to basic info
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "tellUsAboutYourselfViewController") as! tellUsAboutYourselfViewController
+            window.rootViewController = UINavigationController(rootViewController: vc)
+
+        } else {
+            // Nothing completed → start from beginning (Onboarding storyboard initial VC)
+            window.rootViewController = onboardingStoryboard.instantiateInitialViewController()
+        }
+
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
