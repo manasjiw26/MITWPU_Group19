@@ -78,28 +78,28 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.reloadData()
     }
     private func checkNotifications() {
-        guard let currentUserId = supabase.auth.currentUser?.id else { return }
-        Task {
+        Task { @MainActor in
             do {
+                let session = try await SupabaseManager.shared.client.auth.session
+                let currentUserId = session.user.id
                 let notifications = try await NotificationService.shared.fetchNotifications(for: currentUserId)
                 let hasUnread = notifications.contains { !$0.isRead }
-                await MainActor.run {
-                    if hasUnread {
-                        if #available(iOS 15.0, *) {
-                            let config = UIImage.SymbolConfiguration(paletteColors: [.systemRed, .label])
-                            self.notificationButton.image = UIImage(systemName: "bell.badge.fill", withConfiguration: config)
-                        } else {
-                            self.notificationButton.image = UIImage(systemName: "bell.fill")
-                            self.notificationButton.tintColor = .systemRed
-                        }
+
+                if hasUnread {
+                    if #available(iOS 15.0, *) {
+                        let config = UIImage.SymbolConfiguration(paletteColors: [.systemRed, .label])
+                        self.notificationButton.image = UIImage(systemName: "bell.badge.fill", withConfiguration: config)
                     } else {
                         self.notificationButton.image = UIImage(systemName: "bell.fill")
-                        self.notificationButton.tintColor = nil
+                        self.notificationButton.tintColor = .systemRed
                     }
+                } else {
+                    self.notificationButton.image = UIImage(systemName: "bell.fill")
+                    self.notificationButton.tintColor = nil
                 }
             } catch {
-        print("Error checking notifications: \(error)")
-    }
+                print("❌ Error checking notifications: \(error)")
+            }
         }
     }
     
@@ -1008,6 +1008,7 @@ extension VibeViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        checkNotifications()
 
         Task { [weak self] in
             guard let self else { return }

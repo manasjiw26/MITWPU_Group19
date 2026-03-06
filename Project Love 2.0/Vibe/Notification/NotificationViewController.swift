@@ -19,15 +19,51 @@ final class NotificationViewController: UIViewController {
              UINib(nibName: "Notification1CollectionViewCell", bundle: nil),
              forCellWithReuseIdentifier: "Notification"
          )
+         collectionView.register(
+             UINib(nibName: "EmptyStateLoveNoteCollectionViewCell", bundle: nil),
+             forCellWithReuseIdentifier: "lovenote_empty_cell"
+         )
 
          collectionView.delegate = self
          collectionView.dataSource = self
+         collectionView.setCollectionViewLayout(generateLayout(), animated: false)
+     }
 
-         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-             layout.minimumLineSpacing = 16
-             layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-             layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+     private func generateLayout() -> UICollectionViewLayout {
+         let layout = UICollectionViewCompositionalLayout { [weak self] section, env in
+             guard let self = self else { return nil }
+
+             if self.notifications.isEmpty {
+                 let itemSize = NSCollectionLayoutSize(
+                     widthDimension: .fractionalWidth(1.0),
+                     heightDimension: .absolute(400)
+                 )
+                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                 let groupSize = NSCollectionLayoutSize(
+                     widthDimension: .fractionalWidth(1.0),
+                     heightDimension: .absolute(400)
+                 )
+                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                 let section = NSCollectionLayoutSection(group: group)
+                 section.contentInsets = NSDirectionalEdgeInsets(top: 40, leading: 16, bottom: 40, trailing: 16)
+                 return section
+             }
+
+             let itemSize = NSCollectionLayoutSize(
+                 widthDimension: .fractionalWidth(1.0),
+                 heightDimension: .estimated(100)
+             )
+             let item = NSCollectionLayoutItem(layoutSize: itemSize)
+             let groupSize = NSCollectionLayoutSize(
+                 widthDimension: .fractionalWidth(1.0),
+                 heightDimension: .estimated(100)
+             )
+             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+             let section = NSCollectionLayoutSection(group: group)
+             section.interGroupSpacing = 16
+             return section
          }
+         return layout
      }
 
     private func loadNotifications() {
@@ -35,11 +71,15 @@ final class NotificationViewController: UIViewController {
             do {
                 let session = try await SupabaseManager.shared.client.auth.session
                 let userId = session.user.id
+                print("📥 Loading notifications for user: \(userId)")
 
                 notifications = try await NotificationService.shared.fetchNotifications(for: userId)
+                print("📥 Loaded \(notifications.count) notifications")
+                collectionView.setCollectionViewLayout(generateLayout(), animated: false)
                 collectionView.reloadData()
             } catch {
-                print("Failed to load notifications: \(error)")
+                print("❌ Failed to load notifications: \(error)")
+                print("❌ Error details: \(String(describing: error))")
             }
         }
     }
@@ -134,13 +174,26 @@ final class NotificationViewController: UIViewController {
  extension NotificationViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-         return notifications.count
+         return notifications.isEmpty ? 1 : notifications.count
      }
 
      func collectionView(
          _ collectionView: UICollectionView,
          cellForItemAt indexPath: IndexPath
      ) -> UICollectionViewCell {
+
+         if notifications.isEmpty {
+             let cell = collectionView.dequeueReusableCell(
+                 withReuseIdentifier: "lovenote_empty_cell",
+                 for: indexPath
+             ) as! EmptyStateLoveNoteCollectionViewCell
+             cell.configure(
+                 title: "You’re all caught up!",
+                 subtitle: "Recent activities from your partner will appear here",
+                 imageName: "empty_notification"
+             )
+             return cell
+         }
 
          let cell = collectionView.dequeueReusableCell(
              withReuseIdentifier: "Notification",
@@ -151,6 +204,7 @@ final class NotificationViewController: UIViewController {
          return cell
      }
      func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+         guard !notifications.isEmpty else { return }
          var notification = notifications[indexPath.item]
          collectionView.deselectItem(at: indexPath, animated: true)
 

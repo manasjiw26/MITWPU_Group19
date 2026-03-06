@@ -17,8 +17,8 @@ final class NotificationService {
     func fetchNotifications(for userId: UUID) async throws -> [AppNotification] {
         let rows: [NotificationRow] = try await supabase
             .from("notifications")
-            .select("notification_id,sent_by_user_id,received_user_id,type,message,is_read,created_at")
-            .eq("received_user_id", value: userId.uuidString)
+            .select("notification_id,sender_user_id,receiver_user_id,type,message,is_read,created_at,sender:users!sender_user_id(name)")
+            .eq("receiver_user_id", value: userId.uuidString)
             .order("created_at", ascending: false)
             .execute()
             .value
@@ -26,7 +26,7 @@ final class NotificationService {
         return rows.map { row in
             AppNotification(
                 id: row.notification_id,
-                senderName: row.sender_name ?? "Partner",
+                senderName: row.sender?.name ?? "Partner",
                 message: row.message,
                 type: mapType(row.type),
                 createdAt: row.created_at,
@@ -42,6 +42,9 @@ final class NotificationService {
             .eq("notification_id", value: notificationId.uuidString)
             .execute()
     }
+
+    /// Send a notification to the current user's partner by inserting directly
+    /// into the `notifications` table. Resolves the partner from the relationship.
     func sendPartnerNotification(
         relationshipId: UUID,
         type: String,
@@ -49,22 +52,46 @@ final class NotificationService {
         entityType: String? = nil,
         entityId: String? = nil
     ) async throws {
-        var params: [String: String] = [
-            "p_relationship_id": relationshipId.uuidString,
-            "p_type": type,
-            "p_message": message
-        ]
 
-        if let entityType {
-            params["p_entity_type"] = entityType
+        // 1. Get the current user
+        let session = try await supabase.auth.session
+        let currentUserId = session.user.id
+
+        // 2. Find the partner from the relationship
+        let relationships: [DBRelationship] = try await supabase
+            .from("relationships")
+            .select()
+            .eq("relationship_id", value: relationshipId.uuidString)
+            .limit(1)
+            .execute()
+            .value
+
+        guard let relationship = relationships.first else {
+            print("⚠️ sendPartnerNotification: relationship not found")
+            return
         }
-        if let entityId {
-            params["p_entity_id"] = entityId
-        }
+
+        let partnerUserId = (relationship.user1_id == currentUserId)
+            ? relationship.user2_id
+            : relationship.user1_id
+
+        // 3. Insert the notification row
+        let insert = NotificationInsert(
+            relationship_id: relationshipId.uuidString,
+            sender_user_id: currentUserId.uuidString,
+            receiver_user_id: partnerUserId.uuidString,
+            type: type,
+            message: message,
+            entity_type: entityType,
+            entity_id: entityId
+        )
 
         try await supabase
-            .rpc("create_partner_notification", params: params)
+            .from("notifications")
+            .insert(insert)
             .execute()
+
+        print("✅ Notification inserted: \(type) → partner \(partnerUserId)")
     }
 
     

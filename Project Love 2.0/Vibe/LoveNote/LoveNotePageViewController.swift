@@ -75,12 +75,19 @@ class LoveNotePageViewController: UIViewController {
 
         let nib = UINib(nibName: "LoveNoteCardCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "LoveNoteCardCell")
+        
+        let nib1 = UINib(nibName: "EmptyStateLoveNoteCollectionViewCell", bundle: nil)
+        collectionView.register(nib1, forCellWithReuseIdentifier: "lovenote_empty_cell")
     }
 
 
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         print("Segment changed to:", sender.selectedSegmentIndex)
         applyFilter()
+    }
+
+    private func isEmptyState() -> Bool {
+        return filteredNotes.isEmpty
     }
     private func fetchLoveNotes() async {
         guard let currentRelationshipId, let currentUserId else { return }
@@ -138,6 +145,7 @@ class LoveNotePageViewController: UIViewController {
             filteredNotes = []
         }
 
+        collectionView.setCollectionViewLayout(generateLayout(), animated: false)
         collectionView.reloadData()
     }
 
@@ -256,11 +264,46 @@ class LoveNotePageViewController: UIViewController {
 
     
     private func generateLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 16
-        layout.sectionInset = UIEdgeInsets(top: 8, left: 12, bottom: 12, right: 12)
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        let layout = UICollectionViewCompositionalLayout { [weak self] section, env in
+            guard let self = self else { return nil }
+
+            if self.isEmptyState() {
+                // Large centered empty state cell
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(400)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(400)
+                )
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 40, leading: 16, bottom: 40, trailing: 16)
+                return section
+            }
+
+            // Normal love note card layout
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(120)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(120)
+            )
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 12, bottom: 12, trailing: 12)
+            section.interGroupSpacing = 16
+            return section
+        }
         return layout
     }
 }
@@ -268,13 +311,43 @@ class LoveNotePageViewController: UIViewController {
 extension LoveNotePageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        filteredNotes.count
+        return filteredNotes.isEmpty ? 1 : filteredNotes.count
     }
 
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
+
+        if filteredNotes.isEmpty {
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "lovenote_empty_cell",
+                for: indexPath
+            ) as! EmptyStateLoveNoteCollectionViewCell
+            switch segmentedControl.selectedSegmentIndex {
+            case 0:
+                cell.configure(
+                    title: "No love notes sent yet",
+                    subtitle: "Send your partner a sweet note to make their day.",
+                    imageName: "empty_lovenote_send"
+                )
+            case 1:
+                cell.configure(
+                    title: "Nothing received yet",
+                    subtitle: "When your partner sends a love note, it will appear here.",
+                    imageName: "empty_lovenote_receive"
+                )
+            case 2:
+                cell.configure(
+                    title: "No scheduled notes",
+                    subtitle: "Plan a surprise love note for the future.",
+                    imageName: "empty_lovenote_schedule"
+                )
+            default:
+                break
+            }
+            return cell
+        }
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "LoveNoteCardCell",
@@ -288,7 +361,7 @@ extension LoveNotePageViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
-        
+        guard !filteredNotes.isEmpty else { return }
         let selectedNote = filteredNotes[indexPath.item]
         
         let storyboard = UIStoryboard(name: "LoveNote", bundle: nil)

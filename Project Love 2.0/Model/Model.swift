@@ -412,15 +412,29 @@ struct LoveNoteScheduleUpdate: Encodable {
     let scheduled_for: String
     let is_sent: Bool
 }
+struct NotificationSender: Decodable {
+    let name: String?
+}
+
+struct NotificationInsert: Encodable {
+    let relationship_id: String
+    let sender_user_id: String
+    let receiver_user_id: String
+    let type: String
+    let message: String
+    let entity_type: String?
+    let entity_id: String?
+}
+
 struct NotificationRow: Decodable {
     let notification_id: UUID
-    let sent_by_user_id: UUID
-    let received_user_id: UUID
+    let sender_user_id: UUID
+    let receiver_user_id: UUID
     let type: String
     let message: String
     let is_read: Bool
     let created_at: Date
-    let sender_name: String?
+    let sender: NotificationSender?
 }
 enum NotificationType: String {
     case activityStarted = "activity_started"
