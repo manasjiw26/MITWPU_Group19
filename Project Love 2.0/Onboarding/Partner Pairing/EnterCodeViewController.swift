@@ -74,7 +74,7 @@ class EnterCodeViewController: UIViewController {
     func pairWithCode(_ code: String) async {
         do {
             let response = try await supabase
-                .rpc("complete_pairing", params: ["pairing_code_input": code.uppercased()])
+                .rpc("pair_with_code", params: ["p_code": code.uppercased()])
                 .execute()
 
             // if function returns uuid:

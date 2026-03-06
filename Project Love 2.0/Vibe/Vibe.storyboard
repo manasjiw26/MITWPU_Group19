@@ -177,6 +177,7 @@
                     <connections>
                         <outlet property="activityImage" destination="DxN-OV-RTm" id="FV3-oc-uTL"/>
                         <outlet property="activityName" destination="bN4-sy-2h9" id="UAk-Se-6KR"/>
+                        <outlet property="notificationButton" destination="kGJ-RI-j1E" id="UX2-sy-aM0"/>
                         <outlet property="ongoingActivitiesView" destination="JMY-mF-scs" id="6di-Vo-9Sn"/>
                         <outlet property="secondOngoingActivityView" destination="vbH-88-N5E" id="pOu-6G-87w"/>
                         <outlet property="showAllActivityButton" destination="mgF-dh-DZP" id="e6p-Ji-QE5"/>

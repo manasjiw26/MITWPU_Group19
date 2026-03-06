@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+extension Notification.Name {
+    static let preferencesDidChange = Notification.Name("preferencesDidChange")
+}
+
 // JSON wrapper for decoding activities.json
 struct ActivitiesJSON: Codable {
     let activities: [JSONActivity]
@@ -253,10 +257,11 @@ struct DBUser: Codable {
     let profile_image: String?
     let created_at: Date?
     let birth_date: Date
-    
-    let partner_id: UUID?
     let relationship_id: UUID?
+    let gender: String?
+    let assessment_answers: [String: [Int]]?
 }
+
 struct DBRelationship: Codable {
     let relationship_id: UUID
     let user1_id: UUID
@@ -264,11 +269,9 @@ struct DBRelationship: Codable {
     let started_at: Date
     let status: String
 }
-struct PairingCodeInsert: Codable {
-    let code: String
-    let created_by: UUID
-    let expires_at: Date
-    let used: Bool?
+struct PairingCodeUpdate: Encodable {
+    let pairing_code: String
+    let pairing_code_expires_at: String  // ISO8601 formatted
 }
 struct DBMood: Codable {
     let mood_id: UUID
@@ -297,7 +300,7 @@ struct DailyCheckInSelection {
 struct MemoryModel: Decodable {
     let id: UUID
     let relationship_id: UUID
-    let created_by_user_id: UUID
+    let user_id: UUID
     let title: String
     let description: String?
     let image_path: String
@@ -306,7 +309,7 @@ struct MemoryModel: Decodable {
     enum CodingKeys: String, CodingKey {
         case id = "memory_id"
         case relationship_id
-        case created_by_user_id
+        case user_id
         case title
         case description
         case image_path
@@ -317,8 +320,8 @@ struct MemoryModel: Decodable {
 struct DBLoveNote: Codable {
     let love_note_id: UUID
     let relationship_id: UUID
-    let sender_user_id: UUID
-    let receiver_user_id: UUID
+    let user_id: UUID
+    let partner_user_id: UUID
     let message: String
     let created_at: Date
     let reaction: String?
@@ -329,8 +332,8 @@ struct DBLoveNote: Codable {
 
 struct LoveNoteInsert: Encodable {
     let relationship_id: UUID
-    let sender_user_id: UUID
-    let receiver_user_id: UUID
+    let user_id: UUID
+    let partner_user_id: UUID
     let message: String
     let scheduled_for: Date?
     let is_sent: Bool
@@ -352,14 +355,14 @@ struct LoveNote {
 extension LoveNote {
     static func fromDB(_ row: DBLoveNote, currentUserId: UUID) -> LoveNote {
         let status: LoveNoteStatus = row.is_sent
-            ? (row.sender_user_id == currentUserId ? .sent : .received)
+            ? (row.user_id == currentUserId ? .sent : .received)
             : .scheduled
 
         return LoveNote(
             id: row.love_note_id,
             relationshipId: row.relationship_id,
-            senderUserId: row.sender_user_id,
-            receiverUserId: row.receiver_user_id,
+            senderUserId: row.user_id,
+            receiverUserId: row.partner_user_id,
             message: row.message,
             createdAt: row.created_at,
             scheduledDate: row.scheduled_for,
@@ -483,7 +486,7 @@ struct DBCoupleActivity: Codable {
         case activityId = "activity_id"
         case activityName = "activity_name"
         case status
-        case startedBy = "started_by"
+        case startedBy = "user_id"
         case startedAt = "started_at"
         case scheduledDate = "scheduled_date"
         case feedbackADone = "feedback_a_done"
@@ -523,7 +526,7 @@ struct CoupleActivityInsert: Encodable {
         case activityId = "activity_id"
         case activityName = "activity_name"
         case status
-        case startedBy = "started_by"
+        case startedBy = "user_id"
         case scheduledDate = "scheduled_date"
     }
 }

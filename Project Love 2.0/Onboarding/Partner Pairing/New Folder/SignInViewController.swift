@@ -64,6 +64,15 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         }
         return true
     }
+    // Lightweight struct to decode user row
+    private struct UserRow: Codable {
+        let user_id: UUID
+        let relationship_id: UUID?
+        let gender: String?
+        let assessment_answers: [String: [Int]]?
+    }
+
+
     func login(email: String, password: String) async {
         do {
             let response = try await SupabaseManager.shared.client.auth.signIn(
@@ -73,14 +82,50 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
 
             let user = response.user
 
+            // Query users table to check if already paired
+            let rows: [UserRow] = try await SupabaseManager.shared.client
+                .from("users")
+                .select("user_id, relationship_id, gender, assessment_answers")
+                .eq("user_id", value: user.id.uuidString)
+                .execute()
+                .value
+
+            let userRow = rows.first
+            let hasAssessment = !(userRow?.assessment_answers?.isEmpty ?? true)
+            if let gender = userRow?.gender, !gender.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                UserDefaults.standard.set(gender, forKey: "userGender")
+            }
+            await DataStore.shared.refreshUserProfileFromSupabase()
+
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
-                UserDefaults.standard.set(true, forKey: "hasCompletedAuth")
-                let vc = UIStoryboard(name: "Onboarding", bundle: nil)
-                    .instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
 
-                vc.userId = user.id
-                self.navigationController?.pushViewController(vc, animated: true)
+                let defaults = UserDefaults.standard
+                defaults.set(true, forKey: "hasCompletedAuth")
+                defaults.set(true, forKey: "hasCompletedBasicInfo")
+
+                let onboardingSB = UIStoryboard(name: "Onboarding", bundle: nil)
+
+                if let row = userRow, row.relationship_id != nil {
+                    // Already paired → mark all stages done and go to main app
+                    defaults.set(true, forKey: "hasCompletedAssessment")
+                    defaults.set(true, forKey: "hasCompletedPairing")
+                    defaults.set(true, forKey: "hasCompletedOnboarding")
+
+                    let mainSB = UIStoryboard(name: "Main", bundle: nil)
+                    guard let mainVC = mainSB.instantiateInitialViewController() else { return }
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                       let window = sceneDelegate.window {
+                        window.rootViewController = mainVC
+                        window.makeKeyAndVisible()
+                    }
+                } else {
+                    // Not paired yet → go to assessment (then partner pairing)
+                    let vc = onboardingSB.instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
+                    vc.userId = user.id
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
             }
 
         } catch {

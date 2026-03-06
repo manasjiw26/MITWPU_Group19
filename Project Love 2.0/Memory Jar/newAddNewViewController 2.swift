@@ -106,9 +106,8 @@ class NewAddNewViewController: UIViewController {
 
     @MainActor
     private func saveMemoryToSupabase() async {
-
         guard let image = memoryImageView.image,
-              let imageData = image.jpegData(compressionQuality: 1.0) else {
+              let imageData = image.jpegData(compressionQuality: 0.8) else {
             showError(message: "Please select a photo.")
             return
         }
@@ -117,7 +116,6 @@ class NewAddNewViewController: UIViewController {
             showError(message: "User not logged in")
             return
         }
-        print("Auth user ID:", userId.uuidString)
 
         do {
             // Get relationship_id
@@ -133,71 +131,63 @@ class NewAddNewViewController: UIViewController {
             }
 
             let decoded = try JSONDecoder().decode(UserRelation.self, from: response.data)
-            print("Decoded relationship ID:", decoded.relationship_id as Any)
 
             guard let relationshipId = decoded.relationship_id else {
                 showError(message: "No relationship found")
                 return
             }
 
-            // File path
-            let timestamp = Int(Date().timeIntervalSince1970)
-            let fileName = "\(timestamp)_\(UUID().uuidString).jpg"
+            // 1. Prepare Data for Background Upload
+            let date = datePicker.date
+            let isoDate = ISO8601DateFormatter().string(from: date)
+            let title = memoryTitleTextField.text ?? ""
+            let description = descriptionTextView.text == placeholderText ? "" : descriptionTextView.text ?? ""
+            
+            // Generate a random ID for instant local display
+            let tempID = UUID() 
+            let newLocalMemory = Memory(
+                id: tempID,
+                date: date,
+                imageName: "", // Will be assigned remotely
+                location: "", 
+                title: title,
+                description: description,
+                uiImage: image
+            )
 
-            // Upload
-            try await supabase.storage
-                .from("memory-images")
-                .upload(path: fileName, file: imageData)
-            let isoDate = ISO8601DateFormatter().string(from: datePicker.date)
-
-            try await supabase
-                .from("memories")
-                .insert([
-                    [
-                        "relationship_id": relationshipId.uuidString,
-                        "created_by_user_id": userId.uuidString,
-                        "title": memoryTitleTextField.text ?? "",
-                        "description": descriptionTextView.text == placeholderText ? "" : descriptionTextView.text ?? "",
-                        "image_path": fileName,
-                        "memory_date": isoDate
-                    ]
-                ])
-                .execute()
-            do {
-                try await NotificationService.shared.sendPartnerNotification(
-                    relationshipId: relationshipId,
-                    type: "memory_added",
-                    message: "Your partner added a new memory for you 💌",
-                    entityType: "memory",
-                    entityId: nil
-                )
-            } catch {
-                print("Memory notification insert failed: \(error)")
-            }
+            // 2. Start the background upload
+            MemoryUploadManager.shared.uploadMemory(
+                userId: userId.uuidString,
+                relationshipId: relationshipId,
+                imageData: imageData,
+                title: title,
+                description: description,
+                isoDate: isoDate
+            )
+            
             let alert = UIAlertController(
                 title: "",
                 message: "Memory added successfully!",
                 preferredStyle: .alert
             )
-
             self.present(alert, animated: true)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 alert.dismiss(animated: true) {
-                    // Notify jar screen
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name("MemoryAdded"),
-                        object: nil
-                    )
-                    self.dismiss(animated: true)
+                    self.dismiss(animated: true) {
+                        // 3. Notify Jar & Show Alert
+                        NotificationCenter.default.post(
+                            name: NSNotification.Name("MemoryAdded"),
+                            object: newLocalMemory
+                        )
+                    }
                 }
             }
 
         } catch {
             showError(message: error.localizedDescription)
-            print("Memory save error:", error)
+            print("Failed to get relationship ID:", error)
         }
-        
     }
     
     private func updateDateTextField(date: Date) {

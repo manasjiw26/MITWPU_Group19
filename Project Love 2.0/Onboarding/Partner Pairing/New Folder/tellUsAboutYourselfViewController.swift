@@ -90,24 +90,32 @@ class tellUsAboutYourselfViewController: UIViewController {
                 profile_image: nil,
                 created_at: Date(),
                 birth_date: dob,
-                partner_id: nil,
-                relationship_id: nil
+                relationship_id: nil,
+                gender: nil,
+                assessment_answers: nil
             )
             
             try await SupabaseManager.shared.client
                 .from("users")
                 .insert(user)
                 .execute()
-            
+
             DispatchQueue.main.async {
+                DataStore.shared.applyLocalBasicInfo(
+                    name: name,
+                    email: SupabaseManager.shared.client.auth.currentUser?.email,
+                    birthDate: dob
+                )
+
                 self.spinner.stopAnimating()
                 UserDefaults.standard.set(true, forKey: "hasCompletedBasicInfo")
+
                 let vc = UIStoryboard(name: "Onboarding", bundle: nil)
                     .instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
-                
                 vc.userId = userId
                 self.navigationController?.pushViewController(vc, animated: true)
             }
+
             
         } catch {
             DispatchQueue.main.async {

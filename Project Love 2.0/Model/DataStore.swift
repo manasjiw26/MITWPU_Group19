@@ -503,7 +503,6 @@ class DataStore {
                 items: [
                     PersonalInfoItem(title: "Full Name", value: "Name", showsChevron: false),
                     PersonalInfoItem(title: "Email", value: "name@email.com", showsChevron: false),
-                    PersonalInfoItem(title: "Phone Number", value: "+91 9876543210", showsChevron: false),
                     PersonalInfoItem(title: "Date of Birth", value: "12 Jan 2003", showsChevron: false)
                 ]
             ),
@@ -517,46 +516,210 @@ class DataStore {
     }
     
     func loadProfileData() {
-
-        userProfile = UserProfile(
-            name: "Name",
-            email: "name@email.com",
-            profileImageName: "Profile",
-            savedPreferences: [:]
-        )
-
-        profileSections = [
-            
-            ProfileSection(
-                title: "Account",
-                items: [
-                    ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true)
-                ]
-            ),
-            ProfileSection(
-                title: "Relationship Profile",
-                items: [
-        ProfileItem(title: "Special Dates", iconName: "slider.horizontal.3", showsChevron: true),
-        ProfileItem(title: "Partner Pairing", iconName: "slider.horizontal.3", showsChevron: true)
-                ]
-            ),
-            
-            ProfileSection(
-                title: "Support",
-                items: [
-                    ProfileItem(title: "Help & Support", iconName: "questionmark.circle", showsChevron: true),
-                    ProfileItem(title: "About App", iconName: "info.circle", showsChevron: true),
-                    ProfileItem(title: "Feedback", iconName: "bubble.left", showsChevron: true)
-                ]
-            ),
-            ProfileSection(
-                title: "",
-                items: [
-                    ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
-                ]
+        if userProfile == nil {
+            userProfile = UserProfile(
+                name: "Name",
+                email: "name@email.com",
+                profileImageName: "Profile",
+                savedPreferences: [:]
             )
-        ]
+        }
+
+        if profileSections.isEmpty {
+            profileSections = [
+                ProfileSection(
+                    title: "Account",
+                    items: [
+                        ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true)
+                    ]
+                ),
+                ProfileSection(
+                    title: "Relationship Profile",
+                    items: [
+                        ProfileItem(title: "Special Dates", iconName: "slider.horizontal.3", showsChevron: true),
+                        ProfileItem(title: "Partner Pairing", iconName: "slider.horizontal.3", showsChevron: true)
+                    ]
+                ),
+                ProfileSection(
+                    title: "Support",
+                    items: [
+                        ProfileItem(title: "Help & Support", iconName: "questionmark.circle", showsChevron: true),
+                        ProfileItem(title: "About App", iconName: "info.circle", showsChevron: true),
+                        ProfileItem(title: "Feedback", iconName: "bubble.left", showsChevron: true)
+                    ]
+                ),
+                ProfileSection(
+                    title: "",
+                    items: [
+                        ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
+                    ]
+                )
+            ]
+        }
     }
+
+    private struct UserProfileRow: Decodable {
+        let name: String?
+        let birth_date: String?
+        let gender: String?
+        let assessment_answers: [String: [Int]]?
+    }
+
+    private struct ProfileUpdatePayload: Encodable {
+        let name: String
+        let birth_date: String
+    }
+
+     var partnerPronoun: String {
+        let gender = UserDefaults.standard.string(forKey: "userGender")?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased() ?? ""
+        switch gender {
+        case "male":   return "her"
+        case "female": return "him"
+        default:       return "them"
+        }
+    }
+    var partnerDisplayText: String {
+        switch partnerPronoun {
+        case "her": return "Her"
+        case "him": return "Him"
+        default: return "Partner"
+        }
+    }
+
+    func refreshUserProfileFromSupabase() async {
+        guard let authUser = SupabaseManager.shared.client.auth.currentUser else { return }
+        currentUserId = authUser.id
+
+        do {
+            let rows: [UserProfileRow] = try await SupabaseManager.shared.client
+                .from("users")
+                .select("name, birth_date, gender, assessment_answers")
+                .eq("user_id", value: authUser.id.uuidString)
+                .limit(1)
+                .execute()
+                .value
+
+            guard let row = rows.first else { return }
+
+            let name = (row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false)
+                ? row.name!
+                : "Name"
+            let email = authUser.email ?? "name@email.com"
+            let prefs = mapAssessmentAnswers(row.assessment_answers)
+
+            if userProfile == nil {
+                userProfile = UserProfile(name: name, email: email, profileImageName: "Profile", savedPreferences: prefs)
+            } else {
+                userProfile?.name = name
+                userProfile?.email = email
+                userProfile?.savedPreferences = prefs
+            }
+
+            setPersonalInfoValue(title: "Full Name", value: name)
+            setPersonalInfoValue(title: "Email", value: email)
+
+            let dobText = profileDOBText(from: row.birth_date)
+            if !dobText.isEmpty {
+                setPersonalInfoValue(title: "Date of Birth", value: dobText)
+            }
+
+            if let gender = row.gender?.trimmingCharacters(in: .whitespacesAndNewlines), !gender.isEmpty {
+                UserDefaults.standard.set(gender, forKey: "userGender")
+            }
+            reloadGenderDependentContent()
+        } catch {
+            print("❌ Failed to load profile from Supabase: \(error)")
+        }
+    }
+
+    func applyLocalBasicInfo(name: String, email: String?, birthDate: Date) {
+        let emailValue = (email?.isEmpty == false) ? email! : "name@email.com"
+        let dob = profileDOBFormatter.string(from: birthDate)
+
+        if userProfile == nil {
+            userProfile = UserProfile(name: name, email: emailValue, profileImageName: "Profile", savedPreferences: [:])
+        } else {
+            userProfile?.name = name
+            userProfile?.email = emailValue
+        }
+
+        setPersonalInfoValue(title: "Full Name", value: name)
+        setPersonalInfoValue(title: "Email", value: emailValue)
+        setPersonalInfoValue(title: "Date of Birth", value: dob)
+    }
+
+    private var profileDOBFormatter: DateFormatter {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "dd/MM/yyyy"
+        return f
+    }
+
+    private func profileDOBText(from raw: String?) -> String {
+        guard let raw, !raw.isEmpty else { return "" }
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+
+        for format in ["yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX", "yyyy-MM-dd'T'HH:mm:ssXXXXX"] {
+            parser.dateFormat = format
+            if let date = parser.date(from: raw) {
+                return profileDOBFormatter.string(from: date)
+            }
+        }
+        return raw
+    }
+
+    private func mapAssessmentAnswers(_ answers: [String: [Int]]?) -> [Int: Set<Int>] {
+        guard let answers else { return [:] }
+        var mapped: [Int: Set<Int>] = [:]
+        for (k, v) in answers {
+            if let idx = Int(k) { mapped[idx] = Set(v) }
+        }
+        return mapped
+    }
+
+    private func setPersonalInfoValue(title: String, value: String) {
+        for sectionIndex in personalInfoSections.indices {
+            if let itemIndex = personalInfoSections[sectionIndex].items.firstIndex(where: { $0.title == title }) {
+                personalInfoSections[sectionIndex].items[itemIndex].value = value
+            }
+        }
+    }
+
+    /// Persist name, email, and DOB edits to the Supabase `users` table.
+    func updateProfileInSupabase(name: String, email: String, dob: Date) {
+        guard let userId = SupabaseManager.shared.currentUserId else { return }
+
+        let dobString = profileDOBFormatter.string(from: dob)
+
+        // Convert dd/MM/yyyy → yyyy-MM-dd for Supabase
+        let isoFormatter = DateFormatter()
+        isoFormatter.locale = Locale(identifier: "en_US_POSIX")
+        isoFormatter.dateFormat = "yyyy-MM-dd"
+        let isoDOB = isoFormatter.string(from: dob)
+
+        Task {
+            do {
+                let payload = ProfileUpdatePayload(name: name, birth_date: isoDOB)
+                try await SupabaseManager.shared.client
+                    .from("users")
+                    .update(payload)
+                    .eq("user_id", value: userId.uuidString)
+                    .execute()
+                print("✅ Profile (name, DOB) saved to Supabase")
+            } catch {
+                print("⚠️ Failed to save profile to Supabase: \(error)")
+            }
+        }
+    }
+
+    /// Rebuilds gender-dependent content (tips) after a gender preference change.
+    func reloadGenderDependentContent() {
+        loadSampleTips()
+    }
+
     
     
     func loadSampleQuestions () {
@@ -601,32 +764,34 @@ class DataStore {
     
     //love tips
     func loadSampleTips() {
+        let p = partnerPronoun
         let sampleTips: [Tip] = [
-            Tip(title: "Make hot chocolate for her"),
-            Tip(title: "Write her a sweet note"),
-            Tip(title: "Give her a foot massage"),
-            Tip(title: "Prepare dinner for her"),
-            Tip(title: "Offer to do her chores"),
+            Tip(title: "Make hot chocolate for \(p)"),
+            Tip(title: "Write \(p) a sweet note"),
+            Tip(title: "Give \(p) a foot massage"),
+            Tip(title: "Prepare dinner for \(p)"),
+            Tip(title: "Offer to do \(p == "them" ? "their" : p == "her" ? "her" : "his") chores"),
             Tip(title: "Plan a movie date night"),
-            Tip(title: "Cook her favorite meal"),
-            Tip(title: "Help her with her homework"),
-            Tip(title: "Organize her closet")
+            Tip(title: "Cook \(p == "them" ? "their" : p == "her" ? "her" : "his") favorite meal"),
+            Tip(title: "Help \(p) with \(p == "them" ? "their" : p == "her" ? "her" : "his") homework"),
+            Tip(title: "Organize \(p == "them" ? "their" : p == "her" ? "her" : "his") closet")
         ]
         
         self.tips = sampleTips
     }
     
     func getAllTips() -> [Tip] {
+        let p = partnerPronoun
         return [
-            Tip(title: "Make hot chocolate for her"),
-            Tip(title: "Write her a sweet note"),
-            Tip(title: "Give her a foot massage"),
-            Tip(title: "Prepare dinner for her"),
-            Tip(title: "Offer to do her chores"),
+            Tip(title: "Make hot chocolate for \(p)"),
+            Tip(title: "Write \(p) a sweet note"),
+            Tip(title: "Give \(p) a foot massage"),
+            Tip(title: "Prepare dinner for \(p)"),
+            Tip(title: "Offer to do \(p == "them" ? "their" : p == "her" ? "her" : "his") chores"),
             Tip(title: "Plan a movie date night"),
-            Tip(title: "Cook her favorite meal"),
-            Tip(title: "Help her with her homework"),
-            Tip(title: "Organize her closet")
+            Tip(title: "Cook \(p == "them" ? "their" : p == "her" ? "her" : "his") favorite meal"),
+            Tip(title: "Help \(p) with \(p == "them" ? "their" : p == "her" ? "her" : "his") homework"),
+            Tip(title: "Organize \(p == "them" ? "their" : p == "her" ? "her" : "his") closet")
         ]
     }
     

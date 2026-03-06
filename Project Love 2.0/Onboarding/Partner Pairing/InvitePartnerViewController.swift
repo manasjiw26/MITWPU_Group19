@@ -70,42 +70,38 @@ class InvitePartnerViewController: UIViewController {
         return String((0..<6).map { _ in chars.randomElement()! })
     }
     
-       func savePairingCodeToDB(code: String) async {
-           if isSavingCode { return }
-           isSavingCode = true
-           
-           guard let userId = SupabaseManager.shared.currentUserId else {
-               isSavingCode = false
-               return
-           }
+    func savePairingCodeToDB(code: String) async {
+        if isSavingCode { return }
+        isSavingCode = true
 
-           do {
-               try await supabase.from("pairing_codes")
-                   .update(["used": true])
-                   .eq("created_by", value: userId.uuidString)
-                   .eq("used", value: false)
-                   .execute()
+        guard let userId = SupabaseManager.shared.currentUserId else {
+            isSavingCode = false
+            return
+        }
 
-               let pairingCode = PairingCodeInsert(
-                   code: code.uppercased(),
-                   created_by: userId,
-                   expires_at: Date().addingTimeInterval(600), // Date directly
-                   used: false
-               )
+        do {
+            let formatter = ISO8601DateFormatter()
+            let expiresAt = formatter.string(from: Date().addingTimeInterval(600))
 
-               try await supabase
-                   .from("pairing_codes")
-                   .insert(pairingCode)
-                   .execute()
-               
-               print("Pairing code saved")
+            let update = PairingCodeUpdate(
+                pairing_code: code.uppercased(),
+                pairing_code_expires_at: expiresAt
+            )
 
-           } catch {
-               print("Failed to save pairing code:", error)
-           }
-           
-           isSavingCode = false
-       }
+            try await supabase
+                .from("users")
+                .update(update)
+                .eq("user_id", value: userId.uuidString)
+                .execute()
+
+            print("Pairing code saved to users table")
+
+        } catch {
+            print("Failed to save pairing code:", error)
+        }
+
+        isSavingCode = false
+    }
 
     private func setupCollectionView() {
         let nib = UINib(nibName: "ShareCodeCollectionViewCell", bundle: nil)

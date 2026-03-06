@@ -91,12 +91,12 @@ class LoveNotePageViewController: UIViewController {
                 .from("love_notes")
                 .select()
                 .eq("relationship_id", value: currentRelationshipId.uuidString)
-                .or("is_sent.eq.true,and(is_sent.eq.false,sender_user_id.eq.\(currentUserId.uuidString))")
+                .or("is_sent.eq.true,and(is_sent.eq.false,user_id.eq.\(currentUserId.uuidString))")
                 .order("created_at", ascending: false)
                 .execute()
                 .value
 
-            let visibleRows = rows.filter { $0.is_sent || $0.sender_user_id == currentUserId }
+            let visibleRows = rows.filter { $0.is_sent || $0.user_id == currentUserId }
             allNotes = visibleRows.map { LoveNote.fromDB($0, currentUserId: currentUserId) }
             applyFilter()
         } catch {
@@ -190,8 +190,8 @@ class LoveNotePageViewController: UIViewController {
 
             let payload = LoveNoteInsert(
                 relationship_id: currentRelationshipId,
-                sender_user_id: authUserId,
-                receiver_user_id: partnerUserId,
+                user_id: authUserId,
+                partner_user_id: partnerUserId,
                 message: message,
                 scheduled_for: scheduledDate,
                 is_sent: (scheduledDate == nil)

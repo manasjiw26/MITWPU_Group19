@@ -12,7 +12,7 @@ protocol LoveTipsSelectionDelegate: AnyObject {
     func didUpdateSelectedTips(_ tips: [Tip])
 }
 
-class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate {
+class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate, UIAdaptivePresentationControllerDelegate {
     
     @IBOutlet weak var vibeCollectionView: UICollectionView!
     @IBOutlet weak var showAllActivityButton: UIButton!
@@ -21,6 +21,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     @IBOutlet weak var activityImage: UIImageView!
     @IBOutlet weak var ongoingActivitiesView: UIView!
     @IBOutlet weak var activityName: UILabel!
+    @IBOutlet weak var notificationButton: UIBarButtonItem!
     
     var ongoingActivites: [Activity] = []
     var makeSmileData: [MakeSmile] = []
@@ -38,23 +39,11 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var myMoodImage: String = "neutral"
     
     var moodChannel: RealtimeChannelV2?
-    
-    private var partnerDisplayText: String {
-        let userGender = UserDefaults.standard.string(forKey: "userGender")?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .lowercased() ?? ""
-
-        switch userGender {
-        case "female": return "Him"
-        case "male": return "Her"
-        default: return "Partner"
-        }
-    }
-
+    var partnerDisplayText: String { DataStore.shared.partnerDisplayText }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        checkNotifications()
         BuildBond = dataStore.loadBuildYourbond()
         suggestedActivities = DataStore.shared.getSuggestedActivities()
         registerCell()
@@ -64,11 +53,53 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         setupOngoing()
         configureOngoingActivity()
 
+        // Refresh gender-dependent UI when preferences change (e.g. from Profile modal)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePreferencesChanged),
+            name: .preferencesDidChange,
+            object: nil
+        )
+
         // Load user/relationship context from Supabase, then sync activities
         Task {
             await DataStore.shared.loadUserContext()
             DataStore.shared.syncActivitiesFromSupabase()
             await fetchPartnerMood()
+        }
+    }
+
+    @objc private func handlePreferencesChanged() {
+        makeSmileData = [
+            MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
+            MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
+            MakeSmile(types: "Activities for \(partnerDisplayText)", imageName: "checklist")
+        ]
+        vibeCollectionView.reloadData()
+    }
+    private func checkNotifications() {
+        guard let currentUserId = supabase.auth.currentUser?.id else { return }
+        Task {
+            do {
+                let notifications = try await NotificationService.shared.fetchNotifications(for: currentUserId)
+                let hasUnread = notifications.contains { !$0.isRead }
+                await MainActor.run {
+                    if hasUnread {
+                        if #available(iOS 15.0, *) {
+                            let config = UIImage.SymbolConfiguration(paletteColors: [.systemRed, .label])
+                            self.notificationButton.image = UIImage(systemName: "bell.badge.fill", withConfiguration: config)
+                        } else {
+                            self.notificationButton.image = UIImage(systemName: "bell.fill")
+                            self.notificationButton.tintColor = .systemRed
+                        }
+                    } else {
+                        self.notificationButton.image = UIImage(systemName: "bell.fill")
+                        self.notificationButton.tintColor = nil
+                    }
+                }
+            } catch {
+        print("Error checking notifications: \(error)")
+    }
         }
     }
     
@@ -570,11 +601,27 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     
     @IBAction func profileTapped(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
-        let profileVC = storyboard.instantiateInitialViewController()!
-        let navVC = UINavigationController(rootViewController: profileVC)
-        navVC.modalPresentationStyle = .pageSheet
-        present(navVC, animated: true)
+           let profileVC = storyboard.instantiateInitialViewController()!
+           let navVC = UINavigationController(rootViewController: profileVC)
+           navVC.modalPresentationStyle = .pageSheet
+           navVC.presentationController?.delegate = self
+           present(navVC, animated: true)
     }
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        Task { [weak self] in
+            guard let self else { return }
+            await DataStore.shared.refreshUserProfileFromSupabase()
+            await MainActor.run {
+                self.makeSmileData = [
+                    MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
+                    MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
+                    MakeSmile(types: "Activities for \(self.partnerDisplayText)", imageName: "checklist")
+                ]
+                self.vibeCollectionView.reloadData()
+            }
+        }
+    }
+
 }
 
 
@@ -962,21 +1009,30 @@ extension VibeViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        makeSmileData = [
-            MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
-            MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
-            MakeSmile(types: "Activities for \(partnerDisplayText)", imageName: "checklist")
-        ]
-        vibeCollectionView.reloadSections(IndexSet(integer: 3))
-        Task {
-            await fetchPartnerMood()
-        }
-        if hasCompletedDailyCheckIn && self.suggestedActivities.isEmpty{
-            self.suggestedActivities = DataStore.shared.getSuggestedActivities()
-        }
+        Task { [weak self] in
+            guard let self else { return }
 
-        configureOngoingActivity()
+            await DataStore.shared.refreshUserProfileFromSupabase()
+
+            await MainActor.run {
+                self.makeSmileData = [
+                    MakeSmile(types: "Send Lovenote", imageName: "pencil.and.list.clipboard"),
+                    MakeSmile(types: "Love Tips", imageName: "lightbulb.max"),
+                    MakeSmile(types: "Activities for \(self.partnerDisplayText)", imageName: "checklist")
+                ]
+                
+                if self.hasCompletedDailyCheckIn && self.suggestedActivities.isEmpty {
+                    self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+                }
+                
+                self.configureOngoingActivity()
+                self.vibeCollectionView.reloadData()
+            }
+
+            await self.fetchPartnerMood()
+        }
     }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

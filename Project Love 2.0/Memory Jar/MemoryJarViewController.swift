@@ -9,6 +9,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var MemoryJarView: SKView!
     
     private var memoryChannel: RealtimeChannelV2?
+    private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,13 +22,22 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         addButton.configuration = .glass()
         addButton.setTitle("Add", for: .normal)
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory), name: NSNotification.Name("MemoryAdded"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNewMemory(_:)), name: NSNotification.Name("MemoryAdded"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(showMemoryDisplay(_:)), name: NSNotification.Name("OpenMemory"), object: nil)
         memoryLaneCollectionView.alwaysBounceVertical = false
         memoryLaneCollectionView.showsVerticalScrollIndicator = false
         memoryLaneCollectionView.contentInsetAdjustmentBehavior = .never
 
+        // Setup loading indicator
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.hidesWhenStopped = true
+        view.addSubview(loadingIndicator)
+        
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -77,33 +87,47 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
 
-//    @objc func handleNewMemory() {
-//        DispatchQueue.main.async {
-//            
-//            guard !dataStore.savedMemories.isEmpty else {
-//                print("No memories to display")
-//                return
-//            }
-//            
-//            self.memoryLaneCollectionView.reloadData()
-//            
-//            if let scene = self.MemoryJarView.scene as? MemoryJarScene {
-//                let newIndex = dataStore.savedMemories.count - 1
-//                
-//                guard newIndex >= 0 else { return }
-//                
-//                let memory = dataStore.savedMemories[newIndex]
-//                scene.addHeart(index: newIndex, memoryID: memory.id, animate: true)
-//                
-//                let indexPath = IndexPath(item: newIndex, section: 0)
-//                self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
-//            }
-//        }
-//    }
-//    
+    @objc func handleNewMemory(_ notification: Notification) {
+        // Retrieve the locally created memory
+        guard let localMemory = notification.object as? Memory else { return }
+
+        DispatchQueue.main.async {
+            // Check if it was already added somehow to prevent duplicates
+            guard !dataStore.savedMemories.contains(where: { $0.id == localMemory.id }) else { return }
+
+            // Add the local memory to the data store immediately
+            dataStore.savedMemories.append(localMemory)
+            
+            // Reload the collection view to show the new card
+            self.memoryLaneCollectionView.reloadData()
+            
+            if let scene = self.MemoryJarView.scene as? MemoryJarScene {
+                let newIndex = dataStore.savedMemories.count - 1
+                
+                guard newIndex >= 0 else { return }
+                
+                scene.addHeart(index: newIndex, memoryID: localMemory.id, animate: true)
+                
+                let indexPath = IndexPath(item: newIndex, section: 0)
+                // Scroll to the new item
+                if indexPath.item < self.memoryLaneCollectionView.numberOfItems(inSection: 0) {
+                    self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
+                }
+            }
+        }
+    }
+
     @MainActor
     func fetchMemoriesFromSupabase() async {
         guard let userId = SupabaseManager.shared.client.auth.currentUser?.id else { return }
+
+        // Determine if we need to show the loading state (e.g. if we have no memories locally)
+        let isInitialLoad = dataStore.savedMemories.isEmpty
+        if isInitialLoad {
+            loadingIndicator.startAnimating()
+            MemoryJarView.isHidden = true
+            memoryLaneCollectionView.isHidden = true
+        }
 
         do {
             // 1️⃣ Get relationship_id
@@ -161,6 +185,15 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             await MainActor.run {
                 dataStore.savedMemories.removeAll()
                 dataStore.savedMemories = convertedMemories
+                
+                if isInitialLoad {
+                    self.loadingIndicator.stopAnimating()
+                    // Animate the views back in
+                    UIView.animate(withDuration: 0.3) {
+                        self.MemoryJarView.isHidden = false
+                        self.memoryLaneCollectionView.isHidden = false
+                    }
+                }
             }
 
             memoryLaneCollectionView.reloadData()
@@ -169,6 +202,13 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
 
         } catch {
             print("Fetch error:", error)
+            await MainActor.run {
+                if isInitialLoad {
+                    self.loadingIndicator.stopAnimating()
+                    self.MemoryJarView.isHidden = false
+                    self.memoryLaneCollectionView.isHidden = false
+                }
+            }
         }
     }
     
@@ -202,6 +242,12 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
 
                         // Decode into your model
                         let item = try JSONDecoder().decode(MemoryModel.self, from: jsonData)
+
+                        // If we created this memory, ignore it (we already displayed it instantly)
+                        let currentUserId = SupabaseManager.shared.client.auth.currentUser?.id.uuidString
+                        if item.user_id.uuidString == currentUserId {
+                            continue
+                        }
 
                         if dataStore.savedMemories.contains(where: { $0.id == item.id }) {
                             continue

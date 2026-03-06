@@ -10,8 +10,9 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
         DataStore.shared.personalInfoSections
     }
 
-    private let user = DataStore.shared.userProfile
+    private var user: UserProfile? { DataStore.shared.userProfile }
     private var isEditingProfile = false
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,17 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
         setupTableView()
         setupHeader()
         setupEditButton()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Task {
+            await DataStore.shared.refreshUserProfileFromSupabase()
+            DispatchQueue.main.async {
+                self.setupHeader()
+                self.Table.reloadData()
+            }
+        }
     }
 
     private func setupTableView() {
@@ -53,6 +65,10 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
     }
 
     private func saveProfileData() {
+        var updatedName: String?
+        var updatedEmail: String?
+        var updatedDOBString: String?
+
         for cell in Table.visibleCells {
             guard let indexPath = Table.indexPath(for: cell),
                   let cell = cell as? PersonalInfoTableViewCell else { continue }
@@ -64,8 +80,26 @@ class Personal_InfoViewController: UIViewController, UITableViewDelegate, UITabl
             let itemTitle = DataStore.shared.personalInfoSections[indexPath.section].items[indexPath.row].title
             if itemTitle == "Full Name" {
                 DataStore.shared.userProfile?.name = newValue
+                updatedName = newValue
             } else if itemTitle == "Email" {
                 DataStore.shared.userProfile?.email = newValue
+                updatedEmail = newValue
+            } else if itemTitle == "Date of Birth" {
+                updatedDOBString = newValue
+            }
+        }
+
+        // Persist to Supabase
+        let name = updatedName ?? DataStore.shared.userProfile?.name ?? ""
+        let email = updatedEmail ?? DataStore.shared.userProfile?.email ?? ""
+
+        if let dobStr = updatedDOBString ?? DataStore.shared.personalInfoSections
+            .flatMap({ $0.items }).first(where: { $0.title == "Date of Birth" })?.value {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "dd/MM/yyyy"
+            if let dobDate = formatter.date(from: dobStr) {
+                DataStore.shared.updateProfileInSupabase(name: name, email: email, dob: dobDate)
             }
         }
     }

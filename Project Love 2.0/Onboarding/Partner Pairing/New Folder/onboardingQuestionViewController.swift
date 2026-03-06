@@ -1,4 +1,5 @@
 import UIKit
+import Supabase
 
 class onboardingQuestionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -38,6 +39,11 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
         updateUI()
     }
     
+    private struct AssessmentUpdatePayload: Encodable {
+        let gender: String
+        let assessment_answers: [String: [Int]]
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.layoutIfNeeded()
@@ -95,42 +101,85 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
                 currentIndex += 1
                 updateUI()
             } else {
-                DataStore.shared.userProfile?.savedPreferences = self.selectedAnswers
-                persistUserGender() // add this line
+                Task {
+                    do {
+                        try await self.persistUserGender()
+                        DataStore.shared.userProfile?.savedPreferences = self.selectedAnswers
+                        await DataStore.shared.refreshUserProfileFromSupabase()
+                        DataStore.shared.reloadGenderDependentContent()
+                        NotificationCenter.default.post(name: .preferencesDidChange, object: nil)
 
-                if isEditingMode {
-                    self.navigationController?.setNavigationBarHidden(false, animated: true)
-                    if let nav = self.navigationController {
-                        nav.popViewController(animated: true)
-                    } else {
-                        self.dismiss(animated: true)
-                    }
-                } else {
-                    UserDefaults.standard.set(true, forKey: "hasCompletedAssessment")
-                    guard let parentNavController = self.presentingViewController as? UINavigationController ?? self.presentingViewController?.navigationController else {
-                        return
-                    }
+                        await MainActor.run {
+                            if self.isEditingMode {
+                                self.navigationController?.setNavigationBarHidden(false, animated: true)
+                                if let nav = self.navigationController {
+                                    nav.popViewController(animated: true)
+                                } else {
+                                    self.dismiss(animated: true)
+                                }
+                            } else {
+                                UserDefaults.standard.set(true, forKey: "hasCompletedAssessment")
+                                guard let parentNavController = self.presentingViewController as? UINavigationController
+                                        ?? self.presentingViewController?.navigationController else {
+                                    return
+                                }
 
-                    self.dismiss(animated: true) {
-                        let vc = self.storyboard?.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
-                        vc.view.backgroundColor = UIColor(named: "AppBackground")
-                        parentNavController.pushViewController(vc, animated: true)
+                                self.dismiss(animated: true) {
+                                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
+                                    vc.view.backgroundColor = UIColor(named: "AppBackground")
+                                    parentNavController.pushViewController(vc, animated: true)
+                                }
+                            }
+                        }
+                    } catch {
+                        print("⚠️ Failed to save gender/answers to Supabase: \(error)")
                     }
                 }
             }
     }
     
-    private func persistUserGender() {
+    private func persistUserGender() async throws {
         guard
             let genderQuestionIndex = questions.firstIndex(where: { $0.questionText.lowercased().contains("gender") }),
             let selectedOptionIndex = selectedAnswers[genderQuestionIndex]?.first,
             questions[genderQuestionIndex].options.indices.contains(selectedOptionIndex)
-        else { return }
+        else {
+            throw NSError(
+                domain: "onboardingQuestionViewController",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "Gender selection is missing"]
+            )
+        }
+
+        guard let userId = SupabaseManager.shared.currentUserId else {
+            throw NSError(
+                domain: "onboardingQuestionViewController",
+                code: 2,
+                userInfo: [NSLocalizedDescriptionKey: "No authenticated user id"]
+            )
+        }
 
         let gender = questions[genderQuestionIndex].options[selectedOptionIndex].text
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
+        var answersDict: [String: [Int]] = [:]
+        for (key, value) in selectedAnswers {
+            answersDict[String(key)] = Array(value)
+        }
+
+        let payload = AssessmentUpdatePayload(
+            gender: gender,
+            assessment_answers: answersDict
+        )
+
+        try await SupabaseManager.shared.client
+            .from("users")
+            .update(payload)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+
         UserDefaults.standard.set(gender, forKey: "userGender")
+        print("✅ Gender + assessment answers saved to Supabase")
     }
 
     // MARK: - TableView Methods

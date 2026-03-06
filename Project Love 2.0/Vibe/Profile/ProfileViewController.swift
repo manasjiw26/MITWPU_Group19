@@ -13,12 +13,21 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        applyHeader()
 
-        user = DataStore.shared.userProfile
+        Task {
+            await DataStore.shared.refreshUserProfileFromSupabase()
+            DispatchQueue.main.async { self.applyHeader() }
+        }
+
+    }
+    private func applyHeader() {
+        guard let user = DataStore.shared.userProfile else { return }
         nameLabel.text = user.name
         emailLabel.text = user.email
         profileImage.image = UIImage(named: user.profileImageName)
     }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
