@@ -15,8 +15,12 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         super.viewDidLoad()
         
         memoryLaneCollectionView.dataSource = self
-        memoryLaneCollectionView.collectionViewLayout = generateLayout()
+        
         memoryLaneCollectionView.delegate = self
+        memoryLaneCollectionView.register(
+            UINib(nibName: "memoryEmptyStateCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "emptyMemoryState"
+        )
         MemoryJarView.allowsTransparency = true
         MemoryJarView.backgroundColor = .clear
         addButton.configuration = .glass()
@@ -38,6 +42,15 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+    }
+    private var isEmptyState: Bool {
+        dataStore.savedMemories.isEmpty
+    }
+    private func refreshMemoryLaneUI() {
+        memoryLaneCollectionView.setCollectionViewLayout(generateLayout(), animated: false)
+        memoryLaneCollectionView.collectionViewLayout.invalidateLayout()
+        memoryLaneCollectionView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -99,7 +112,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             dataStore.savedMemories.append(localMemory)
             
             // Reload the collection view to show the new card
-            self.memoryLaneCollectionView.reloadData()
+            self.refreshMemoryLaneUI()
             
             if let scene = self.MemoryJarView.scene as? MemoryJarScene {
                 let newIndex = dataStore.savedMemories.count - 1
@@ -195,8 +208,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                     }
                 }
             }
-
-            memoryLaneCollectionView.reloadData()
+            refreshMemoryLaneUI()
             syncJarHearts()
             await listenForPartnerMemory(relationshipId: relationshipId)
 
@@ -221,34 +233,28 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         self.memoryChannel = SupabaseManager.shared.client.channel("memory_updates")
         guard let channel = self.memoryChannel else { return }
 
-        let insertionStream = channel.postgresChange(
+        let changesStream = channel.postgresChange(
             AnyAction.self,
             schema: "public",
             table: "memories",
-            filter: "relationship_id=eq.\(relationshipId)"
+            filter: "relationship_id=eq.\(relationshipId.uuidString)"
         )
 
         await channel.subscribe()
 
         Task {
-            do {
-                for await change in insertionStream {
-                    switch change {
+            for await change in changesStream {
+                switch change {
 
-                    case .insert(let action):
-
-                        // Convert record dictionary into Data
+                case .insert(let action):
+                    do {
                         let jsonData = try JSONEncoder().encode(action.record)
-
-                        // Decode into your model
                         let item = try JSONDecoder().decode(MemoryModel.self, from: jsonData)
 
-                        // If we created this memory, ignore it (we already displayed it instantly)
-                        let currentUserId = SupabaseManager.shared.client.auth.currentUser?.id.uuidString
-                        if item.user_id.uuidString == currentUserId {
-                            continue
-                        }
+                        // Ignore own insert (already shown locally)
+                       
 
+                        // Prevent duplicates
                         if dataStore.savedMemories.contains(where: { $0.id == item.id }) {
                             continue
                         }
@@ -259,7 +265,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                             .download(path: item.image_path)
 
                         await MainActor.run {
-
                             let date = ISO8601DateFormatter().date(from: item.memory_date) ?? Date()
 
                             let newMemory = Memory(
@@ -273,83 +278,91 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                             )
 
                             dataStore.savedMemories.append(newMemory)
-
-                            self.memoryLaneCollectionView.reloadData()
+                            self.refreshMemoryLaneUI()
 
                             if let scene = self.MemoryJarView.scene as? MemoryJarScene {
                                 let newIndex = dataStore.savedMemories.count - 1
                                 scene.addHeart(index: newIndex, memoryID: newMemory.id, animate: true)
                             }
                         }
+                    } catch {
+                        print("Insert realtime handling error:", error)
+                    }
 
-                    case .delete(let action):
-                        // Partner (or self) deleted a memory
+                case .delete(let action):
+                    do {
                         let jsonData = try JSONEncoder().encode(action.oldRecord)
 
                         struct DeletedMemory: Decodable {
-                            let memory_id: UUID
+                            let id: UUID
                             let title: String?
+
+                            enum CodingKeys: String, CodingKey {
+                                case id
+                                case memory_id
+                                case title
+                            }
+
+                            init(from decoder: Decoder) throws {
+                                let container = try decoder.container(keyedBy: CodingKeys.self)
+                                if let v = try container.decodeIfPresent(UUID.self, forKey: .id) {
+                                    id = v
+                                } else {
+                                    id = try container.decode(UUID.self, forKey: .memory_id)
+                                }
+                                title = try container.decodeIfPresent(String.self, forKey: .title)
+                            }
                         }
 
                         let deleted = try JSONDecoder().decode(DeletedMemory.self, from: jsonData)
 
                         await MainActor.run {
-                            // Remove from local data store
-                            if let index = dataStore.savedMemories.firstIndex(where: { $0.id == deleted.memory_id }) {
+                            if let index = dataStore.savedMemories.firstIndex(where: { $0.id == deleted.id }) {
                                 dataStore.savedMemories.remove(at: index)
 
-                                // Remove heart from jar
                                 if let scene = self.MemoryJarView.scene as? MemoryJarScene {
-                                    scene.removeHeart(memoryID: deleted.memory_id)
+                                    scene.removeHeart(memoryID: deleted.id)
                                 }
 
-                                self.memoryLaneCollectionView.reloadData()
+                                self.refreshMemoryLaneUI()
 
-                                // If the partner is viewing the photo or memory lane, pop them back
                                 if let navVC = self.navigationController,
                                    let topVC = navVC.topViewController,
                                    (topVC is memoryPhotoViewController || topVC is MemoryLaneViewController) {
                                     navVC.popToViewController(self, animated: true)
                                 }
-
-                                // Show alert to the partner
-                                let memoryTitle = deleted.title ?? "A memory"
-                                let alert = UIAlertController(
-                                    title: "Memory Deleted",
-                                    message: "Your partner deleted \"\(memoryTitle)\" from the memory jar.",
-                                    preferredStyle: .alert
-                                )
-                                alert.addAction(UIAlertAction(title: "OK", style: .default))
-
-                                // Present on the topmost visible VC
-                                if let topVC = self.navigationController?.topViewController {
-                                    topVC.present(alert, animated: true)
-                                } else {
-                                    self.present(alert, animated: true)
-                                }
                             }
                         }
-
-                    default:
-                        break
+                    } catch {
+                        print("Delete realtime handling error:", error)
                     }
+
+                default:
+                    break
                 }
-            } catch {
-                print("Realtime error:", error)
             }
         }
     }
+
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dataStore.savedMemories.count
+        return isEmptyState ? 1 : dataStore.savedMemories.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if isEmptyState {
+               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "emptyMemoryState", for: indexPath) as! memoryEmptyStateCollectionViewCell
+               cell.emptyTitleLabel.text = "No memory"
+               cell.emptyImageView.image = UIImage(named: "empty_memory")
+               return cell
+           }
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemoryLaneCell", for: indexPath) as! MemoryLaneCell
         let memory = dataStore.savedMemories[indexPath.item]
         cell.ImageView.image = memory.uiImage ?? UIImage(named: memory.imageName)
         return cell
     }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.item < dataStore.savedMemories.count else { return }
 
@@ -369,6 +382,19 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
 
     private func generateLayout() -> UICollectionViewLayout {
         
+        if isEmptyState {
+               let itemSize = NSCollectionLayoutSize(
+                   widthDimension: .fractionalWidth(1.0),
+                   heightDimension: .absolute(110)
+               )
+               let item = NSCollectionLayoutItem(layoutSize: itemSize)
+               let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+               let section = NSCollectionLayoutSection(group: group)
+               section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+               section.orthogonalScrollingBehavior = .none
+               return UICollectionViewCompositionalLayout(section: section)
+           }
+        
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalHeight(1.0)
@@ -376,7 +402,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .estimated(110),
+            widthDimension: .absolute(110),
             heightDimension: .absolute(110)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])

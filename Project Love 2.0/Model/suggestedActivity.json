@@ -1,0 +1,2328 @@
+{
+  "activities": [
+    {
+      "id": 1,
+      "category": "A",
+      "name": "Blindfolded Route Road",
+      "description": "A secret trip with structure, reveals, and a payoff that turns the.",
+      "image": "DeletetheGlitch",
+      "time": "2 to 3 hrs",
+      "steps": [
+        "1. Plan the Route. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Run the Hint System. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Set the Car Ritual. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Nail the Arrival Moment. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 2,
+      "category": "A",
+      "name": "Couple Content Mini",
+      "description": "A simple, playful way to make something together \u2014 more 'us having.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Pick One Trend. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Match the Vibe. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Film Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Wrap It Up. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 3,
+      "category": "A",
+      "name": "Thrift Outfit Persona",
+      "description": "A zero veto styling mission where you style your partner into a specific.",
+      "image": "Fun&Playful",
+      "time": "60 mins",
+      "steps": [
+        "1. Pick a Persona Blindly. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Shop with Rules. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. The Reveal. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Capture the Moment. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 4,
+      "category": "A",
+      "name": "Rooftop Sunset Picnic",
+      "description": "A calm, intimate evening watching the sunset with a simple game \u2014.",
+      "image": "DeletetheGlitch",
+      "time": "90 mins",
+      "steps": [
+        "1. Set Up Before Sunset. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Settle In. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Play 'This or That: Us Edition'. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let the Sun Do the Rest. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 5,
+      "category": "A",
+      "name": "Couple's Olympic Games",
+      "description": "A blindfold partner challenge that's funny, slightly chaotic, zero prep, and high.",
+      "image": "Fun&Playful",
+      "time": "30 mins",
+      "steps": [
+        "1. Set Up the Challenge. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Pick a Task. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Play and Switch. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Score It Simply. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 6,
+      "category": "A",
+      "name": "Boozy Cake Decorating",
+      "description": "A creative, slightly messy, cozy activity that's confidence boosting without pressure.",
+      "image": "DeletetheGlitch",
+      "time": "30 mins",
+      "steps": [
+        "1. Get Ready. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decorate. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share a Prompt. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Trade and Eat. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 7,
+      "category": "A",
+      "name": "Steal My Day",
+      "description": "Live one tiny part of your partner's day as if it's yours.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Pick a Habit. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Swap and Try. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Notice the Difference. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Share One Steal. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 8,
+      "category": "A",
+      "name": "Memory Remix",
+      "description": "Revisit a shared memory, but change the vibe.",
+      "image": "DeletetheGlitch",
+      "time": "60 mins",
+      "steps": [
+        "1. Choose an Old Memory. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Go Back or Recreate. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Change One Element. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Talk About Now. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 9,
+      "category": "A",
+      "name": "Question, But Make",
+      "description": "Ask questions you normally skip when things are good.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Prepare Questions. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Take Turns. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Go Deeper. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Share One Surprise. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 10,
+      "category": "A",
+      "name": "No Plan Date",
+      "description": "Spend time together with zero structure \u2014 just follow the flow.",
+      "image": "Fun&Playful",
+      "time": "1 to 2 hrs",
+      "steps": [
+        "1. Step Out. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Take Turns Deciding. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Say Yes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End Naturally. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 11,
+      "category": "A",
+      "name": "Tiny Appreciation Drop",
+      "description": "Say the small things before they disappear.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Close. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share 2 Each. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Be Specific. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End with Closeness. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 12,
+      "category": "A",
+      "name": "The One Song",
+      "description": "Express your vibe with music \u2014 one song at a time, no.",
+      "image": "Fun&Playful",
+      "time": "5 mins",
+      "steps": [
+        "1. Pick One Song. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. No Skipping. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Explaining. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let It Reflect the Day. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 13,
+      "category": "A",
+      "name": "Micro Date Jar",
+      "description": "Tiny dates, zero planning stress \u2014 pick randomly and do it today.",
+      "image": "Fun&Playful",
+      "time": "15 to 30 mins",
+      "steps": [
+        "1. Write 10 Ideas. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Fill the Jar. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Pick One Randomly. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Do It Today. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 14,
+      "category": "A",
+      "name": "City Dessert Crawl",
+      "description": "Turn one evening into a mini dessert adventure \u2014 small portions at.",
+      "image": "DeletetheGlitch",
+      "time": "2 to 3 hrs",
+      "steps": [
+        "1. Pick 2\u20133 Spots. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. One Dessert Per Stop. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Rate Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Crown a Winner. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 15,
+      "category": "A",
+      "name": "Themed Movie Dinner",
+      "description": "Match dinner to the theme of a movie you watch together.",
+      "image": "DeletetheGlitch",
+      "time": "2 to 3 hrs",
+      "steps": [
+        "1. Choose a Themed Movie. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Match the Meal. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Set the Scene. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Rate Your Creation. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 16,
+      "category": "A",
+      "name": "Home Board Game",
+      "description": "A cozy, low pressure competition with playful penalties instead of serious stakes.",
+      "image": "DeletetheGlitch",
+      "time": "60 mins",
+      "steps": [
+        "1. Set Up. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Pick a Penalty. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Play Best of Three. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Apply the Penalty. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 17,
+      "category": "A",
+      "name": "Memory Photo Scavenger",
+      "description": "A structured memory walk using photos you already have to retell your.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Set Up. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Use the 5 Prompts. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share One at a Time. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Create the Album. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 18,
+      "category": "A",
+      "name": "Cook & Learn",
+      "description": "Pick a new recipe neither of you has tried and cook it.",
+      "image": "Rekindle",
+      "time": "90 mins",
+      "steps": [
+        "1. Choose a New Dish. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Gather and Assign Roles. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Cook Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Eat and Rate. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 19,
+      "category": "B",
+      "name": "3 Question Relationship",
+      "description": "A weekly 30 minute check in to stay aligned without overthinking.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Set the Ritual. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Answer 3 Questions in Order. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Hard Stop. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close Gently. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 20,
+      "category": "B",
+      "name": "Windowsill Herb Project",
+      "description": "A small, shared gardening ritual that grows alongside your relationship.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": [
+        "1. Choose Herbs. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Set Up Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Water Every Sunday. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Blame Rule. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 21,
+      "category": "B",
+      "name": "Couple Journal \u2014",
+      "description": "A quick, imperfect journal page capturing today \u2014 one photo, one item.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": [
+        "1. Gather Today's Pieces. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Build the Page. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Decorate Freely. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close the Book. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 22,
+      "category": "B",
+      "name": "6 Image Us",
+      "description": "A visual collage of shared dreams \u2014 emotional alignment, not practical planning.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Pick 3 Images Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Build Without Talking. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Explain With Feeling. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Point and Close. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 23,
+      "category": "B",
+      "name": "Couple's Book Club",
+      "description": "Read the same pages, then have one focused conversation.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Choose One Book. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Read Separately. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Meet and Answer 3 Questions. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Read One Line Aloud. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 24,
+      "category": "B",
+      "name": "Soft Check In",
+      "description": "A low pressure way to see how each other actually feels today.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Facing Each Other. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share One Easy Thing. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share One Hard Thing. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Acknowledge Only. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 25,
+      "category": "B",
+      "name": "Mood Sync",
+      "description": "Align your emotional pace for the rest of the day.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Rate Your Mood. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share Why. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Adjust Expectations. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Decide Together. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 26,
+      "category": "B",
+      "name": "End of Day",
+      "description": "Close the day gently, without deep processing.",
+      "image": "DeletetheGlitch",
+      "time": "10 mins",
+      "steps": [
+        "1. Settle In. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share One Moment. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Name the Feeling. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End with Closeness. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 27,
+      "category": "B",
+      "name": "Sunday Reset Date",
+      "description": "A slow, intentional reset to prepare for the week together.",
+      "image": "DeletetheGlitch",
+      "time": "60 mins",
+      "steps": [
+        "1. Pick a Fixed Time. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Clean One Space Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Sit Down After. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Share One Intention. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 28,
+      "category": "B",
+      "name": "Routine Swap Evening",
+      "description": "Step into each other's everyday routine for a short time.",
+      "image": "Rekindle",
+      "time": "45 mins",
+      "steps": [
+        "1. Pick One Habit Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Teach Your Partner. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Follow It Exactly. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Back Tomorrow. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 29,
+      "category": "B",
+      "name": "Comfort Meal Ritual",
+      "description": "Share a meal that feels emotionally familiar rather than exciting.",
+      "image": "Fun&Playful",
+      "time": "45 mins",
+      "steps": [
+        "1. Name Your Comfort Food. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Cook or Order. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Eat Without Distractions. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Rate the Comfort. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 30,
+      "category": "B",
+      "name": "Walk + One",
+      "description": "Add light meaning to an otherwise normal walk.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Go for a Regular Walk. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. One Question Only. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stay on Topic. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End Naturally. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 31,
+      "category": "B",
+      "name": "Shared Watchlist Night",
+      "description": "Build something together over time through shared viewing.",
+      "image": "Fun&Playful",
+      "time": "60 mins",
+      "steps": [
+        "1. Create a Shared List. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Pick One Thing. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Watch One Episode Only. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Keep the Ritual. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 32,
+      "category": "B",
+      "name": "Gratitude in Passing",
+      "description": "Appreciation without making it a big emotional moment.",
+      "image": "Activityimage",
+      "time": "5 mins",
+      "steps": [
+        "1. Find a Moment. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Say One Appreciation. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Response Required. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Continue Your Day. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 33,
+      "category": "C",
+      "name": "Pottery or Painting",
+      "description": "A tactile, intimate creative session \u2014 more connection, less performance.",
+      "image": "DeletetheGlitch",
+      "time": "2 hrs",
+      "steps": [
+        "1. Go to a Studio. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Start in Silence. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Swap and Mark. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Name Your Piece. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 34,
+      "category": "C",
+      "name": "Volunteering Date",
+      "description": "Show up, do the work together, and feel the impact side by.",
+      "image": "Activityimage",
+      "time": "3 to 4 hrs",
+      "steps": [
+        "1. Choose a Cause. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Book a Shift. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Show Up and Work. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Debrief After. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 35,
+      "category": "C",
+      "name": "Learn a New",
+      "description": "Turn learning into doing \u2014 teamwork, creativity, and mutual respect.",
+      "image": "DeletetheGlitch",
+      "time": "90 mins",
+      "steps": [
+        "1. Pick One Skill. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Watch Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Create a Mini Project. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Share and Appreciate. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 36,
+      "category": "C",
+      "name": "Yes Day",
+      "description": "6 yeses, zero overthinking \u2014 a structured spontaneity day.",
+      "image": "Rekindle",
+      "time": "3 to 4 hrs",
+      "steps": [
+        "1. Set the Rules. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Take Turns. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Follow the Constraints. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close the Day. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 37,
+      "category": "C",
+      "name": "Art Gallery /",
+      "description": "Turn wandering into discovery through structured observation and one playful debate.",
+      "image": "Rekindle",
+      "time": "90 mins",
+      "steps": [
+        "1. Walk Silently for 10 Minutes. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Secretly Pick 3 Pieces Each. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share One at a Time. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. The Debate Round. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 38,
+      "category": "C",
+      "name": "Cooperative Games",
+      "description": "Work as a team under light pressure to see how you communicate.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Pick a Co op Game. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide Roles. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Play Through. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Two Minute Debrief. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 39,
+      "category": "C",
+      "name": "What If We\u2026",
+      "description": "Explore possibilities you've never actually talked about \u2014 no commitment required.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": [
+        "1. Take Turns. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. React Freely. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Ask One Follow Up. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Name the Exciting One. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 40,
+      "category": "C",
+      "name": "Future Snapshot",
+      "description": "Picture one tiny moment from a shared future \u2014 details, not achievements.",
+      "image": "Fun&Playful",
+      "time": "15 mins",
+      "steps": [
+        "1. Pick a Time Frame. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Describe One Normal Day. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Feel It Out. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave It Open. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 41,
+      "category": "C",
+      "name": "Habit Trade",
+      "description": "Try one small habit from each other's life for a day.",
+      "image": "DeletetheGlitch",
+      "time": "varies",
+      "steps": [
+        "1. Choose One Habit Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Explain Why It Matters. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Swap for a Day. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Report Back. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 42,
+      "category": "C",
+      "name": "How Do You",
+      "description": "Understand how your partner's mind actually works.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": [
+        "1. Pick a Topic. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Ask the Question. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Listen Without Comparing. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Reflect One Thing. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 43,
+      "category": "C",
+      "name": "Values, Not Goals",
+      "description": "Talk about what matters without pressure to plan.",
+      "image": "DeletetheGlitch",
+      "time": "15 mins",
+      "steps": [
+        "1. Name One Value Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share Where It Shows Up. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Ask About Theirs. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Notice Overlap or Difference. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 44,
+      "category": "C",
+      "name": "Skill Share Mini",
+      "description": "Teach each other something tiny you're good at.",
+      "image": "Fun&Playful",
+      "time": "20 mins",
+      "steps": [
+        "1. Pick a Simple Skill. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Teach in 10 Minutes. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Let Them Try. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Appreciate the Effort. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 45,
+      "category": "C",
+      "name": "10 Minute Sweat",
+      "description": "A short, shared burst of physical effort together.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose 3 Exercises. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Set a 10 Minute Timer. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Do Them Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop When Time Ends. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 46,
+      "category": "C",
+      "name": "Try Once Movement",
+      "description": "Test a new physical activity without any commitment.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Pick Something New. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Try It for 20 Minutes. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Laugh at Yourselves. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Decide Later. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 47,
+      "category": "C",
+      "name": "Question Caf\u00e9 Date",
+      "description": "Turn a caf\u00e9 visit into a curiosity driven experience.",
+      "image": "DeletetheGlitch",
+      "time": "60 mins",
+      "steps": [
+        "1. Go Somewhere New. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Bring 3 Questions Each. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Take Turns. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop When Done. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 48,
+      "category": "C",
+      "name": "Skill Swap Hour",
+      "description": "Learn something practical from each other in a focused session.",
+      "image": "DeletetheGlitch",
+      "time": "30 mins",
+      "steps": [
+        "1. Choose a Skill Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Teach in 15 Minutes. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Let Them Try. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 49,
+      "category": "C",
+      "name": "Bookstore / Library",
+      "description": "Explore ideas instead of buying things.",
+      "image": "Fun&Playful",
+      "time": "45 mins",
+      "steps": [
+        "1. Visit a Bookstore or Library. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Browse Separately. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Pick One Book Each. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Explain and Leave. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 50,
+      "category": "C",
+      "name": "Try Something New",
+      "description": "Experience something unfamiliar together without expectations.",
+      "image": "DeletetheGlitch",
+      "time": "2 hrs",
+      "steps": [
+        "1. Pick an Activity. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Attend Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Observe Reactions. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Lightly. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 51,
+      "category": "C",
+      "name": "Values Without Debate",
+      "description": "Share what matters without trying to align or justify.",
+      "image": "Fun&Playful",
+      "time": "15 mins",
+      "steps": [
+        "1. List 3 Values Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share One by One. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Debate. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Acknowledge and Move On. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 52,
+      "category": "C",
+      "name": "New Neighbourhood Date",
+      "description": "Explore a part of the city neither of you usually visits.",
+      "image": "DeletetheGlitch",
+      "time": "90 mins",
+      "steps": [
+        "1. Pick a New Area. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Walk Without a Plan. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stop Once. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Satisfied. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 53,
+      "category": "C",
+      "name": "Try a Class",
+      "description": "Sample a new experience without committing to it.",
+      "image": "Fun&Playful",
+      "time": "2 hrs",
+      "steps": [
+        "1. Find a Trial Class. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Attend Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Be Bad Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Without Over Judging. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 54,
+      "category": "C",
+      "name": "Menu Roulette",
+      "description": "Let randomness guide a shared food experience.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Go to a Restaurant. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Close Your Eyes. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Order What You Land On. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Share the Dishes. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 55,
+      "category": "C",
+      "name": "Local Event Drop",
+      "description": "Experience something happening around you, not planned for you.",
+      "image": "DeletetheGlitch",
+      "time": "45 mins",
+      "steps": [
+        "1. Find a Local Event. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Attend Without Expectations. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stay for 30\u201345 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Early on Purpose. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 56,
+      "category": "C",
+      "name": "Skill Swap Evening",
+      "description": "Learn something new from each other in a relaxed evening session.",
+      "image": "DeletetheGlitch",
+      "time": "30 mins",
+      "steps": [
+        "1. Choose a Skill Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Teach in 15 Minutes. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Let Them Practice. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 57,
+      "category": "C",
+      "name": "One Question Dinner",
+      "description": "Add curiosity to an otherwise normal meal.",
+      "image": "Rekindle",
+      "time": "45 mins",
+      "steps": [
+        "1. Pick One Interesting Question. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Eat Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Talk Around the Question. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End the Meal Naturally. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 58,
+      "category": "C",
+      "name": "Thrift / Street",
+      "description": "Browse without the pressure to buy \u2014 just explore.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Visit a Market. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Pick One Item. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Explain Why. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Without Buying (Optional). Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 59,
+      "category": "C",
+      "name": "Mini Road Trip",
+      "description": "Take a short drive or ride to see something new.",
+      "image": "Rekindle",
+      "time": "2 to 3 hrs",
+      "steps": [
+        "1. Pick a Destination. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Go Without Overplanning. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Spend a Short Time There. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Return Same Day. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 60,
+      "category": "C",
+      "name": "Documentary Night",
+      "description": "Learn about something neither of you knows much about.",
+      "image": "Fun&Playful",
+      "time": "90 mins",
+      "steps": [
+        "1. Pick an Unfamiliar Topic. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Watch One Episode. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share One Takeaway. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop There. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 61,
+      "category": "C",
+      "name": "Create a Someday",
+      "description": "Share future curiosities without commitment or timeline.",
+      "image": "DeletetheGlitch",
+      "time": "15 mins",
+      "steps": [
+        "1. List 5 Things Each. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share Casually. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Circle One Overlap. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Keep the List. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 62,
+      "category": "D",
+      "name": "Love Mapping \u2014",
+      "description": "A focused conversation to understand what's currently going on in your partner's.",
+      "image": "Fun&Playful",
+      "time": "25 mins",
+      "steps": [
+        "1. Set the Space. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Choose 5 Questions. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Listen Without Fixing. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close With Understanding. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 63,
+      "category": "D",
+      "name": "Recreate Your First",
+      "description": "Relive the beginning of your relationship to reconnect with the excitement, nerves.",
+      "image": "Fun&Playful",
+      "time": "90 mins",
+      "steps": [
+        "1. Remember the Details. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Go Back. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Use the Prompts. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close With Today. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 64,
+      "category": "D",
+      "name": "Recreate Your First",
+      "description": "Relive your first date across distance by recreating the feeling and flow.",
+      "image": "Activityimage",
+      "time": "45 mins",
+      "steps": [
+        "1. Set a Shared Time. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Recreate One Element Each. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Talk Like You Did Then. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Capture the Moment. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 65,
+      "category": "D",
+      "name": "Recreate Your First",
+      "description": "Bring the memory home using small details instead of locations or spending.",
+      "image": "Fun&Playful",
+      "time": "30 mins",
+      "steps": [
+        "1. Identify 3 Elements. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Recreate Two at Home. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Face Each Other. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Use the Prompts. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 66,
+      "category": "D",
+      "name": "Appreciation Jar",
+      "description": "A quick, in the moment way to capture appreciation and drop it into a.",
+      "image": "DeletetheGlitch",
+      "time": "5 mins",
+      "steps": [
+        "1. Open the Jar. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Write One Specific Sentence. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Save It. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Read Together Later. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 67,
+      "category": "D",
+      "name": "7 Breath\u2013Forehead Connection",
+      "description": "A quiet, physical reset to calm your nervous systems and feel emotionally.",
+      "image": "Activityimage",
+      "time": "3 mins",
+      "steps": [
+        "1. Get Into Position. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Rest Foreheads Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Take 7 Slow Breaths Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Hold and Open. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 68,
+      "category": "D",
+      "name": "Memory Lane Mapping",
+      "description": "Slow down together and intentionally add the most important moments of your.",
+      "image": "DeletetheGlitch",
+      "time": "20 mins",
+      "steps": [
+        "1. Open the Memory Jar Together. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Write Each Memory Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Keep It Honest. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Add the Final Memory. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 69,
+      "category": "D",
+      "name": "The Sandwich Method",
+      "description": "A simple way to ask for a behavior change while keeping your.",
+      "image": "Fun&Playful",
+      "time": "5 mins",
+      "steps": [
+        "1. Start Positive. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Make a Clear Request. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. End With Why It Matters Emotionally. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Keep It Clean. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 70,
+      "category": "D",
+      "name": "The 5 Minute",
+      "description": "A daily mini game you play whenever things feel slightly off \u2014.",
+      "image": "Rekindle",
+      "time": "5 mins",
+      "steps": [
+        "1. Pick a Simple Game. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Set a 5 Minute Timer. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Play Fully. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop When Time Ends. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 71,
+      "category": "D",
+      "name": "Us Playlist Game",
+      "description": "Build a shared playlist one song at a time over days \u2014.",
+      "image": "DeletetheGlitch",
+      "time": "5 mins",
+      "steps": [
+        "1. Create One Shared Playlist. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Add One Song Per Day Max. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Listen Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let the Music Speak. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 72,
+      "category": "D",
+      "name": "Scoreboard Life",
+      "description": "Turn everyday moments into a playful shared game \u2014 competition becomes connection.",
+      "image": "Activityimage",
+      "time": "ongoing",
+      "steps": [
+        "1. Create a Silly Scoreboard. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide What Counts. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Keep Score Casually. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Reset Weekly. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 73,
+      "category": "D",
+      "name": "The Ongoing Challenge",
+      "description": "Pick one tiny shared challenge for the next 7 days \u2014 forward.",
+      "image": "DeletetheGlitch",
+      "time": "varies",
+      "steps": [
+        "1. Decide a Simple Challenge. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Do It Daily. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Check In Briefly. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Celebrate Finishing. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 74,
+      "category": "D",
+      "name": "Guess What I'd",
+      "description": "A game that reminds you how well you know each other \u2014.",
+      "image": "DeletetheGlitch",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Random Category. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Guess What the Other Would Choose. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Reveal Answers. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Enjoy the Reactions. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 75,
+      "category": "D",
+      "name": "The Shared Thing",
+      "description": "Decide one small thing that's only yours as a couple \u2014 emotional.",
+      "image": "Rekindle",
+      "time": "varies",
+      "steps": [
+        "1. Choose One Shared Activity. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Agree It's Only Done Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Default to It. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let It Become Automatic. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 76,
+      "category": "D",
+      "name": "Cook For Each",
+      "description": "Express care through cooking \u2014 not explaining feelings, but showing up with.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Decide Who Cooks First. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Cook a Full Meal Alone. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. The Other Sets the Table or Cleans. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles Next Time. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 77,
+      "category": "D",
+      "name": "Memory Box Build",
+      "description": "Create something physical that holds shared meaning \u2014 a quiet emotional anchor.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Take a Box, Jar, or Envelope. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Add 2\u20133 Items. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Briefly Explain One Item. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Place It Somewhere Visible. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 78,
+      "category": "D",
+      "name": "Errand as a",
+      "description": "Turn ordinary responsibility into connection by doing it slowly and together.",
+      "image": "Rekindle",
+      "time": "45 mins",
+      "steps": [
+        "1. Pick One Real Errand. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Do It Slowly and Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Don't Divide Tasks. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End With a Stop. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 79,
+      "category": "D",
+      "name": "Shared Skill Night",
+      "description": "Learn something side by side \u2014 the collaboration matters more than the.",
+      "image": "Fun&Playful",
+      "time": "60 mins",
+      "steps": [
+        "1. Pick One Skill. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Watch or Attend a Beginner Session. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Try It Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Keep the Imperfection. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 80,
+      "category": "D",
+      "name": "Revisit the Beginning",
+      "description": "Go back to where something meaningful started and let the place remind.",
+      "image": "DeletetheGlitch",
+      "time": "45 mins",
+      "steps": [
+        "1. Choose a Place From Early On. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Go There Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Each Share One Memory. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Without Comparing. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 81,
+      "category": "D",
+      "name": "Care in Action",
+      "description": "Show emotional support through one concrete action instead of words.",
+      "image": "Rekindle",
+      "time": "varies",
+      "steps": [
+        "1. Ask the Question. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Choose One Thing. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Do It Fully. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Say Thank You and Stop. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 82,
+      "category": "D",
+      "name": "Slow Evening Ritual",
+      "description": "End the day intentionally together \u2014 no phone, no agenda, just presence.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose a Fixed Time. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Dim the Lights. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Sit or Lie Together for 10 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let the Stillness Close the Day. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 83,
+      "category": "D",
+      "name": "Emotion in Motion",
+      "description": "Move emotions through the body instead of processing them through words.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": [
+        "1. Go for a Slow Walk. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Focus on Breathing and Movement. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share One Sentence After (Optional). Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End Normally. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 84,
+      "category": "D",
+      "name": "Gratitude Meal",
+      "description": "Anchor appreciation in something tangible \u2014 a shared meal with one honest.",
+      "image": "Fun&Playful",
+      "time": "30 mins",
+      "steps": [
+        "1. Share a Meal Together. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Say One Thing. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Keep It Specific. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Continue Eating. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 85,
+      "category": "D",
+      "name": "Create a Shared",
+      "description": "Build emotional safety through one small, consistent, repeatable ritual.",
+      "image": "Fun&Playful",
+      "time": "varies",
+      "steps": [
+        "1. Pick One Small Ritual. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide When It Happens. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Try It for a Week. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Adjust or Keep. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 86,
+      "category": "E",
+      "name": "The Silence Retreat",
+      "description": "A shared pause from talking that helps you reconnect through presence, not.",
+      "image": "Activityimage",
+      "time": "90 mins",
+      "steps": [
+        "1. Agree on Start and End Time. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Choose 1\u20132 Quiet Activities. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Begin the Silence. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Break the Silence Gently. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 87,
+      "category": "E",
+      "name": "Tech Free Half",
+      "description": "A quick 30 minute pause from screens to reset your attention and feel.",
+      "image": "Rekindle",
+      "time": "30 mins",
+      "steps": [
+        "1. Set a 30 Minute Timer. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Choose One Quiet Activity. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stay Offline. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close With One Sentence. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 88,
+      "category": "E",
+      "name": "Parallel Play",
+      "description": "Spend time side by side doing separate activities \u2014 closeness without needing.",
+      "image": "DeletetheGlitch",
+      "time": "45 mins",
+      "steps": [
+        "1. Choose Your Solo Activity. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Stay in the Same Space. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Let Silence Happen. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End When Ready. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 89,
+      "category": "E",
+      "name": "Quiet Stargazing",
+      "description": "A short, silent activity sharing stillness and physical closeness while watching the.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Set Up After 9 PM. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Lie Shoulder to Shoulder. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Count 10 Slow Breaths. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End With One Sentence. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 90,
+      "category": "E",
+      "name": "Listening Without Interruption",
+      "description": "A structured 6 minute exercise where one person releases stress while the other.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a 3 Minute Timer. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Partner A Speaks. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. When Timer Ends. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close Together. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 91,
+      "category": "E",
+      "name": "Sharing an Audiobook",
+      "description": "Create closeness by sharing attention on the same story or voice \u2014.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Pick One Episode or Chapter. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Get Comfortable. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Listen Without Pausing. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. One Line Each After. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 92,
+      "category": "E",
+      "name": "Pressure Release Note",
+      "description": "Let heavy thoughts out without turning them into a discussion.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Each Write Down What's Overwhelming. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Fold the Note and Keep It Aside. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Decide Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Pressure. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 93,
+      "category": "E",
+      "name": "Solo But Together",
+      "description": "Be near each other while doing your own thing \u2014 presence without.",
+      "image": "Fun&Playful",
+      "time": "20 mins",
+      "steps": [
+        "1. Sit in the Same Room. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Do Separate Activities. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Talking for 20 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End With a Small Gesture. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 94,
+      "category": "E",
+      "name": "Quiet Game Window",
+      "description": "Play a game together in comfortable silence \u2014 shared focus without conversation.",
+      "image": "Fun&Playful",
+      "time": "15 mins",
+      "steps": [
+        "1. Pick a Low Effort Game. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide It's a Silent Round. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Play for 10\u201315 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop Without Debriefing. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 95,
+      "category": "E",
+      "name": "Boundary Reset",
+      "description": "Set temporary limits so no one feels crowded \u2014 practical, not emotional.",
+      "image": "DeletetheGlitch",
+      "time": "5 mins",
+      "steps": [
+        "1. Each Say One Boundary. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Agree to Respect It Fully. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Reconnect After the Set Time. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Normalise This. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 96,
+      "category": "E",
+      "name": "Body Shake Out",
+      "description": "Release built up tension through quick, silly movement.",
+      "image": "Rekindle",
+      "time": "3 mins",
+      "steps": [
+        "1. Stand Apart in the Same Space. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Shake Arms, Legs, Shoulders Freely. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Move for 2\u20133 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Sit or Lie Down Afterward. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 97,
+      "category": "E",
+      "name": "Low Stakes Challenge",
+      "description": "Compete lightly without emotional investment \u2014 laughter over winning.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Quick Challenge. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Set a Short Time Limit. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Do It Side by Side. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Laugh It Off. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 98,
+      "category": "E",
+      "name": "Comfort Meal Together",
+      "description": "Eat something familiar that already feels safe \u2014 not a date, just.",
+      "image": "DeletetheGlitch",
+      "time": "30 mins",
+      "steps": [
+        "1. Choose a Familiar Meal. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Cook or Order With Minimal Effort. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Eat at the Same Time. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let It Be What It Is. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 99,
+      "category": "E",
+      "name": "Low Energy Watch",
+      "description": "Watch something easy and familiar \u2014 no new stories, no emotional investment.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Pick Something You've Already Seen. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Watch One Episode or Part. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Pause or Stop Anytime. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Discussion Needed. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 100,
+      "category": "E",
+      "name": "Hands Busy, Heart",
+      "description": "Regulate together through repetitive, shared physical motion \u2014 grounding without words.",
+      "image": "DeletetheGlitch",
+      "time": "20 mins",
+      "steps": [
+        "1. Choose a Repetitive Task. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Sit Near Each Other. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Do the Task Silently. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop When It's Done. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 101,
+      "category": "E",
+      "name": "Soft Focus Ritual",
+      "description": "Give your nervous systems one shared calming focal point \u2014 visual stillness.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Choose One Calming Visual. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Sit Where Both Can See It. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Watch for 5\u201310 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End Naturally. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 102,
+      "category": "E",
+      "name": "The Comfort Swap",
+      "description": "Externalise comfort so it doesn't need to be verbal \u2014 a physical.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Take a Small Box or Bag. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Add 2 Comfort Items. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Swap Boxes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Use the Items Anytime Today. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 103,
+      "category": "E",
+      "name": "Care Countdown",
+      "description": "Contained comfort with a clear ending \u2014 soothing without the fear of.",
+      "image": "DeletetheGlitch",
+      "time": "10 mins",
+      "steps": [
+        "1. Set a 10 Minute Timer. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. One Person Receives Care. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Talking Required. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop Exactly When the Timer Ends. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 104,
+      "category": "E",
+      "name": "Evening Care Map",
+      "description": "Understand each other's comfort patterns \u2014 no processing emotions, just mapping needs.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Each Write Down What Helps When Drained. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share the Lists. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Keep for Future Reference. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Discussion Needed Now. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 105,
+      "category": "F",
+      "name": "Validation Exercise \u2014",
+      "description": "Practice acknowledging your partner's feelings without fixing, defending, or debating \u2014 reducing.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": [
+        "1. Sit Face to Face. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Partner A Shares One Feeling. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Partner B Responds With One Validation Sentence. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 106,
+      "category": "F",
+      "name": "Naikan Reflection \u2014",
+      "description": "A quiet reflection exercise to notice the care and effort your partner.",
+      "image": "DeletetheGlitch",
+      "time": "15 mins",
+      "steps": [
+        "1. Reflect Individually. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Share Only the 'Received' List. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Say 'Thank You' After Each Item. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Receive the Gratitude. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 107,
+      "category": "F",
+      "name": "Positive Language Practice",
+      "description": "Turn criticism into clear, supportive requests \u2014 making needs easier to hear.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Write Down One Critical Thought. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Rewrite It Using This Format. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Say It Out Loud Once. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Example. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 108,
+      "category": "F",
+      "name": "Three and Three",
+      "description": "Reinforce emotional safety by naming what you value and appreciate \u2014 countering.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Write Separately. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Exchange Lists. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Then Read Out Loud. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Be Specific. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 109,
+      "category": "F",
+      "name": "Love Letters to",
+      "description": "Capture who you are as a couple today and what you hope.",
+      "image": "DeletetheGlitch",
+      "time": "20 mins",
+      "steps": [
+        "1. Write to 'Future Us'. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Include Three Things. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Seal It. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Don't Rewrite After Sealing. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 110,
+      "category": "F",
+      "name": "Good Qualities Worksheet",
+      "description": "Reconnect with the strengths that made you choose each other \u2014 rebuilding.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": [
+        "1. List Qualities That First Attracted You. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. List 3 Recent Caring Actions. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Share One Item at a Time. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let Appreciation Land. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 111,
+      "category": "F",
+      "name": "Reassurance Round",
+      "description": "Ask directly for reassurance instead of hinting or guessing \u2014 stop the.",
+      "image": "DeletetheGlitch",
+      "time": "5 mins",
+      "steps": [
+        "1. Each Ask One Reassurance Question. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Answer Honestly and Calmly. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Counter Questions. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End With Touch. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 112,
+      "category": "F",
+      "name": "Build the Fort",
+      "description": "Create a temporary shared space that feels safe \u2014 oddly comforting and.",
+      "image": "DeletetheGlitch",
+      "time": "20 mins",
+      "steps": [
+        "1. Gather Materials. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Build a Small Fort. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Sit Inside Together for 10 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave It As Is. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 113,
+      "category": "F",
+      "name": "Comfort Contact",
+      "description": "Use physical closeness to calm the nervous system \u2014 no words required.",
+      "image": "Rekindle",
+      "time": "5 mins",
+      "steps": [
+        "1. Sit or Lie Close. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. One Person Initiates Contact. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stay for 3\u20135 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Next Time. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 114,
+      "category": "F",
+      "name": "The Safety Game",
+      "description": "Name what feels safe \u2014 indirectly, through choices instead of feelings.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Take Turns Naming 'Safe' Things. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Let Patterns Emerge. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. End When It Feels Enough. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Notice What Came Up. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 115,
+      "category": "F",
+      "name": "Body Double Time",
+      "description": "Do parallel movement to feel less alone \u2014 the shared rhythm eases.",
+      "image": "Fun&Playful",
+      "time": "15 mins",
+      "steps": [
+        "1. Choose a Simple Activity. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Do It at the Same Time. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Talking. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Acknowledge Each Other After. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 116,
+      "category": "F",
+      "name": "Return Point",
+      "description": "Create a ritual spot for coming back together after emotional distance \u2014.",
+      "image": "Activityimage",
+      "time": "5 mins",
+      "steps": [
+        "1. Pick a Specific Spot. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Agree It's Your 'Return Point'. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. When Needed, Just Go There. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Sit or Stand Together for One Minute. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 117,
+      "category": "F",
+      "name": "Tag Team Game",
+      "description": "Work together instead of against each other \u2014 coordination reduces insecurity.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": [
+        "1. Pick a Cooperative Game or Task. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide Roles Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Focus on Coordination. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Celebrate as a Team. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 118,
+      "category": "F",
+      "name": "Do One Thing",
+      "description": "Complete one small task together \u2014 the completion itself builds security and.",
+      "image": "Rekindle",
+      "time": "30 mins",
+      "steps": [
+        "1. Choose One Small Task. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Start It Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Finish It Fully. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Acknowledge Completion. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 119,
+      "category": "G",
+      "name": "40 to 20",
+      "description": "A timed structure for conflict conversations that guarantees equal airtime, deep listening.",
+      "image": "Rekindle",
+      "time": "50 mins",
+      "steps": [
+        "1. Partner A Speaks for 20 Minutes. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Reflection Round \u2014 10 Minutes. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Partner B Speaks for 20 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close With Understanding. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 120,
+      "category": "G",
+      "name": "DEAR MAN Script",
+      "description": "A DBT based strategy to ask for what you need using facts, feelings.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": [
+        "1. Describe \u2014 Facts Only. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Express \u2014 One Feeling. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Assert \u2014 Clear Request. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Reinforce \u2014 Why It Matters. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 121,
+      "category": "G",
+      "name": "Mirroring \u2014 Take",
+      "description": "A structured listening exercise where the goal is to accurately reflect what.",
+      "image": "DeletetheGlitch",
+      "time": "20 mins",
+      "steps": [
+        "1. Speaker Talks for 1\u20132 Minutes. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Listener Mirrors Back. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Speaker Confirms. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Continue Until 'I Feel Heard'. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 122,
+      "category": "G",
+      "name": "Stress Reducing Conversation",
+      "description": "A gentle way to share daily stress without rushing, fixing, or letting.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Partner A Shares Until Finished. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Set It Down. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Switch Roles. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close Gently. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 123,
+      "category": "G",
+      "name": "Slow Motion Argument",
+      "description": "Revisit a recent disagreement at a slowed down pace to pinpoint the exact.",
+      "image": "Fun&Playful",
+      "time": "20 mins",
+      "steps": [
+        "1. Choose a Small Slice. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Replay Sentence by Sentence. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Call the Breakpoint. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Try One Alternative. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 124,
+      "category": "G",
+      "name": "DIY Photo Frame",
+      "description": "Channel tension into making something physical you can keep \u2014 creative work.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Take One Photo of You Two. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Gather Materials. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Decorate Silently for 15 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Place It Somewhere Visible. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 125,
+      "category": "G",
+      "name": "Silent Scrap Page",
+      "description": "Process the day without explaining it \u2014 one visual page, one word.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Open a Notebook or Scrapbook. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Add One Thing. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Each Write One Word Only. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Close the Book. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 126,
+      "category": "G",
+      "name": "Card Stack Challenge",
+      "description": "Focus tension into a shared physical goal \u2014 cooperation through hands, not.",
+      "image": "DeletetheGlitch",
+      "time": "10 mins",
+      "steps": [
+        "1. Use Playing Cards or Paper Cards. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Take Turns Stacking Cards Into a Tower. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. If It Falls, Reset Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop After 10 Minutes. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 127,
+      "category": "G",
+      "name": "Clay Mood Objects",
+      "description": "Shape how you feel without naming it directly \u2014 externalise emotions through.",
+      "image": "Rekindle",
+      "time": "15 mins",
+      "steps": [
+        "1. Take Clay, Dough, or Even Atta. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Make One Small Object. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Place Them Side by Side. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Clean Up Together. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 128,
+      "category": "G",
+      "name": "Puzzle Without Talking",
+      "description": "Let your hands cooperate even if words can't \u2014 shared coordination before.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": [
+        "1. Pick a 50\u2013100 Piece Puzzle. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Agree on No Talking. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Work on It Together for 20 Minutes. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop Whether Finished or Not. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 129,
+      "category": "G",
+      "name": "Recreate a Memory",
+      "description": "Revisit a good memory using objects around you \u2014 the present tension.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick One Neutral or Happy Shared Memory. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Use Objects Around You. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Don't Explain While Building. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Look at It Together When Done. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 130,
+      "category": "G",
+      "name": "One Minute Vent",
+      "description": "Say what's bothering you without it turning into a debate \u2014 contained.",
+      "image": "Fun&Playful",
+      "time": "5 mins",
+      "steps": [
+        "1. Set a 60 Second Timer. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Talk About What's Frustrating. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. The Other Listens Silently. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles Once. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 131,
+      "category": "G",
+      "name": "What I Meant",
+      "description": "Clear misunderstanding in a controlled way \u2014 comparing intent vs impact without.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. One Person Says What They Meant. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. The Other Says What They Heard. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Compare the Difference. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop There. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 132,
+      "category": "G",
+      "name": "The Line Sentence",
+      "description": "Say what crossed a boundary \u2014 once and clearly, with no follow up.",
+      "image": "Activityimage",
+      "time": "5 mins",
+      "steps": [
+        "1. Each Prepare One Sentence. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Say It Calmly. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. The Other Acknowledges. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Pause. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 133,
+      "category": "H",
+      "name": "Walk Down Memory",
+      "description": "Revisit early memories to reconnect with feelings and patterns that originally brought.",
+      "image": "DeletetheGlitch",
+      "time": "20 mins",
+      "steps": [
+        "1. Open Phone Gallery or Old Messages. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Pick 5 Items. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. For Each Item, Answer Two Questions. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Comparing Better vs Worse. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 134,
+      "category": "H",
+      "name": "Music Sharing",
+      "description": "Use music as a shortcut to understanding each other's emotional history \u2014.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": [
+        "1. Each Pick 2 Songs. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Play Them Shared (No Headphones). Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. After Each Song, the Chooser Answers. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch After Both Songs. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 135,
+      "category": "H",
+      "name": "Book Swap",
+      "description": "Exchange meaningful books to understand how each other's thinking and imagination were.",
+      "image": "Fun&Playful",
+      "time": "varies",
+      "steps": [
+        "1. Each Choose One Book. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Swap Books. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Read Independently. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. When Done, Answer Two Questions. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 136,
+      "category": "H",
+      "name": "Apologising Effectively",
+      "description": "A structured 4 sentence apology that repairs trust by focusing on impact, not.",
+      "image": "Rekindle",
+      "time": "10 mins",
+      "steps": [
+        "1. Acknowledge. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Explain Without Excuses. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Express Remorse. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Make Amends. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 137,
+      "category": "H",
+      "name": "Emotion Word Game",
+      "description": "A simple game to increase emotional awareness and spot patterns \u2014 normalising.",
+      "image": "Fun&Playful",
+      "time": "15 mins",
+      "steps": [
+        "1. Write 10 Emotion Words on Slips. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Mix Them in a Bowl. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Take Turns Picking One. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Problem Solving. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 138,
+      "category": "H",
+      "name": "Parallel Scrap Page",
+      "description": "Be in the same space while working separately on the same thing.",
+      "image": "DeletetheGlitch",
+      "time": "15 mins",
+      "steps": [
+        "1. Take Two Pages in a Notebook. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decorate Silently. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Close the Book Without Showing Each Other. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let the Shared Effort Be Enough. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 139,
+      "category": "H",
+      "name": "Quiet Card Build",
+      "description": "Focus together on a neutral physical task \u2014 silent cooperation that requires.",
+      "image": "DeletetheGlitch",
+      "time": "10 mins",
+      "steps": [
+        "1. Take a Deck of Cards or Paper Slips. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Build the Tallest Structure You Can. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Talking While Building. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop When It Falls. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 140,
+      "category": "H",
+      "name": "Side Quest",
+      "description": "Do a tiny task together with zero emotional meaning \u2014 just proximity.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Neutral Task. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Do It Side by Side. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Walk Away Separately After. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let the Proximity Count. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 141,
+      "category": "H",
+      "name": "Same Song, Different",
+      "description": "Be emotionally aligned without physical closeness \u2014 a quiet thread connecting you.",
+      "image": "Fun&Playful",
+      "time": "5 mins",
+      "steps": [
+        "1. Pick One Song Together. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Listen Separately. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Don't Text During the Song. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Resume Normal Activity After. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 142,
+      "category": "H",
+      "name": "Silent Trade",
+      "description": "Exchange personal objects instead of words \u2014 care expressed through giving, not.",
+      "image": "DeletetheGlitch",
+      "time": "5 mins",
+      "steps": [
+        "1. Each Pick One Personal Item Nearby. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Place It in Front of the Other Person. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Accept the Trade Silently. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Keep It for the Next Hour. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 143,
+      "category": "H",
+      "name": "Leave It There",
+      "description": "Acknowledge something without responding to it \u2014 presence without pursuit.",
+      "image": "Fun&Playful",
+      "time": "2 mins",
+      "steps": [
+        "1. One Person Says One Factual Sentence. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. The Other Responds Only With 'Noted.' Nothing else. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Follow Up Allowed. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Continue Your Day. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 144,
+      "category": "I",
+      "name": "Netflix and Snuggle",
+      "description": "A comfort first activity where the show is background and physical closeness is.",
+      "image": "Activityimage",
+      "time": "60 mins",
+      "steps": [
+        "1. Pick Something Familiar. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Sit Close. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Decide on One Form of Touch. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Let the Show Play. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 145,
+      "category": "I",
+      "name": "Scenic Drive to",
+      "description": "A short drive with minimal decisions \u2014 movement creates connection without planning.",
+      "image": "Rekindle",
+      "time": "45 mins",
+      "steps": [
+        "1. Driver Decides Direction. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Passenger Gets Two Turns. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stop Once. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Drive Back the Same Way. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 146,
+      "category": "I",
+      "name": "Share a Dessert",
+      "description": "A small, intentional moment of intimacy that turns an ordinary night into.",
+      "image": "Rekindle",
+      "time": "15 mins",
+      "steps": [
+        "1. One Dessert Only. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. One Candle. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Sit Facing Each Other. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Phones, No Heavy Conversations. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 147,
+      "category": "I",
+      "name": "Five Things\u2026 Go!",
+      "description": "A rapid fire appreciation exercise that forces presence by removing time to overthink.",
+      "image": "Activityimage",
+      "time": "5 mins",
+      "steps": [
+        "1. Read the Prompts Silently First. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Partner A Takes One Breath, Then Lists 5 Things. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Partner B Responds With One Sentence. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 148,
+      "category": "I",
+      "name": "Mystery Movie PowerPoint",
+      "description": "A fun, prep based game using slides \u2014 guess each other's favourite films.",
+      "image": "Fun&Playful",
+      "time": "45 mins",
+      "steps": [
+        "1. Each Create a Short Slide Deck. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Take Turns Presenting. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Keep It Light and Competitive. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Watch the Winner's Choice. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 149,
+      "category": "I",
+      "name": "Daily Walk Around",
+      "description": "A predictable, low effort walk that helps you mentally switch from the day.",
+      "image": "Fun&Playful",
+      "time": "15 mins",
+      "steps": [
+        "1. Same Route Every Time. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. First Half \u2014 One Sentence Each. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Second Half \u2014 Only What You See. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End at the Same Spot. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 150,
+      "category": "I",
+      "name": "No Contact Coexistence",
+      "description": "Share a space without interacting at all \u2014 presence without any pressure.",
+      "image": "Rekindle",
+      "time": "30 mins",
+      "steps": [
+        "1. Agree on a Shared Room. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. No Talking, No Eye Contact. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Do Your Own Thing. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Independently. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 151,
+      "category": "I",
+      "name": "Side by Side",
+      "description": "Be near each other while focusing on something else \u2014 presence without.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": [
+        "1. Pick One Neutral Task. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Do It Silently. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Don't Coordinate or Comment. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop When Finished. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 152,
+      "category": "I",
+      "name": "Object Boundary",
+      "description": "Use a physical object to signal emotional limits \u2014 no explanation needed.",
+      "image": "Rekindle",
+      "time": "varies",
+      "steps": [
+        "1. Each Choose One Personal Object. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Place It Clearly Beside You. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Respect It Fully. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Remove It When Ready. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 153,
+      "category": "I",
+      "name": "Third Thing Focus",
+      "description": "Redirect attention away from each other \u2014 focus on something neutral in.",
+      "image": "Rekindle",
+      "time": "15 mins",
+      "steps": [
+        "1. Choose a Third Thing. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Focus Only on That. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. No Comments About Each Other. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End Naturally. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 154,
+      "category": "I",
+      "name": "Background Presence",
+      "description": "Let ambient sound replace interaction \u2014 silence without awkwardness.",
+      "image": "DeletetheGlitch",
+      "time": "30 mins",
+      "steps": [
+        "1. Choose Neutral Background Audio. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Play It in the Shared Space. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stay in Separate Zones. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave When Ready. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 155,
+      "category": "J",
+      "name": "Heads Up\u2013Style Guessing",
+      "description": "A physical, laugh out loud guessing game using only paper, movement, and exaggeration \u2014.",
+      "image": "Rekindle",
+      "time": "15 mins",
+      "steps": [
+        "1. Prep 20 Words. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Place and Act. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Guess Until 5 Correct. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 156,
+      "category": "J",
+      "name": "Most Likely To",
+      "description": "A fast, playful game that reveals everyday quirks \u2014 zero discussion, just.",
+      "image": "Fun&Playful",
+      "time": "10 mins",
+      "steps": [
+        "1. Write 10\u201312 Prompts on Slips. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Read and Point. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. React and Move On. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Stop After 8\u201310 Prompts. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 157,
+      "category": "J",
+      "name": "Jenga with a",
+      "description": "A playful, slightly chaotic game mixing physical tension with silly dares and.",
+      "image": "Fun&Playful",
+      "time": "30 mins",
+      "steps": [
+        "1. Write Prompts on 15\u201320 Blocks. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Play Normally. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Keep It Moving. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. End the Game Warmly. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 158,
+      "category": "J",
+      "name": "One Pizza Taste",
+      "description": "Turn a single pizza into a playful tasting experiment by changing how.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Create 3 Versions From One Pizza. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Blind Taste Round. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Guess and Rank. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Switch Roles with Fresh Bites. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 159,
+      "category": "J",
+      "name": "Meme Caption Battle",
+      "description": "A meme style game where you plug your real moment into ready made caption.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Real Scene. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Choose a Template. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Fill the Blank. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Reveal Together. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 160,
+      "category": "J",
+      "name": "Two Truths and",
+      "description": "A reveal game using categories to uncover small, surprising facts \u2014 discovery.",
+      "image": "DeletetheGlitch",
+      "time": "15 mins",
+      "steps": [
+        "1. Choose One Category. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Prepare 3 Statements. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Lock the Guess. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Tell One True Story. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 161,
+      "category": "J",
+      "name": "Public Mission, Private",
+      "description": "Complete a small mission in public as a silent team \u2014 bonded.",
+      "image": "Fun&Playful",
+      "time": "30 mins",
+      "steps": [
+        "1. Pick a Public Place. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide One Mission. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Communicate Only Using Gestures. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Exit Once Complete. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 162,
+      "category": "J",
+      "name": "Spend \u20b9200 Like",
+      "description": "Use a small budget as a constraint \u2014 playful spending that feels.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": [
+        "1. Fix a Small Amount. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide One Rule. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Spend It Together. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Once It's Gone. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 163,
+      "category": "J",
+      "name": "Different Lives Date",
+      "description": "Pretend to be strangers with invented backstories \u2014 flirt without emotional baggage.",
+      "image": "DeletetheGlitch",
+      "time": "30 mins",
+      "steps": [
+        "1. Go to a Caf\u00e9 or Bar. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Introduce Yourselves. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Stay in Character. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Drop the Act After 20 Minutes. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 164,
+      "category": "J",
+      "name": "Witness Something Together",
+      "description": "Attend something as observers, not participants \u2014 shared witnessing creates quiet intimacy.",
+      "image": "Activityimage",
+      "time": "45 mins",
+      "steps": [
+        "1. Choose a Public Event. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Stand or Sit Together. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Watch Fully. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Leave Immediately After. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 165,
+      "category": "J",
+      "name": "Rank Things That",
+      "description": "Argue safely about complete nonsense \u2014 conflict without stakes equals fun.",
+      "image": "DeletetheGlitch",
+      "time": "10 mins",
+      "steps": [
+        "1. Pick a Category. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Each Rank Your Top 5. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Disagree Dramatically. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. No Final Answer Required. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    },
+    {
+      "id": 166,
+      "category": "J",
+      "name": "Judge Fictional Characters",
+      "description": "Project opinions safely through fictional characters \u2014 indirect self expression at low risk.",
+      "image": "DeletetheGlitch",
+      "time": "15 mins",
+      "steps": [
+        "1. Pick a Movie or Show Character. Set this up clearly before you start so both of you know the plan, timing, and what outcome you want from this step.",
+        "2. Decide: Red Flag or Green Flag? Each give your verdict. Do this slowly and communicate as you go, so the activity feels easy to follow and enjoyable for both of you.",
+        "3. Debate Briefly. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
+        "4. Drop It. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
+      ]
+    }
+  ]
+}

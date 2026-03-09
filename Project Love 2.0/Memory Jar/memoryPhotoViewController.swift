@@ -119,7 +119,7 @@ class memoryPhotoViewController: UIViewController,
             image: UIImage(systemName: "trash"),
             attributes: .destructive
         ) { [weak self] _ in
-            self?.deleteMemory()
+            self?.confirmDeleteMemory()
         }
 
         menuButton.menu = UIMenu(children: [
@@ -130,6 +130,21 @@ class memoryPhotoViewController: UIViewController,
             delete
         ])
     }
+    private func confirmDeleteMemory() {
+        let alert = UIAlertController(
+            title: "Delete Memory?",
+            message: "This memory will be deleted for you and your partner.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
+            self?.deleteMemory()
+        })
+
+        present(alert, animated: true)
+    }
+
     private func showEditTitleAlert() {
         guard !dataStore.savedMemories.isEmpty else { return }
 
@@ -233,14 +248,14 @@ class memoryPhotoViewController: UIViewController,
                     if let index = dataStore.savedMemories.firstIndex(where: { $0.id == memory.id }) {
                         dataStore.savedMemories.remove(at: index)
                     }
-
+                    
                     // Remove heart from jar scene
                     if let jarVC = self.navigationController?.viewControllers.first(where: { $0 is MemoryJarViewController }) as? MemoryJarViewController,
                        let scene = jarVC.MemoryJarView.scene as? MemoryJarScene {
                         scene.removeHeart(memoryID: memory.id)
                         jarVC.memoryLaneCollectionView.reloadData()
                     }
-
+                    
                     // If no memories left, pop back
                     if dataStore.savedMemories.isEmpty {
                         self.navigationController?.popViewController(animated: true)
@@ -248,20 +263,6 @@ class memoryPhotoViewController: UIViewController,
                         self.currentIndex = min(self.currentIndex, dataStore.savedMemories.count - 1)
                         self.thumbnailsCollectionView.reloadData()
                         self.updateUI()
-                    }
-
-                    // Show deletion success alert
-                    let alert = UIAlertController(
-                        title: "Memory Deleted",
-                        message: "This memory has been deleted for both you and your partner.",
-                        preferredStyle: .alert
-                    )
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    // Show on the topmost VC (might have popped back)
-                    if let topVC = self.navigationController?.topViewController {
-                        topVC.present(alert, animated: true)
-                    } else {
-                        self.present(alert, animated: true)
                     }
                 }
 

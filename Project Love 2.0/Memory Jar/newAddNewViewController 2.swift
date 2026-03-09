@@ -144,16 +144,7 @@ class NewAddNewViewController: UIViewController {
             let description = descriptionTextView.text == placeholderText ? "" : descriptionTextView.text ?? ""
             
             // Generate a random ID for instant local display
-            let tempID = UUID() 
-            let newLocalMemory = Memory(
-                id: tempID,
-                date: date,
-                imageName: "", // Will be assigned remotely
-                location: "", 
-                title: title,
-                description: description,
-                uiImage: image
-            )
+           
 
             // 2. Start the background upload
             MemoryUploadManager.shared.uploadMemory(
@@ -175,11 +166,7 @@ class NewAddNewViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 alert.dismiss(animated: true) {
                     self.dismiss(animated: true) {
-                        // 3. Notify Jar & Show Alert
-                        NotificationCenter.default.post(
-                            name: NSNotification.Name("MemoryAdded"),
-                            object: newLocalMemory
-                        )
+                      
                     }
                 }
             }

@@ -63,7 +63,7 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
             height = 120
         } else {
             switch note.status {
-            case .received: height = 160
+            case .received, .loveTipCompleted: height = 160
             case .sent:     height = 120
             case .scheduled: height = 130
             }
@@ -114,7 +114,7 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
         let id: String = {
             switch note.status {
             case .sent: return "LNSentCollectionViewCell"
-            case .received: return "LNReceiveCollectionViewCell"
+            case .received, .loveTipCompleted: return "LNReceiveCollectionViewCell"
             case .scheduled: return "LNScheduleCollectionViewCell"
             }
         }()

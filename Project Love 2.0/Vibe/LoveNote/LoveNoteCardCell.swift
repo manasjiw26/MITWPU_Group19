@@ -62,7 +62,7 @@ class LoveNoteCardCell: UICollectionViewCell {
 
             dividerView.isHidden = false
 
-        case .received:
+        case .received, .loveTipCompleted:
             timeLabel.text = note.timeText
 
             if let reaction = note.reaction {

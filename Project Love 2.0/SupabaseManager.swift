@@ -211,6 +211,70 @@ final class SupabaseManager {
             }
         }
     }
+    func updateUserMood(moodTitle: String) async throws {
+
+            guard let currentUserId = currentUserId,
+
+                  let relationshipId = DataStore.shared.currentRelationshipId else {
+
+                print("⚠️ updateUserMood: missing context")
+
+                return
+
+            }
+
+
+            // 1. Get mood_id from titles
+
+            let moods: [DBMood] = try await client
+
+                .from("moods")
+
+                .select()
+
+                .eq("title", value: moodTitle)
+
+                .limit(1)
+
+                .execute()
+
+                .value
+
+
+
+            guard let selectedMood = moods.first else {
+
+                print("❌ Mood '\(moodTitle)' not found in DB")
+
+                return
+
+            }
+
+
+
+            // 2. Insert new log
+
+            try await client
+
+                .from("user_mood_logs")
+
+                .insert([
+
+                    "relationship_id": relationshipId.uuidString,
+
+                    "user_id": currentUserId.uuidString,
+
+                    "mood_id": selectedMood.mood_id.uuidString
+
+                ])
+
+                .execute()
+
+            
+
+            print("✅ Mood '\(moodTitle)' logged to Supabase")
+
+        }
 
 }
 

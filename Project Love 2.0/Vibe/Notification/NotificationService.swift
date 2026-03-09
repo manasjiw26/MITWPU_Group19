@@ -15,26 +15,27 @@ final class NotificationService {
 
     private var supabase: SupabaseClient { SupabaseManager.shared.client }
   
-    func fetchNotifications(for userId: UUID) async throws -> [AppNotification] {
-        let rows: [NotificationRow] = try await supabase
-            .from("notifications")
-            .select("notification_id,sender_user_id,receiver_user_id,type,message,is_read,created_at,sender:users!sender_user_id(name)")
-            .eq("receiver_user_id", value: userId.uuidString)
-            .order("created_at", ascending: false)
-            .execute()
-            .value
+       func fetchNotifications(for userId: UUID) async throws -> [AppNotification] {
+            let rows: [NotificationRow] = try await supabase
+                .from("notifications")
+                .select("notification_id,sender_user_id,receiver_user_id,type,message,is_read,created_at,entity_id,entity_type,sender:users!sender_user_id(name)")
+                .eq("receiver_user_id", value: userId.uuidString)
+                .order("created_at", ascending: false)
+                .execute()
+                .value
 
-        return rows.map { row in
-            AppNotification(
-                id: row.notification_id,
-                senderName: row.sender?.name ?? "Partner",
-                message: row.message,
-                type: mapType(row.type),
-                createdAt: row.created_at,
-                isRead: row.is_read
-            )
-        }
-    }
+            return rows.map { row in
+                AppNotification(
+                    id: row.notification_id,
+                    senderName: row.sender?.name ?? "Partner",
+                    message: row.message,
+                    type: mapType(row.type),
+                    createdAt: row.created_at,
+                    isRead: row.is_read,
+                    entityId: row.entity_id
+                )
+            }
+        }
 
     func markAsRead(notificationId: UUID) async throws {
         try await supabase
@@ -106,5 +107,16 @@ final class NotificationService {
         default: return .activityStarted
         }
     }
+    func fetchLoveNote(id: String, currentUserId: UUID) async throws -> LoveNote {
+        let row: DBLoveNote = try await supabase
+               .from("love_notes")
+               .select()
+               .eq("love_note_id", value: id)
+               .single()
+               .execute()
+               .value
+
+           return LoveNote.fromDB(row, currentUserId: currentUserId)
+       }
 
 }

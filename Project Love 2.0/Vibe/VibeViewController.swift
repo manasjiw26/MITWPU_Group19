@@ -135,7 +135,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         }
     
     private var hasCheckedInToday: Bool {
-        return DataStore.shared.getHisMood() != nil
+        return myMoodTitle != "Not set"
     }
     
     func registerCell() {
@@ -539,8 +539,33 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             print("Partner mood fetch error:", error)
         }
     }
+    func fetchMyMood() async {
+        guard let currentUserId = supabase.auth.currentUser?.id,
+                  let relationshipId = DataStore.shared.currentRelationshipId else { return }
 
-    // 2. Realtime listener
+        do {
+            let moods: [DBMoodLogWithMood] = try await supabase
+                   .from("user_mood_logs")
+                   .select("*, moods(*)")
+                   .eq("relationship_id", value: relationshipId.uuidString)
+                   .eq("user_id", value: currentUserId.uuidString)
+                   .order("created_at", ascending: false)
+                   .limit(1)
+                   .execute()
+                   .value
+
+            if let moodLog = moods.first {
+                await MainActor.run {
+                    self.myMoodTitle = moodLog.moods.title
+                    self.myMoodImage = moodLog.moods.image
+                    self.vibeCollectionView.reloadSections(IndexSet(integer: 1))
+                }
+            }
+        } catch {
+            print("My mood fetch error:", error)
+        }
+    }
+    //  Realtime listener
     func listenForPartnerMoodUpdates() async {
         guard let currentUserId = supabase.auth.currentUser?.id else { return }
 
@@ -879,55 +904,39 @@ extension VibeViewController {
             return
         }
         //section 2
-        if indexPath.section == 2 {
-            // If daily check-in isn't done, we don't want to open activities yet
-                        guard hasCompletedDailyCheckIn else { return }
-                        
-            
-                        // 1. Check if the Refresh Cell was tapped
-                        if indexPath.row == suggestedActivities.count {
-                            // This is the refresh logic you already had
-                            let startIndex = suggestedActivities.count
-                            let newActivities = DataStore.shared.getMoreActivities(excluding: self.suggestedActivities)
-                            guard !newActivities.isEmpty else { return }
+                if indexPath.section == 2 {
+                    // If daily check-in isn't done, we don't want to open activities yet
+                                guard hasCompletedDailyCheckIn else { return }
+                                
+                    
+                                // 1. Check if the Refresh Cell was tapped
+                                if indexPath.row == suggestedActivities.count {
+                                    // completely replace current 3 activities with 3 new ones
+                                    let newActivities = DataStore.shared.getRefreshSuggestedActivities()
+                                    guard !newActivities.isEmpty else { return }
 
-                            self.suggestedActivities.append(contentsOf: newActivities)
-                            DataStore.shared.suggestedActivities = self.suggestedActivities
-                            let indexPathsToAdd = (0..<newActivities.count).map {
-                            IndexPath(row: startIndex + $0, section: 2)
-                            }
+                                    self.suggestedActivities = newActivities
+                                    
+                                    UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            collectionView.reloadSections(IndexSet(integer: 2))
+        }, completion: nil)
+            return
+        }
+            // 2. Handle Activity Selection (This is the part that was missing!)
+            else {
+                let selectedActivity = suggestedActivities[indexPath.row]
 
-                            UIView.performWithoutAnimation {
-                                self.vibeCollectionView.collectionViewLayout.invalidateLayout()
-                            }
-
-                            vibeCollectionView.performBatchUpdates({
-                                vibeCollectionView.deleteItems(at: [IndexPath(row: startIndex, section: 2)])
-                                vibeCollectionView.insertItems(at: indexPathsToAdd)
-                                if self.suggestedActivities.count < 6 {
-                                    vibeCollectionView.insertItems(at: [IndexPath(row: self.suggestedActivities.count, section: 2)])
-                                }
-                            }, completion: nil)
-                            
-                            return
-                        }
-                        
-                        // 2. Handle Activity Selection (This is the part that was missing!)
-                        else {
-                            let selectedActivity = suggestedActivities[indexPath.row]
-
-                        let destinationVC = SmallModalViewController( nibName: "SmallModalViewController", bundle: nil )
-                            destinationVC.selectedActivity = selectedActivity
-                            // Link the modal data (steps/description) from DataStore
-                            destinationVC.modalData = DataStore.shared.getSmallModalData(for: selectedActivity)
-                            destinationVC.flowSource = .activitiesForHer // This ensures the modal knows which flow to use
-                            destinationVC.modalPresentationStyle = .overFullScreen
-                            destinationVC.delegate = self
-                            present(destinationVC, animated: false)
-                            return
-                        }
+                let destinationVC = SmallModalViewController( nibName: "SmallModalViewController", bundle: nil )
+                destinationVC.selectedActivity = selectedActivity
+                // Link the modal data (steps/description) from DataStore
+                destinationVC.modalData = DataStore.shared.getSmallModalData(for: selectedActivity)
+                destinationVC.flowSource = .activitiesForHer // This ensures the modal knows which flow to use
+                destinationVC.modalPresentationStyle = .overFullScreen
+                destinationVC.delegate = self
+                present(destinationVC, animated: false)
+                return
             }
-
+        }
 
         // Section 3- Make Her Smile
         if indexPath.section == 3 {
@@ -1029,8 +1038,9 @@ extension VibeViewController {
                 self.configureOngoingActivity()
                 self.vibeCollectionView.reloadData()
             }
-
+            await self.fetchMyMood()
             await self.fetchPartnerMood()
+            
         }
     }
 

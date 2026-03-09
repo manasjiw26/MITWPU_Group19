@@ -91,6 +91,8 @@ final class NotificationViewController: UIViewController {
          case .loveNoteSent: openLoveNote(notification)
          case .moodUpdated: openMoodUpdate(notification)
          case .nudgeSent: openNudge(notification)
+         case .loveTipCompleted: openLoveTipCompleted(notification)
+         case .loveTipReacted: openLoveTipReacted(notification)
          }
      }
     private func openNudge(_ notification: AppNotification) {
@@ -101,6 +103,78 @@ final class NotificationViewController: UIViewController {
         )
 
         alert.addAction(UIAlertAction(title: "Close", style: .default))
+        present(alert, animated: true)
+    }
+
+    private func openLoveTipCompleted(_ notification: AppNotification) {
+        let storyboard = UIStoryboard(name: "LoveNote", bundle: nil)
+        guard let detailVC = storyboard.instantiateViewController(withIdentifier: "LoveNoteDetailVC") as? LoveNoteDetail2ViewController else { return }
+        
+        // Extract tip title
+        var tipTitle = notification.message
+        if let range = tipTitle.range(of: "Partner completed tip: ") {
+            tipTitle = String(tipTitle[range.upperBound...])
+        }
+
+        // Mock a LoveNote to use the existing modal
+        let mockNote = LoveNote(
+            id: UUID(), // We don't have a real UUID
+            relationshipId: UUID(),
+            senderUserId: notification.id, // Using notification ID to differentiate senders if needed
+            receiverUserId: UUID(),
+            message: tipTitle,
+            createdAt: notification.createdAt,
+            scheduledDate: nil,
+            reaction: nil,
+            reactedAt: nil,
+            isSent: false,
+            status: .loveTipCompleted
+        )
+
+        detailVC.note = mockNote
+        detailVC.modalPresentationStyle = .pageSheet
+        
+        detailVC.onReact = { [weak self] _, emoji in
+            self?.reactToTip(emoji: emoji, tipTitle: tipTitle)
+        }
+        
+        present(detailVC, animated: true)
+    }
+
+    private func reactToTip(emoji: String, tipTitle: String) {
+        Task {
+            do {
+                let session = try await SupabaseManager.shared.client.auth.session
+                let currentUserId = session.user.id
+                
+                let relationships: [DBRelationship] = try await SupabaseManager.shared.client
+                    .from("relationships")
+                    .select()
+                    .or("user1_id.eq.\(currentUserId),user2_id.eq.\(currentUserId)")
+                    .limit(1)
+                    .execute()
+                    .value
+                
+                if let relationship = relationships.first {
+                    try await NotificationService.shared.sendPartnerNotification(
+                        relationshipId: relationship.relationship_id,
+                        type: NotificationType.loveTipReacted.rawValue,
+                        message: "\(emoji) to '\(tipTitle)'"
+                    )
+                }
+            } catch {
+                print("Failed to send love tip reaction: \(error)")
+            }
+        }
+    }
+
+    private func openLoveTipReacted(_ notification: AppNotification) {
+        let alert = UIAlertController(
+            title: "Reaction Received",
+            message: "Your partner reacted \(notification.message)",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Awesome!", style: .default))
         present(alert, animated: true)
     }
     
@@ -149,7 +223,6 @@ final class NotificationViewController: UIViewController {
         let knownActivities =
             store.getActivities() +
             store.getSuggestedActivities() +
-            store.allSuggestedPool +
             store.bondpage.flatMap { $0.activity }
 
         return knownActivities.first {
@@ -159,6 +232,45 @@ final class NotificationViewController: UIViewController {
 
 
      private func openLoveNote(_ notification: AppNotification) {
+         guard let noteId = notification.entityId else {
+             print("⚠️ openLoveNote: Missing entityId in notification")
+             showLoveNoteAlert(for: notification)
+             return
+         }
+
+         Task { @MainActor in
+             do {
+                 let session = try await SupabaseManager.shared.client.auth.session
+                 let currentUserId = session.user.id
+
+                 // Fetch the complete LoveNote object
+                 let loveNote = try await NotificationService.shared.fetchLoveNote(id: noteId, currentUserId: currentUserId)
+
+                 // Instantiate and present the detail modal
+                 let storyboard = UIStoryboard(name: "LoveNote", bundle: nil)
+                 if let detailVC = storyboard.instantiateViewController(withIdentifier: "LoveNoteDetailVC") as? LoveNoteDetail2ViewController {
+                     detailVC.note = loveNote
+                     detailVC.modalPresentationStyle = .pageSheet
+                     
+                     // Handle reactions and reschedules if necessary
+                     detailVC.onReact = { [weak self] noteId, emoji in
+                         Task { await self?.updateReaction(noteId: noteId, emoji: emoji) }
+                     }
+                     detailVC.onReschedule = { [weak self] noteId, date in
+                         Task { await self?.updateSchedule(noteId: noteId, date: date) }
+                     }
+
+                     self.present(detailVC, animated: true)
+                 }
+
+             } catch {
+                 print("❌ openLoveNote: Failed to fetch love note details: \(error)")
+                 showLoveNoteAlert(for: notification)
+             }
+         }
+     }
+
+     private func showLoveNoteAlert(for notification: AppNotification) {
          let alert = UIAlertController(
              title: "Love Note from \(notification.senderName)",
              message: notification.message,
@@ -168,6 +280,37 @@ final class NotificationViewController: UIViewController {
          alert.addAction(UIAlertAction(title: "Close", style: .default))
          present(alert, animated: true)
      }
+
+    private func updateReaction(noteId: UUID, emoji: String) async {
+        do {
+            try await SupabaseManager.shared.client
+                .from("love_notes")
+                .update(LoveNoteReactionUpdate(
+                    reaction: emoji,
+                    reacted_at: Date().ISO8601Format()
+                ))
+                .eq("love_note_id", value: noteId.uuidString)
+                .execute()
+        } catch {
+            print("updateReaction error:", error)
+        }
+    }
+
+    private func updateSchedule(noteId: UUID, date: Date) async {
+        guard date > Date() else { return }
+        do {
+            try await SupabaseManager.shared.client
+                .from("love_notes")
+                .update(LoveNoteScheduleUpdate(
+                    scheduled_for: date.ISO8601Format(),
+                    is_sent: false
+                ))
+                .eq("love_note_id", value: noteId.uuidString)
+                .execute()
+        } catch {
+            print("updateSchedule error:", error)
+        }
+    }
 
      private func openMoodUpdate(_ notification: AppNotification) {
          let alert = UIAlertController(

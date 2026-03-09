@@ -39,6 +39,7 @@ struct Activity: Codable {
     var status: ActivityStatus
     var category: String
     var scheduledDate: Date?
+    var steps: [String]? = nil
 }
 
 enum ActivityStatus: Codable {
@@ -173,7 +174,8 @@ enum LoveNoteStatus {
     case sent
     case received
     case scheduled
-
+    case loveTipCompleted
+    
     var displayText: String {
         switch self {
             case .sent:
@@ -182,6 +184,8 @@ enum LoveNoteStatus {
             return "RECEIVED"
             case .scheduled:
             return "SCHEDULED"
+            case .loveTipCompleted:
+            return "LOVE TIP COMPLETED"
         }
     }
 }
@@ -260,6 +264,8 @@ struct DBUser: Codable {
     let relationship_id: UUID?
     let gender: String?
     let assessment_answers: [String: [Int]]?
+    let entity_id: String?
+    let entity_type: String?
 }
 
 struct DBRelationship: Codable {
@@ -434,6 +440,8 @@ struct NotificationRow: Decodable {
     let message: String
     let is_read: Bool
     let created_at: Date
+    let entity_id: String?
+    let entity_type: String?
     let sender: NotificationSender?
 }
 enum NotificationType: String {
@@ -442,7 +450,9 @@ enum NotificationType: String {
     case memoryAdded = "memory_added"
     case moodUpdated = "mood_updated"
     case nudgeSent = "nudge_sent"
-
+    case loveTipCompleted = "love_tip_completed"
+    case loveTipReacted = "love_tip_reacted"
+    
     var titleText: String {
         switch self {
         case .activityStarted: return "ACTIVITY ALERT"
@@ -450,6 +460,9 @@ enum NotificationType: String {
         case .memoryAdded: return "MEMORY ALERT"
         case .moodUpdated: return "MOOD UPDATE"
         case .nudgeSent: return "SWEET NUDGE"
+        case .loveTipCompleted: return "LOVE TIP COMPLETED"
+        case .loveTipReacted: return "REACTION RECEIVED"
+            
         }
     }
 
@@ -460,6 +473,8 @@ enum NotificationType: String {
         case .memoryAdded: return "photo.on.rectangle"
         case .moodUpdated: return "face.smiling"
         case .nudgeSent: return "heart.fill"
+        case .loveTipCompleted: return "lightbulb.max.fill"
+        case .loveTipReacted: return "heart.text.square.fill"
         }
     }
 }
@@ -471,6 +486,7 @@ struct AppNotification {
     let createdAt: Date
     var isRead: Bool
 
+    let entityId: String?
     var titleText: String { type.titleText }
     var iconName: String { type.iconName }
     var timeAgoText: String { createdAt.timeAgoText }

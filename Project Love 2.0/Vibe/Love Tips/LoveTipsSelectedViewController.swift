@@ -1,4 +1,5 @@
 import UIKit
+import Supabase
 
 class LoveTipsSelectedViewController: UIViewController {
 
@@ -65,11 +66,41 @@ class LoveTipsSelectedViewController: UIViewController {
 
     @IBAction func confirmSelectionTapped(_ sender: UIButton) {
         // Filter out the completed tips from the list
-        let remainingTips = selectedTips.filter { !completedTipTitles.contains($0.title) }
-        
-        delegate?.didUpdateSelectedTips(remainingTips)
-       
-        self.view.window?.rootViewController?.dismiss(animated: true)
+                let remainingTips = selectedTips.filter { !completedTipTitles.contains($0.title) }
+                
+                delegate?.didUpdateSelectedTips(remainingTips)
+                
+                let completed = Array(completedTipTitles)
+                if !completed.isEmpty {
+                    Task {
+                        do {
+                            let session = try await SupabaseManager.shared.client.auth.session
+                            let currentUserId = session.user.id
+                            
+                            let relationships: [DBRelationship] = try await SupabaseManager.shared.client
+                                .from("relationships")
+                                .select()
+                                .or("user1_id.eq.\(currentUserId),user2_id.eq.\(currentUserId)")
+                                .limit(1)
+                                .execute()
+                                .value
+                            
+                            if let relationship = relationships.first {
+                                for title in completed {
+                                    try await NotificationService.shared.sendPartnerNotification(
+                                        relationshipId: relationship.relationship_id,
+                                        type: NotificationType.loveTipCompleted.rawValue,
+                                        message: "Partner completed tip: \(title)"
+                                    )
+                                }
+                            }
+                        } catch {
+                            print("Failed to send love tip completion: \(error)")
+                        }
+                    }
+                }
+               
+                self.view.window?.rootViewController?.dismiss(animated: true)
     }
 
     @objc private func showMoreTapped() {

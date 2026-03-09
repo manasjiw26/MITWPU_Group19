@@ -12,11 +12,27 @@ class MemoryLaneViewController: UIViewController,
 
         memoryLaneItemCollectionView.dataSource = self
         memoryLaneItemCollectionView.delegate = self
-        memoryLaneItemCollectionView.collectionViewLayout = generateLayout()
+
+        memoryLaneItemCollectionView.register(
+            UINib(nibName: "memoryEmptyStateCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "emptyMemoryState"
+        )
+
+        refreshUI()
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        refreshUI()
+    }
+    private var isEmptyState: Bool {
+        dataStore.savedMemories.isEmpty
+    }
+
+    private func refreshUI() {
+        memoryLaneItemCollectionView.setCollectionViewLayout(generateLayout(), animated: false)
+        memoryLaneItemCollectionView.collectionViewLayout.invalidateLayout()
         memoryLaneItemCollectionView.reloadData()
     }
 

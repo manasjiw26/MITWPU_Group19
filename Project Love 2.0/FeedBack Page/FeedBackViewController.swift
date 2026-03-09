@@ -306,6 +306,16 @@ extension FeedBackViewController: TellMoodSelectionDelegate {
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
         feedbackItem?.selectedMood = mood.label
         moodButton.setTitle("Mood updated: \(mood.label)", for: .normal)
+        
+        // Persist mood globally so it reflects on Vibe screen
+        Task {
+            do {
+                try await SupabaseManager.shared.updateUserMood(moodTitle: mood.moodLabel)
+                print("✅ Global mood updated from Feedback")
+            } catch {
+                print("❌ Failed to update global mood from Feedback: \(error)")
+            }
+        }
     }
 }
     
