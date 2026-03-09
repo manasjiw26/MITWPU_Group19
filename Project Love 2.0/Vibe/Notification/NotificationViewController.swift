@@ -90,10 +90,20 @@ final class NotificationViewController: UIViewController {
          case .activityStarted: openActivity(notification)
          case .loveNoteSent: openLoveNote(notification)
          case .moodUpdated: openMoodUpdate(notification)
+         case .nudgeSent: openNudge(notification)
          }
-
      }
+    private func openNudge(_ notification: AppNotification) {
+        let alert = UIAlertController(
+            title: "Nudge",
+            message: notification.message,
+            preferredStyle: .alert
+        )
 
+        alert.addAction(UIAlertAction(title: "Close", style: .default))
+        present(alert, animated: true)
+    }
+    
     private func openMemory(_ notification: AppNotification) {
         NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: 0)
      }

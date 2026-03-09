@@ -215,29 +215,63 @@ class memoryPhotoViewController: UIViewController,
     }
 
     func deleteMemory() {
+        guard !dataStore.savedMemories.isEmpty else { return }
 
-        // take the memory before removing
-        let deletedMemory = dataStore.savedMemories[currentIndex]
+        let memory = dataStore.savedMemories[currentIndex]
 
-        // delete from datastore
-        dataStore.savedMemories.remove(at: currentIndex)
+        Task {
+            do {
+                // 1. Delete from Supabase (wait for completion)
+                try await SupabaseManager.shared.deleteMemory(
+                    memoryId: memory.id,
+                    imagePath: memory.imageName
+                )
 
-        // find the jar vc
-        if let jarVC = navigationController?.viewControllers.first(where: { $0 is MemoryJarViewController }) as? MemoryJarViewController,
-           let scene = jarVC.MemoryJarView.scene as? MemoryJarScene {
+                // 2. Supabase delete succeeded — now remove locally
+                await MainActor.run {
+                    // Guard in case realtime already removed it
+                    if let index = dataStore.savedMemories.firstIndex(where: { $0.id == memory.id }) {
+                        dataStore.savedMemories.remove(at: index)
+                    }
 
-            scene.removeHeart(memoryID: deletedMemory.id)
+                    // Remove heart from jar scene
+                    if let jarVC = self.navigationController?.viewControllers.first(where: { $0 is MemoryJarViewController }) as? MemoryJarViewController,
+                       let scene = jarVC.MemoryJarView.scene as? MemoryJarScene {
+                        scene.removeHeart(memoryID: memory.id)
+                        jarVC.memoryLaneCollectionView.reloadData()
+                    }
+
+                    // If no memories left, pop back
+                    if dataStore.savedMemories.isEmpty {
+                        self.navigationController?.popViewController(animated: true)
+                    } else {
+                        self.currentIndex = min(self.currentIndex, dataStore.savedMemories.count - 1)
+                        self.thumbnailsCollectionView.reloadData()
+                        self.updateUI()
+                    }
+
+                    // Show deletion success alert
+                    let alert = UIAlertController(
+                        title: "Memory Deleted",
+                        message: "This memory has been deleted for both you and your partner.",
+                        preferredStyle: .alert
+                    )
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    // Show on the topmost VC (might have popped back)
+                    if let topVC = self.navigationController?.topViewController {
+                        topVC.present(alert, animated: true)
+                    } else {
+                        self.present(alert, animated: true)
+                    }
+                }
+
+            } catch {
+                print("❌ Failed to delete memory: \(error)")
+                await MainActor.run {
+                    self.showSimpleError("Failed to delete memory: \(error.localizedDescription)")
+                }
+            }
         }
-        
-        // If no memories give a popover
-        if dataStore.savedMemories.isEmpty {
-            navigationController?.popViewController(animated: true)
-            return
-        }
-
-        currentIndex = max(0, currentIndex - 1)
-        thumbnailsCollectionView.reloadData()
-        updateUI()
     }
 
     func setupSwipes() {

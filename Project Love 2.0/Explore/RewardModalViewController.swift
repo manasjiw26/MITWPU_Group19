@@ -94,6 +94,22 @@ class RewardModalViewController: UIViewController {
         if step == 4 {
             playSuccessHaptic()
             dismissWithDelay()
+            if let relationshipId = DataStore.shared.currentRelationshipId {
+                
+                let nudgeType = rewardName ?? "Nudge"
+                print("🔔 RewardModal: Triggering nudge notification for \(nudgeType)")
+                Task {
+                    do {
+                        try await NotificationService.shared.sendPartnerNotification( relationshipId: relationshipId, type: "nudge_sent", message: "Sent you a \(nudgeType) \(rewardEmoji)!"
+                        )
+                    } catch {
+                        print("❌ Failed to send nudge notification: \(error)")
+                    }
+                }
+            } else {
+                print("⚠️ RewardModal: No currentRelationshipId found, cannot send nudge")
+            }
         }
+        
     }
 }

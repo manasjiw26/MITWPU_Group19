@@ -282,6 +282,54 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                             }
                         }
 
+                    case .delete(let action):
+                        // Partner (or self) deleted a memory
+                        let jsonData = try JSONEncoder().encode(action.oldRecord)
+
+                        struct DeletedMemory: Decodable {
+                            let memory_id: UUID
+                            let title: String?
+                        }
+
+                        let deleted = try JSONDecoder().decode(DeletedMemory.self, from: jsonData)
+
+                        await MainActor.run {
+                            // Remove from local data store
+                            if let index = dataStore.savedMemories.firstIndex(where: { $0.id == deleted.memory_id }) {
+                                dataStore.savedMemories.remove(at: index)
+
+                                // Remove heart from jar
+                                if let scene = self.MemoryJarView.scene as? MemoryJarScene {
+                                    scene.removeHeart(memoryID: deleted.memory_id)
+                                }
+
+                                self.memoryLaneCollectionView.reloadData()
+
+                                // If the partner is viewing the photo or memory lane, pop them back
+                                if let navVC = self.navigationController,
+                                   let topVC = navVC.topViewController,
+                                   (topVC is memoryPhotoViewController || topVC is MemoryLaneViewController) {
+                                    navVC.popToViewController(self, animated: true)
+                                }
+
+                                // Show alert to the partner
+                                let memoryTitle = deleted.title ?? "A memory"
+                                let alert = UIAlertController(
+                                    title: "Memory Deleted",
+                                    message: "Your partner deleted \"\(memoryTitle)\" from the memory jar.",
+                                    preferredStyle: .alert
+                                )
+                                alert.addAction(UIAlertAction(title: "OK", style: .default))
+
+                                // Present on the topmost visible VC
+                                if let topVC = self.navigationController?.topViewController {
+                                    topVC.present(alert, animated: true)
+                                } else {
+                                    self.present(alert, animated: true)
+                                }
+                            }
+                        }
+
                     default:
                         break
                     }

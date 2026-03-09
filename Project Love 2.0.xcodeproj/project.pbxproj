@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19D35C742F5E8FCF00FE3092 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 19D35C732F5E8FCF00FE3092 /* GoogleSignIn */; };
+		19D35C762F5E8FCF00FE3092 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 19D35C752F5E8FCF00FE3092 /* GoogleSignInSwift */; };
 		19DF906C2F39EB5800604C6A /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 19DF906B2F39EB5800604C6A /* Supabase */; };
 		1F1788AC2EF35C9F00976F75 /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1F1788AB2EF35C9F00976F75 /* MessageKit */; };
 		547903A62F2129CF00246001 /* Tink.caf in Resources */ = {isa = PBXBuildFile; fileRef = 547903A32F2129CF00246001 /* Tink.caf */; };
@@ -47,6 +49,8 @@
 			files = (
 				19DF906C2F39EB5800604C6A /* Supabase in Frameworks */,
 				1F1788AC2EF35C9F00976F75 /* MessageKit in Frameworks */,
+				19D35C742F5E8FCF00FE3092 /* GoogleSignIn in Frameworks */,
+				19D35C762F5E8FCF00FE3092 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +113,8 @@
 			packageProductDependencies = (
 				1F1788AB2EF35C9F00976F75 /* MessageKit */,
 				19DF906B2F39EB5800604C6A /* Supabase */,
+				19D35C732F5E8FCF00FE3092 /* GoogleSignIn */,
+				19D35C752F5E8FCF00FE3092 /* GoogleSignInSwift */,
 			);
 			productName = "Project Love 2.0";
 			productReference = 1909FEE72ED5D2B80007823D /* Project Love 2.0.app */;
@@ -142,6 +148,7 @@
 			packageReferences = (
 				1F1788AA2EF35C9F00976F75 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				19DF90692F39EABA00604C6A /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				19D35C722F5E8FCF00FE3092 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1909FEE82ED5D2B80007823D /* Products */;
@@ -185,7 +192,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9YW76R6Q5C;
+				DEVELOPMENT_TEAM = 6H55S6G6GC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
@@ -201,7 +208,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = loveproject.apple.c;
+				PRODUCT_BUNDLE_IDENTIFIER = TwoOfUs.in;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -224,7 +231,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9YW76R6Q5C;
+				DEVELOPMENT_TEAM = 6H55S6G6GC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Project Love 2.0/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "This app needs camera access to capture memories.";
@@ -240,7 +247,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = loveproject.apple.c;
+				PRODUCT_BUNDLE_IDENTIFIER = TwoOfUs.in;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -396,6 +403,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		19D35C722F5E8FCF00FE3092 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
 		19DF90692F39EABA00604C6A /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase-community/supabase-swift";
@@ -415,6 +430,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		19D35C732F5E8FCF00FE3092 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19D35C722F5E8FCF00FE3092 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		19D35C752F5E8FCF00FE3092 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19D35C722F5E8FCF00FE3092 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		19DF906B2F39EB5800604C6A /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19DF90692F39EABA00604C6A /* XCRemoteSwiftPackageReference "supabase-swift" */;

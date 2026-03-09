@@ -441,6 +441,7 @@ enum NotificationType: String {
     case loveNoteSent = "love_note_sent"
     case memoryAdded = "memory_added"
     case moodUpdated = "mood_updated"
+    case nudgeSent = "nudge_sent"
 
     var titleText: String {
         switch self {
@@ -448,6 +449,7 @@ enum NotificationType: String {
         case .loveNoteSent: return "LOVE NOTE"
         case .memoryAdded: return "MEMORY ALERT"
         case .moodUpdated: return "MOOD UPDATE"
+        case .nudgeSent: return "SWEET NUDGE"
         }
     }
 
@@ -457,6 +459,7 @@ enum NotificationType: String {
         case .loveNoteSent: return "heart.text.square"
         case .memoryAdded: return "photo.on.rectangle"
         case .moodUpdated: return "face.smiling"
+        case .nudgeSent: return "heart.fill"
         }
     }
 }

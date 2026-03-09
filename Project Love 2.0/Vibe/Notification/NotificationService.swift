@@ -5,6 +5,7 @@
 //  Created by SDC-USER on 04/03/26.
 //
 
+import UIKit 
 import Foundation
 import Supabase
 
@@ -101,6 +102,7 @@ final class NotificationService {
         case "love_note_sent": return .loveNoteSent
         case "memory_added": return .memoryAdded
         case "mood_updated": return .moodUpdated
+        case "nudge_sent": return .nudgeSent
         default: return .activityStarted
         }
     }

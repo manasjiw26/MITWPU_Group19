@@ -185,5 +185,32 @@ final class SupabaseManager {
         }
     }
 
+    // MARK: - Memory Delete
+
+    /// Delete a memory using a server-side function.
+    /// This calls the delete_memory() PostgreSQL function which handles the deletion.
+    func deleteMemory(memoryId: UUID, imagePath: String) async throws {
+        print("🗑️ Attempting to delete memory: \(memoryId.uuidString)")
+
+        // 1. Call the database function to delete the row
+        try await client
+            .rpc("delete_memory", params: ["p_memory_id": memoryId.uuidString])
+            .execute()
+
+        print("✅ Memory deleted from Supabase: \(memoryId.uuidString)")
+
+        // 2. Remove the image from storage (best-effort)
+        if !imagePath.isEmpty {
+            do {
+                try await client.storage
+                    .from("memory-images")
+                    .remove(paths: [imagePath])
+                print("🗑️ Image removed from storage: \(imagePath)")
+            } catch {
+                print("⚠️ Could not remove image from storage: \(error.localizedDescription)")
+            }
+        }
+    }
+
 }
 
