@@ -26,7 +26,6 @@ class ScheduleCalendarCollectionViewCell: UICollectionViewCell {
         calendar.tintColor = UIColor(named: "PurpleColor")!
         calendar.preservesSuperviewLayoutMargins = false
         calendar.directionalLayoutMargins = .zero
-        //calendar.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
 
 
         let selection = UICalendarSelectionSingleDate(delegate: self)

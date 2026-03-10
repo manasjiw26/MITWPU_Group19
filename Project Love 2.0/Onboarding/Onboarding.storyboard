@@ -20,21 +20,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Hnn-j5-rhc">
-                                <rect key="frame" x="24" y="564" width="345" height="180"/>
+                                <rect key="frame" x="24" y="628" width="345" height="116"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5GB-H3-E8D">
-                                        <rect key="frame" x="0.0" y="0.0" width="345" height="52"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="52" id="kFq-jR-grd" userLabel="height = 52"/>
-                                        </constraints>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Continue with Apple" imagePadding="8" cornerStyle="capsule">
-                                            <imageReference key="image" image="apple.logo" catalog="system" symbolScale="medium"/>
-                                            <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </buttonConfiguration>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTv-av-jR1">
-                                        <rect key="frame" x="0.0" y="64" width="345" height="52"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="345" height="52"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="52" id="Qrp-h8-cYS"/>
@@ -51,7 +40,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zd6-nF-5mI">
-                                        <rect key="frame" x="0.0" y="128" width="345" height="52"/>
+                                        <rect key="frame" x="0.0" y="64" width="345" height="52"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="52" id="LSh-36-b9I"/>
                                         </constraints>
@@ -69,12 +58,11 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="VTv-av-jR1" secondAttribute="trailing" id="8s6-aY-7kQ"/>
                                     <constraint firstItem="VTv-av-jR1" firstAttribute="leading" secondItem="Hnn-j5-rhc" secondAttribute="leading" id="c3f-Gt-VRM"/>
-                                    <constraint firstItem="5GB-H3-E8D" firstAttribute="leading" secondItem="Hnn-j5-rhc" secondAttribute="leading" id="gRn-Dq-56j"/>
                                     <constraint firstItem="zd6-nF-5mI" firstAttribute="leading" secondItem="Hnn-j5-rhc" secondAttribute="leading" id="p2I-LO-IRN"/>
                                     <constraint firstAttribute="trailing" secondItem="zd6-nF-5mI" secondAttribute="trailing" id="rpx-Eo-p1m"/>
                                 </constraints>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to AppName" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4R-Kk-tDv">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to TwoOfUs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4R-Kk-tDv">
                                 <rect key="frame" x="20" y="362" width="353" height="37"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="31"/>
                                 <nil key="textColor"/>
@@ -113,7 +101,6 @@
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="aN9-Eg-46H"/>
                     <connections>
-                        <outlet property="appleLoginButton" destination="5GB-H3-E8D" id="G05-5K-cFF"/>
                         <outlet property="googleLoginButton" destination="VTv-av-jR1" id="eIC-Ho-LU0"/>
                     </connections>
                 </viewController>
@@ -1322,7 +1309,6 @@ bond together </string>
     <resources>
         <image name="Attached_option" width="284" height="250"/>
         <image name="Partner Pairing" width="278" height="129"/>
-        <image name="apple.logo" catalog="system" width="105" height="128"/>
         <image name="assesment" width="1232" height="1480"/>
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
@@ -1344,10 +1330,10 @@ bond together </string>
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

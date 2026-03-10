@@ -14,7 +14,6 @@ class ActivitiesForHerViewController: UIViewController, UICollectionViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Count:", activitiesForHer.count)
         
         activityCollectionView.dataSource = self
         activityCollectionView.delegate = self

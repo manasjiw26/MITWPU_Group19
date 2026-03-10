@@ -74,7 +74,6 @@ class infoPageViewController: UIViewController {
                let storyboard = UIStoryboard(name: "Main", bundle: nil)
                
                guard let mainVC = storyboard.instantiateInitialViewController() else {
-                   print("❌ Could not load Main storyboard")
                    return
                }
 

@@ -98,7 +98,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     self.notificationButton.tintColor = nil
                 }
             } catch {
-                print("❌ Error checking notifications: \(error)")
             }
         }
     }
@@ -492,7 +491,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             performSegue(withIdentifier: "openQuestions", sender: self)
     }
     func didStartActivity() {
-        print("Activity started")
 
         DispatchQueue.main.async {
             self.vibeCollectionView.reloadData()
@@ -513,7 +511,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 .value
 
             guard let relationship = relationships.first else {
-                print(" No relationship found")
                 return
             }
 
@@ -536,7 +533,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             }
 
         } catch {
-            print("Partner mood fetch error:", error)
         }
     }
     func fetchMyMood() async {
@@ -562,7 +558,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 }
             }
         } catch {
-            print("My mood fetch error:", error)
         }
     }
     //  Realtime listener
@@ -594,7 +589,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
             Task {
                 for await change in moodChanges {
-                    print("Realtime Mood Change Detected")
                     
                     switch change {
                     case .insert(let action):
@@ -602,7 +596,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                        
                         if let changedUserId = newRecord["user_id"]?.value as? String,
                            changedUserId != currentUserId.uuidString {
-                            print("Partner updated mood, fetching details...")
                             await self.fetchPartnerMood()
                         }
                     default:
@@ -612,14 +605,12 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             }
 
         } catch {
-            print("Realtime setup error:", error)
         }
     }
 
     private func updateMoodUI(with log: DBMoodLogWithMood) {
         self.partnerMoodTitle = log.moods.title
         self.partnerMoodImage = log.moods.image
-        print("Partner mood updated to: \(log.moods.title)")
         
         self.vibeCollectionView.reloadData()
     }
@@ -668,8 +659,6 @@ extension VibeViewController:  UICollectionViewDataSource {
                         return 1
                     }
         } else if section == 3 {
-            print("Section 3 files")
-            print("\(makeSmileData.count)")
             return makeSmileData.count
         } else {
             return BuildBond.count
@@ -744,7 +733,6 @@ extension VibeViewController:  UICollectionViewDataSource {
         }
         
         else if indexPath.section == 3 {
-            print("collectionView 3 working")
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "makeSmile_cell",
                 for: indexPath
@@ -800,7 +788,6 @@ extension VibeViewController:  UICollectionViewDataSource {
     func didSelectMood(_ mood: MoodCheckIn, at indexPath: IndexPath) {
 
         guard let currentUserId = supabase.auth.currentUser?.id else {
-            print("No current user")
             return
         }
 
@@ -821,7 +808,6 @@ extension VibeViewController:  UICollectionViewDataSource {
                     .value
 
                 guard let relationship = relationships.first else {
-                    print("No relationship found")
                     return
                 }
 
@@ -835,7 +821,6 @@ extension VibeViewController:  UICollectionViewDataSource {
                     .value
 
                 guard let selectedMood = moods.first else {
-                    print("Mood not found in DB")
                     return
                 }
 
@@ -849,10 +834,8 @@ extension VibeViewController:  UICollectionViewDataSource {
                     ])
                     .execute()
 
-                print("Mood inserted successfully")
 
             } catch {
-                print("Insert failed:", error)
             }
         }
     }
@@ -904,20 +887,20 @@ extension VibeViewController {
             return
         }
         //section 2
-                if indexPath.section == 2 {
-                    // If daily check-in isn't done, we don't want to open activities yet
-                                guard hasCompletedDailyCheckIn else { return }
-                                
-                    
-                                // 1. Check if the Refresh Cell was tapped
-                                if indexPath.row == suggestedActivities.count {
-                                    // completely replace current 3 activities with 3 new ones
-                                    let newActivities = DataStore.shared.getRefreshSuggestedActivities()
-                                    guard !newActivities.isEmpty else { return }
+                if indexPath.section == 2 {
+                    // If daily check-in isn't done, we don't want to open activities yet
+                                guard hasCompletedDailyCheckIn else { return }
+                                
+                    
+                                // 1. Check if the Refresh Cell was tapped
+                                if indexPath.row == suggestedActivities.count {
+                                    // completely replace current 3 activities with 3 new ones
+                                    let newActivities = DataStore.shared.getRefreshSuggestedActivities()
+                                    guard !newActivities.isEmpty else { return }
 
-                                    self.suggestedActivities = newActivities
-                                    
-                                    UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                                    self.suggestedActivities = newActivities
+                                    
+                                    UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: {
             collectionView.reloadSections(IndexSet(integer: 2))
         }, completion: nil)
             return

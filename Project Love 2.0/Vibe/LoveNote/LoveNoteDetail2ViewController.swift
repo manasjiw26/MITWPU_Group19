@@ -59,7 +59,7 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
         actionHeightConstraint?.isActive = false
         
         let height: CGFloat
-        if note.status == .received && note.reaction != nil {
+        if (note.status == .received || note.status == .loveTipCompleted) && note.reaction != nil {
             height = 120
         } else {
             switch note.status {
@@ -105,7 +105,7 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let note = note else { return UICollectionViewCell() }
         
-        if note.status == .received && note.reaction != nil {
+        if (note.status == .received || note.status == .loveTipCompleted) && note.reaction != nil {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LNSentCollectionViewCell", for: indexPath) as! LNSentCollectionViewCell
             cell.configureCells(note)
             return cell

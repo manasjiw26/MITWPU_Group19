@@ -173,7 +173,6 @@ class NewAddNewViewController: UIViewController {
 
         } catch {
             showError(message: error.localizedDescription)
-            print("Failed to get relationship ID:", error)
         }
     }
     

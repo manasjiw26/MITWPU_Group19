@@ -137,7 +137,6 @@ final class SupabaseManager {
 
         // 2. Find the relationship to determine user1 vs user2
         guard let relationshipId = DataStore.shared.currentRelationshipId else {
-            print("⚠️ submitFeedback: no currentRelationshipId")
             return
         }
 
@@ -190,14 +189,12 @@ final class SupabaseManager {
     /// Delete a memory using a server-side function.
     /// This calls the delete_memory() PostgreSQL function which handles the deletion.
     func deleteMemory(memoryId: UUID, imagePath: String) async throws {
-        print("🗑️ Attempting to delete memory: \(memoryId.uuidString)")
 
         // 1. Call the database function to delete the row
         try await client
             .rpc("delete_memory", params: ["p_memory_id": memoryId.uuidString])
             .execute()
 
-        print("✅ Memory deleted from Supabase: \(memoryId.uuidString)")
 
         // 2. Remove the image from storage (best-effort)
         if !imagePath.isEmpty {
@@ -205,9 +202,7 @@ final class SupabaseManager {
                 try await client.storage
                     .from("memory-images")
                     .remove(paths: [imagePath])
-                print("🗑️ Image removed from storage: \(imagePath)")
             } catch {
-                print("⚠️ Could not remove image from storage: \(error.localizedDescription)")
             }
         }
     }
@@ -217,7 +212,6 @@ final class SupabaseManager {
 
                   let relationshipId = DataStore.shared.currentRelationshipId else {
 
-                print("⚠️ updateUserMood: missing context")
 
                 return
 
@@ -244,7 +238,6 @@ final class SupabaseManager {
 
             guard let selectedMood = moods.first else {
 
-                print("❌ Mood '\(moodTitle)' not found in DB")
 
                 return
 
@@ -272,7 +265,6 @@ final class SupabaseManager {
 
             
 
-            print("✅ Mood '\(moodTitle)' logged to Supabase")
 
         }
 

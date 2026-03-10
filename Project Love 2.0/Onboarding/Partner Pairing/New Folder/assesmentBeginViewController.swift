@@ -22,7 +22,6 @@ class assesmentBeginViewController: UIViewController {
     
 
     @IBAction func beginButton(_ sender: Any) {
-        print("Button tapped")
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "questions") as! onboardingQuestionViewController
         self.present(vc, animated: true, completion: nil)
     }

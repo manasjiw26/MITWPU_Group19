@@ -208,7 +208,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             picker.allowsEditing = false
        self.present(picker, animated: true, completion: nil)
         } else {
-            print("Camera not available")
         }
     }
     
@@ -282,7 +281,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
         // Request microphone permission
         AVAudioSession.sharedInstance().requestRecordPermission { allowed in
             if !allowed {
-                print("Microphone access denied")
                 return
             }
         }
@@ -306,9 +304,7 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             audioRecorder = try AVAudioRecorder(url: url, settings: settings)
             audioRecorder?.record()
 
-            print("Started recording at:", url)
         } catch {
-            print("Could not start recording:", error)
         }
 
         // UI feedback
@@ -319,7 +315,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
 
     @objc func stopAndSendRecording() {
 
-        print("Stopped recording")
 
         // Stop recorder
         audioRecorder?.stop()
@@ -331,11 +326,9 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
             }
 
         guard let url = audioFileURL else {
-            print("No audio file available")
             return
         }
 
-        print("Sending voice note:", url)
 
         let audioItem = ChatAudioItem(url: url)
 
@@ -357,7 +350,6 @@ class ChatViewController: MessagesViewController, UIImagePickerControllerDelegat
 
 
     @objc func cancelRecording() {
-        print("Recording cancelled.")
         audioRecorder?.stop()
         
         if let url = audioFileURL {

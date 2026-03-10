@@ -120,7 +120,6 @@ class tellUsAboutYourselfViewController: UIViewController {
         } catch {
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
-                print("INSERT ERROR:", error)
                 self.showAlert("Failed to save profile")
             }
         }

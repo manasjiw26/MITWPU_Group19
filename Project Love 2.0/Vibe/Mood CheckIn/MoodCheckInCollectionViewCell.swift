@@ -49,7 +49,6 @@ class MoodCheckInCollectionViewCell: UICollectionViewCell {
         
     }
     @objc private func moodTapped() {
-        print("MOOD IMAGE TAPPED")
         delegate?.didTapMood(in: self)
     }
     

@@ -267,7 +267,6 @@ class memoryPhotoViewController: UIViewController,
                 }
 
             } catch {
-                print("❌ Failed to delete memory: \(error)")
                 await MainActor.run {
                     self.showSimpleError("Failed to delete memory: \(error.localizedDescription)")
                 }

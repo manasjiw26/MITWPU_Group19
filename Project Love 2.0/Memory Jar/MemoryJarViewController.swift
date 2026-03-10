@@ -143,7 +143,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
 
         do {
-            // 1️⃣ Get relationship_id
+            // Get relationship_id
             let response = try await SupabaseManager.shared.client
                 .from("users")
                 .select("relationship_id")
@@ -158,7 +158,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             let decodedRelation = try JSONDecoder().decode(UserRelation.self, from: response.data)
             guard let relationshipId = decodedRelation.relationship_id else { return }
             
-            print("Fetched relationship_id:", decodedRelation.relationship_id as Any)
 
             let memoryResponse = try await SupabaseManager.shared.client
                 .from("memories")
@@ -213,7 +212,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             await listenForPartnerMemory(relationshipId: relationshipId)
 
         } catch {
-            print("Fetch error:", error)
             await MainActor.run {
                 if isInitialLoad {
                     self.loadingIndicator.stopAnimating()
@@ -251,10 +249,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                         let jsonData = try JSONEncoder().encode(action.record)
                         let item = try JSONDecoder().decode(MemoryModel.self, from: jsonData)
 
-                        // Ignore own insert (already shown locally)
-                       
-
-                        // Prevent duplicates
+               
                         if dataStore.savedMemories.contains(where: { $0.id == item.id }) {
                             continue
                         }
@@ -286,7 +281,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                             }
                         }
                     } catch {
-                        print("Insert realtime handling error:", error)
                     }
 
                 case .delete(let action):
@@ -334,7 +328,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                             }
                         }
                     } catch {
-                        print("Delete realtime handling error:", error)
                     }
 
                 default:

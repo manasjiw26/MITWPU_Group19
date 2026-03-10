@@ -11,7 +11,6 @@ import Supabase
 
 class signupOptionsViewController: UIViewController {
 
-    @IBOutlet weak var appleLoginButton: UIButton!
     @IBOutlet weak var googleLoginButton: UIButton!
     
     let spinner = UIActivityIndicatorView(style: .large)

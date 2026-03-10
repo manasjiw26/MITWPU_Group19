@@ -254,7 +254,6 @@ struct SpecialDate {
     let note: String
 }
 
-//Database model
 struct DBUser: Codable {
     let user_id: UUID
     let name: String
@@ -264,8 +263,6 @@ struct DBUser: Codable {
     let relationship_id: UUID?
     let gender: String?
     let assessment_answers: [String: [Int]]?
-    let entity_id: String?
-    let entity_type: String?
 }
 
 struct DBRelationship: Codable {

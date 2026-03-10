@@ -9,7 +9,6 @@ final class MemoryUploadManager {
 
     private init() {}
     
-    /// Starts the upload process in a background task so it continues even if the app closes.
     func uploadMemory(
         userId: String,
         relationshipId: UUID,
@@ -28,7 +27,6 @@ final class MemoryUploadManager {
         
         Task {
             do {
-                print("Starting background upload for memory: \(title)")
                 
                 let timestamp = Int(Date().timeIntervalSince1970)
                 let fileName = "\(timestamp)_\(UUID().uuidString).jpg"
@@ -63,14 +61,11 @@ final class MemoryUploadManager {
                         entityId: nil
                     )
                 } catch {
-                    print("Failed to notify partner: \(error)")
                 }
                 
-                print("Background upload completed successfully for memory: \(title)")
                 
             } catch {
-                print("Background upload failed: \(error)")
-                // Note: Consider adding local retry logic or a database of "failed uploads" if required
+                
             }
             
             // Mark background task as complete

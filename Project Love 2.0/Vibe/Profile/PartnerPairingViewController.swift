@@ -116,7 +116,6 @@ class PartnerPairingViewController: UIViewController {
        }
 
        func codeCompleted(_ code: String) {
-           print("Ready to pair with:", code)
        }
 
        // MARK: - Actions

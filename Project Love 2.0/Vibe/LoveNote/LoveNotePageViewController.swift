@@ -82,7 +82,6 @@ class LoveNotePageViewController: UIViewController {
 
 
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
-        print("Segment changed to:", sender.selectedSegmentIndex)
         applyFilter()
     }
 
@@ -90,80 +89,77 @@ class LoveNotePageViewController: UIViewController {
         return filteredNotes.isEmpty
     }
     private func fetchLoveNotes() async {
-            guard let currentRelationshipId, let currentUserId else { return }
-            do {
-                await markDueScheduledNotesAsSent(relationshipId: currentRelationshipId, currentUserId: currentUserId)
+            guard let currentRelationshipId, let currentUserId else { return }
+            do {
+                await markDueScheduledNotesAsSent(relationshipId: currentRelationshipId, currentUserId: currentUserId)
 
-                let rows: [DBLoveNote] = try await SupabaseManager.shared.client
-                    .from("love_notes")
-                    .select()
-                    .eq("relationship_id", value: currentRelationshipId.uuidString)
-                    .or("is_sent.eq.true,and(is_sent.eq.false,user_id.eq.\(currentUserId.uuidString))")
-                    .order("created_at", ascending: false)
-                    .execute()
-                    .value
+                let rows: [DBLoveNote] = try await SupabaseManager.shared.client
+                    .from("love_notes")
+                    .select()
+                    .eq("relationship_id", value: currentRelationshipId.uuidString)
+                    .or("is_sent.eq.true,and(is_sent.eq.false,user_id.eq.\(currentUserId.uuidString))")
+                    .order("created_at", ascending: false)
+                    .execute()
+                    .value
 
-                let visibleRows = rows.filter { $0.is_sent || $0.user_id == currentUserId }
-                allNotes = visibleRows.map { LoveNote.fromDB($0, currentUserId: currentUserId) }
-                applyFilter()
-            } catch {
-                print("fetchLoveNotes error:", error)
-            }
-        }
+                let visibleRows = rows.filter { $0.is_sent || $0.user_id == currentUserId }
+                allNotes = visibleRows.map { LoveNote.fromDB($0, currentUserId: currentUserId) }
+                applyFilter()
+            } catch {
+            }
+        }
 
-        private func markDueScheduledNotesAsSent(relationshipId: UUID, currentUserId: UUID) async {
-            do {
-                let updatedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
-                    .from("love_notes")
-                    .update(["is_sent": true])
-                    .eq("relationship_id", value: relationshipId.uuidString)
-                    .eq("user_id", value: currentUserId.uuidString)
-                    .eq("is_sent", value: false)
-                    .lte("scheduled_for", value: Date().ISO8601Format())
-                    .select()
-                    .execute()
-                    .value
+        private func markDueScheduledNotesAsSent(relationshipId: UUID, currentUserId: UUID) async {
+            do {
+                let updatedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
+                    .from("love_notes")
+                    .update(["is_sent": true])
+                    .eq("relationship_id", value: relationshipId.uuidString)
+                    .eq("user_id", value: currentUserId.uuidString)
+                    .eq("is_sent", value: false)
+                    .lte("scheduled_for", value: Date().ISO8601Format())
+                    .select()
+                    .execute()
+                    .value
 
-                for note in updatedNotes {
-                    do {
-                        try await NotificationService.shared.sendPartnerNotification(
-                            relationshipId: relationshipId,
-                            type: "love_note_sent",
-                            message: "Your partner sent you a love note 💌",
-                            entityType: "love_note",
-                            entityId: note.love_note_id.uuidString
-                        )
-                    } catch {
-                        print("Notification insert failed for scheduled note \(note.love_note_id): \(error)")
-                    }
-                }
+                for note in updatedNotes {
+                    do {
+                        try await NotificationService.shared.sendPartnerNotification(
+                            relationshipId: relationshipId,
+                            type: "love_note_sent",
+                            message: "Your partner sent you a love note 💌",
+                            entityType: "love_note",
+                            entityId: note.love_note_id.uuidString
+                        )
+                    } catch {
+                    }
+                }
     } catch {
-        print("markDueScheduledNotesAsSent error:", error)
     }
     }
     private func applyFilter() {
-            let notes = allNotes
+            let notes = allNotes
 
-            switch segmentedControl.selectedSegmentIndex {
-            case 0:
-                filteredNotes = notes.filter { $0.status == .sent }
-                sectionTitleLabel.text = "Sent"
+            switch segmentedControl.selectedSegmentIndex {
+            case 0:
+                filteredNotes = notes.filter { $0.status == .sent }
+                sectionTitleLabel.text = "Sent"
 
-            case 1:
-                filteredNotes = notes.filter { $0.status == .received }
-                sectionTitleLabel.text = "Received"
+            case 1:
+                filteredNotes = notes.filter { $0.status == .received }
+                sectionTitleLabel.text = "Received"
 
-            case 2:
-                filteredNotes = notes.filter { $0.status == .scheduled }
-                sectionTitleLabel.text = "Scheduled"
+            case 2:
+                filteredNotes = notes.filter { $0.status == .scheduled }
+                sectionTitleLabel.text = "Scheduled"
 
-            default:
-                filteredNotes = []
-            }
+            default:
+                filteredNotes = []
+            }
 
-            collectionView.setCollectionViewLayout(generateLayout(), animated: false)
-            collectionView.reloadData()
-        }
+            collectionView.setCollectionViewLayout(generateLayout(), animated: false)
+            collectionView.reloadData()
+        }
 
     override func viewWillAppear(_ animated: Bool) {
         collectionView.reloadData()
@@ -197,62 +193,54 @@ class LoveNotePageViewController: UIViewController {
     
     private func createLoveNote(message: String, scheduledDate: Date?) async {
 
-            guard let currentRelationshipId,
-                  let partnerUserId else {
-                print("❌ relationship or partner missing")
-                return
-            }
+            guard let currentRelationshipId,
+                  let partnerUserId else {
+                return
+            }
 
-            do {
-                let session = try await SupabaseManager.shared.client.auth.session
-                let authUserId = session.user.id
-
-                print("Current user ID:", authUserId)
-                print("Relationship ID:", currentRelationshipId)
-                print("Receiver ID:", partnerUserId)
-
-                let payload = LoveNoteInsert(
-                    relationship_id: currentRelationshipId,
-                    user_id: authUserId,
-                    partner_user_id: partnerUserId,
-                    message: message,
-                    scheduled_for: scheduledDate,
-                    is_sent: (scheduledDate == nil)
-                )
-
-                print("🚀 Attempting insert...")
-
-                let insertedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
-                    .from("love_notes")
-                    .insert(payload)
-                    .select()
-                    .execute()
-                    .value
-
-                print("✅ Insert success")
-
-                if scheduledDate == nil { // send notification only for immediate send
-                    do {
-                        let loveNoteIdString = insertedNotes.first?.love_note_id.uuidString
-                        try await NotificationService.shared.sendPartnerNotification(
-                            relationshipId: currentRelationshipId,
-                            type: "love_note_sent",
-                            message: "Your partner sent you a love note 💌",
-                            entityType: "love_note",
-                            entityId: loveNoteIdString
-                        )
-                    } catch {
-                        print("Notification insert failed: \(error)")
-                    }
-                }
-
-                await fetchLoveNotes()
+            do {
+                let session = try await SupabaseManager.shared.client.auth.session
+                let authUserId = session.user.id
 
 
-            } catch {
-                print("🔥 createLoveNote error:", error)
-            }
-        }
+                let payload = LoveNoteInsert(
+                    relationship_id: currentRelationshipId,
+                    user_id: authUserId,
+                    partner_user_id: partnerUserId,
+                    message: message,
+                    scheduled_for: scheduledDate,
+                    is_sent: (scheduledDate == nil)
+                )
+
+
+                let insertedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
+                    .from("love_notes")
+                    .insert(payload)
+                    .select()
+                    .execute()
+                    .value
+
+
+                if scheduledDate == nil { // send notification only for immediate send
+                    do {
+                        let loveNoteIdString = insertedNotes.first?.love_note_id.uuidString
+                        try await NotificationService.shared.sendPartnerNotification(
+                            relationshipId: currentRelationshipId,
+                            type: "love_note_sent",
+                            message: "Your partner sent you a love note 💌",
+                            entityType: "love_note",
+                            entityId: loveNoteIdString
+                        )
+                    } catch {
+                    }
+                }
+
+                await fetchLoveNotes()
+
+
+            } catch {
+            }
+        }
     
     private func loadLoveNoteContext() async -> Bool {
         do {
@@ -276,7 +264,6 @@ class LoveNotePageViewController: UIViewController {
             partnerUserId = (relationship.user1_id == authUserId) ? relationship.user2_id : relationship.user1_id
             return true
         } catch {
-            print("loadLoveNoteContext error:", error)
             return false
         }
     }
@@ -416,13 +403,11 @@ extension LoveNotePageViewController: UICollectionViewDelegate, UICollectionView
                 .execute()
             await fetchLoveNotes()
         } catch {
-            print("updateReaction error:", error)
         }
     }
 
     private func updateSchedule(noteId: UUID, date: Date) async {
         guard date > Date() else {
-            print("Cannot schedule in the past")
             return
         }
 
@@ -437,7 +422,6 @@ extension LoveNotePageViewController: UICollectionViewDelegate, UICollectionView
                 .execute()
             await fetchLoveNotes()
         } catch {
-            print("updateSchedule error:", error)
         }
     }
 

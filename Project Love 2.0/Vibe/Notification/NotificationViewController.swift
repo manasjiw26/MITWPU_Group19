@@ -71,15 +71,11 @@ final class NotificationViewController: UIViewController {
             do {
                 let session = try await SupabaseManager.shared.client.auth.session
                 let userId = session.user.id
-                print("📥 Loading notifications for user: \(userId)")
 
                 notifications = try await NotificationService.shared.fetchNotifications(for: userId)
-                print("📥 Loaded \(notifications.count) notifications")
                 collectionView.setCollectionViewLayout(generateLayout(), animated: false)
                 collectionView.reloadData()
             } catch {
-                print("❌ Failed to load notifications: \(error)")
-                print("❌ Error details: \(String(describing: error))")
             }
         }
     }
@@ -163,7 +159,6 @@ final class NotificationViewController: UIViewController {
                     )
                 }
             } catch {
-                print("Failed to send love tip reaction: \(error)")
             }
         }
     }
@@ -187,7 +182,6 @@ final class NotificationViewController: UIViewController {
             let activityName = extractActivityName(from: notification.message),
             let selectedActivity = findActivity(named: activityName)
         else {
-            print("Could not resolve activity from notification: \(notification.message)")
             return
         }
 
@@ -233,7 +227,6 @@ final class NotificationViewController: UIViewController {
 
      private func openLoveNote(_ notification: AppNotification) {
          guard let noteId = notification.entityId else {
-             print("⚠️ openLoveNote: Missing entityId in notification")
              showLoveNoteAlert(for: notification)
              return
          }
@@ -264,7 +257,6 @@ final class NotificationViewController: UIViewController {
                  }
 
              } catch {
-                 print("❌ openLoveNote: Failed to fetch love note details: \(error)")
                  showLoveNoteAlert(for: notification)
              }
          }
@@ -292,7 +284,6 @@ final class NotificationViewController: UIViewController {
                 .eq("love_note_id", value: noteId.uuidString)
                 .execute()
         } catch {
-            print("updateReaction error:", error)
         }
     }
 
@@ -308,7 +299,6 @@ final class NotificationViewController: UIViewController {
                 .eq("love_note_id", value: noteId.uuidString)
                 .execute()
         } catch {
-            print("updateSchedule error:", error)
         }
     }
 
@@ -368,7 +358,6 @@ final class NotificationViewController: UIViewController {
                  notifications[indexPath.item] = notification
                  collectionView.reloadItems(at: [indexPath])
              } catch {
-                 print("Failed to mark notification as read: \(error)")
              }
          }
 

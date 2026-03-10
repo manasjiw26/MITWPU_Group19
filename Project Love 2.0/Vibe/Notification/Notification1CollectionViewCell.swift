@@ -30,14 +30,14 @@ class Notification1CollectionViewCell: UICollectionViewCell {
         titleLabel.text = notification.titleText
         
         if notification.message.hasPrefix("Partner ") {
-                    notificationDescLabel.text = notification.message
-                } else {
-                    notificationDescLabel.text = "\(notification.senderName) \(notification.message)"
-                }
+                    notificationDescLabel.text = notification.message
+                } else {
+                    notificationDescLabel.text = "\(notification.senderName) \(notification.message)"
+                }
 
-                notificationDateLabel.text = notification.timeAgoText
-                notificationImageView.image = UIImage(systemName: notification.iconName)
+                notificationDateLabel.text = notification.timeAgoText
+                notificationImageView.image = UIImage(systemName: notification.iconName)
 
-                notificationBackgroundView.alpha = notification.isRead ? 0.6 : 1.0
-            }
+                notificationBackgroundView.alpha = notification.isRead ? 0.6 : 1.0
+            }
 }

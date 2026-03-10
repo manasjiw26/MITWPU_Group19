@@ -132,7 +132,6 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
                             }
                         }
                     } catch {
-                        print("⚠️ Failed to save gender/answers to Supabase: \(error)")
                     }
                 }
             }
@@ -179,7 +178,6 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
             .execute()
 
         UserDefaults.standard.set(gender, forKey: "userGender")
-        print("✅ Gender + assessment answers saved to Supabase")
     }
 
     // MARK: - TableView Methods

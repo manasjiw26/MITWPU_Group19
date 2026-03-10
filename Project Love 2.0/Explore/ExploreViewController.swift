@@ -88,7 +88,6 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
     }
 
     @IBAction func calendarTapped(_ sender: UIButton) {
-        print("Calendar button tapped")
         openCalendarModal()
     }
     
@@ -178,7 +177,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
 
                 let titleSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(36)   // ⬅️ increased from 34 → same visual weight as Activities
+                    heightDimension: .absolute(36)
                 )
 
                 let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
@@ -188,7 +187,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
                 )
 
                 titleHeader.contentInsets = NSDirectionalEdgeInsets(
-                    top: -5,      // small breathing space like other headers
+                    top: -5,
                     leading: 16,
                     bottom: 4,
                     trailing: 16
@@ -294,7 +293,6 @@ extension ExploreViewController:  UICollectionViewDataSource {
         }
         else {
 
-            print("Inside numberOfItemsInSection → selected segment =", selectedSegmentIndex)
 
             if selectedSegmentIndex == 0 {
                 return activityCategory.count

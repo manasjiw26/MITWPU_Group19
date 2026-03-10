@@ -152,9 +152,7 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                                mood: mood,
                                message: message
                            )
-                           print("✅ Feedback submitted to Supabase")
                        } catch {
-                           print("❌ Supabase submitFeedback failed: \(error)")
                        }
                    }
                }
@@ -307,13 +305,10 @@ extension FeedBackViewController: TellMoodSelectionDelegate {
         feedbackItem?.selectedMood = mood.label
         moodButton.setTitle("Mood updated: \(mood.label)", for: .normal)
         
-        // Persist mood globally so it reflects on Vibe screen
         Task {
             do {
                 try await SupabaseManager.shared.updateUserMood(moodTitle: mood.moodLabel)
-                print("✅ Global mood updated from Feedback")
             } catch {
-                print("❌ Failed to update global mood from Feedback: \(error)")
             }
         }
     }

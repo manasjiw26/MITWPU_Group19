@@ -94,10 +94,8 @@ class InvitePartnerViewController: UIViewController {
                 .eq("user_id", value: userId.uuidString)
                 .execute()
 
-            print("Pairing code saved to users table")
 
         } catch {
-            print("Failed to save pairing code:", error)
         }
 
         isSavingCode = false
@@ -156,7 +154,6 @@ class InvitePartnerViewController: UIViewController {
             let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
             
             guard let vc = storyboard.instantiateViewController(withIdentifier: "infoPageViewController") as? infoPageViewController else {
-                print("❌ Could not instantiate infoPageViewController")
                 return
             }
             
@@ -184,7 +181,6 @@ class InvitePartnerViewController: UIViewController {
             guard let vc = storyboard.instantiateViewController(
                 withIdentifier: "infoPageViewController"
             ) as? infoPageViewController else {
-                print("❌ Could not instantiate infoPageViewController")
                 return
             }
             

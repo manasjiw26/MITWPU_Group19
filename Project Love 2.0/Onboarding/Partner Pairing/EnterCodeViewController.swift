@@ -79,7 +79,6 @@ class EnterCodeViewController: UIViewController {
 
             // if function returns uuid:
             let relationshipId = try JSONDecoder().decode(UUID.self, from: response.data)
-            print("Paired relationship:", relationshipId)
 
             showSuccess()
         } catch {
@@ -113,7 +112,6 @@ class EnterCodeViewController: UIViewController {
                 let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
                 
                 guard let vc = storyboard.instantiateViewController(withIdentifier: "infoPageViewController") as? infoPageViewController else {
-                    print("❌ Could not instantiate infoPageViewController")
                     return
                 }
                 
@@ -145,7 +143,6 @@ class EnterCodeViewController: UIViewController {
     }
     
     @IBAction func skipTapped(_ sender: Any) {
-        print("Skip tapped")
         UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
         spinner.stopAnimating()
         view.isUserInteractionEnabled = true
@@ -158,7 +155,6 @@ class EnterCodeViewController: UIViewController {
         guard let vc = storyboard.instantiateViewController(
                 withIdentifier: "infoPageViewController"
             ) as? infoPageViewController else {
-                print("❌ Could not instantiate infoPageViewController")
                 return
             }
             

@@ -146,6 +146,5 @@ extension Questions_OptionsViewController: UICollectionViewDataSource, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // STORE SELECTION: Save the choice for this step
         userSelections[currentStep] = indexPath.item
-        print("Step \(currentStep) selection: \(questionsList[currentStep].options[indexPath.item])")
     }
 }

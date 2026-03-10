@@ -47,7 +47,6 @@ class StepsViewController: UIViewController {
         super.viewDidLoad()
 
         guard let activity = activity else {
-            print(" StepsViewController: activity is nil")
             return
         }
 

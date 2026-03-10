@@ -48,6 +48,7 @@ class DataStore {
     private(set) var allActivities: [Activity] = []
     private var bondJSONActivities: [JSONActivity] = []
     private var exploreJSONActivities: [JSONActivity] = []
+    private(set) var suggestedJSONActivities: [JSONActivity] = []
     private var HisMood: Mood?
     private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "Calm" )
     private(set) var notifications: [AppNotification] = []
@@ -68,6 +69,7 @@ class DataStore {
         loadsampleBuildYourBond()
         loadPersonalInfoData()
         loadProfileData()
+        let _ = groupedSuggestedActivities // force load
         buildAllActivities()
         loadDailyCheckInQuestions()
         loadOnboardingQnA()
@@ -75,13 +77,13 @@ class DataStore {
 
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
         guard let url = Bundle.main.url(forResource: "suggestedActivity", withExtension: "json") else {
-            print("❌ Could not find suggestedActivity.json")
             return [:]
         }
         
         do {
             let data = try Data(contentsOf: url)
             let parsed = try JSONDecoder().decode(ActivitiesJSON.self, from: data)
+            self.suggestedJSONActivities = parsed.activities
             
             var grouped: [SuggestionGroup: [Activity]] = [:]
             
@@ -90,7 +92,6 @@ class DataStore {
                 let categoryStr = json.category.replacingOccurrences(of: "Group ", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
                 
                 guard let group = SuggestionGroup(rawValue: categoryStr) else {
-                    print("⚠️ Invalid group category in JSON: \(json.category)")
                     continue
                 }
                 
@@ -113,19 +114,17 @@ class DataStore {
                     grouped[group] = [activity]
                 }
             }
-                print("✅ Loaded grouped suggested activities from suggestedActivity.json")
                 return grouped
             } catch {
-                print("❌ Could not load suggestedActivity.json: \(error)")
                 return [:]
             }
 
-        }
+        }
     func resolveSuggestionGroup(selection: DailyCheckInSelection) -> SuggestionGroup {
             let mood = normalize(selection.mood)
             let closeness = normalize(selection.closeness) // disconnected/chill/attached/kinda close/very distant/very close/somewhat close/a bit distant
-            let vibe = normalize(selection.vibe)           // dry/meh/synced/vibing/smooth/neutral/a little off/tense
-            let need = normalize(selection.need)           // reassurance/quality time/space/deep convo/comfort/connection/fun
+            let vibe = normalize(selection.vibe)           // dry/meh/synced/vibing/smooth/neutral/a little off/tense
+            let need = normalize(selection.need)           // reassurance/quality time/space/deep convo/comfort/connection/fun
 
             let isVeryClose = (closeness == "attached" || closeness == "very close")
             let isSomewhatClose = (closeness == "kinda close" || closeness == "chill" || closeness == "somewhat close")
@@ -145,39 +144,39 @@ class DataStore {
             // EDGE CASES
             // Case 1: Positive but very distant + comfort => Group I
             if ["joyful", "playful", "satisfied", "adventurous", "calm", "peaceful", "productive", "curious", "determined"].contains(mood),
-               isVeryDistant,
-               isComfort {
+               isVeryDistant,
+               isComfort {
                 return .I
             }
             
             // Case 2: Angry but need connection => Group G
             if mood == "angry",
-               (isSomewhatClose || isVeryClose),
-               isTense,
-               isConnection {
+               (isSomewhatClose || isVeryClose),
+               isTense,
+               isConnection {
                 return .G
             }
             
             // Case 3: Drained but wants fun => Group A (Positive & Aligned via Need override)
             if mood == "drained",
-               (isVeryClose || isSomewhatClose),
-               isFun {
+               (isVeryClose || isSomewhatClose),
+               isFun {
                 return .A // The rules say "Covered under Positive but Low Energy -> reclassified via Need override"
             }
             
             // Case 4: Attached + very close + smooth + space => Group E
             if mood == "attached",
-               isVeryClose,
-               isSmooth,
-               isSpace {
+               isVeryClose,
+               isSmooth,
+               isSpace {
                 return .E
             }
             
             // Case 5: Calm + very distant + fun => Group J
             if mood == "calm",
-               isVeryDistant,
-               isNeutral,
-               isFun {
+               isVeryDistant,
+               isNeutral,
+               isFun {
                 return .J
             }
             
@@ -185,79 +184,79 @@ class DataStore {
             // STANDARD RULES
             // GROUP G: Tense but Still Engaged
             if ["angry", "regretful", "disappointed"].contains(mood),
-               (isVeryClose || isSomewhatClose),
-               isTense,
-               (isComfort || isSpace) {
+               (isVeryClose || isSomewhatClose),
+               isTense,
+               (isComfort || isSpace) {
                 return .G
             }
 
             // GROUP E: Close but Overstimulated
             if ["drained", "peaceful"].contains(mood),
-               (isVeryClose || isSomewhatClose),
-               (isNeutral || isSmooth),
-               isSpace {
+               (isVeryClose || isSomewhatClose),
+               (isNeutral || isSmooth),
+               isSpace {
                 return .E
             }
 
             // GROUP I: Distant & Self-Preserving
             if ["drained", "angry", "disappointed"].contains(mood),
-               isVeryDistant,
-               (isLittleOff || isTense),
-               isSpace {
+               isVeryDistant,
+               (isLittleOff || isTense),
+               isSpace {
                 return .I
             }
             
             // GROUP J: Distant but Playful Reach
             if ["playful", "curious"].contains(mood),
-               isBitDistant,
-               isNeutral,
-               isFun {
+               isBitDistant,
+               isNeutral,
+               isFun {
                 return .J
             }
 
             // GROUP H: Distant but Wanting Repair
             if ["sad", "curious", "regretful"].contains(mood),
-               isBitDistant,
-               (isNeutral || isLittleOff),
-               isConnection {
+               isBitDistant,
+               (isNeutral || isLittleOff),
+               isConnection {
                 return .H
             }
 
             // GROUP F: Attached but Insecure
             if mood == "attached",
-               (isSomewhatClose || isBitDistant),
-               (isNeutral || isLittleOff),
-               (isComfort || isConnection) {
+               (isSomewhatClose || isBitDistant),
+               (isNeutral || isLittleOff),
+               (isComfort || isConnection) {
                 return .F
             }
 
             // GROUP D: Close but Emotionally Off
             if ["calm", "curious", "regretful", "attached"].contains(mood),
-               isVeryClose,
-               isLittleOff,
-               (isConnection || isComfort) {
+               isVeryClose,
+               isLittleOff,
+               (isConnection || isComfort) {
                 return .D
             }
 
             // GROUP A: Positive & Aligned
             if ["joyful", "playful", "satisfied", "adventurous"].contains(mood),
-               (isVeryClose || isSomewhatClose),
-               isSmooth,
-               (isFun || isConnection) {
+               (isVeryClose || isSomewhatClose),
+               isSmooth,
+               (isFun || isConnection) {
                 return .A
             }
 
             // GROUP B: Calm & Stable
             if ["calm", "peaceful", "productive"].contains(mood),
-               (isSmooth || isNeutral),
-               isConnection {
+               (isSmooth || isNeutral),
+               isConnection {
                 return .B
             }
 
             // GROUP C: Curious / Growth-Oriented
             if ["curious", "determined", "productive"].contains(mood),
-               isNeutral,
-               (isConnection || isFun) {
+               isNeutral,
+               (isConnection || isFun) {
                 return .C
             }
 
@@ -267,10 +266,10 @@ class DataStore {
             if isVeryDistant { return .I }
             if isBitDistant { return .H }
             return .B
-        }
+        }
     
-        @discardableResult
-        func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection, limit: Int = 3) -> [Activity] {
+        @discardableResult
+        func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection, limit: Int = 3) -> [Activity] {
             let group = resolveSuggestionGroup(selection: selection)
             lastSuggestionGroup = group
             let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
@@ -278,7 +277,7 @@ class DataStore {
             let result = Array(shuffledPool.prefix(limit))
             self.suggestedActivities = result
             return result
-        }
+        }
 
     private func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -360,7 +359,6 @@ class DataStore {
     // update mood
     func saveFeedback(_ feedback: FeedBackGiven) {
             savedFeedback.append(feedback)
-            print(" Saved feedback:", feedback)
         }
 
     private func mood(by id: Int) -> Mood? {
@@ -383,7 +381,6 @@ class DataStore {
     func loadSampleData() {
         // Load from activities.json ONLY
         guard let url = Bundle.main.url(forResource: "activities", withExtension: "json") else {
-            print("❌ Could not find activities.json")
             return
         }
 
@@ -392,7 +389,6 @@ class DataStore {
             let data = try Data(contentsOf: url)
             parsed = try JSONDecoder().decode(ActivitiesJSON.self, from: data)
         } catch {
-            print("❌ Could not load activities.json")
             return
         }
 
@@ -413,7 +409,6 @@ class DataStore {
                 scheduledDate: nil
             )
         }
-        print("✅ Loaded \(self.activities.count) activities from activities.json")
     }
     func loadDailyCheckInQuestions() {
         let sampleQuestions: [Question] = [
@@ -461,7 +456,7 @@ class DataStore {
     }
     func getSteps(for activity: Activity) -> [StepsToFollow] {
             if let jsonSteps = activity.steps, !jsonSteps.isEmpty {
-                return jsonSteps.enumerated().map { index, stepStr in
+                return jsonSteps.enumerated().map { index, stepStr in
                     var titleStr = "Step \(index + 1)"
                     var descStr = stepStr
                     
@@ -469,45 +464,45 @@ class DataStore {
                     let parts = cleanStepStr.split(separator: ".", maxSplits: 1)
                     
                     if parts.count == 2 {
-                        titleStr = String(parts[0]).trimmingCharacters(in: .whitespaces)
-                        descStr = String(parts[1]).trimmingCharacters(in: .whitespaces)
-                        if !descStr.hasSuffix(".") && !descStr.isEmpty {
+                        titleStr = String(parts[0]).trimmingCharacters(in: .whitespaces)
+                        descStr = String(parts[1]).trimmingCharacters(in: .whitespaces)
+                        if !descStr.hasSuffix(".") && !descStr.isEmpty {
                             descStr += "."
-                        }
+                        }
                     } else {
-                        descStr = cleanStepStr
+                        descStr = cleanStepStr
                     }
                     
                     return StepsToFollow(number: index + 1, title: titleStr, descriptionLabel: descStr)
-                }
+                }
             }
 
             let mapped = loadSteps(for: activity.name)
             if !mapped.isEmpty { return mapped }
 
             return [
-                StepsToFollow(number: 1, title: "Set intention", descriptionLabel: "Start with: \"What do we need right now?\""),
-                StepsToFollow(number: 2, title: "Do the activity", descriptionLabel: activity.description),
-                StepsToFollow(number: 3, title: "Reflect", descriptionLabel: "Share one line: \"This felt ___ for me.\"")
+                StepsToFollow(number: 1, title: "Set intention", descriptionLabel: "Start with: \"What do we need right now?\""),
+                StepsToFollow(number: 2, title: "Do the activity", descriptionLabel: activity.description),
+                StepsToFollow(number: 3, title: "Reflect", descriptionLabel: "Share one line: \"This felt ___ for me.\"")
     ]
     }
 
     
     func getMoreActivities(excluding current: [Activity]) -> [Activity] {
-            guard let group = lastSuggestionGroup else { return [] }
-            let sourcePool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-            
-            let remaining = sourcePool.filter { new in
-                !current.contains(where: { $0.id == new.id })
-            }
-            
-            if remaining.count >= 3 {
-                return Array(remaining.shuffled().prefix(3))
-            } else {
-                // If less than 3 remaining, we've exhausted the fresh ones. Reshuffle everything and pick 3.
-                return Array(sourcePool.shuffled().prefix(3))
-            }
-        }
+            guard let group = lastSuggestionGroup else { return [] }
+            let sourcePool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
+            
+            let remaining = sourcePool.filter { new in
+                !current.contains(where: { $0.id == new.id })
+            }
+            
+            if remaining.count >= 3 {
+                return Array(remaining.shuffled().prefix(3))
+            } else {
+                // If less than 3 remaining, we've exhausted the fresh ones. Reshuffle everything and pick 3.
+                return Array(sourcePool.shuffled().prefix(3))
+            }
+        }
 
     func getActivities(forCategoryName name: String) -> [Activity] {
             return activities.filter { $0.category == name }
@@ -660,7 +655,6 @@ class DataStore {
             }
             reloadGenderDependentContent()
         } catch {
-            print("❌ Failed to load profile from Supabase: \(error)")
         }
     }
 
@@ -738,9 +732,7 @@ class DataStore {
                     .update(payload)
                     .eq("user_id", value: userId.uuidString)
                     .execute()
-                print("✅ Profile (name, DOB) saved to Supabase")
             } catch {
-                print("⚠️ Failed to save profile to Supabase: \(error)")
             }
         }
     }
@@ -873,6 +865,12 @@ class DataStore {
            !jsonActivity.steps.isEmpty {
             return parseJSONSteps(jsonActivity.steps)
         }
+        
+        // Check suggested activities JSON (suggestedActivity.json)
+        if let jsonActivity = suggestedJSONActivities.first(where: { $0.name == activityTitle }),
+           !jsonActivity.steps.isEmpty {
+            return parseJSONSteps(jsonActivity.steps)
+        }
 
         return []
     }
@@ -907,9 +905,7 @@ class DataStore {
            let data = try? Data(contentsOf: url),
            let parsed = try? JSONDecoder().decode(ActivitiesJSON.self, from: data) {
             self.bondJSONActivities = parsed.activities
-            print("✅ Loaded \(bondJSONActivities.count) bond activities from bondActivities.json")
         } else {
-            print("⚠️ Could not load bondActivities.json, using fallback data")
         }
 
         // Helper to get activities for a specific category from JSON
@@ -1013,7 +1009,6 @@ class DataStore {
             $0.category == activity.category
         }) {
             activities[index].status = .completed
-            print(" MARKED COMPLETED:", activities[index].name)
         }
     }
     
@@ -1031,7 +1026,6 @@ class DataStore {
             $0.category == activity.category
         }) {
             activities[index].status = .none
-            print(" MARKED COMPLETED:", activities[index].name)
         }
     }
 
@@ -1046,13 +1040,11 @@ class DataStore {
             var newActivity = activity
             newActivity.status = .ongoing
             activities.append(newActivity)
-            print("Added new ongoing activity:", newActivity.name)
         }
 
         // Also insert into Supabase so partner's device sees it
         guard let relationshipId = currentRelationshipId,
               let userId = currentUserId else {
-            print("⚠️ startActivity: missing relationshipId or userId for Supabase sync")
             return
         }
 
@@ -1063,7 +1055,6 @@ class DataStore {
                     userId: userId,
                     activity: activity
                 )
-                print("✅ Supabase: activity started → \(coupleActivity.coupleActivityId)")
 
                 // Store the coupleActivityId back on the local activity
                 if let index = self.activities.firstIndex(where: {
@@ -1081,12 +1072,9 @@ class DataStore {
                         entityType: "activity",
                         entityId: coupleActivity.coupleActivityId.uuidString
                     )
-                    print("✅ Activity notification sent to partner")
                 } catch {
-                    print("⚠️ Activity notification failed: \(error)")
                 }
             } catch {
-                print("❌ Supabase startActivity failed: \(error)")
             }
         }
     }
@@ -1097,7 +1085,6 @@ class DataStore {
 
     func setHisMood(_ mood: Mood) {
         HisMood = mood
-        print("His mood ", mood.title)
     }
 
     func setHerMood(moodId: Int) {
@@ -1129,7 +1116,6 @@ class DataStore {
             let session = try await SupabaseManager.shared.client.auth.session
             let authUserId = session.user.id
             self.currentUserId = authUserId
-            print("✅ DataStore: currentUserId = \(authUserId)")
 
             // Find the active relationship
             let rows: [DBRelationship] = try await SupabaseManager.shared.client
@@ -1146,13 +1132,9 @@ class DataStore {
                 self.partnerUserId = (relationship.user1_id == authUserId)
                     ? relationship.user2_id
                     : relationship.user1_id
-                print("✅ DataStore: relationshipId = \(relationship.relationship_id)")
-                print("✅ DataStore: partnerUserId = \(self.partnerUserId?.uuidString ?? "nil")")
             } else {
-                print("⚠️ DataStore: no active relationship found")
             }
         } catch {
-            print("❌ DataStore.loadUserContext failed: \(error)")
         }
     }
 
@@ -1161,7 +1143,6 @@ class DataStore {
     /// Fetch all couple_activities from Supabase and update local activity statuses
     func syncActivitiesFromSupabase() {
         guard let relationshipId = currentRelationshipId else {
-            print("⚠️ syncActivities: no currentRelationshipId")
             return
         }
 
@@ -1201,29 +1182,49 @@ class DataStore {
                             }
                         }()
 
+                        var desc = ""
+                        var img = "Activityimage"
+                        var time = ""
+                        var detailedDesc: String? = nil
+                        var category = ""
+                        var steps: [String]? = nil
+                        
+                        let match = self.exploreJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
+                           self.bondJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
+                           self.suggestedJSONActivities.first(where: { $0.name == coupleActivity.activityName })
+                           
+                        if let match = match {
+                            desc = match.description
+                            img = match.image
+                            time = match.time
+                            detailedDesc = match.detailedDescription
+                            category = match.category
+                            steps = match.steps
+                        }
+
                         let newActivity = Activity(
                             id: coupleActivity.activityId,
                             coupleActivityId: coupleActivity.coupleActivityId,
                             name: coupleActivity.activityName,
-                            description: "",
-                            image: "Activityimage",
-                            time: "",
+                            description: desc,
+                            detailedDescription: detailedDesc,
+                            image: img,
+                            time: time,
                             status: newStatus,
-                            category: "",
-                            scheduledDate: coupleActivity.scheduledDate
+                            category: category,
+                            scheduledDate: coupleActivity.scheduledDate,
+                            steps: steps
                         )
                         self.activities.append(newActivity)
                     }
                 }
 
-                print("✅ Synced \(remote.count) couple activities from Supabase")
 
                 // Post notification so UI can reload
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
             } catch {
-                print("❌ syncActivitiesFromSupabase failed: \(error)")
             }
         }
     }
