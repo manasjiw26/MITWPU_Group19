@@ -249,10 +249,33 @@ struct QnAData {
 }
 //adding special dates
 struct SpecialDate {
+    let id: UUID
+    let relationshipId: UUID
+    let userId: UUID
     let title: String
     let date: Date
     let note: String
+    let createdAt: Date
 }
+
+struct DBSpecialDate: Codable {
+    let special_date_id: UUID
+    let relationship_id: UUID
+    let user_id: UUID
+    let title: String
+    let event_date: String
+    let note: String?
+    let created_at: Date
+}
+
+struct SpecialDateInsert: Encodable {
+    let relationship_id: String
+    let user_id: String
+    let title: String
+    let event_date: String
+    let note: String?
+}
+
 
 struct DBUser: Codable {
     let user_id: UUID
@@ -459,7 +482,6 @@ enum NotificationType: String {
         case .nudgeSent: return "SWEET NUDGE"
         case .loveTipCompleted: return "LOVE TIP COMPLETED"
         case .loveTipReacted: return "REACTION RECEIVED"
-            
         }
     }
 
@@ -500,7 +522,7 @@ extension Date {
 struct DBCoupleActivity: Codable {
     let coupleActivityId: UUID
     let relationshipId: UUID
-    let activityId: Int
+    let activityId: Int?
     let activityName: String
     let status: String
     let startedBy: UUID
@@ -509,6 +531,8 @@ struct DBCoupleActivity: Codable {
     let feedbackADone: Bool
     let feedbackBDone: Bool
     let completedAt: Date?
+    let isCustom: Bool
+    let description: String?
 
     enum CodingKeys: String, CodingKey {
         case coupleActivityId = "couple_activity_id"
@@ -522,34 +546,52 @@ struct DBCoupleActivity: Codable {
         case feedbackADone = "feedback_a_done"
         case feedbackBDone = "feedback_b_done"
         case completedAt = "completed_at"
+        case isCustom = "is_custom"
+        case description
     }
 }
 
 struct DBActivityFeedback: Codable {
     let feedbackId: UUID
     let coupleActivityId: UUID
-    let userId: UUID
-    let mood: String
-    let message: String?
+    let userAId: UUID?
+    let userAMood: String?
+    let userAMessage: String?
+    let userATags: [String]?
+    let userAScore: Int?
+    let userBId: UUID?
+    let userBMood: String?
+    let userBMessage: String?
+    let userBTags: [String]?
+    let userBScore: Int?
     let createdAt: Date
 
     enum CodingKeys: String, CodingKey {
         case feedbackId = "feedback_id"
         case coupleActivityId = "couple_activity_id"
-        case userId = "user_id"
-        case mood
-        case message
+        case userAId = "user_a_id"
+        case userAMood = "user_a_mood"
+        case userAMessage = "user_a_message"
+        case userATags = "user_a_tags"
+        case userAScore = "user_a_score"
+        case userBId = "user_b_id"
+        case userBMood = "user_b_mood"
+        case userBMessage = "user_b_message"
+        case userBTags = "user_b_tags"
+        case userBScore = "user_b_score"
         case createdAt = "created_at"
     }
 }
 
 struct CoupleActivityInsert: Encodable {
     let relationshipId: UUID
-    let activityId: Int
+    let activityId: Int?
     let activityName: String
     let status: String
     let startedBy: UUID
     let scheduledDate: Date?
+    let isCustom: Bool
+    let description: String?
 
     enum CodingKeys: String, CodingKey {
         case relationshipId = "relationship_id"
@@ -558,19 +600,54 @@ struct CoupleActivityInsert: Encodable {
         case status
         case startedBy = "user_id"
         case scheduledDate = "scheduled_date"
+        case isCustom = "is_custom"
+        case description
     }
 }
 
-struct ActivityFeedbackInsert: Encodable {
-    let coupleActivityId: UUID
-    let userId: UUID
-    let mood: String
-    let message: String?
+/// Single payload struct for both insert and update.
+/// Uses `encodeIfPresent` so only the submitting user's fields
+/// are included — the other user's data is never overwritten.
+struct ActivityFeedbackPayload: Encodable {
+    var coupleActivityId: UUID?
+    var userAId: UUID?
+    var userAMood: String?
+    var userAMessage: String?
+    var userATags: [String]?
+    var userAScore: Int?
+    var userBId: UUID?
+    var userBMood: String?
+    var userBMessage: String?
+    var userBTags: [String]?
+    var userBScore: Int?
 
     enum CodingKeys: String, CodingKey {
         case coupleActivityId = "couple_activity_id"
-        case userId = "user_id"
-        case mood
-        case message
+        case userAId = "user_a_id"
+        case userAMood = "user_a_mood"
+        case userAMessage = "user_a_message"
+        case userATags = "user_a_tags"
+        case userAScore = "user_a_score"
+        case userBId = "user_b_id"
+        case userBMood = "user_b_mood"
+        case userBMessage = "user_b_message"
+        case userBTags = "user_b_tags"
+        case userBScore = "user_b_score"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(coupleActivityId, forKey: .coupleActivityId)
+        try container.encodeIfPresent(userAId, forKey: .userAId)
+        try container.encodeIfPresent(userAMood, forKey: .userAMood)
+        try container.encodeIfPresent(userAMessage, forKey: .userAMessage)
+        try container.encodeIfPresent(userATags, forKey: .userATags)
+        try container.encodeIfPresent(userAScore, forKey: .userAScore)
+        try container.encodeIfPresent(userBId, forKey: .userBId)
+        try container.encodeIfPresent(userBMood, forKey: .userBMood)
+        try container.encodeIfPresent(userBMessage, forKey: .userBMessage)
+        try container.encodeIfPresent(userBTags, forKey: .userBTags)
+        try container.encodeIfPresent(userBScore, forKey: .userBScore)
     }
 }
+

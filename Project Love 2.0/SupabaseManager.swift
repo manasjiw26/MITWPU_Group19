@@ -25,21 +25,16 @@ final class SupabaseManager {
         return client.auth.currentUser?.id
     }
 
-    // MARK: - Couple Activities
-
-    /// Insert a new couple_activity with status "ongoing"
-    func startActivityForCouple(
-        relationshipId: UUID,
-        userId: UUID,
-        activity: Activity
-    ) async throws -> DBCoupleActivity {
+    func startActivityForCouple( relationshipId: UUID, userId: UUID, activity: Activity ) async throws -> DBCoupleActivity {
         let insert = CoupleActivityInsert(
             relationshipId: relationshipId,
             activityId: activity.id ?? 0,
             activityName: activity.name,
             status: "ongoing",
             startedBy: userId,
-            scheduledDate: nil
+            scheduledDate: nil,
+            isCustom: false,
+            description: nil
         )
 
         let result: DBCoupleActivity = try await client
@@ -53,20 +48,16 @@ final class SupabaseManager {
         return result
     }
 
-    /// Insert a new couple_activity with status "scheduled" and a date
-    func scheduleActivity(
-        relationshipId: UUID,
-        userId: UUID,
-        activity: Activity,
-        scheduledDate: Date
-    ) async throws -> DBCoupleActivity {
+    func scheduleActivity( relationshipId: UUID, userId: UUID, activity: Activity, scheduledDate: Date ) async throws -> DBCoupleActivity {
         let insert = CoupleActivityInsert(
             relationshipId: relationshipId,
             activityId: activity.id ?? 0,
             activityName: activity.name,
             status: "scheduled",
             startedBy: userId,
-            scheduledDate: scheduledDate
+            scheduledDate: scheduledDate,
+            isCustom: false,
+            description: nil
         )
 
         let result: DBCoupleActivity = try await client
@@ -80,11 +71,7 @@ final class SupabaseManager {
         return result
     }
 
-    /// Fetch couple_activities filtered by status for a given relationship
-    func fetchActivities(
-        relationshipId: UUID,
-        status: String
-    ) async throws -> [DBCoupleActivity] {
+    func fetchActivities( relationshipId: UUID, status: String ) async throws -> [DBCoupleActivity] {
         let result: [DBCoupleActivity] = try await client
             .from("couple_activities")
             .select()
@@ -97,10 +84,7 @@ final class SupabaseManager {
         return result
     }
 
-    /// Fetch all couple_activities for a given relationship
-    func fetchAllCoupleActivities(
-        relationshipId: UUID
-    ) async throws -> [DBCoupleActivity] {
+    func fetchAllCoupleActivities( relationshipId: UUID ) async throws -> [DBCoupleActivity] {
         let result: [DBCoupleActivity] = try await client
             .from("couple_activities")
             .select()
@@ -112,30 +96,8 @@ final class SupabaseManager {
         return result
     }
 
-    /// Submit feedback for a couple_activity:
-    /// 1. INSERT into activity_feedback
-    /// 2. Determine if user is user1 or user2 from the relationship
-    /// 3. UPDATE the correct feedback_a_done or feedback_b_done flag
-    func submitFeedback(
-        coupleActivityId: UUID,
-        userId: UUID,
-        mood: String,
-        message: String?
-    ) async throws {
-        // 1. Insert the feedback row
-        let feedbackInsert = ActivityFeedbackInsert(
-            coupleActivityId: coupleActivityId,
-            userId: userId,
-            mood: mood,
-            message: message
-        )
-
-        try await client
-            .from("activity_feedback")
-            .insert(feedbackInsert)
-            .execute()
-
-        // 2. Find the relationship to determine user1 vs user2
+    func submitFeedback( coupleActivityId: UUID, userId: UUID, mood: String, message: String?, feedbackTags: [String], feedbackScore: Int ) async throws {
+        // 1. Determine if current user is user A (user1) or user B (user2)
         guard let relationshipId = DataStore.shared.currentRelationshipId else {
             return
         }
@@ -148,10 +110,57 @@ final class SupabaseManager {
             .execute()
             .value
 
-        // 3. Update the correct feedback flag
-        let isUser1 = (userId == relationship.user1_id)
-        let column = isUser1 ? "feedback_a_done" : "feedback_b_done"
+        let isUserA = (userId == relationship.user1_id)
 
+        // 2. Build a payload for ONLY this user's columns
+        //    (encodeIfPresent skips nil fields, so the other user's data is never touched)
+        var payload: ActivityFeedbackPayload
+        if isUserA {
+            payload = ActivityFeedbackPayload(
+                userAId: userId,
+                userAMood: mood,
+                userAMessage: message,
+                userATags: feedbackTags,
+                userAScore: feedbackScore
+            )
+        } else {
+            payload = ActivityFeedbackPayload(
+                userBId: userId,
+                userBMood: mood,
+                userBMessage: message,
+                userBTags: feedbackTags,
+                userBScore: feedbackScore
+            )
+        }
+
+        // 3. Check if a feedback row already exists for this activity
+        struct FeedbackCheck: Decodable { let feedback_id: UUID }
+        let existing: [FeedbackCheck] = try await client
+            .from("activity_feedback")
+            .select("feedback_id")
+            .eq("couple_activity_id", value: coupleActivityId.uuidString)
+            .limit(1)
+            .execute()
+            .value
+
+        if existing.isEmpty {
+            // No row yet → INSERT (include couple_activity_id)
+            payload.coupleActivityId = coupleActivityId
+            try await client
+                .from("activity_feedback")
+                .insert(payload)
+                .execute()
+        } else {
+            // Row exists → UPDATE only this user's columns
+            try await client
+                .from("activity_feedback")
+                .update(payload)
+                .eq("couple_activity_id", value: coupleActivityId.uuidString)
+                .execute()
+        }
+
+        // 4. Mark this user's feedback as done on couple_activities
+        let column = isUserA ? "feedback_a_done" : "feedback_b_done"
         try await client
             .from("couple_activities")
             .update([column: true])
@@ -159,12 +168,51 @@ final class SupabaseManager {
             .execute()
     }
 
-    /// Subscribe to Realtime changes on couple_activities for this relationship
-    func listenForActivityChanges(
-        relationshipId: UUID,
-        onChange: @escaping () -> Void
-    ) {
-        let channel = client.realtimeV2.channel("couple-activities-\(relationshipId.uuidString)")
+    /// Fetch the single combined feedback row for an activity
+    func fetchFeedbackForActivity(coupleActivityId: UUID) async throws -> DBActivityFeedback? {
+        let result: [DBActivityFeedback] = try await client
+            .from("activity_feedback")
+            .select()
+            .eq("couple_activity_id", value: coupleActivityId.uuidString)
+            .limit(1)
+            .execute()
+            .value
+        return result.first
+    }
+
+    /// Fetch ALL feedback rows for a relationship (for personalization / suggestions)
+    func fetchAllFeedbackForRelationship(relationshipId: UUID) async throws -> [DBActivityFeedback] {
+        let coupleActivities: [DBCoupleActivity] = try await client
+            .from("couple_activities")
+            .select()
+            .eq("relationship_id", value: relationshipId.uuidString)
+            .execute()
+            .value
+
+        let activityIds = coupleActivities.map { $0.coupleActivityId.uuidString }
+        guard !activityIds.isEmpty else { return [] }
+
+        let result: [DBActivityFeedback] = try await client
+            .from("activity_feedback")
+            .select()
+            .in("couple_activity_id", values: activityIds)
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+
+        return result
+    }
+
+    // Tracks channels we have already subscribed to (prevents duplicate listeners
+    // when viewWillAppear fires multiple times for the same relationship ID).
+    private var subscribedChannelIds: Set<String> = []
+
+    func listenForActivityChanges( relationshipId: UUID, onChange: @escaping () -> Void ) {
+        let channelId = "couple-activities-\(relationshipId.uuidString)"
+        guard !subscribedChannelIds.contains(channelId) else { return }
+        subscribedChannelIds.insert(channelId)
+
+        let channel = client.realtimeV2.channel(channelId)
 
         let changes = channel.postgresChange(
             AnyAction.self,
@@ -184,7 +232,7 @@ final class SupabaseManager {
         }
     }
 
-    // MARK: - Memory Delete
+    //  Memory Delete
 
     /// Delete a memory using a server-side function.
     /// This calls the delete_memory() PostgreSQL function which handles the deletion.
@@ -267,6 +315,66 @@ final class SupabaseManager {
 
 
         }
+
+    // MARK: - Special Dates
+
+    /// Insert a new special date for the relationship
+    func insertSpecialDate(_ insert: SpecialDateInsert) async throws -> DBSpecialDate {
+        let result: DBSpecialDate = try await client
+            .from("special_dates")
+            .insert(insert)
+            .select()
+            .single()
+            .execute()
+            .value
+        return result
+    }
+
+    /// Fetch all special dates for a given relationship
+    func fetchSpecialDates(relationshipId: UUID) async throws -> [DBSpecialDate] {
+        let result: [DBSpecialDate] = try await client
+            .from("special_dates")
+            .select()
+            .eq("relationship_id", value: relationshipId.uuidString)
+            .order("event_date", ascending: true)
+            .execute()
+            .value
+        return result
+    }
+
+    /// Delete a special date by its ID
+    func deleteSpecialDate(specialDateId: UUID) async throws {
+        try await client
+            .from("special_dates")
+            .delete()
+            .eq("special_date_id", value: specialDateId.uuidString)
+            .execute()
+    }
+
+    /// Subscribe to Realtime changes on special_dates for this relationship
+    func listenForSpecialDateChanges(
+        relationshipId: UUID,
+        onChange: @escaping () -> Void
+    ) {
+        let channel = client.realtimeV2.channel("special-dates-\(relationshipId.uuidString)")
+
+        let changes = channel.postgresChange(
+            AnyAction.self,
+            schema: "public",
+            table: "special_dates",
+            filter: "relationship_id=eq.\(relationshipId.uuidString)"
+        )
+
+        Task {
+            await channel.subscribe()
+
+            for await _ in changes {
+                DispatchQueue.main.async {
+                    onChange()
+                }
+            }
+        }
+    }
 
 }
 

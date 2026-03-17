@@ -16,6 +16,7 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
     var bondName: String?
     var selectedActivityIndex: Int?
     weak var bondDelegate: BondActivityCompletionDelegate?
+    private var selectedFeedbackTags = Set<String>()
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
@@ -143,6 +144,11 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                   let userId = DataStore.shared.currentUserId {
                    let mood = feedbackItem?.selectedMood ?? "None"
                    let message = feedbackItem?.userMessage
+                   let tags = Array(selectedFeedbackTags)
+                   let score = scoreFromTags(selectedFeedbackTags)
+                   print("Feedback submit",
+                         "coupleActivityId:", coupleActivityId,
+                         "userId:", userId)
 
                    Task {
                        do {
@@ -150,9 +156,13 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                                coupleActivityId: coupleActivityId,
                                userId: userId,
                                mood: mood,
-                               message: message
+                               message: message,
+                               feedbackTags: tags,
+                               feedbackScore: score
                            )
+                           print("✅ Feedback saved for user:", userId)
                        } catch {
+                           print("❌ Failed to save feedback:", error)
                        }
                    }
                }
@@ -220,23 +230,44 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func optionTapped(_ sender: UIButton) {
- 
-        let normalBG = UIColor(red: 118/255, green: 118/255, blue: 128/255, alpha: 0.12)
-        let selectedBG = UIColor(red: 218/255, green: 214/255, blue: 251/255, alpha: 1.0)
-        let purpleText = UIColor(red: 128/255, green: 99/255, blue: 181/255, alpha: 1)
-        let blackText = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.70)
-    
+        guard let title = sender.title(for: .normal) else { return }
+
             sender.isSelected.toggle()
-        if sender.isSelected {
-            sender.backgroundColor = selectedBG
-            sender.setTitleColor(blackText, for: .normal)
-            sender.setTitleColor(blackText, for: .selected)
-        } else {
-            sender.backgroundColor = normalBG
-            sender.setTitleColor(purpleText, for: .normal)
-            sender.setTitleColor(purpleText, for: .selected)
-        }
+            if sender.isSelected {
+                selectedFeedbackTags.insert(title)
+            } else {
+                selectedFeedbackTags.remove(title)
+            }
+
+            let normalBG = UIColor(red: 118/255, green: 118/255, blue: 128/255, alpha: 0.12)
+            let selectedBG = UIColor(red: 218/255, green: 214/255, blue: 251/255, alpha: 1.0)
+            let purpleText = UIColor(red: 128/255, green: 99/255, blue: 181/255, alpha: 1)
+            let blackText = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.70)
+
+            if sender.isSelected {
+                sender.backgroundColor = selectedBG
+                sender.setTitleColor(blackText, for: .normal)
+                sender.setTitleColor(blackText, for: .selected)
+            } else {
+                sender.backgroundColor = normalBG
+                sender.setTitleColor(purpleText, for: .normal)
+                sender.setTitleColor(purpleText, for: .selected)
+            }
     }
+    private func scoreFromTags(_ tags: Set<String>) -> Int {
+        var score = 0
+        for t in tags {
+            switch t {
+            case "Loved it": score += 2
+            case "Relaxing", "Connecting", "Fun": score += 1
+            case "Boring": score -= 1
+            case "Not my thing": score -= 2
+            default: break
+            }
+        }
+        return score
+    }
+
     
     private func showBadgePopup(from page: BuildYourBondpage) {
 

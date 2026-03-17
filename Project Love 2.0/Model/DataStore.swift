@@ -75,6 +75,20 @@ class DataStore {
         loadOnboardingQnA()
     }
 
+    /// Clears all user session data — call after sign out or account deletion.
+    func clearSession() {
+        currentUserId       = nil
+        currentRelationshipId = nil
+        partnerUserId       = nil
+        userProfile         = nil
+        specialDates        = []
+        customActivities    = []
+        activities          = []
+        coupleActivities    = []
+        notifications       = []
+        profileSections     = []
+    }
+
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
         guard let url = Bundle.main.url(forResource: "suggestedActivity", withExtension: "json") else {
             return [:]
@@ -365,17 +379,73 @@ class DataStore {
         moodOptions.first { $0.id == id }
     }
     
-    //custom activity
-    func addCustomActivity(name: String, description: String, date: String) {
-        let newActivity = Activity(
-            name: name,
-            description: description,
-            image: "Activityimage",
-            time: date,
-            status: .none,
-            category: "Custom"
+    //custom activity — inserts into couple_activities with is_custom = true
+    func addCustomActivity(name: String, description: String, date: String, scheduledDate: Date = Date()) {
+        guard let relationshipId = currentRelationshipId,
+              let userId = currentUserId else {
+            // Fallback: local only
+            let newActivity = Activity(
+                name: name,
+                description: description,
+                image: "Activityimage",
+                time: date,
+                status: .none,
+                category: "Custom"
+            )
+            customActivities.append(newActivity)
+            return
+        }
+
+        let insert = CoupleActivityInsert(
+            relationshipId: relationshipId,
+            activityId: nil,
+            activityName: name,
+            status: "ongoing",
+            startedBy: userId,
+            scheduledDate: scheduledDate,
+            isCustom: true,
+            description: description
         )
-        customActivities.append(newActivity)
+
+        Task {
+            do {
+                let dbRow: DBCoupleActivity = try await SupabaseManager.shared.client
+                    .from("couple_activities")
+                    .insert(insert)
+                    .select()
+                    .single()
+                    .execute()
+                    .value
+
+                let newActivity = Activity(
+                    coupleActivityId: dbRow.coupleActivityId,
+                    name: dbRow.activityName,
+                    description: dbRow.description ?? description,
+                    image: "Activityimage",
+                    time: date,
+                    status: .ongoing,
+                    category: "Custom"
+                )
+                DispatchQueue.main.async {
+                    self.customActivities.append(newActivity)
+                    NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+                }
+            } catch {
+                print("Failed to save custom activity: \(error)")
+                // Fallback to local
+                let newActivity = Activity(
+                    name: name,
+                    description: description,
+                    image: "Activityimage",
+                    time: date,
+                    status: .none,
+                    category: "Custom"
+                )
+                DispatchQueue.main.async {
+                    self.customActivities.append(newActivity)
+                }
+            }
+        }
     }
     
     func loadSampleData() {
@@ -576,7 +646,8 @@ class DataStore {
                 ProfileSection(
                     title: "",
                     items: [
-                        ProfileItem(title: "Sign Out", iconName: "questionmark.circle", showsChevron: false)
+                        ProfileItem(title: "Sign Out", iconName: "rectangle.portrait.and.arrow.right", showsChevron: false),
+                        ProfileItem(title: "Delete Account", iconName: "trash", showsChevron: false)
                     ]
                 )
             ]
@@ -1029,7 +1100,7 @@ class DataStore {
         }
     }
 
-    func startActivity(_ activity: Activity) {
+    func startActivity(_ activity: Activity, completion: ((UUID?) -> Void)? = nil) {
 
         if let index = activities.firstIndex(where: {
             $0.name == activity.name &&
@@ -1045,6 +1116,7 @@ class DataStore {
         // Also insert into Supabase so partner's device sees it
         guard let relationshipId = currentRelationshipId,
               let userId = currentUserId else {
+            completion?(nil)
             return
         }
 
@@ -1074,7 +1146,14 @@ class DataStore {
                     )
                 } catch {
                 }
+
+                DispatchQueue.main.async {
+                    completion?(coupleActivity.coupleActivityId)
+                }
             } catch {
+                DispatchQueue.main.async {
+                    completion?(nil)
+                }
             }
         }
     }
@@ -1142,9 +1221,7 @@ class DataStore {
 
     /// Fetch all couple_activities from Supabase and update local activity statuses
     func syncActivitiesFromSupabase() {
-        guard let relationshipId = currentRelationshipId else {
-            return
-        }
+        guard let relationshipId = currentRelationshipId else { return }
 
         Task {
             do {
@@ -1153,12 +1230,42 @@ class DataStore {
                 )
                 self.coupleActivities = remote
 
-                for coupleActivity in remote {
-                    // Try to find a matching local activity by name
+                // Separate custom vs preset rows
+                let customRows  = remote.filter { $0.isCustom }
+                let presetRows  = remote.filter { !$0.isCustom }
+
+                // Rebuild customActivities from Supabase — convert scheduledDate → display string
+                let dateFormatter: DateFormatter = {
+                    let f = DateFormatter()
+                    f.locale = Locale(identifier: "en_US_POSIX")
+                    f.dateStyle = .medium
+                    return f
+                }()
+
+                let synced = customRows.map { row -> Activity in
+                    let displayDate: String = {
+                        if let scheduled = row.scheduledDate {
+                            return dateFormatter.string(from: scheduled)
+                        }
+                        return ""
+                    }()
+                    return Activity(
+                        coupleActivityId: row.coupleActivityId,
+                        name: row.activityName,
+                        description: row.description ?? "",
+                        image: "Activityimage",
+                        time: displayDate,
+                        status: .ongoing,
+                        category: "Custom"
+                    )
+                }
+                self.customActivities = synced
+
+                // Sync preset activities as before
+                for coupleActivity in presetRows {
                     if let index = self.activities.firstIndex(where: {
                         $0.name == coupleActivity.activityName
                     }) {
-                        // Update local status to match Supabase
                         switch coupleActivity.status {
                         case "ongoing":
                             self.activities[index].status = .ongoing
@@ -1172,7 +1279,6 @@ class DataStore {
                         }
                         self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
                     } else {
-                        // Activity not in local list yet — add it
                         let newStatus: ActivityStatus = {
                             switch coupleActivity.status {
                             case "ongoing": return .ongoing
@@ -1182,49 +1288,32 @@ class DataStore {
                             }
                         }()
 
-                        var desc = ""
-                        var img = "Activityimage"
-                        var time = ""
-                        var detailedDesc: String? = nil
-                        var category = ""
-                        var steps: [String]? = nil
-                        
                         let match = self.exploreJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
-                           self.bondJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
-                           self.suggestedJSONActivities.first(where: { $0.name == coupleActivity.activityName })
-                           
-                        if let match = match {
-                            desc = match.description
-                            img = match.image
-                            time = match.time
-                            detailedDesc = match.detailedDescription
-                            category = match.category
-                            steps = match.steps
-                        }
+                            self.bondJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
+                            self.suggestedJSONActivities.first(where: { $0.name == coupleActivity.activityName })
 
                         let newActivity = Activity(
                             id: coupleActivity.activityId,
                             coupleActivityId: coupleActivity.coupleActivityId,
                             name: coupleActivity.activityName,
-                            description: desc,
-                            detailedDescription: detailedDesc,
-                            image: img,
-                            time: time,
+                            description: match?.description ?? "",
+                            detailedDescription: match?.detailedDescription,
+                            image: match?.image ?? "Activityimage",
+                            time: match?.time ?? "",
                             status: newStatus,
-                            category: category,
+                            category: match?.category ?? "",
                             scheduledDate: coupleActivity.scheduledDate,
-                            steps: steps
+                            steps: match?.steps
                         )
                         self.activities.append(newActivity)
                     }
                 }
 
-
-                // Post notification so UI can reload
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
             } catch {
+                print("Failed to sync activities: \(error)")
             }
         }
     }

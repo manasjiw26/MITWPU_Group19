@@ -2,8 +2,6 @@
 //  WriteActivityViewController.swift
 //  Project Love 2.0
 //
-//  Created by SDC-USER on 20/01/26.
-//
 
 import UIKit
 
@@ -15,6 +13,7 @@ class WriteActivityViewController: UIViewController {
     @IBOutlet weak var dateText: UITextField!
 
     private let datePicker = UIDatePicker()
+    private var selectedDate: Date = Date()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,27 +26,25 @@ class WriteActivityViewController: UIViewController {
 
         descriptionActivity.layer.cornerRadius = 10
         descriptionActivity.layer.masksToBounds = true
-        
-        setupDatePicker()
 
+        setupDatePicker()
     }
+
     private func setupDatePicker() {
-        datePicker.datePickerMode = .date
+        datePicker.datePickerMode   = .date
         datePicker.preferredDatePickerStyle = .wheels
-        datePicker.minimumDate = Date()
-        
-        datePicker.addTarget(self,
-                             action: #selector(dateChanged),
-                             for: .valueChanged)
-        
+        datePicker.minimumDate      = Date()
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         dateText.inputView = datePicker
     }
-    
+
     @objc private func dateChanged() {
+        selectedDate = datePicker.date
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         dateText.text = formatter.string(from: datePicker.date)
     }
+
     private func styleField(_ textField: UITextField) {
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
@@ -56,13 +53,25 @@ class WriteActivityViewController: UIViewController {
 
     @IBAction func saveTapped(_ sender: Any) {
         guard let title = activityTitle.text, !title.isEmpty,
-              let desc = descriptionActivity.text, !desc.isEmpty,
-              let date = dateText.text, !date.isEmpty else { return }
+              let desc  = descriptionActivity.text, !desc.isEmpty,
+              !dateText.text!.isEmpty else { return }
 
-        DataStore.shared.addCustomActivity(name: title, description: desc, date: date)
-        navigationController?.popViewController(animated: true)
+        // Pass the actual Date object so DataStore can save it as scheduled_date
+        DataStore.shared.addCustomActivity(
+            name: title,
+            description: desc,
+            date: dateText.text!,
+            scheduledDate: selectedDate
+        )
+
+        // Dismiss this view
+        if let nav = navigationController {
+            nav.popViewController(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
-    
+
     @IBAction func calendarTapped(_ sender: Any) {
         dateText.becomeFirstResponder()
     }
@@ -75,4 +84,3 @@ extension UITextField {
         leftViewMode = .always
     }
 }
-

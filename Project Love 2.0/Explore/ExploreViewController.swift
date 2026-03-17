@@ -46,6 +46,10 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         )
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     @objc private func handleActivitiesSynced() {
         activity_collection.reloadData()
     }
@@ -77,12 +81,18 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
             bundle: nil
         )
 
-        // Passing the data
-        modalVC.activityName = activity.name
+        modalVC.activityName        = activity.name
         modalVC.activityDescription = activity.description
-        modalVC.imageName = activity.image
+        modalVC.imageName           = activity.image
 
-        modalVC.modalPresentationStyle = .overFullScreen
+        modalVC.modalPresentationStyle = .pageSheet
+
+        if let sheet = modalVC.sheetPresentationController {
+            sheet.detents                  = [.large()]
+            sheet.selectedDetentIdentifier = .medium
+            sheet.prefersGrabberVisible    = true
+            sheet.preferredCornerRadius    = 25
+        }
 
         present(modalVC, animated: true)
     }
@@ -134,12 +144,23 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        // Ensure user context is loaded before syncing
         Task {
             if DataStore.shared.currentRelationshipId == nil {
                 await DataStore.shared.loadUserContext()
             }
+            // Initial pull from Supabase
             DataStore.shared.syncActivitiesFromSupabase()
+
+            // Subscribe to real-time changes so the partner's device
+            // updates automatically when the other user adds/changes an activity
+            if let relationshipId = DataStore.shared.currentRelationshipId {
+                SupabaseManager.shared.listenForActivityChanges(
+                    relationshipId: relationshipId
+                ) { [weak self] in
+                    DataStore.shared.syncActivitiesFromSupabase()
+                    self?.activity_collection.reloadData()
+                }
+            }
         }
 
         activity_collection.reloadData()

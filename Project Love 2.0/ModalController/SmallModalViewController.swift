@@ -120,32 +120,40 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     
     @IBAction func beginButon(_ sender: Any) {
 
-        guard let activity = selectedActivity else { return }
+        guard var activity = selectedActivity else { return }
 
-        DataStore.shared.startActivity(activity)
+        // Disable button to prevent double-taps while waiting
+        (sender as? UIButton)?.isEnabled = false
 
-        delegate?.didStartActivity()
+        DataStore.shared.startActivity(activity) { [weak self] coupleActivityId in
+            guard let self = self else { return }
 
-        let storyboard = UIStoryboard(name: "Steps", bundle: nil)
-        let stepsVC = storyboard.instantiateViewController(
-            withIdentifier: "StepsViewController"
-        ) as! StepsViewController
+            // Set the coupleActivityId so feedback can be saved later
+            activity.coupleActivityId = coupleActivityId
 
-        stepsVC.activity = activity
-        stepsVC.flowSource = flowSource
-        stepsVC.modalPresentationStyle = .fullScreen
+            self.delegate?.didStartActivity()
 
-        stepsVC.selectedActivityIndex = selectedActivityIndex
-        stepsVC.bondName = bondName
-        stepsVC.bondDelegate = presentingViewController as? BondActivityCompletionDelegate
+            let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+            let stepsVC = storyboard.instantiateViewController(
+                withIdentifier: "StepsViewController"
+            ) as! StepsViewController
 
-        if let presenter = self.presentingViewController {
-            UIView.animate(withDuration: 0.1) {
-                self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
-                self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
-            }
-            self.dismiss(animated: true) {
-                presenter.present(stepsVC, animated: true)
+            stepsVC.activity = activity
+            stepsVC.flowSource = self.flowSource
+            stepsVC.modalPresentationStyle = .fullScreen
+
+            stepsVC.selectedActivityIndex = self.selectedActivityIndex
+            stepsVC.bondName = self.bondName
+            stepsVC.bondDelegate = self.presentingViewController as? BondActivityCompletionDelegate
+
+            if let presenter = self.presentingViewController {
+                UIView.animate(withDuration: 0.1) {
+                    self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
+                    self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
+                }
+                self.dismiss(animated: true) {
+                    presenter.present(stepsVC, animated: true)
+                }
             }
         }
     }
