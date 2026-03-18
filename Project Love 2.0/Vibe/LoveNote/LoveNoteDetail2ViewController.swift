@@ -8,6 +8,7 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
     private var originalDate: Date?
     private var originalReaction: String?
     private var actionHeightConstraint: NSLayoutConstraint?
+    private var keyboardHeight: CGFloat = 0
 
     var onReact: ((UUID, String) -> Void)?
     var onReschedule: ((UUID, Date) -> Void)?
@@ -44,6 +45,38 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
             collectionView.collectionViewLayout = generateLayout(for: note)
         }
         setupSheet()
+        registerKeyboardObservers()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - Keyboard Observers
+    private func registerKeyboardObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        keyboardHeight = frame.height
+        sheetPresentationController?.invalidateDetents()
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        keyboardHeight = 0
+        sheetPresentationController?.invalidateDetents()
     }
     
     private func setupCheckmarkUI() {
@@ -160,6 +193,8 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
             sheet.detents = [.custom { _ in return self.calculateSheetHeight() }]
             sheet.prefersGrabberVisible = true
             sheet.preferredCornerRadius = 20
+            // Prevent the sheet from auto-resizing due to keyboard avoidance
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         }
     }
 
@@ -172,7 +207,9 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
         )
         let headerHeight = headerDate.frame.maxY
         let actionHeight = actionHeightConstraint?.constant ?? 0
-        return headerHeight + 24 + messageSize.height + 28 + actionHeight + 40
+        let contentHeight = headerHeight + 24 + messageSize.height + 28 + actionHeight + 40
+        // When the keyboard is visible, grow the sheet by the keyboard height so it slides up
+        return contentHeight + keyboardHeight
     }
 }
 
@@ -207,4 +244,8 @@ extension LoveNoteDetail2ViewController: LNReceiveCellDelegate {
             self.dismiss(animated: true)
         }
     }
+    
+    // Emoji keyboard is handled inside the cell itself; no extra action needed here.
+    func requestEmojiKeyboard(from cell: LNReceiveCollectionViewCell) {}
 }
+
