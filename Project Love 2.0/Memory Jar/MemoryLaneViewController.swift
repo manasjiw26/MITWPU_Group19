@@ -49,9 +49,18 @@ class MemoryLaneViewController: UIViewController,
             for: indexPath
         ) as! MemoryGridCell
 
-        if indexPath.item < dataStore.savedMemories.count {
-            let memory = dataStore.savedMemories[indexPath.item]
-            cell.ImageView.image = memory.uiImage ?? UIImage(named: memory.imageName)
+        guard indexPath.item < dataStore.savedMemories.count else { return cell }
+        let memory = dataStore.savedMemories[indexPath.item]
+
+        // Clear immediately so recycled cells don't flash stale images
+        cell.ImageView.image = nil
+        // Tag the cell with the current item index to detect stale reuse
+        cell.tag = indexPath.item
+
+        MemoryFileManager.loadImageAsync(fileName: memory.imageName) { [weak cell] image in
+            // Only apply if this cell still represents the same item
+            guard let cell = cell, cell.tag == indexPath.item else { return }
+            cell.ImageView.image = image ?? memory.uiImage
         }
 
         return cell

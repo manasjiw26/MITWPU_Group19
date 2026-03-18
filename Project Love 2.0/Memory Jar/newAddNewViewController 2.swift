@@ -111,7 +111,7 @@ class NewAddNewViewController: UIViewController {
             showError(message: "Please select a photo.")
             return
         }
-        
+
         guard let userId = supabase.auth.currentUser?.id else {
             showError(message: "User not logged in")
             return
@@ -126,47 +126,58 @@ class NewAddNewViewController: UIViewController {
                 .single()
                 .execute()
 
-            struct UserRelation: Decodable {
-                let relationship_id: UUID?
-            }
-
+            struct UserRelation: Decodable { let relationship_id: UUID? }
             let decoded = try JSONDecoder().decode(UserRelation.self, from: response.data)
-
             guard let relationshipId = decoded.relationship_id else {
                 showError(message: "No relationship found")
                 return
             }
 
-            // 1. Prepare Data for Background Upload
-            let date = datePicker.date
-            let isoDate = ISO8601DateFormatter().string(from: date)
-            let title = memoryTitleTextField.text ?? ""
+            let date        = datePicker.date
+            let isoDate     = ISO8601DateFormatter().string(from: date)
+            let title       = memoryTitleTextField.text ?? ""
             let description = descriptionTextView.text == placeholderText ? "" : descriptionTextView.text ?? ""
-            
-            // Generate a random ID for instant local display
-           
+            let fileName    = "\(Int(Date().timeIntervalSince1970))_\(UUID().uuidString).jpg"
+            let memoryId    = UUID()   // shared — used for both local object + DB row
 
-            // 2. Start the background upload
+            // ── 1. Save image to local disk immediately ────────────────────────
+            let localURL = MemoryFileManager.localURL(for: fileName)
+            try imageData.write(to: localURL)
+
+            // ── 2. Build a local Memory object so the UI updates right away ────
+            let localMemory = Memory(
+                id:             memoryId,
+                date:           date,
+                imageName:      fileName,
+                location:       locationTextField.text ?? "",
+                title:          title,
+                description:    description,
+                uiImage:        image,
+                localImagePath: localURL.path
+            )
+            // ── 3. Upload to Supabase in the background (temp relay) ───────────
             MemoryUploadManager.shared.uploadMemory(
-                userId: userId.uuidString,
+                memoryId:       memoryId,
+                userId:         userId.uuidString,
                 relationshipId: relationshipId,
-                imageData: imageData,
-                title: title,
-                description: description,
-                isoDate: isoDate
+                imageData:      imageData,
+                title:          title,
+                description:    description,
+                isoDate:        isoDate,
+                fileName:       fileName
             )
-            
-            let alert = UIAlertController(
-                title: "",
-                message: "Memory added successfully!",
-                preferredStyle: .alert
-            )
-            self.present(alert, animated: true)
 
+            // ── 4. Dismiss with confirmation, THEN add heart ───────────────────
+            let alert = UIAlertController(title: "", message: "Memory added!", preferredStyle: .alert)
+            self.present(alert, animated: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 alert.dismiss(animated: true) {
                     self.dismiss(animated: true) {
-                      
+                        // Post AFTER fully dismissed → heart appears back on the jar screen
+                        NotificationCenter.default.post(
+                            name: NSNotification.Name("MemoryAdded"),
+                            object: localMemory
+                        )
                     }
                 }
             }

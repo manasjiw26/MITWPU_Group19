@@ -38,7 +38,8 @@ class DataStore {
     
     var currentQnA: QnAData = QnAData( title: "", questions: [QnAQuestion(questionText: "", options: [] )])
     var dailyCheckInQuestions: [Question] = []
-    
+    private var lastDailyCheckInSelection: DailyCheckInSelection?
+
     var specialDates: [SpecialDate] = []
     
     var currentUserId: UUID?
@@ -50,12 +51,14 @@ class DataStore {
     private var exploreJSONActivities: [JSONActivity] = []
     private(set) var suggestedJSONActivities: [JSONActivity] = []
     private var HisMood: Mood?
+    
     private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "Calm" )
     private(set) var notifications: [AppNotification] = []
     private(set) var savedFeedback: [FeedBackGiven] = []
     
     lazy var groupedSuggestedActivities: [SuggestionGroup: [Activity]] = makeGroupedSuggestedActivities()
     private var lastSuggestionGroup: SuggestionGroup?
+    private var partnerAssessmentPreferences: [Int: Set<Int>]?
 
   
     init() {
@@ -284,6 +287,7 @@ class DataStore {
     
         @discardableResult
         func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection, limit: Int = 3) -> [Activity] {
+            lastDailyCheckInSelection = selection
             let group = resolveSuggestionGroup(selection: selection)
             lastSuggestionGroup = group
             let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
@@ -292,6 +296,61 @@ class DataStore {
             self.suggestedActivities = result
             return result
         }
+    private func preferredNeed(from tags: [String]) -> String? {
+        // Priority: Connecting > Relaxing > Fun
+        if tags.contains("Connecting") { return "connection" }
+        if tags.contains("Relaxing") { return "space" }
+        if tags.contains("Fun") { return "fun" }
+        return nil
+    }
+    private func negativeNeedOverride(from tags: [String]) -> String? {
+        if tags.contains("Not my thing") || tags.contains("Boring") { return "space" }
+        return nil
+    }
+    private func pairMood(from feedback: DBActivityFeedback?, fallback: String) -> String {
+        let moods = [feedback?.userAMood, feedback?.userBMood].compactMap { $0 }
+        if moods.isEmpty { return fallback }
+
+        let negative = ["angry", "regretful", "disappointed", "sad", "drained"]
+        if let m = moods.first(where: { negative.contains($0.lowercased()) }) {
+            return m
+        }
+        return moods[0]
+    }
+    func refreshSuggestionsAfterFeedback(coupleActivityId: UUID, limit: Int = 3) async -> [Activity] {
+        let feedback = try? await SupabaseManager.shared.fetchFeedbackForActivity(coupleActivityId: coupleActivityId)
+
+        let base = lastDailyCheckInSelection ?? DailyCheckInSelection(
+            mood: "Calm",
+            closeness: "Chill",
+            vibe: "Neutral",
+            need: "Connection"
+        )
+
+        let updatedMood = pairMood(from: feedback, fallback: base.mood)
+
+        let tags = (feedback?.userATags ?? []) + (feedback?.userBTags ?? [])
+        let needOverride = preferredNeed(from: tags) ?? negativeNeedOverride(from: tags)
+
+        let newSelection = DailyCheckInSelection(
+            mood: updatedMood,
+            closeness: base.closeness,
+            vibe: base.vibe,
+            need: needOverride ?? base.need
+        )
+
+        let group = resolveSuggestionGroup(selection: newSelection)
+        lastSuggestionGroup = group
+
+        let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
+
+        // Exclude the last activity if you want
+        let filtered = pool.filter { $0.coupleActivityId != coupleActivityId }
+        let result = Array(filtered.shuffled().prefix(limit))
+
+        self.suggestedActivities = result
+        return result
+    }
 
     private func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -482,10 +541,10 @@ class DataStore {
     }
     func loadDailyCheckInQuestions() {
         let sampleQuestions: [Question] = [
-            Question(title: "What level of connection are you on today?", options: ["Dry","Meh","Synced","Vibing"])
+            Question(title: "How connected do you feel right now?", options: ["Dry","Meh","Synced","Vibing"])
             ,
             Question(title: "What’s missing in your relationship rn?", options: ["Reassurance","Quality time","Space","Deep Convo"]),
-            Question(title: "How connected do you feel with your partner today?", options: ["Disconnected","Chill","Attached","Kinda close"])
+            Question(title: "How strong is your connection with your partner currently?", options: ["Disconnected","Chill","Attached","Kinda close"])
         ]
         self.dailyCheckInQuestions = sampleQuestions
     }
@@ -493,8 +552,12 @@ class DataStore {
 
  
     func getRefreshSuggestedActivities() -> [Activity] {
-        guard let group = lastSuggestionGroup else { return [] }
-        self.suggestedActivities = getMoreActivities(excluding: self.suggestedActivities)
+        guard lastSuggestionGroup != nil else { return [] }
+        let newBatch = getMoreActivities(excluding: self.suggestedActivities)
+        guard !newBatch.isEmpty else { return self.suggestedActivities }
+        // Append to existing activities, cap at 6
+        let combined = self.suggestedActivities + newBatch
+        self.suggestedActivities = Array(combined.prefix(6))
         return self.suggestedActivities
     }
     
@@ -562,14 +625,17 @@ class DataStore {
             guard let group = lastSuggestionGroup else { return [] }
             let sourcePool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
             
+            let currentNames = Set(current.map { $0.name.lowercased() })
             let remaining = sourcePool.filter { new in
-                !current.contains(where: { $0.id == new.id })
+                !currentNames.contains(new.name.lowercased())
             }
             
             if remaining.count >= 3 {
                 return Array(remaining.shuffled().prefix(3))
+            } else if !remaining.isEmpty {
+                return remaining.shuffled()
             } else {
-                // If less than 3 remaining, we've exhausted the fresh ones. Reshuffle everything and pick 3.
+                // All exhausted — pick 3 from the full pool that aren't already shown
                 return Array(sourcePool.shuffled().prefix(3))
             }
         }
@@ -674,6 +740,13 @@ class DataStore {
         case "male":   return "her"
         case "female": return "him"
         default:       return "them"
+        }
+    }
+    var partnerPossessivePronoun: String {
+        switch partnerPronoun {
+        case "her": return "her"
+        case "him": return "his"
+            default: return "their"
         }
     }
     var partnerDisplayText: String {
@@ -857,37 +930,143 @@ class DataStore {
     
     //love tips
     func loadSampleTips() {
-        let p = partnerPronoun
-        let sampleTips: [Tip] = [
-            Tip(title: "Make hot chocolate for \(p)"),
-            Tip(title: "Write \(p) a sweet note"),
-            Tip(title: "Give \(p) a foot massage"),
-            Tip(title: "Prepare dinner for \(p)"),
-            Tip(title: "Offer to do \(p == "them" ? "their" : p == "her" ? "her" : "his") chores"),
-            Tip(title: "Plan a movie date night"),
-            Tip(title: "Cook \(p == "them" ? "their" : p == "her" ? "her" : "his") favorite meal"),
-            Tip(title: "Help \(p) with \(p == "them" ? "their" : p == "her" ? "her" : "his") homework"),
-            Tip(title: "Organize \(p == "them" ? "their" : p == "her" ? "her" : "his") closet")
-        ]
-        
-        self.tips = sampleTips
+        self.tips = jsonBackedLoveTips()
     }
     
     func getAllTips() -> [Tip] {
-        let p = partnerPronoun
-        return [
-            Tip(title: "Make hot chocolate for \(p)"),
-            Tip(title: "Write \(p) a sweet note"),
-            Tip(title: "Give \(p) a foot massage"),
-            Tip(title: "Prepare dinner for \(p)"),
-            Tip(title: "Offer to do \(p == "them" ? "their" : p == "her" ? "her" : "his") chores"),
-            Tip(title: "Plan a movie date night"),
-            Tip(title: "Cook \(p == "them" ? "their" : p == "her" ? "her" : "his") favorite meal"),
-            Tip(title: "Help \(p) with \(p == "them" ? "their" : p == "her" ? "her" : "his") homework"),
-            Tip(title: "Organize \(p == "them" ? "their" : p == "her" ? "her" : "his") closet")
+        tips.isEmpty ? jsonBackedLoveTips() : tips
+    }
+    func loadPersonalizedLoveTips() async -> [Tip] {
+        let partnerPreferences = await fetchPartnerAssessmentPreferences()
+        let personalized = personalizedLoveTips(from: partnerPreferences)
+        let resolvedTips = personalized.isEmpty ? jsonBackedLoveTips() : personalized
+        self.tips = resolvedTips
+        return resolvedTips
+    }
+
+    private struct PartnerAssessmentRow: Decodable {
+        let assessment_answers: [String: [Int]]?
+    }
+
+    private func fetchPartnerAssessmentPreferences() async -> [Int: Set<Int>] {
+        if let partnerAssessmentPreferences {
+            return partnerAssessmentPreferences
+        }
+
+        if partnerUserId == nil {
+            await loadUserContext()
+        }
+
+        guard let partnerUserId else { return [:] }
+
+        do {
+            let rows: [PartnerAssessmentRow] = try await SupabaseManager.shared.client
+                .from("users")
+                .select("assessment_answers")
+                .eq("user_id", value: partnerUserId.uuidString)
+                .limit(1)
+                .execute()
+                .value
+
+            let mapped = mapAssessmentAnswers(rows.first?.assessment_answers)
+            partnerAssessmentPreferences = mapped
+            return mapped
+        } catch {
+            return [:]
+        }
+    }
+
+    private func personalizedLoveTips(from preferences: [Int: Set<Int>]) -> [Tip] {
+        let payload = loadLoveTipsPayload()
+        guard !payload.tips.isEmpty else { return [] }
+
+        let loveLanguage = selectedOptionTexts(for: 1, from: preferences)
+        let relationshipType = selectedOptionTexts(for: 2, from: preferences)
+        let carePreferences = selectedOptionTexts(for: 3, from: preferences)
+
+        let scored = payload.tips.compactMap { rule -> (LoveTipRule, Int)? in
+            let relationshipMatches = rule.relationshipTypes.isEmpty || !relationshipType.isDisjoint(with: Set(rule.relationshipTypes))
+            guard relationshipMatches else { return nil }
+
+            var score = 0
+            score += matchScore(selected: loveLanguage, candidates: rule.loveLanguages, weight: 3)
+            score += matchScore(selected: carePreferences, candidates: rule.carePreferences, weight: 2)
+            score += matchScore(selected: relationshipType, candidates: rule.relationshipTypes, weight: 1)
+
+            if score == 0 {
+                return nil
+            }
+
+            return (rule, score)
+        }
+
+        let sortedRules = scored
+            .sorted { lhs, rhs in
+                if lhs.1 != rhs.1 { return lhs.1 > rhs.1 }
+                return lhs.0.id < rhs.0.id
+            }
+            .map(\.0)
+
+        var seenTitles = Set<String>()
+        return sortedRules.compactMap { rule in
+            let resolvedTitle = renderLoveTip(rule.title)
+            guard seenTitles.insert(resolvedTitle).inserted else { return nil }
+            return Tip(title: resolvedTitle)
+        }
+    }
+
+    private func loadLoveTipsPayload() -> LoveTipsPayload {
+        guard let url = Bundle.main.url(forResource: "loveTips", withExtension: "json") else {
+            return LoveTipsPayload(tips: [])
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode(LoveTipsPayload.self, from: data)
+        } catch {
+            return LoveTipsPayload(tips: [])
+        }
+    }
+
+    private func jsonBackedLoveTips() -> [Tip] {
+        let payload = loadLoveTipsPayload()
+        let rendered = payload.tips.map { Tip(title: renderLoveTip($0.title)) }
+        return rendered.isEmpty ? fallbackLoveTips() : rendered
+    }
+
+    private func selectedOptionTexts(for questionIndex: Int, from preferences: [Int: Set<Int>]) -> Set<String> {
+        guard currentQnA.questions.indices.contains(questionIndex) else { return [] }
+        let options = currentQnA.questions[questionIndex].options
+        let selectedIndexes = preferences[questionIndex] ?? []
+
+        return Set(selectedIndexes.compactMap { index in
+            guard options.indices.contains(index) else { return nil }
+            return options[index].text
+        })
+    }
+
+    private func matchScore(selected: Set<String>, candidates: [String], weight: Int) -> Int {
+        guard !selected.isEmpty, !candidates.isEmpty else { return 0 }
+        return selected.intersection(Set(candidates)).count * weight
+    }
+
+    private func renderLoveTip(_ title: String) -> String {
+        title
+            .replacingOccurrences(of: "{partner}", with: partnerPronoun)
+            .replacingOccurrences(of: "{partnerPossessive}", with: partnerPossessivePronoun)
+            .replacingOccurrences(of: "{Partner}", with: partnerDisplayText.lowercased())
+    }
+
+    private func fallbackLoveTips() -> [Tip] {
+        [
+            Tip(title: renderLoveTip("Bring {partner} a comfort drink without asking.")),
+            Tip(title: renderLoveTip("Send {partner} one sincere compliment they can re-read later.")),
+            Tip(title: renderLoveTip("Take one task off {partnerPossessive} plate tonight.")),
+            Tip(title: renderLoveTip("Stay beside {partner} for 10 quiet minutes without distracting them.")),
+            Tip(title: renderLoveTip("Write {partner} a short note saying exactly what you appreciate about them.")),
+            Tip(title: renderLoveTip("Plan one small gesture this week that feels personal to {partner}."))
         ]
     }
-    
     //build your bond
     func loadBuildYourbond() -> [BuildYourBond] {
         // Derive BUB category cards from bondActivities.json
@@ -1211,6 +1390,7 @@ class DataStore {
                 self.partnerUserId = (relationship.user1_id == authUserId)
                     ? relationship.user2_id
                     : relationship.user1_id
+                self.partnerAssessmentPreferences = nil
             } else {
             }
         } catch {

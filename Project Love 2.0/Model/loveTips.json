@@ -1,0 +1,221 @@
+{
+  "tips": [
+    {
+      "id": "acts-service-1",
+      "title": "Take one task off {partnerPossessive} plate tonight without asking.",
+      "loveLanguages": ["Acts of service"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Acts of service", "Validation"]
+    },
+    {
+      "id": "acts-service-2",
+      "title": "Order {partnerPossessive} comfort meal before they have to decide what to eat.",
+      "loveLanguages": ["Acts of service"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Acts of service", "Surprises"]
+    },
+    {
+      "id": "acts-service-3",
+      "title": "Set up a warm shower, fresh towel, and a calm room for {partner}.",
+      "loveLanguages": ["Acts of service"],
+      "relationshipTypes": ["Live-In relationship", "Married"],
+      "carePreferences": ["Acts of service"]
+    },
+    {
+      "id": "acts-service-4",
+      "title": "Handle one small errand or message {partner} has been avoiding.",
+      "loveLanguages": ["Acts of service"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Acts of service", "Encouragement"]
+    },
+    {
+      "id": "small-gesture-1",
+      "title": "Bring {partner} one tiny surprise today: a flower, favorite snack, or cute note.",
+      "loveLanguages": ["Small gestures"],
+      "relationshipTypes": ["Dating", "Situationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Surprises", "Small gifts"]
+    },
+    {
+      "id": "small-gesture-2",
+      "title": "Leave a playful sticky note in {partnerPossessive} bag, wallet, or mirror.",
+      "loveLanguages": ["Small gestures"],
+      "relationshipTypes": ["Dating", "Situationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Surprises", "Compliments"]
+    },
+    {
+      "id": "small-gesture-3",
+      "title": "Send {partner} a candid photo of a happy moment with the line, \"This is my favorite version of you.\"",
+      "loveLanguages": ["Small gestures"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Married"],
+      "carePreferences": ["Small gifts", "Compliments"]
+    },
+    {
+      "id": "small-gesture-4",
+      "title": "Drop off or send dessert to {partner} unexpectedly tonight.",
+      "loveLanguages": ["Small gestures"],
+      "relationshipTypes": ["Dating", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Surprises", "Small gifts"]
+    },
+    {
+      "id": "quality-time-1",
+      "title": "Sit beside {partner} for 10 quiet minutes without forcing conversation.",
+      "loveLanguages": ["Quality time"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Quality time", "Validation"]
+    },
+    {
+      "id": "quality-time-2",
+      "title": "Stay through one full comfort-show episode with {partner} instead of checking your phone.",
+      "loveLanguages": ["Quality time"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Quality time"]
+    },
+    {
+      "id": "quality-time-3",
+      "title": "Take {partner} on a short 15-minute walk and let them set the pace.",
+      "loveLanguages": ["Quality time"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Quality time", "Encouragement"]
+    },
+    {
+      "id": "quality-time-4",
+      "title": "Block a no-rush video call and give {partner} your full attention start to finish.",
+      "loveLanguages": ["Quality time"],
+      "relationshipTypes": ["Long-Distance relationship"],
+      "carePreferences": ["Quality time", "Validation"]
+    },
+    {
+      "id": "physical-touch-1",
+      "title": "Give {partner} a long grounding hug and do not let go too quickly.",
+      "loveLanguages": ["Physical touch"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation", "Quality time"]
+    },
+    {
+      "id": "physical-touch-2",
+      "title": "Offer {partner} a slow shoulder or back massage with no distractions.",
+      "loveLanguages": ["Physical touch"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Acts of service", "Validation"]
+    },
+    {
+      "id": "physical-touch-3",
+      "title": "Hold {partnerPossessive} hand or keep a steady hand on their back while they decompress.",
+      "loveLanguages": ["Physical touch"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Quality time", "Validation"]
+    },
+    {
+      "id": "physical-touch-4",
+      "title": "Kiss {partner} on the forehead and stay close until they feel settled.",
+      "loveLanguages": ["Physical touch"],
+      "relationshipTypes": ["Dating", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation", "Compliments"]
+    },
+    {
+      "id": "words-1",
+      "title": "Text {partner}: \"You do not have to carry today alone. I am here.\"",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation", "Encouragement"]
+    },
+    {
+      "id": "words-2",
+      "title": "Tell {partner} exactly what they handled well today and why you respect it.",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Compliments", "Encouragement"]
+    },
+    {
+      "id": "words-3",
+      "title": "Say to {partner}, \"You are allowed to feel this. I am not going anywhere.\"",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation"]
+    },
+    {
+      "id": "words-4",
+      "title": "Send {partner} a late-night message naming one quality in them that bad days cannot take away.",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation", "Compliments"]
+    },
+    {
+      "id": "encouragement-1",
+      "title": "Send {partner} a mid-task message: \"Keep going. I see how hard you are trying.\"",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Encouragement"]
+    },
+    {
+      "id": "encouragement-2",
+      "title": "Check in later and say, \"I am proud of how you got through today.\"",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Encouragement", "Validation"]
+    },
+    {
+      "id": "validation-1",
+      "title": "When {partner} is upset, repeat back what hurt them before offering any solution.",
+      "loveLanguages": ["Words of affirmation", "Quality time"],
+      "relationshipTypes": ["Dating", "Situationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation"]
+    },
+    {
+      "id": "validation-2",
+      "title": "Tell {partner}, \"I understand why that hit you so hard,\" and let that be enough for a minute.",
+      "loveLanguages": ["Words of affirmation"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Validation"]
+    },
+    {
+      "id": "small-gift-1",
+      "title": "Send {partner} a small delivery that feels personal, not expensive: favorite coffee, snack, or dessert.",
+      "loveLanguages": ["Small gestures"],
+      "relationshipTypes": ["Dating", "Situationship", "Long-Distance relationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Small gifts", "Surprises"]
+    },
+    {
+      "id": "small-gift-2",
+      "title": "Bring {partner} a single flower or tiny keepsake on your way back.",
+      "loveLanguages": ["Small gestures"],
+      "relationshipTypes": ["Dating", "Situationship", "Live-In relationship", "Married"],
+      "carePreferences": ["Small gifts"]
+    },
+    {
+      "id": "ldr-1",
+      "title": "Call {partner} before sleep just to make them feel chosen at the end of the day.",
+      "loveLanguages": ["Quality time", "Words of affirmation"],
+      "relationshipTypes": ["Long-Distance relationship"],
+      "carePreferences": ["Quality time", "Validation"]
+    },
+    {
+      "id": "ldr-2",
+      "title": "Send {partner} a voice note instead of a text so they can hear your care clearly.",
+      "loveLanguages": ["Words of affirmation", "Small gestures"],
+      "relationshipTypes": ["Long-Distance relationship"],
+      "carePreferences": ["Encouragement", "Validation"]
+    },
+    {
+      "id": "situationship-1",
+      "title": "Keep the gesture low-pressure but clear: send one thoughtful message that says you noticed {partnerPossessive} mood.",
+      "loveLanguages": ["Words of affirmation", "Small gestures"],
+      "relationshipTypes": ["Situationship"],
+      "carePreferences": ["Validation", "Compliments"]
+    },
+    {
+      "id": "married-1",
+      "title": "Protect {partnerPossessive} peace tonight by handling the house reset before they ask.",
+      "loveLanguages": ["Acts of service"],
+      "relationshipTypes": ["Married", "Live-In relationship"],
+      "carePreferences": ["Acts of service"]
+    },
+    {
+      "id": "dating-1",
+      "title": "Plan one simple date detail yourself so {partner} feels pursued, not managed.",
+      "loveLanguages": ["Quality time", "Small gestures"],
+      "relationshipTypes": ["Dating"],
+      "carePreferences": ["Quality time", "Surprises"]
+    }
+  ]
+}

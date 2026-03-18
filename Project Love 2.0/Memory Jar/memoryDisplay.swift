@@ -51,7 +51,9 @@ class memoryDisplay: UIViewController {
         }
         
         //  Map Image
-        image.image = data.uiImage ?? UIImage(named: data.imageName)
+        image.image = MemoryFileManager.loadImage(fileName: data.imageName)
+                   ?? data.uiImage
+                   ?? UIImage(named: data.imageName)
         
         //  Map Location
         let hasNoLocation = data.location.isEmpty || data.location == "Add Location...."

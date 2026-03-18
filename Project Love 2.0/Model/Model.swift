@@ -80,7 +80,17 @@ struct Tip {
     let title: String
     var isSelected: Bool = false
 }
+struct LoveTipsPayload: Codable {
+    let tips: [LoveTipRule]
+}
 
+struct LoveTipRule: Codable {
+    let id: String
+    let title: String
+    let loveLanguages: [String]
+    let relationshipTypes: [String]
+    let carePreferences: [String]
+}
 struct MoodCheckIn {
     var label: String
     var imageName: String
@@ -168,6 +178,7 @@ struct Memory {
     var title: String
     var description: String
     var uiImage: UIImage?
+    var localImagePath: String?
 }
 
 enum LoveNoteStatus {
@@ -331,7 +342,8 @@ struct MemoryModel: Decodable {
     let description: String?
     let image_path: String
     let memory_date: String
-
+    let is_synced: Bool
+    
     enum CodingKeys: String, CodingKey {
         case id = "memory_id"
         case relationship_id
@@ -340,6 +352,7 @@ struct MemoryModel: Decodable {
         case description
         case image_path
         case memory_date
+        case is_synced
     }
     
 }

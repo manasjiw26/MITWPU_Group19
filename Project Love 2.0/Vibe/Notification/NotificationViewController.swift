@@ -178,11 +178,24 @@ final class NotificationViewController: UIViewController {
      }
 
     private func openActivity(_ notification: AppNotification) {
-        guard
-            let activityName = extractActivityName(from: notification.message),
-            let selectedActivity = findActivity(named: activityName)
-        else {
+        guard let activityName = extractActivityName(from: notification.message) else {
             return
+        }
+
+        let selectedActivity: Activity
+        if let found = findActivity(named: activityName) {
+            selectedActivity = found
+        } else {
+            // Fallback: build a minimal Activity so the modal still opens
+            // (covers custom activities or activities not yet synced locally)
+            selectedActivity = Activity(
+                name: activityName,
+                description: notification.message,
+                image: "Activityimage",
+                time: "",
+                status: .ongoing,
+                category: "Custom"
+            )
         }
 
         let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
@@ -192,6 +205,7 @@ final class NotificationViewController: UIViewController {
         destinationVC.modalPresentationStyle = .overFullScreen
         present(destinationVC, animated: false)
     }
+
     private func extractActivityName(from message: String) -> String? {
         let prefix = "Your partner started an activity:"
         var candidate = message
@@ -202,10 +216,10 @@ final class NotificationViewController: UIViewController {
             candidate = String(candidate[candidate.index(after: colonIndex)...])
         }
 
+        // Only strip the 💫 emoji and whitespace — do NOT strip punctuation,
+        // as activity names may contain &, ', - etc.
         candidate = candidate.replacingOccurrences(of: "💫", with: "")
-        candidate = candidate.trimmingCharacters(
-            in: CharacterSet.whitespacesAndNewlines.union(.punctuationCharacters)
-        )
+        candidate = candidate.trimmingCharacters(in: .whitespacesAndNewlines)
 
         return candidate.isEmpty ? nil : candidate
     }
@@ -217,7 +231,8 @@ final class NotificationViewController: UIViewController {
         let knownActivities =
             store.getActivities() +
             store.getSuggestedActivities() +
-            store.bondpage.flatMap { $0.activity }
+            store.bondpage.flatMap { $0.activity } +
+            store.customActivities
 
         return knownActivities.first {
             $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == target

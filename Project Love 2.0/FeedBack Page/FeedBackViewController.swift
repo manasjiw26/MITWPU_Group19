@@ -160,6 +160,9 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                                feedbackTags: tags,
                                feedbackScore: score
                            )
+                           _ = await DataStore.shared.refreshSuggestionsAfterFeedback(
+                                      coupleActivityId: coupleActivityId
+                                  )
                            print("✅ Feedback saved for user:", userId)
                        } catch {
                            print("❌ Failed to save feedback:", error)

@@ -64,15 +64,16 @@ class memoryPhotoViewController: UIViewController,
 
     func updateUI() {
         guard !dataStore.savedMemories.isEmpty else { return }
-
+        currentIndex = min(currentIndex, dataStore.savedMemories.count - 1)
         let memory = dataStore.savedMemories[currentIndex]
 
         MemoryTitle.text = memory.title
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMM yy"   
         MemoryDate.text = formatter.string(from: memory.date)
-        MemoryImage.image = memory.uiImage ??
-                            UIImage(named: memory.imageName)
+        MemoryImage.image = MemoryFileManager.loadImage(fileName: memory.imageName)
+                         ?? memory.uiImage
+                         ?? UIImage(named: memory.imageName)
         
         //collection view scroll to that particular image
         
@@ -329,9 +330,11 @@ class memoryPhotoViewController: UIViewController,
             for: indexPath
         ) as! ThumbnailCell
 
+        guard indexPath.item < dataStore.savedMemories.count else { return cell }
         let memory = dataStore.savedMemories[indexPath.item]
-        cell.imageView.image = memory.uiImage ??
-                               UIImage(named: memory.imageName)
+        cell.imageView.image = MemoryFileManager.loadImage(fileName: memory.imageName)
+                             ?? memory.uiImage
+                             ?? UIImage(named: memory.imageName)
 
         return cell
     }

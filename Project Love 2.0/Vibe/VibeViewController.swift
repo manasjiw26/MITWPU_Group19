@@ -488,7 +488,29 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     }
     
     func didTapGetExercise() {
-            performSegue(withIdentifier: "openQuestions", sender: self)
+        // Require mood to be set before daily check-in
+        guard hasCheckedInToday else {
+            let alert = UIAlertController(
+                title: "No mood, no check-in 😉",
+                message: "Please update your mood before starting the daily check-in.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "Set Mood", style: .default) { [weak self] _ in
+                guard let self else { return }
+                let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
+                let vc = storyboard.instantiateViewController(
+                    withIdentifier: "TellMoodSelectionViewController"
+                ) as! TellMoodSelectionViewController
+                vc.delegate = self
+                vc.selectedIndexPath = IndexPath(item: 0, section: 1)
+                vc.modalPresentationStyle = .pageSheet
+                self.present(vc, animated: true)
+            })
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alert, animated: true)
+            return
+        }
+        performSegue(withIdentifier: "openQuestions", sender: self)
     }
     func didStartActivity() {
 
@@ -794,7 +816,10 @@ extension VibeViewController:  UICollectionViewDataSource {
         self.myMoodTitle = mood.moodLabel
         self.myMoodImage = mood.imageName
 
-        self.vibeCollectionView.reloadSections(IndexSet(integer: 1))
+        // Regenerate layout because section 1 switches between
+        // a single "how are you feeling" card and two mood cards
+        self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
+        self.vibeCollectionView.reloadData()
 
         Task {
             do {
@@ -894,12 +919,14 @@ extension VibeViewController {
                     
                                 // 1. Check if the Refresh Cell was tapped
                                 if indexPath.row == suggestedActivities.count {
-                                    // completely replace current 3 activities with 3 new ones
-                                    let newActivities = DataStore.shared.getRefreshSuggestedActivities()
-                                    guard !newActivities.isEmpty else { return }
+                                    // Append 3 more activities (grows from 3→6, then button disappears)
+                                    let updatedActivities = DataStore.shared.getRefreshSuggestedActivities()
+                                    guard updatedActivities.count > self.suggestedActivities.count else { return }
 
-                                    self.suggestedActivities = newActivities
-                                    
+                                    self.suggestedActivities = updatedActivities
+
+                                    // Rebuild layout + reload so the refresh cell disappears at 6
+                                    self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
                                     UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: {
             collectionView.reloadSections(IndexSet(integer: 2))
         }, completion: nil)
@@ -1014,11 +1041,15 @@ extension VibeViewController {
                     MakeSmile(types: "Activities for \(self.partnerDisplayText)", imageName: "checklist")
                 ]
                 
-                if self.hasCompletedDailyCheckIn && self.suggestedActivities.isEmpty {
-                    self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+                // Always sync suggested activities from DataStore
+                // (covers post-feedback refreshes for both partners)
+                let latestSuggestions = DataStore.shared.getSuggestedActivities()
+                if self.hasCompletedDailyCheckIn && !latestSuggestions.isEmpty {
+                    self.suggestedActivities = latestSuggestions
                 }
                 
                 self.configureOngoingActivity()
+                self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
                 self.vibeCollectionView.reloadData()
             }
             await self.fetchMyMood()
@@ -1052,9 +1083,12 @@ extension VibeViewController: LoveTipsSelectionDelegate {
 extension VibeViewController: DailyExerciseFlowDelegate {
     func dailyExerciseDidFinish() {
         self.hasCompletedDailyCheckIn = true
-        self.suggestedActivities = DataStore.shared.getSuggestedActivities() // IMPORTANT
+        self.suggestedActivities = DataStore.shared.getSuggestedActivities()
         DispatchQueue.main.async {
-            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
+            // Regenerate layout because section 2 switches from
+            // a vertical daily-check-in card to horizontal scrolling activities
+            self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
+            self.vibeCollectionView.reloadData()
         }
     }
 }
