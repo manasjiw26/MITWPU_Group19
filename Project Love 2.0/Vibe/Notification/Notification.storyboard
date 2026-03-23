@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -83,10 +84,103 @@
             </objects>
             <point key="canvasLocation" x="138.1679389312977" y="130.98591549295776"/>
         </scene>
+        <!--Reward Notification View Controller-->
+        <scene sceneID="qrM-Wd-kNW">
+            <objects>
+                <viewController storyboardIdentifier="BadgePopupViewController" id="r3N-hc-joe" customClass="RewardNotificationViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="B3Q-6V-8X9">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Wx-ca-IiD" userLabel="pop-up view">
+                                <rect key="frame" x="36.666666666666657" y="236" width="320" height="380"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Gep-Yh-HP8" userLabel="contect stack view">
+                                        <rect key="frame" x="24" y="36" width="272" height="320"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3R-Me-wOy" userLabel="TitleLabel">
+                                                <rect key="frame" x="115.66666666666667" y="0.0" width="40.333333333333329" height="21.666666666666668"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                <color key="textColor" systemColor="systemPurpleColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nmf-65-bak">
+                                                <rect key="frame" x="36" y="50" width="200" height="200"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="200" id="Abo-P0-49c"/>
+                                                    <constraint firstAttribute="height" constant="200" id="MSZ-nh-FBZ"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fs8-Ky-XP6">
+                                                <rect key="frame" x="118.33333333333333" y="278.33333333333337" width="35.333333333333329" height="41.666666666666686"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="nmf-65-bak" firstAttribute="centerX" secondItem="Gep-Yh-HP8" secondAttribute="centerX" id="Kbq-bt-Mjk"/>
+                                            <constraint firstItem="nmf-65-bak" firstAttribute="centerY" secondItem="Gep-Yh-HP8" secondAttribute="centerY" constant="-10" id="Ymr-Oc-q2d"/>
+                                        </constraints>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M93-1s-fFc">
+                                        <rect key="frame" x="272" y="16" width="32" height="32"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="fuO-Yk-0dA"/>
+                                            <constraint firstAttribute="width" constant="32" id="ub4-fL-iaF"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" image="xmark" catalog="system"/>
+                                        <connections>
+                                            <action selector="closeButton:" destination="r3N-hc-joe" eventType="touchUpInside" id="kQ8-3X-Gni"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" name="AppBackground"/>
+                                <constraints>
+                                    <constraint firstItem="Gep-Yh-HP8" firstAttribute="top" secondItem="M93-1s-fFc" secondAttribute="top" constant="20" id="9Me-2g-527"/>
+                                    <constraint firstItem="M93-1s-fFc" firstAttribute="top" secondItem="1Wx-ca-IiD" secondAttribute="top" constant="16" id="Lhp-TW-A8I"/>
+                                    <constraint firstAttribute="trailing" secondItem="M93-1s-fFc" secondAttribute="trailing" constant="16" id="PGe-Th-h5m"/>
+                                    <constraint firstAttribute="height" constant="380" id="SQa-w3-PeW"/>
+                                    <constraint firstAttribute="trailing" secondItem="Gep-Yh-HP8" secondAttribute="trailing" constant="24" id="WKO-Mm-VeZ"/>
+                                    <constraint firstItem="Gep-Yh-HP8" firstAttribute="leading" secondItem="1Wx-ca-IiD" secondAttribute="leading" constant="24" id="awf-SI-2zt"/>
+                                    <constraint firstAttribute="width" constant="320" id="guy-aj-rg9"/>
+                                    <constraint firstAttribute="bottom" secondItem="Gep-Yh-HP8" secondAttribute="bottom" constant="24" id="iQ2-bv-KpB"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="btD-0Y-lRs"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="1Wx-ca-IiD" firstAttribute="centerY" secondItem="B3Q-6V-8X9" secondAttribute="centerY" id="hb6-ft-MSJ"/>
+                            <constraint firstItem="1Wx-ca-IiD" firstAttribute="centerX" secondItem="B3Q-6V-8X9" secondAttribute="centerX" id="xez-Hi-qOq"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="badgeImageView" destination="nmf-65-bak" id="i5a-XH-hvE"/>
+                        <outlet property="dismissButton" destination="M93-1s-fFc" id="opZ-Wb-d1j"/>
+                        <outlet property="popupView" destination="1Wx-ca-IiD" id="TQ5-b5-wz5"/>
+                        <outlet property="rewardLabel" destination="c3R-Me-wOy" id="Oj8-f3-gKW"/>
+                        <outlet property="rewardNudgeimage" destination="nmf-65-bak" id="xoR-gm-wMu"/>
+                        <outlet property="rewarddescription" destination="Fs8-Ky-XP6" id="nso-Hb-6ss"/>
+                        <outlet property="subtitleLabel" destination="Fs8-Ky-XP6" id="zPN-8j-9Zq"/>
+                        <outlet property="titleLabel" destination="c3R-Me-wOy" id="gRf-hQ-Q29"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1SM-XT-1KA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1935" y="131"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <namedColor name="AppBackground">
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemPurpleColor">
+            <color red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

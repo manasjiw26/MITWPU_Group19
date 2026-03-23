@@ -39,6 +39,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var myMoodImage: String = "neutral"
     
     var moodChannel: RealtimeChannelV2?
+    var notificationChannel: RealtimeChannelV2?
     var partnerDisplayText: String { DataStore.shared.partnerDisplayText }
     
     override func viewDidLoad() {
@@ -637,6 +638,39 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         self.vibeCollectionView.reloadData()
     }
     
+    // Notification Realtime Listener
+    func listenForNotifications() async {
+        guard let currentUserId = supabase.auth.currentUser?.id else { return }
+
+        let channel = supabase.channel("vibe-notifications")
+
+        let notificationChanges = channel.postgresChange(
+            AnyAction.self,
+            schema: "public",
+            table: "notifications",
+            filter: "receiver_user_id=eq.\(currentUserId.uuidString)"
+        )
+
+        do {
+            try await channel.subscribe()
+            self.notificationChannel = channel
+
+            Task {
+                for await change in notificationChanges {
+                    switch change {
+                    case .insert(_), .update(_):
+                        await MainActor.run {
+                            self.checkNotifications()
+                        }
+                    default:
+                        break
+                    }
+                }
+            }
+        } catch {
+        }
+    }
+
     @IBAction func profileTapped(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
            let profileVC = storyboard.instantiateInitialViewController()!
@@ -1023,11 +1057,16 @@ extension VibeViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // Prevent duplicate channel creation
-        if moodChannel != nil { return }
-
-        Task {
-            await listenForPartnerMoodUpdates()
+        if moodChannel == nil {
+            Task {
+                await listenForPartnerMoodUpdates()
+            }
+        }
+        
+        if notificationChannel == nil {
+            Task {
+                await listenForNotifications()
+            }
         }
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -1070,6 +1109,9 @@ extension VibeViewController {
         Task {
             await moodChannel?.unsubscribe()
             moodChannel = nil
+            
+            await notificationChannel?.unsubscribe()
+            notificationChannel = nil
         }
     }
 

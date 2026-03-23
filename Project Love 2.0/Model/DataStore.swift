@@ -1359,21 +1359,18 @@ class DataStore {
         return activities
     }
 
-    /// Returns 5 random activities from `activities.json`, refreshed daily.
-    /// Uses a date-based seed so the selection stays consistent within the same day.
-    func getDailyRandomActivities(count: Int = 5) -> [Activity] {
-        guard !activities.isEmpty else { return [] }
-
-        // Build a seed from today's date components so the shuffle is
-        // deterministic within the same calendar day.
+    func getDailyRandomActivities(count: Int = 6) -> [Activity] {
+        let categoryName = "Activities for \(partnerDisplayText)"
+        let pool = activities.filter { $0.category == categoryName }
+        guard !pool.isEmpty else { return [] }
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
-        let daySeed = (components.year ?? 0) * 10000
-                    + (components.month ?? 0) * 100
-                    + (components.day ?? 0)
+            let daySeed = (components.year ?? 0) * 10000
+        + (components.month ?? 0) * 100
+        + (components.day ?? 0)
 
         var rng = SeededRandomNumberGenerator(seed: UInt64(daySeed))
-        let shuffled = activities.shuffled(using: &rng)
+        let shuffled = pool.shuffled(using: &rng)
         return Array(shuffled.prefix(count))
     }
     func getOngoingActivities() -> [Activity] {

@@ -92,14 +92,19 @@ final class NotificationViewController: UIViewController {
          }
      }
     private func openNudge(_ notification: AppNotification) {
-        let alert = UIAlertController(
-            title: "Nudge",
-            message: notification.message,
-            preferredStyle: .alert
-        )
-
-        alert.addAction(UIAlertAction(title: "Close", style: .default))
-        present(alert, animated: true)
+        let storyboard = UIStoryboard(name: "Notification", bundle: nil)
+        if let rewardVC = storyboard.instantiateViewController(withIdentifier: "BadgePopupViewController") as? RewardNotificationViewController {
+            rewardVC.notificationTitle = "Nudge Received!"
+            rewardVC.notificationMessage = notification.message
+            rewardVC.modalPresentationStyle = .overFullScreen
+            rewardVC.modalTransitionStyle = .crossDissolve
+            self.present(rewardVC, animated: true)
+        } else {
+            // Fallback just in case
+            let alert = UIAlertController(title: "Nudge", message: notification.message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Close", style: .default))
+            present(alert, animated: true)
+        }
     }
 
     private func openLoveTipCompleted(_ notification: AppNotification) {

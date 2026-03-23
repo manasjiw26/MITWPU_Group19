@@ -53,31 +53,56 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Collection Layout with Swipe-to-Delete
 
     private func setupCollectionLayout() {
-        var listConfig = UICollectionLayoutListConfiguration(appearance: .plain)
-        listConfig.backgroundColor = .clear
-
-        // Native iOS swipe-to-delete
-        listConfig.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
-            guard let self = self,
-                  !DataStore.shared.specialDates.isEmpty else { return nil }
-
-            let deleteAction = UIContextualAction(
-                style: .destructive,
-                title: "Delete"
-            ) { [weak self] _, _, completion in
-                guard let self = self else { completion(false); return }
-                let specialDate = DataStore.shared.specialDates[indexPath.item]
-                self.deleteSpecialDate(specialDate, at: indexPath)
-                completion(true)
-            }
-            deleteAction.image = UIImage(systemName: "trash.fill")
-            return UISwipeActionsConfiguration(actions: [deleteAction])
-        }
-
-        let layout = UICollectionViewCompositionalLayout.list(using: listConfig)
-        collectionView.setCollectionViewLayout(layout, animated: false)
+        collectionView.setCollectionViewLayout(generateLayout(), animated: false)
         collectionView.delegate   = self
         collectionView.dataSource = self
+    }
+
+    private func generateLayout() -> UICollectionViewLayout {
+        if DataStore.shared.specialDates.isEmpty {
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(300)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(300)
+            )
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 40, leading: 16, bottom: 40, trailing: 16)
+            return UICollectionViewCompositionalLayout(section: section)
+        } else {
+            return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+                var listConfig = UICollectionLayoutListConfiguration(appearance: .plain)
+                listConfig.backgroundColor = .clear
+                listConfig.showsSeparators = false
+
+                // Native iOS swipe-to-delete
+                listConfig.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+                    guard let self = self,
+                          !DataStore.shared.specialDates.isEmpty else { return nil }
+
+                    let deleteAction = UIContextualAction(
+                        style: .destructive,
+                        title: "Delete"
+                    ) { [weak self] _, _, completion in
+                        guard let self = self else { completion(false); return }
+                        let specialDate = DataStore.shared.specialDates[indexPath.item]
+                        self.deleteSpecialDate(specialDate, at: indexPath)
+                        completion(true)
+                    }
+                    deleteAction.image = UIImage(systemName: "trash.fill")
+                    return UISwipeActionsConfiguration(actions: [deleteAction])
+                }
+
+                let section = NSCollectionLayoutSection.list(using: listConfig, layoutEnvironment: layoutEnvironment)
+                section.interGroupSpacing = 10
+                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+                return section
+            }
+        }
     }
 
     // MARK: - Supabase Fetch
@@ -100,6 +125,7 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
                         createdAt: row.created_at
                     )
                 }
+                collectionView.setCollectionViewLayout(generateLayout(), animated: false)
                 collectionView.reloadData()
             } catch {
                 print("Failed to load special dates: \(error)")
@@ -163,6 +189,7 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
                     createdAt: dbRow.created_at
                 )
                 DataStore.shared.specialDates.append(newSpecialDate)
+                collectionView.setCollectionViewLayout(generateLayout(), animated: false)
                 collectionView.reloadData()
                 clearFields()
             } catch {
@@ -178,6 +205,7 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
             do {
                 try await SupabaseManager.shared.deleteSpecialDate(specialDateId: specialDate.id)
                 DataStore.shared.specialDates.remove(at: indexPath.item)
+                collectionView.setCollectionViewLayout(generateLayout(), animated: false)
                 collectionView.reloadData()
             } catch {
                 print("Failed to delete special date: \(error)")
@@ -300,7 +328,7 @@ extension SpecialDatesViewController: UICollectionViewDelegate, UICollectionView
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "empty_cell", for: indexPath
             ) as! EmptyStateCollectioViewCellCollectionViewCell
-            cell.configure(title: "No dates added yet", subtitle: "add now", imageName: "empty_dates")
+            cell.configure(title: "No dates added yet", subtitle: "", imageName: "empty_dates")
             return cell
         }
 
