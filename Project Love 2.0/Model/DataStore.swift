@@ -1254,29 +1254,14 @@ class DataStore {
     }
 
     func markActivityCompleted(activity: Activity) {
-        if let index = activities.firstIndex(where: {
-            $0.name == activity.name &&
-            $0.category == activity.category
-        }) {
-            activities[index].status = .completed
-        }
+        updateStatus(for: activity, status: .completed, scheduledDate: nil)
     }
     
     func markActivityOngoing(activity: Activity) {
-        if let index = activities.firstIndex(where: {
-            $0.name == activity.name &&
-            $0.category == activity.category
-        }) {
-            activities[index].status = .ongoing
-        }
+        updateStatus(for: activity, status: .ongoing, scheduledDate: nil)
     }
     func markActivityNone(activity: Activity) {
-        if let index = activities.firstIndex(where: {
-            $0.name == activity.name &&
-            $0.category == activity.category
-        }) {
-            activities[index].status = .none
-        }
+        updateStatus(for: activity, status: .none, scheduledDate: nil)
     }
 
     func startActivity(_ activity: Activity, completion: ((UUID?) -> Void)? = nil) {
@@ -1464,13 +1449,16 @@ class DataStore {
                         switch coupleActivity.status {
                         case "ongoing":
                             self.activities[index].status = .ongoing
+                            self.activities[index].scheduledDate = nil
                         case "completed":
                             self.activities[index].status = .completed
+                            self.activities[index].scheduledDate = nil
                         case "scheduled":
                             self.activities[index].status = .scheduled
                             self.activities[index].scheduledDate = coupleActivity.scheduledDate
                         default:
-                            break
+                            self.activities[index].status = .none
+                            self.activities[index].scheduledDate = nil
                         }
                         self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
                     } else {
@@ -1522,12 +1510,53 @@ class DataStore {
         return suggestedActivities
     }
     func updateScheduledDate(for activity: Activity, date: Date) {
+        var scheduledActivity = activity
+        scheduledActivity.status = .scheduled
+        scheduledActivity.scheduledDate = date
 
-        if let index = allActivities.firstIndex(where: {
-            $0.name == activity.name && $0.category == activity.category
-        }) {
-            allActivities[index].scheduledDate = date
-            allActivities[index].status = .scheduled
+        let updatedActivities = updateActivity(in: &activities, with: scheduledActivity)
+        let updatedSuggestedActivities = updateActivity(in: &suggestedActivities, with: scheduledActivity)
+        var updatedBondActivity = false
+
+        for pageIndex in bondpage.indices {
+            let didUpdate = updateActivity(in: &bondpage[pageIndex].activity, with: scheduledActivity)
+            updatedBondActivity = updatedBondActivity || didUpdate
+        }
+
+        if !updatedActivities && !updatedSuggestedActivities && !updatedBondActivity {
+            activities.append(scheduledActivity)
+        }
+
+        buildAllActivities()
+
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+        }
+
+        guard let relationshipId = currentRelationshipId,
+              let userId = currentUserId else {
+            return
+        }
+
+        Task {
+            do {
+                let coupleActivity = try await SupabaseManager.shared.scheduleActivity(
+                    relationshipId: relationshipId,
+                    userId: userId,
+                    activity: scheduledActivity,
+                    scheduledDate: date
+                )
+
+                DispatchQueue.main.async {
+                    self.updateCoupleActivityId(
+                        for: scheduledActivity,
+                        coupleActivityId: coupleActivity.coupleActivityId
+                    )
+                    NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+                }
+            } catch {
+                print("Failed to schedule activity: \(error)")
+            }
         }
     }
 
@@ -1537,18 +1566,125 @@ class DataStore {
         }
     }
     func buildAllActivities() {
-        allActivities = []
+        var mergedActivities: [Activity] = []
 
         // Explore
-        allActivities.append(contentsOf: activities)
+        mergeActivities(from: activities, into: &mergedActivities)
 
         // Suggested (Vibe)
-        allActivities.append(contentsOf: suggestedActivities)
+        mergeActivities(from: suggestedActivities, into: &mergedActivities)
 
         // Build Your Bond
         bondpage.forEach { page in
-            allActivities.append(contentsOf: page.activity)
+            mergeActivities(from: page.activity, into: &mergedActivities)
         }
+
+        allActivities = mergedActivities
+    }
+
+    @discardableResult
+    private func updateActivity(in source: inout [Activity], with updatedActivity: Activity) -> Bool {
+        if let index = source.firstIndex(where: { matchesActivity($0, updatedActivity) }) {
+            source[index] = mergeActivity(source[index], with: updatedActivity)
+            return true
+        }
+
+        return false
+    }
+
+    private func updateCoupleActivityId(for activity: Activity, coupleActivityId: UUID) {
+        updateCoupleActivityId(in: &activities, for: activity, coupleActivityId: coupleActivityId)
+        updateCoupleActivityId(in: &suggestedActivities, for: activity, coupleActivityId: coupleActivityId)
+
+        for pageIndex in bondpage.indices {
+            updateCoupleActivityId(
+                in: &bondpage[pageIndex].activity,
+                for: activity,
+                coupleActivityId: coupleActivityId
+            )
+        }
+
+        buildAllActivities()
+    }
+
+    private func updateCoupleActivityId(
+        in source: inout [Activity],
+        for activity: Activity,
+        coupleActivityId: UUID
+    ) {
+        guard let index = source.firstIndex(where: { matchesActivity($0, activity) }) else {
+            return
+        }
+
+        source[index].coupleActivityId = coupleActivityId
+    }
+
+    private func matchesActivity(_ lhs: Activity, _ rhs: Activity) -> Bool {
+        if let lhsId = lhs.id, let rhsId = rhs.id, lhsId == rhsId {
+            return true
+        }
+
+        return lhs.name == rhs.name && lhs.category == rhs.category
+    }
+
+    private func mergeActivity(_ existing: Activity, with updated: Activity) -> Activity {
+        Activity(
+            id: existing.id ?? updated.id,
+            coupleActivityId: updated.coupleActivityId ?? existing.coupleActivityId,
+            name: updated.name,
+            description: updated.description,
+            detailedDescription: updated.detailedDescription ?? existing.detailedDescription,
+            image: updated.image,
+            time: updated.time,
+            status: updated.status,
+            category: updated.category,
+            scheduledDate: updated.scheduledDate,
+            steps: updated.steps ?? existing.steps
+        )
+    }
+
+    private func mergeActivities(from source: [Activity], into target: inout [Activity]) {
+        for activity in source {
+            if let index = target.firstIndex(where: { matchesActivity($0, activity) }) {
+                target[index] = mergeActivity(target[index], with: activity)
+            } else {
+                target.append(activity)
+            }
+        }
+    }
+
+    private func updateStatus(for activity: Activity, status: ActivityStatus, scheduledDate: Date?) {
+        updateStatus(in: &activities, for: activity, status: status, scheduledDate: scheduledDate)
+        updateStatus(in: &suggestedActivities, for: activity, status: status, scheduledDate: scheduledDate)
+
+        for pageIndex in bondpage.indices {
+            updateStatus(
+                in: &bondpage[pageIndex].activity,
+                for: activity,
+                status: status,
+                scheduledDate: scheduledDate
+            )
+        }
+
+        buildAllActivities()
+
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+        }
+    }
+
+    private func updateStatus(
+        in source: inout [Activity],
+        for activity: Activity,
+        status: ActivityStatus,
+        scheduledDate: Date?
+    ) {
+        guard let index = source.firstIndex(where: { matchesActivity($0, activity) }) else {
+            return
+        }
+
+        source[index].status = status
+        source[index].scheduledDate = scheduledDate
     }
     
     //small modal data — now fully driven by JSON via getSmallModalData()

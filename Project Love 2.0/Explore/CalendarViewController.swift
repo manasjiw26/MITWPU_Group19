@@ -23,9 +23,24 @@ class CalendarViewController: UIViewController {
 
         registerCell()
         filterActivities()
-        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleActivitiesSynced),
+            name: .activitiesSynced,
+            object: nil
+        )
         
     }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        filterActivities()
+    }
+
     func registerCell() {
         
         activityCollectionView.register(UINib(nibName: "ActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "activity_cell")
@@ -41,10 +56,16 @@ class CalendarViewController: UIViewController {
     func filterActivities() {
         activitiesForSelectedDate = DataStore.shared.allActivities.filter {
             guard let date = $0.scheduledDate else { return false }
+            guard $0.status == .scheduled else { return false }
             return Calendar.current.isDate(date, inSameDayAs: selectedDate)
         }
 
         activityCollectionView.reloadSections(IndexSet(integer: 1))
+    }
+
+    @objc private func handleActivitiesSynced() {
+        filterActivities()
+        activityCollectionView.reloadSections(IndexSet(integer: 0))
     }
     
     @IBAction func dateChanged(_ sender: UIDatePicker) {
@@ -76,11 +97,11 @@ extension CalendarViewController: UICollectionViewDataSource {
                 for: indexPath
             ) as! CalendarCell
 
-            let activityDates = Set(
+            let activityDates: Set<Date> = Set(
                 DataStore.shared.allActivities.compactMap {
-                    $0.scheduledDate.map {
-                        Calendar.current.startOfDay(for: $0)
-                    }
+                    guard $0.status == .scheduled else { return nil }
+                    guard let scheduledDate = $0.scheduledDate else { return nil }
+                    return Calendar.current.startOfDay(for: scheduledDate)
                 }
             )
 

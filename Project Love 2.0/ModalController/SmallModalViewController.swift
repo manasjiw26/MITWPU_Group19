@@ -94,9 +94,7 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
     }
     
     func didSchedule(activity: Activity, on date: Date) {
-        DataStore.shared.updateScheduledDate(for: activity, date: date)
-
-            delegate?.didStartActivity()
+        delegate?.didStartActivity()
         
         UIView.animate(withDuration: 0.2, animations: {
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
