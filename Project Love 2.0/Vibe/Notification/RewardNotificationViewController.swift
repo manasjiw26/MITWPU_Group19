@@ -15,16 +15,41 @@ class RewardNotificationViewController: UIViewController {
     
     // Storyboard residual connections to prevent crashes
     @IBOutlet weak var badgeImageView: UIImageView!
+    @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var popupView: UIView!
     @IBOutlet weak var subtitleLabel: UILabel!
     
     var notificationTitle: String?
     var notificationMessage: String?
     var notificationImage: UIImage?
+    var notificationEmoji: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
 
+        popupView.layer.cornerRadius = 28
+        popupView.layer.masksToBounds = true
+        popupView.backgroundColor = .white
+        
+        //Shadow styling
+        popupView.layer.shadowColor = UIColor.black.cgColor
+        popupView.layer.shadowOpacity = 0.15
+        popupView.layer.shadowOffset = CGSize(width: 0, height: 8)
+        popupView.layer.shadowRadius = 20
+        popupView.layer.masksToBounds = false
+        
+        dismissButton.configuration = .glass()
+        dismissButton.setImage(
+            UIImage(
+                systemName: "xmark",
+                withConfiguration: UIImage.SymbolConfiguration(weight: .medium)
+            ),
+            for: .normal
+        )
+        dismissButton.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        dismissButton.layer.cornerRadius = 16
         if let titleText = notificationTitle {
             rewardLabel.text = titleText
         }
@@ -33,7 +58,22 @@ class RewardNotificationViewController: UIViewController {
             rewarddescription.text = messageText
         }
         
-        if let image = notificationImage {
+        if let emoji = notificationEmoji {
+            // Hide the image view and show the emoji as a large label
+            rewardNudgeimage.isHidden = true
+            let emojiLabel = UILabel()
+            emojiLabel.text = emoji
+            emojiLabel.font = UIFont.systemFont(ofSize: 120)
+            emojiLabel.textAlignment = .center
+            emojiLabel.translatesAutoresizingMaskIntoConstraints = false
+            popupView.addSubview(emojiLabel)
+            NSLayoutConstraint.activate([
+                emojiLabel.centerXAnchor.constraint(equalTo: rewardNudgeimage.centerXAnchor),
+                emojiLabel.centerYAnchor.constraint(equalTo: rewardNudgeimage.centerYAnchor),
+                emojiLabel.widthAnchor.constraint(equalTo: rewardNudgeimage.widthAnchor),
+                emojiLabel.heightAnchor.constraint(equalTo: rewardNudgeimage.heightAnchor)
+            ])
+        } else if let image = notificationImage {
             rewardNudgeimage.image = image
         }
     }
@@ -145,14 +185,6 @@ class RewardNotificationViewController: UIViewController {
         }
     }
     
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -25,7 +25,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0HL-c5-fHl">
-                                <rect key="frame" x="16" y="284.66666666666674" width="361" height="499.33333333333326"/>
+                                <rect key="frame" x="16" y="284.66666666666669" width="361" height="567.33333333333326"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oYq-6q-HIP">
                                     <size key="itemSize" width="128" height="128"/>
@@ -50,7 +50,7 @@
                         <constraints>
                             <constraint firstItem="ogx-fl-pdI" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="4M1-lf-SRb"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="0HL-c5-fHl" secondAttribute="trailing" constant="16" id="5X4-7M-aZe"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="0HL-c5-fHl" secondAttribute="bottom" id="AbF-tN-P8O"/>
+                            <constraint firstAttribute="bottom" secondItem="0HL-c5-fHl" secondAttribute="bottom" id="QIf-xm-qCZ"/>
                             <constraint firstItem="0HL-c5-fHl" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="Wt1-Rc-95s"/>
                             <constraint firstItem="0HL-c5-fHl" firstAttribute="top" secondItem="ogx-fl-pdI" secondAttribute="bottom" constant="20" id="eGi-fo-pnL"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ogx-fl-pdI" secondAttribute="trailing" constant="16" id="qOY-0g-UKF"/>
@@ -87,7 +87,7 @@
         <!--Reward Notification View Controller-->
         <scene sceneID="qrM-Wd-kNW">
             <objects>
-                <viewController storyboardIdentifier="BadgePopupViewController" id="r3N-hc-joe" customClass="RewardNotificationViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BadgePopupViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r3N-hc-joe" customClass="RewardNotificationViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="B3Q-6V-8X9">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -99,28 +99,29 @@
                                         <rect key="frame" x="24" y="36" width="272" height="320"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3R-Me-wOy" userLabel="TitleLabel">
-                                                <rect key="frame" x="115.66666666666667" y="0.0" width="40.333333333333329" height="21.666666666666668"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                <rect key="frame" x="113" y="0.0" width="46" height="40"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="21"/>
                                                 <color key="textColor" systemColor="systemPurpleColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nmf-65-bak">
-                                                <rect key="frame" x="36" y="50" width="200" height="200"/>
+                                                <rect key="frame" x="36" y="60" width="200" height="200"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="200" id="Abo-P0-49c"/>
                                                     <constraint firstAttribute="height" constant="200" id="MSZ-nh-FBZ"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fs8-Ky-XP6">
-                                                <rect key="frame" x="118.33333333333333" y="278.33333333333337" width="35.333333333333329" height="41.666666666666686"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <rect key="frame" x="111.33333333333334" y="280" width="49" height="40"/>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="nmf-65-bak" firstAttribute="centerX" secondItem="Gep-Yh-HP8" secondAttribute="centerX" id="Kbq-bt-Mjk"/>
-                                            <constraint firstItem="nmf-65-bak" firstAttribute="centerY" secondItem="Gep-Yh-HP8" secondAttribute="centerY" constant="-10" id="Ymr-Oc-q2d"/>
+                                            <constraint firstItem="Fs8-Ky-XP6" firstAttribute="top" secondItem="nmf-65-bak" secondAttribute="bottom" constant="20" id="SBK-GD-un7"/>
+                                            <constraint firstItem="nmf-65-bak" firstAttribute="centerY" secondItem="Gep-Yh-HP8" secondAttribute="centerY" id="Ymr-Oc-q2d"/>
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M93-1s-fFc">
@@ -160,8 +161,8 @@
                     </view>
                     <connections>
                         <outlet property="badgeImageView" destination="nmf-65-bak" id="i5a-XH-hvE"/>
-                        <outlet property="dismissButton" destination="M93-1s-fFc" id="opZ-Wb-d1j"/>
-                        <outlet property="popupView" destination="1Wx-ca-IiD" id="TQ5-b5-wz5"/>
+                        <outlet property="dismissButton" destination="M93-1s-fFc" id="BCe-Rc-r51"/>
+                        <outlet property="popupView" destination="1Wx-ca-IiD" id="BZN-rf-ErM"/>
                         <outlet property="rewardLabel" destination="c3R-Me-wOy" id="Oj8-f3-gKW"/>
                         <outlet property="rewardNudgeimage" destination="nmf-65-bak" id="xoR-gm-wMu"/>
                         <outlet property="rewarddescription" destination="Fs8-Ky-XP6" id="nso-Hb-6ss"/>
@@ -180,7 +181,7 @@
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemPurpleColor">
-            <color red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.79607843137254897" green="0.18823529411764706" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -121,6 +121,23 @@ extension CalendarViewController: UICollectionViewDataSource {
         return cell
     }
 }
+extension CalendarViewController: UICollectionViewDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // Section 0 is the calendar, section 1 is activities
+        guard indexPath.section == 1, !activitiesForSelectedDate.isEmpty else { return }
+
+        let activity = activitiesForSelectedDate[indexPath.row]
+
+        let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
+        destinationVC.selectedActivity = activity
+        destinationVC.modalData = DataStore.shared.getSmallModalData(for: activity)
+        destinationVC.flowSource = .explore
+        destinationVC.modalPresentationStyle = .overFullScreen
+        present(destinationVC, animated: false)
+    }
+}
+
 extension CalendarViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView,

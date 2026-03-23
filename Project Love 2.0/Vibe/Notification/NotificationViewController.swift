@@ -96,15 +96,27 @@ final class NotificationViewController: UIViewController {
         if let rewardVC = storyboard.instantiateViewController(withIdentifier: "BadgePopupViewController") as? RewardNotificationViewController {
             rewardVC.notificationTitle = "Nudge Received!"
             rewardVC.notificationMessage = notification.message
+            rewardVC.notificationEmoji = extractEmoji(from: notification.message)
             rewardVC.modalPresentationStyle = .overFullScreen
             rewardVC.modalTransitionStyle = .crossDissolve
             self.present(rewardVC, animated: true)
         } else {
-            // Fallback just in case
             let alert = UIAlertController(title: "Nudge", message: notification.message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Close", style: .default))
             present(alert, animated: true)
         }
+    }
+
+    private func extractEmoji(from message: String) -> String? {
+        // Message format: "Sent you a {nudgeType} {emoji}!"
+        // Extract the last emoji character from the message
+        let scalars = message.unicodeScalars
+        for scalar in scalars.reversed() {
+            if scalar.properties.isEmoji && scalar.value > 0x7E {
+                return String(scalar)
+            }
+        }
+        return nil
     }
 
     private func openLoveTipCompleted(_ notification: AppNotification) {
