@@ -1358,6 +1358,24 @@ class DataStore {
     func getActivities() -> [Activity] {
         return activities
     }
+
+    /// Returns 5 random activities from `activities.json`, refreshed daily.
+    /// Uses a date-based seed so the selection stays consistent within the same day.
+    func getDailyRandomActivities(count: Int = 5) -> [Activity] {
+        guard !activities.isEmpty else { return [] }
+
+        // Build a seed from today's date components so the shuffle is
+        // deterministic within the same calendar day.
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: Date())
+        let daySeed = (components.year ?? 0) * 10000
+                    + (components.month ?? 0) * 100
+                    + (components.day ?? 0)
+
+        var rng = SeededRandomNumberGenerator(seed: UInt64(daySeed))
+        let shuffled = activities.shuffled(using: &rng)
+        return Array(shuffled.prefix(count))
+    }
     func getOngoingActivities() -> [Activity] {
         return activities.filter { $0.status == .ongoing }
     }
@@ -1643,5 +1661,20 @@ extension UIView {
 
         glassEffectView.layer.cornerRadius = self.layer.cornerRadius
         glassEffectView.clipsToBounds = true
+    }
+}
+
+// MARK: - Seeded RNG for deterministic daily shuffles
+struct SeededRandomNumberGenerator: RandomNumberGenerator {
+    private var state: UInt64
+
+    init(seed: UInt64) {
+        state = seed
+    }
+
+    mutating func next() -> UInt64 {
+        // Linear congruential generator (same constants as glibc)
+        state = state &* 6364136223846793005 &+ 1442695040888963407
+        return state
     }
 }

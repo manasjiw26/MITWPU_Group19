@@ -1014,6 +1014,11 @@ extension VibeViewController {
                     vc.flowDelegate = self
                 }
             }
+        if segue.identifier == "ActivityForHerShow" {
+            if let dest = segue.destination as? ActivitiesForHerViewController {
+                dest.screenTitle = "Activities for \(partnerDisplayText)"
+            }
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

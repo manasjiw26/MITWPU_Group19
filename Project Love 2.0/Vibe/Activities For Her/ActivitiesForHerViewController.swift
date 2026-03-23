@@ -8,7 +8,7 @@ class ActivitiesForHerViewController: UIViewController, UICollectionViewDelegate
     @IBOutlet weak var activityCollectionView: UICollectionView!
     
     var activitiesForHer: [Activity] {
-        return DataStore.shared.getActivities()
+        return DataStore.shared.getDailyRandomActivities()
     }
     var screenTitle: String = "Activities"
     

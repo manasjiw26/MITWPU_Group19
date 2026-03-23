@@ -92,7 +92,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
 
         // Red tint for destructive actions
         if item.title == "Sign Out" {
-            cell.textLabel?.textColor = .systemOrange
+            cell.textLabel?.textColor = .systemRed
         } else if item.title == "Delete Account" {
             cell.textLabel?.textColor = .systemRed
         } else {
