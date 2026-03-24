@@ -182,7 +182,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             // Skip images already on disk — instant path, no network needed
             guard MemoryFileManager.loadImage(fileName: item.image_path) == nil else { continue }
 
-            print("[MemoryJarVC] 📥 Downloading missing image: \(item.image_path)")
 
             do {
                 let data = try await supabase.storage
@@ -190,7 +189,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                     .download(path: item.image_path)
 
                 MemoryFileManager.saveImage(data: data, fileName: item.image_path)
-                print("[MemoryJarVC] ✅ Saved missing image (\(data.count) bytes): \(item.image_path)")
 
                 // Mark is_synced = true so the uploader can clean up Supabase Storage.
                 // Only applies to the partner's images, never our own.
@@ -200,16 +198,15 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                         .update(["is_synced": true])
                         .eq("memory_id", value: item.id.uuidString)
                         .execute()
-                    print("[MemoryJarVC] ✅ Marked is_synced = true for \(item.id)")
+                    
                 }
 
             } catch {
-                print("[MemoryJarVC] ⚠️ Could not download missing image \(item.image_path): \(error)")
+                print("[MemoryJarVC] Could not download missing image \(item.image_path): \(error)")
             }
         }
     }
 
-    // MARK: - New Memory Handler (local + partner via MemorySyncManager)
 
     @objc func handleNewMemory(_ notification: Notification) {
         guard let localMemory = notification.object as? Memory else { return }
@@ -232,7 +229,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
 
-    /// Called when the PARTNER deletes a memory — removes heart and card in real-time.
     @objc func handleDeletedMemory(_ notification: Notification) {
         guard let deletedId = notification.object as? UUID else { return }
 
@@ -254,8 +250,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
 
-
-    // MARK: - UI Helpers
 
     private var lastLayoutWasEmpty: Bool? = nil
 
@@ -311,7 +305,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
 
-    // MARK: - Collection View
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return isEmptyState ? 1 : dataStore.savedMemories.count
@@ -361,7 +354,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         }
     }
 
-    // MARK: - Layout
 
     private func generateLayout() -> UICollectionViewLayout {
         if isEmptyState {
@@ -384,8 +376,6 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
         return UICollectionViewCompositionalLayout(section: section)
     }
-
-    // MARK: - Memory Display
 
     @objc func showMemoryDisplay(_ notification: Notification) {
         guard let index = notification.object as? Int else { return }

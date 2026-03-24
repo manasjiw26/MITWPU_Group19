@@ -146,9 +146,6 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                    let message = feedbackItem?.userMessage
                    let tags = Array(selectedFeedbackTags)
                    let score = scoreFromTags(selectedFeedbackTags)
-                   print("Feedback submit",
-                         "coupleActivityId:", coupleActivityId,
-                         "userId:", userId)
 
                    Task {
                        do {
@@ -163,9 +160,9 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                            _ = await DataStore.shared.refreshSuggestionsAfterFeedback(
                                       coupleActivityId: coupleActivityId
                                   )
-                           print("✅ Feedback saved for user:", userId)
+                           print(" Feedback saved for user:", userId)
                        } catch {
-                           print("❌ Failed to save feedback:", error)
+                           print(" Failed to save feedback:", error)
                        }
                    }
                }

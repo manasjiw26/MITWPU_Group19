@@ -73,7 +73,6 @@ enum MemoryFileManager {
             }
             return url
         } catch {
-            print("[MemoryFileManager] save failed: \(error)")
             return nil
         }
     }

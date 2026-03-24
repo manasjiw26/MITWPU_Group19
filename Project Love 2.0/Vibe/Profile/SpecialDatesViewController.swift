@@ -143,7 +143,6 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
         return nil
     }
 
-    // MARK: - Realtime
 
     private func listenForRealtimeChanges() {
         guard let relationshipId = DataStore.shared.currentRelationshipId else { return }
@@ -152,7 +151,6 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    // MARK: - Save
 
     @IBAction func saveButtonTapped(_ sender: UIButton) {
         guard let titleText = titleField.text, !titleText.isEmpty,
@@ -198,7 +196,6 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    // MARK: - Delete
 
     private func deleteSpecialDate(_ specialDate: SpecialDate, at indexPath: IndexPath) {
         Task { @MainActor in
@@ -208,7 +205,7 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
                 collectionView.setCollectionViewLayout(generateLayout(), animated: false)
                 collectionView.reloadData()
             } catch {
-                print("Failed to delete special date: \(error)")
+                
                 let alert = UIAlertController(
                     title: "Error",
                     message: "Could not delete. Please try again.",
@@ -220,7 +217,6 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    // MARK: - Helpers
 
     func clearFields() {
         titleField.text = ""
@@ -298,7 +294,6 @@ class SpecialDatesViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
-// MARK: - UITextViewDelegate
 extension SpecialDatesViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == .placeholderText {
@@ -312,7 +307,6 @@ extension SpecialDatesViewController: UITextViewDelegate {
     }
 }
 
-// MARK: - UICollectionViewDataSource + Delegate
 extension SpecialDatesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

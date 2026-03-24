@@ -490,7 +490,7 @@ class DataStore {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
             } catch {
-                print("Failed to save custom activity: \(error)")
+                
                 // Fallback to local
                 let newActivity = Activity(
                     name: name,
@@ -1496,7 +1496,7 @@ class DataStore {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
             } catch {
-                print("Failed to sync activities: \(error)")
+                
             }
         }
     }
@@ -1555,7 +1555,7 @@ class DataStore {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
             } catch {
-                print("Failed to schedule activity: \(error)")
+                
             }
         }
     }
