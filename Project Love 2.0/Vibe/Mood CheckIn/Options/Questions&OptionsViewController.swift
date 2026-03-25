@@ -101,7 +101,7 @@ class Questions_OptionsViewController: UIViewController {
                         need: needAnswer
                     )
 
-                    _ = DataStore.shared.getSuggestedActivitiesForDailyCheckIn(selection: selection, limit: 3)
+                    _ = DataStore.shared.getSuggestedActivitiesForDailyCheckIn(selection: selection)
                     flowDelegate?.dailyExerciseDidFinish()
                     dismiss(animated: true)
 

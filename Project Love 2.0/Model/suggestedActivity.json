@@ -2323,6 +2323,375 @@
         "3. Debate Briefly. Pay attention to each other\u2019s reactions, keep the energy positive, and adjust the pace if either of you needs it.",
         "4. Drop It. Wrap up with a quick reflection on what felt best, and decide one thing you want to repeat next time."
       ]
+    },
+    {
+      "id": 167,
+      "category": "A",
+      "name": "Love Note: Quick Send",
+      "description": "Send a short loving note right now to keep the good vibe going. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "2 mins",
+      "steps": []
+    },
+    {
+      "id": 168,
+      "category": "A",
+      "name": "Nudge: Celebrate You",
+      "description": "Send a playful nudge to celebrate your partner. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "1 min",
+      "steps": []
+    },
+    {
+      "id": 169,
+      "category": "A",
+      "name": "Explore: Fun & Playful",
+      "description": "Turn a good mood into a shared mini adventure. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 170,
+      "category": "A",
+      "name": "Build Your Bond: Rekindle Honeymoon Phase",
+      "description": "Bring back the spark with a short step by step journey. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "30 mins",
+      "steps": []
+    },
+    {
+      "id": 171,
+      "category": "A",
+      "name": "Activities For Her: Sweet Ideas",
+      "description": "Pick a sweet idea for him to do for her. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": []
+    },
+    {
+      "id": 172,
+      "category": "B",
+      "name": "Love Tips: Gentle Gestures",
+      "description": "Get small calm gestures based on your partner mood. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "5 mins",
+      "steps": []
+    },
+    {
+      "id": 173,
+      "category": "B",
+      "name": "Explore: Daily Dose of Us",
+      "description": "Keep everyday closeness steady and warm. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": []
+    },
+    {
+      "id": 174,
+      "category": "B",
+      "name": "Explore: Acts of Love",
+      "description": "Keep romance alive with a simple sweet act. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 175,
+      "category": "B",
+      "name": "Memory Jar: Add a Memory",
+      "description": "Save a small moment to revisit later. Location: Memory Jar page.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": []
+    },
+    {
+      "id": 176,
+      "category": "C",
+      "name": "Explore: Meaning & Growth",
+      "description": "Choose a growth focused activity to deepen understanding. Location: Explore page.",
+      "image": "Rekindle",
+      "time": "25 mins",
+      "steps": []
+    },
+    {
+      "id": 177,
+      "category": "C",
+      "name": "Explore: No Filter Chats",
+      "description": "Have a real conversation with gentle structure. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 178,
+      "category": "C",
+      "name": "Build Your Bond: Establishing Good Communication",
+      "description": "Follow a short journey to improve how you talk. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "30 mins",
+      "steps": []
+    },
+    {
+      "id": 179,
+      "category": "C",
+      "name": "Love Tips: Mood Based Ideas",
+      "description": "Get ideas that match your partner mood and your curiosity. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "5 mins",
+      "steps": []
+    },
+    {
+      "id": 180,
+      "category": "D",
+      "name": "Build Your Bond: Navigate Conflict Together",
+      "description": "Use step by step guidance to move through conflict. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "35 mins",
+      "steps": []
+    },
+    {
+      "id": 181,
+      "category": "D",
+      "name": "Love Note: Repair Note",
+      "description": "Send a short note to soften things. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "3 mins",
+      "steps": []
+    },
+    {
+      "id": 182,
+      "category": "D",
+      "name": "Nudge: Comfort Hug",
+      "description": "Send a gentle virtual hug as a soft reset. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "1 min",
+      "steps": []
+    },
+    {
+      "id": 183,
+      "category": "D",
+      "name": "Memory Jar: Revisit a Moment",
+      "description": "Revisit a memory that reminds you both of the good. Location: Memory Jar page.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": []
+    },
+    {
+      "id": 184,
+      "category": "E",
+      "name": "Love Note: Schedule for Later",
+      "description": "Write a note now and schedule it for a softer moment. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "5 mins",
+      "steps": []
+    },
+    {
+      "id": 185,
+      "category": "E",
+      "name": "Memory Jar: Quiet Revisit",
+      "description": "Share a quiet memory without pressure to talk. Location: Memory Jar page.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": []
+    },
+    {
+      "id": 186,
+      "category": "E",
+      "name": "Explore: Daily Dose of Us (Low Effort)",
+      "description": "Choose a tiny together moment that does not demand energy. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": []
+    },
+    {
+      "id": 187,
+      "category": "E",
+      "name": "Nudge: Soft Check In",
+      "description": "Send a low pressure check in nudge. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "1 min",
+      "steps": []
+    },
+    {
+      "id": 188,
+      "category": "F",
+      "name": "Love Note: Reassure",
+      "description": "Offer reassurance with a clear short note. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "3 mins",
+      "steps": []
+    },
+    {
+      "id": 189,
+      "category": "F",
+      "name": "Love Tips: Reassurance List",
+      "description": "Get quick ideas to help them feel safe. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "5 mins",
+      "steps": []
+    },
+    {
+      "id": 190,
+      "category": "F",
+      "name": "Explore: Acts of Love (Reassure)",
+      "description": "Use a small act of love to soothe insecurity. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 191,
+      "category": "F",
+      "name": "Nudge: Hold Me",
+      "description": "Send a supportive touch nudge. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "1 min",
+      "steps": []
+    },
+    {
+      "id": 192,
+      "category": "G",
+      "name": "Build Your Bond: Navigate Conflict Together (Reset)",
+      "description": "Use the conflict journey to reset the tone. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "35 mins",
+      "steps": []
+    },
+    {
+      "id": 193,
+      "category": "G",
+      "name": "Explore: No Filter Chats (Repair)",
+      "description": "Use a real talk card to repair tension. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 194,
+      "category": "G",
+      "name": "Love Note: Reset Apology",
+      "description": "Send a short apology or reset note. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "3 mins",
+      "steps": []
+    },
+    {
+      "id": 195,
+      "category": "G",
+      "name": "Build Your Bond: Establishing Good Communication (Repair)",
+      "description": "Use a step to improve how you speak during tension. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "25 mins",
+      "steps": []
+    },
+    {
+      "id": 196,
+      "category": "H",
+      "name": "Love Note: Reconnect",
+      "description": "Send a gentle note to reopen the door. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "3 mins",
+      "steps": []
+    },
+    {
+      "id": 197,
+      "category": "H",
+      "name": "Build Your Bond: Establishing Good Communication (Reconnect)",
+      "description": "Start the communication journey to reconnect. Location: Vibe page.",
+      "image": "Rekindle",
+      "time": "30 mins",
+      "steps": []
+    },
+    {
+      "id": 198,
+      "category": "H",
+      "name": "Explore: Daily Dose of Us (Reconnect)",
+      "description": "Pick a small together moment to ease distance. Location: Explore page.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": []
+    },
+    {
+      "id": 199,
+      "category": "H",
+      "name": "Memory Jar: Share a Memory",
+      "description": "Revisit a memory and share one feeling. Location: Memory Jar page.",
+      "image": "Activityimage",
+      "time": "15 mins",
+      "steps": []
+    },
+    {
+      "id": 200,
+      "category": "I",
+      "name": "Memory Jar: Solo Revisit",
+      "description": "Revisit a memory quietly on your own. Location: Memory Jar page.",
+      "image": "Activityimage",
+      "time": "10 mins",
+      "steps": []
+    },
+    {
+      "id": 201,
+      "category": "I",
+      "name": "Love Note: When Ready",
+      "description": "Draft a note now and send when ready. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "5 mins",
+      "steps": []
+    },
+    {
+      "id": 202,
+      "category": "I",
+      "name": "Nudge: Low Pressure Ping",
+      "description": "Send a tiny nudge that does not require a reply. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "1 min",
+      "steps": []
+    },
+    {
+      "id": 203,
+      "category": "I",
+      "name": "Explore: Meaning & Growth (Solo)",
+      "description": "Choose a growth prompt you can do quietly. Location: Explore page.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 204,
+      "category": "J",
+      "name": "Explore: Fun & Playful (Reach Out)",
+      "description": "Use a playful activity to reconnect lightly. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 205,
+      "category": "J",
+      "name": "Explore: Spice It Up!",
+      "description": "Turn up the spark with a playful idea. Location: Explore page.",
+      "image": "Rekindle",
+      "time": "20 mins",
+      "steps": []
+    },
+    {
+      "id": 206,
+      "category": "J",
+      "name": "Nudge: Playful Kiss",
+      "description": "Send a playful kiss nudge to break distance. Location: Explore page.",
+      "image": "Fun&Playful",
+      "time": "1 min",
+      "steps": []
+    },
+    {
+      "id": 207,
+      "category": "J",
+      "name": "Activities For Him: Thoughtful Ideas",
+      "description": "Pick a thoughtful idea for her to do for him. Location: Vibe page.",
+      "image": "Activityimage",
+      "time": "30 mins",
+      "steps": []
     }
   ]
 }

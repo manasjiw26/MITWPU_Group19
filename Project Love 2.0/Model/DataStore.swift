@@ -285,14 +285,59 @@ class DataStore {
             return .B
         }
     
+        /// Returns the "type" prefix for a suggested activity name.
+        /// e.g. "Love Note: Sweet Morning" → "Love Note",
+        ///      "Blindfolded Route Road"   → "Activity"
+        func suggestionTypePrefix(_ name: String) -> String {
+            if let colonIndex = name.firstIndex(of: ":") {
+                return String(name[name.startIndex..<colonIndex]).trimmingCharacters(in: .whitespaces)
+            }
+            return "Activity"
+        }
+
+        /// Picks `count` activities from `pool` ensuring no two share the same type prefix.
+        /// First selects one item per type (shuffled), then fills remaining slots from leftover items.
+        private func diverseSelection(from pool: [Activity], count: Int) -> [Activity] {
+            // Group by type prefix
+            var byType: [String: [Activity]] = [:]
+            for a in pool.shuffled() {
+                let key = suggestionTypePrefix(a.name)
+                byType[key, default: []].append(a)
+            }
+
+            var result: [Activity] = []
+            var usedTypes: Set<String> = []
+
+            // 1. Pick one from each type (shuffled order)
+            for (type, items) in byType.shuffled() {
+                guard result.count < count else { break }
+                if let pick = items.first {
+                    result.append(pick)
+                    usedTypes.insert(type)
+                }
+            }
+
+            // 2. If we still need more, fill from remaining items (avoiding duplicates)
+            if result.count < count {
+                let usedNames = Set(result.map { $0.name })
+                let remaining = pool.shuffled().filter { !usedNames.contains($0.name) }
+                for item in remaining {
+                    guard result.count < count else { break }
+                    result.append(item)
+                }
+            }
+
+            return result
+        }
+
         @discardableResult
-        func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection, limit: Int = 3) -> [Activity] {
+        func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection) -> [Activity] {
             lastDailyCheckInSelection = selection
             let group = resolveSuggestionGroup(selection: selection)
             lastSuggestionGroup = group
             let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-            let shuffledPool = pool.shuffled()
-            let result = Array(shuffledPool.prefix(limit))
+            let count = Int.random(in: 3...5)
+            let result = diverseSelection(from: pool, count: count)
             self.suggestedActivities = result
             return result
         }
@@ -317,7 +362,7 @@ class DataStore {
         }
         return moods[0]
     }
-    func refreshSuggestionsAfterFeedback(coupleActivityId: UUID, limit: Int = 3) async -> [Activity] {
+    func refreshSuggestionsAfterFeedback(coupleActivityId: UUID) async -> [Activity] {
         let feedback = try? await SupabaseManager.shared.fetchFeedbackForActivity(coupleActivityId: coupleActivityId)
 
         let base = lastDailyCheckInSelection ?? DailyCheckInSelection(
@@ -344,9 +389,10 @@ class DataStore {
 
         let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
 
-        // Exclude the last activity if you want
+        // Exclude the just-completed activity
         let filtered = pool.filter { $0.coupleActivityId != coupleActivityId }
-        let result = Array(filtered.shuffled().prefix(limit))
+        let count = Int.random(in: 3...5)
+        let result = diverseSelection(from: filtered, count: count)
 
         self.suggestedActivities = result
         return result

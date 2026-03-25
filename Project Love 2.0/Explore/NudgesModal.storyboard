@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NdgVC-01">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Nudges Modal View Controller-->
+        <scene sceneID="ndg-sc-001">
+            <objects>
+                <viewController storyboardIdentifier="NudgesModalVC" id="NdgVC-01" customClass="NudgesModalViewController" customModule="Project_Love_2_0" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ndg-vw-001">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndg-gb-001">
+                                <rect key="frame" x="178.66666666666666" y="10" width="36" height="5"/>
+                                <color key="backgroundColor" systemColor="tertiaryLabelColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="5" id="gb-h-001"/>
+                                    <constraint firstAttribute="width" constant="36" id="gb-w-001"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="2.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nudges" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ndg-tl-001">
+                                <rect key="frame" x="20" y="26" width="353" height="26"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ndg-cv-001">
+                                <rect key="frame" x="0.0" y="68" width="393" height="140"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="140" id="cv-h-001"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="16" minimumInteritemSpacing="10" id="ndg-fl-001">
+                                    <size key="itemSize" width="100" height="120"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ndg-sa-001"/>
+                        <color key="backgroundColor" name="AppBackground"/>
+                        <constraints>
+                            <constraint firstItem="ndg-cv-001" firstAttribute="leading" secondItem="ndg-vw-001" secondAttribute="leading" id="c-cv-lead"/>
+                            <constraint firstItem="ndg-cv-001" firstAttribute="top" secondItem="ndg-tl-001" secondAttribute="bottom" constant="16" id="c-cv-top"/>
+                            <constraint firstItem="ndg-sa-001" firstAttribute="trailing" secondItem="ndg-cv-001" secondAttribute="trailing" id="c-cv-trail"/>
+                            <constraint firstItem="ndg-gb-001" firstAttribute="centerX" secondItem="ndg-vw-001" secondAttribute="centerX" id="c-gb-cx"/>
+                            <constraint firstItem="ndg-gb-001" firstAttribute="top" secondItem="ndg-vw-001" secondAttribute="top" constant="10" id="c-gb-top"/>
+                            <constraint firstItem="ndg-tl-001" firstAttribute="leading" secondItem="ndg-vw-001" secondAttribute="leading" constant="20" id="c-tl-lead"/>
+                            <constraint firstItem="ndg-tl-001" firstAttribute="top" secondItem="ndg-gb-001" secondAttribute="bottom" constant="11" id="c-tl-top"/>
+                            <constraint firstItem="ndg-sa-001" firstAttribute="trailing" secondItem="ndg-tl-001" secondAttribute="trailing" constant="20" id="c-tl-trail"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="nudgesCollectionView" destination="ndg-cv-001" id="o-cv-001"/>
+                        <outlet property="titleLabel" destination="ndg-tl-001" id="o-tl-001"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ndg-fr-001" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138" y="131"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="AppBackground">
+            <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tertiaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
