@@ -17,9 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="Jkm-qo-d0f">
+                            <tableView translatesAutoresizingMaskIntoConstraints="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="Jkm-qo-d0f">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="sectionIndexBackgroundColor" name="AppBackground"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="psU-Pa-e2J">
@@ -87,6 +86,12 @@
                                 </prototypes>
                             </tableView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="Jkm-qo-d0f" firstAttribute="top" secondItem="mbD-Kj-DMg" secondAttribute="top" id="tbl-top-con"/>
+                            <constraint firstItem="Jkm-qo-d0f" firstAttribute="leading" secondItem="BGe-JM-vTV" secondAttribute="leading" id="tbl-ld-con"/>
+                            <constraint firstItem="BGe-JM-vTV" firstAttribute="trailing" secondItem="Jkm-qo-d0f" secondAttribute="trailing" id="tbl-tr-con"/>
+                            <constraint firstItem="mbD-Kj-DMg" firstAttribute="bottom" secondItem="Jkm-qo-d0f" secondAttribute="bottom" id="tbl-bt-con"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="BGe-JM-vTV"/>
                         <color key="backgroundColor" name="AppBackground"/>
                     </view>

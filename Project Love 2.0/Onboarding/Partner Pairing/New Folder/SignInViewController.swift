@@ -99,19 +99,19 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
 
             DispatchQueue.main.async {
                 self.spinner.stopAnimating()
-
+                
                 let defaults = UserDefaults.standard
+                let hasValidNameAndDOB = (DataStore.shared.userProfile?.name != "Name" && DataStore.shared.userProfile?.name != nil) // approximation since DataStore 
                 defaults.set(true, forKey: "hasCompletedAuth")
+                // Basic info is considered complete if profile exists. Let's just mark it true to avoid regressions, or just check DataStore.
                 defaults.set(true, forKey: "hasCompletedBasicInfo")
-
+                defaults.set(hasAssessment, forKey: "hasCompletedAssessment")
+                defaults.set(userRow?.relationship_id != nil, forKey: "hasCompletedPairing")
+                defaults.set(userRow?.relationship_id != nil, forKey: "hasCompletedOnboarding")
+                
                 let onboardingSB = UIStoryboard(name: "Onboarding", bundle: nil)
-
-                if let row = userRow, row.relationship_id != nil {
-                    // Already paired → mark all stages done and go to main app
-                    defaults.set(true, forKey: "hasCompletedAssessment")
-                    defaults.set(true, forKey: "hasCompletedPairing")
-                    defaults.set(true, forKey: "hasCompletedOnboarding")
-
+                
+                if defaults.bool(forKey: "hasCompletedOnboarding") {
                     let mainSB = UIStoryboard(name: "Main", bundle: nil)
                     guard let mainVC = mainSB.instantiateInitialViewController() else { return }
                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -120,8 +120,13 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                         window.rootViewController = mainVC
                         window.makeKeyAndVisible()
                     }
+                } else if defaults.bool(forKey: "hasCompletedPairing") {
+                    let vc = onboardingSB.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
+                    self.navigationController?.pushViewController(vc, animated: true)
+                } else if defaults.bool(forKey: "hasCompletedAssessment") {
+                    let vc = onboardingSB.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
+                    self.navigationController?.pushViewController(vc, animated: true)
                 } else {
-                    // Not paired yet → go to assessment (then partner pairing)
                     let vc = onboardingSB.instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
                     vc.userId = user.id
                     self.navigationController?.pushViewController(vc, animated: true)

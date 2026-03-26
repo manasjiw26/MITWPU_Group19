@@ -125,8 +125,7 @@ class onboardingQuestionViewController: UIViewController, UITableViewDelegate, U
                                 }
 
                                 self.dismiss(animated: true) {
-                                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
-                                    vc.view.backgroundColor = UIColor(named: "AppBackground")
+                                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
                                     parentNavController.pushViewController(vc, animated: true)
                                 }
                             }

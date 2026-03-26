@@ -71,6 +71,7 @@
             </constraints>
             <size key="customSize" width="406" height="250"/>
             <connections>
+                <outlet property="actionButton" destination="fQf-9w-fYq" id="aBc-De-FgH"/>
                 <outlet property="checkInImageView" destination="iI6-ZC-kjE" id="R5Y-xX-ywv"/>
                 <outlet property="checkInSubTitleLabel" destination="Zyx-nl-JMe" id="YKs-hT-aaZ"/>
                 <outlet property="checkInTitleLabel" destination="rWm-mi-iuW" id="ge6-UA-JIs"/>

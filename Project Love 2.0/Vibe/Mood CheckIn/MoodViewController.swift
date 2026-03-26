@@ -8,7 +8,7 @@
 import UIKit
 private let ongoingActivityCountKey = "ongoingActivityCount"
 
-class MoodViewController: UIViewController, SmallModalDelegate {
+class MoodViewController: UIViewController, SmallModalDelegate, InfoModalDelegate {
 
     @IBOutlet weak var MoodCheckIn: UICollectionView!
     
@@ -280,23 +280,32 @@ class MoodViewController: UIViewController, SmallModalDelegate {
 
             let selectedActivity = suggestedActivities[indexPath.row]
 
-            let destinationVC = SmallModalViewController(
-                nibName: "SmallModalViewController",
-                bundle: nil
-            )
-            
-            destinationVC.selectedActivity = selectedActivity
+            // Check if activity has steps — if not, show InfoModal
+            if selectedActivity.steps == nil || selectedActivity.steps?.isEmpty == true {
+                let storyboard = UIStoryboard(name: "InfoModal", bundle: nil)
+                let infoVC = storyboard.instantiateViewController(withIdentifier: "InfoModalViewController") as! InfoModalViewController
+                infoVC.activity = selectedActivity
+                infoVC.delegate = self
+                infoVC.modalPresentationStyle = .overFullScreen
+                present(infoVC, animated: false)
+            } else {
+                let destinationVC = SmallModalViewController(
+                    nibName: "SmallModalViewController",
+                    bundle: nil
+                )
+                destinationVC.selectedActivity = selectedActivity
 
-            if let modalData = DataStore.shared.smallmodal.first(
-                where: { $0.title == selectedActivity.name }
-            ) {
-                destinationVC.modalData = modalData
+                if let modalData = DataStore.shared.smallmodal.first(
+                    where: { $0.title == selectedActivity.name }
+                ) {
+                    destinationVC.modalData = modalData
+                }
+
+                destinationVC.flowSource = .activitiesForHer
+                destinationVC.modalPresentationStyle = .overFullScreen
+                destinationVC.delegate = self
+                present(destinationVC, animated: false)
             }
-
-            destinationVC.flowSource = .activitiesForHer
-            destinationVC.modalPresentationStyle = .overFullScreen
-            destinationVC.delegate = self
-            present(destinationVC, animated: false)
             return
         }
 
@@ -447,5 +456,13 @@ extension MoodViewController: TellMoodSelectionDelegate {
     }
 }
 
-
-
+// MARK: - InfoModalDelegate
+extension MoodViewController {
+    func didTapLetsDoThis(for activity: Activity) {
+        if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
+            suggestedActivities.remove(at: index)
+            DataStore.shared.suggestedActivities = suggestedActivities
+            MoodCheckIn.reloadSections(IndexSet(integer: 1))
+        }
+    }
+}

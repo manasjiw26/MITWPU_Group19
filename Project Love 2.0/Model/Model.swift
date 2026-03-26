@@ -19,13 +19,16 @@ struct ActivitiesJSON: Codable {
 
 struct JSONActivity: Codable {
     let id: Int
-    let name: String
+    let name: String?
+    let title: String?
     let description: String
     let detailedDescription: String?
+    let modalDescription: String?
     let image: String
     let category: String
-    let time: String
-    let steps: [String]
+    let time: String?
+    let steps: [String]?
+    let location: String?
 }
 
 struct Activity: Codable {
@@ -34,12 +37,14 @@ struct Activity: Codable {
     var name : String
     var description : String
     var detailedDescription: String?
+    var modalDescription: String?
     var image : String
     var time : String
     var status: ActivityStatus
     var category: String
     var scheduledDate: Date?
     var steps: [String]? = nil
+    var location: String? = nil
 }
 
 enum ActivityStatus: Codable {
@@ -333,6 +338,16 @@ struct DailyCheckInSelection {
     let vibe: String
     let need: String
 }
+
+struct VibeTitle {
+    let name: String
+    let description: String
+
+    var displayTitle: String {
+        return " \(name)"
+    }
+}
+
 
 struct MemoryModel: Decodable {
     let id: UUID

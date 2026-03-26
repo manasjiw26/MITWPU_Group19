@@ -28,14 +28,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = mainStoryboard.instantiateInitialViewController()
 
         } else if defaults.bool(forKey: "hasCompletedPairing") {
-            // Pairing done → go to app brief (infoPageVC)
-            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
+            // Pairing done → all done, go to main app
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            window.rootViewController = mainStoryboard.instantiateInitialViewController()
+            defaults.set(true, forKey: "hasCompletedOnboarding")
+
+        } else if defaults.bool(forKey: "hasCompletedInfoPages") {
+            // Info pages done → go to partner pairing
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
+            vc.view.backgroundColor = UIColor(named: "AppBackground")
             window.rootViewController = UINavigationController(rootViewController: vc)
 
         } else if defaults.bool(forKey: "hasCompletedAssessment") {
-            // Assessment done → go to partner pairing
-            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
-            vc.view.backgroundColor = UIColor(named: "AppBackground")
+            // Assessment done → go to info pages (what the app does)
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
             window.rootViewController = UINavigationController(rootViewController: vc)
 
         } else if defaults.bool(forKey: "hasCompletedBasicInfo") {
@@ -89,6 +95,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: "hasCompletedOnboarding") {
+            ScheduleManager.shared.scheduleAppSideNotifications()
+        }
     }
 
 

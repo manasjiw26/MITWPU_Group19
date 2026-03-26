@@ -143,6 +143,7 @@ class InvitePartnerViewController: UIViewController {
     }
     func showPartnerJoinedAlert() {
         UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         let alert = UIAlertController(
             title: "Paired ❤️",
             message: "Your partner has joined!",
@@ -150,17 +151,14 @@ class InvitePartnerViewController: UIViewController {
         )
 
         alert.addAction(UIAlertAction(title: "Continue", style: .default) { _ in
-            
-            let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
-            
-            guard let vc = storyboard.instantiateViewController(withIdentifier: "infoPageViewController") as? infoPageViewController else {
-                return
-            }
-            
-            if let nav = self.navigationController {
-                nav.pushViewController(vc, animated: true)
-            } else {
-                self.present(vc, animated: true)
+            let mainSB = UIStoryboard(name: "Main", bundle: nil)
+            guard let mainVC = mainSB.instantiateInitialViewController() else { return }
+
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let sceneDelegate = windowScene.delegate as? SceneDelegate,
+               let window = sceneDelegate.window {
+                window.rootViewController = mainVC
+                window.makeKeyAndVisible()
             }
         })
 
@@ -170,21 +168,22 @@ class InvitePartnerViewController: UIViewController {
     @IBAction func skipTapped(_ sender: Any) {
         UserDefaults.standard.set(true, forKey: "didSkipPairing")
         UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
             
             // Stop realtime listener if active
             Task {
                 await realtimeChannel?.unsubscribe()
             }
             
-            let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
+            let mainSB = UIStoryboard(name: "Main", bundle: nil)
+            guard let mainVC = mainSB.instantiateInitialViewController() else { return }
             
-            guard let vc = storyboard.instantiateViewController(
-                withIdentifier: "infoPageViewController"
-            ) as? infoPageViewController else {
-                return
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let sceneDelegate = windowScene.delegate as? SceneDelegate,
+               let window = sceneDelegate.window {
+                window.rootViewController = mainVC
+                window.makeKeyAndVisible()
             }
-            
-            navigationController?.pushViewController(vc, animated: true)
     }
     
 }

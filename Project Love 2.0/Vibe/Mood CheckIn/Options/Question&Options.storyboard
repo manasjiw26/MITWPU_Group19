@@ -60,6 +60,42 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <!-- Result Container View (hidden by default, shown on step 4) -->
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vrContainer">
+                                <rect key="frame" x="0.0" y="146" width="393" height="530"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vrImg">
+                                        <rect key="frame" x="71" y="30" width="250" height="250"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="250" id="vrImg-w"/>
+                                            <constraint firstAttribute="height" constant="250" id="vrImg-h"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrTitle">
+                                        <rect key="frame" x="20" y="310" width="353" height="28"/>
+                                        <fontDescription key="fontDescription" type="system" weight="bold" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrDesc">
+                                        <rect key="frame" x="30" y="350" width="333" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" name="AppBackground"/>
+                                <constraints>
+                                    <constraint firstItem="vrImg" firstAttribute="top" secondItem="vrContainer" secondAttribute="top" constant="30" id="vr-c1"/>
+                                    <constraint firstItem="vrImg" firstAttribute="centerX" secondItem="vrContainer" secondAttribute="centerX" id="vr-c2"/>
+                                    <constraint firstItem="vrTitle" firstAttribute="top" secondItem="vrImg" secondAttribute="bottom" constant="30" id="vr-c3"/>
+                                    <constraint firstItem="vrTitle" firstAttribute="leading" secondItem="vrContainer" secondAttribute="leading" constant="20" id="vr-c4"/>
+                                    <constraint firstAttribute="trailing" secondItem="vrTitle" secondAttribute="trailing" constant="20" id="vr-c5"/>
+                                    <constraint firstItem="vrDesc" firstAttribute="top" secondItem="vrTitle" secondAttribute="bottom" constant="12" id="vr-c6"/>
+                                    <constraint firstItem="vrDesc" firstAttribute="leading" secondItem="vrContainer" secondAttribute="leading" constant="30" id="vr-c7"/>
+                                    <constraint firstAttribute="trailing" secondItem="vrDesc" secondAttribute="trailing" constant="30" id="vr-c8"/>
+                                </constraints>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ijd-Hj-ue1">
                                 <rect key="frame" x="20" y="728" width="353" height="35"/>
                                 <state key="normal" title="Button"/>
@@ -88,6 +124,11 @@
                             <constraint firstItem="Ijd-Hj-ue1" firstAttribute="leading" secondItem="udm-8A-PLU" secondAttribute="leading" constant="20" id="oZH-Vb-JbQ"/>
                             <constraint firstItem="zBL-lZ-wCm" firstAttribute="leading" secondItem="udm-8A-PLU" secondAttribute="leading" constant="25" id="vqz-tv-dQ9"/>
                             <constraint firstItem="udm-8A-PLU" firstAttribute="trailing" secondItem="kJE-8g-FFn" secondAttribute="trailing" constant="20" id="vxn-wa-rf3"/>
+                            <!-- Result container constraints (same position as collection view) -->
+                            <constraint firstItem="vrContainer" firstAttribute="top" secondItem="kJE-8g-FFn" secondAttribute="bottom" constant="10" id="vrc-t"/>
+                            <constraint firstItem="vrContainer" firstAttribute="leading" secondItem="udm-8A-PLU" secondAttribute="leading" id="vrc-l"/>
+                            <constraint firstItem="udm-8A-PLU" firstAttribute="trailing" secondItem="vrContainer" secondAttribute="trailing" id="vrc-r"/>
+                            <constraint firstItem="Ijd-Hj-ue1" firstAttribute="top" secondItem="vrContainer" secondAttribute="bottom" constant="20" id="vrc-b"/>
                         </constraints>
                     </view>
                     <modalPageSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -96,6 +137,10 @@
                         <outlet property="optionsCollectionView" destination="ECx-kV-1LV" id="Vtw-Tg-LR2"/>
                         <outlet property="progressView" destination="zBL-lZ-wCm" id="RAN-x3-fTL"/>
                         <outlet property="questionLabel" destination="kJE-8g-FFn" id="wwf-qv-Da9"/>
+                        <outlet property="resultContainerView" destination="vrContainer" id="vrc-conn"/>
+                        <outlet property="resultImageView" destination="vrImg" id="vri-conn"/>
+                        <outlet property="resultTitleLabel" destination="vrTitle" id="vrt-conn"/>
+                        <outlet property="resultDescriptionLabel" destination="vrDesc" id="vrd-conn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wQZ-Gz-Lr4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

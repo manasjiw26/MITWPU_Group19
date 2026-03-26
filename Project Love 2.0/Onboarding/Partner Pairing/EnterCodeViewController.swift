@@ -97,6 +97,7 @@ class EnterCodeViewController: UIViewController {
 
     func showSuccess() {
         UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         DispatchQueue.main.async {
             self.spinner.stopAnimating()
             self.view.isUserInteractionEnabled = true
@@ -108,17 +109,14 @@ class EnterCodeViewController: UIViewController {
             )
 
             alert.addAction(UIAlertAction(title: "Continue", style: .default) { _ in
-                
-                let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
-                
-                guard let vc = storyboard.instantiateViewController(withIdentifier: "infoPageViewController") as? infoPageViewController else {
-                    return
-                }
-                
-                if let nav = self.navigationController {
-                    nav.pushViewController(vc, animated: true)
-                } else {
-                    self.present(vc, animated: true)
+                let mainSB = UIStoryboard(name: "Main", bundle: nil)
+                guard let mainVC = mainSB.instantiateInitialViewController() else { return }
+
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                   let window = sceneDelegate.window {
+                    window.rootViewController = mainVC
+                    window.makeKeyAndVisible()
                 }
             })
 
@@ -144,26 +142,22 @@ class EnterCodeViewController: UIViewController {
     
     @IBAction func skipTapped(_ sender: Any) {
         UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
         spinner.stopAnimating()
         view.isUserInteractionEnabled = true
             
             // Optional: Save skip state
         UserDefaults.standard.set(true, forKey: "didSkipPairing")
             
-        let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
+        let mainSB = UIStoryboard(name: "Main", bundle: nil)
+        guard let mainVC = mainSB.instantiateInitialViewController() else { return }
             
-        guard let vc = storyboard.instantiateViewController(
-                withIdentifier: "infoPageViewController"
-            ) as? infoPageViewController else {
-                return
-            }
-            
-            if let nav = navigationController {
-                nav.pushViewController(vc, animated: true)
-            } else {
-                present(vc, animated: true)
-            }
-        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = windowScene.delegate as? SceneDelegate,
+           let window = sceneDelegate.window {
+            window.rootViewController = mainVC
+            window.makeKeyAndVisible()
+        }
     }
     
 }

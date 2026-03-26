@@ -16,9 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="jjU-Dc-wOq">
-                                <rect key="frame" x="0.0" y="47" width="393" height="746"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jjU-Dc-wOq">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="sectionIndexBackgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="6Si-Ml-12Y">
@@ -29,8 +28,8 @@
                                             <rect key="frame" x="146.66666666666666" y="10" width="100" height="100"/>
                                             <color key="tintColor" systemColor="systemGray3Color"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="aYr-iY-ENm"/>
-                                                <constraint firstAttribute="height" constant="100" id="urx-ed-59C"/>
+                                                <constraint firstAttribute="width" secondItem="7Wk-A1-MQr" secondAttribute="height" multiplier="1:1" id="QQh-EO-alj"/>
+                                                <constraint firstAttribute="width" constant="100" id="jny-xC-FTT"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -53,14 +52,15 @@
                                     </subviews>
                                     <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
-                                        <constraint firstItem="WuF-WC-hhE" firstAttribute="leading" secondItem="6Si-Ml-12Y" secondAttribute="leading" constant="20" id="LFE-sN-HAY"/>
-                                        <constraint firstAttribute="trailing" secondItem="u51-YI-eWX" secondAttribute="trailing" constant="20" id="T3h-S3-Ye6"/>
-                                        <constraint firstItem="u51-YI-eWX" firstAttribute="leading" secondItem="6Si-Ml-12Y" secondAttribute="leading" constant="20" id="b99-Hp-hJc"/>
-                                        <constraint firstItem="7Wk-A1-MQr" firstAttribute="centerX" secondItem="6Si-Ml-12Y" secondAttribute="centerX" id="bM2-ir-v3A"/>
-                                        <constraint firstItem="u51-YI-eWX" firstAttribute="top" secondItem="WuF-WC-hhE" secondAttribute="bottom" constant="8" id="iEd-wz-bNM"/>
-                                        <constraint firstAttribute="trailing" secondItem="WuF-WC-hhE" secondAttribute="trailing" constant="20" id="nJv-5j-Gf2"/>
-                                        <constraint firstItem="7Wk-A1-MQr" firstAttribute="top" secondItem="6Si-Ml-12Y" secondAttribute="top" constant="10" id="rdC-6q-v1f"/>
-                                        <constraint firstItem="WuF-WC-hhE" firstAttribute="top" secondItem="7Wk-A1-MQr" secondAttribute="bottom" constant="16" id="sck-N1-eke"/>
+                                        <constraint firstItem="WuF-WC-hhE" firstAttribute="top" secondItem="7Wk-A1-MQr" secondAttribute="bottom" constant="16" id="3Hb-oZ-iem"/>
+                                        <constraint firstItem="WuF-WC-hhE" firstAttribute="leading" secondItem="u51-YI-eWX" secondAttribute="leading" id="3mk-hu-1eb"/>
+                                        <constraint firstItem="WuF-WC-hhE" firstAttribute="leading" secondItem="6Si-Ml-12Y" secondAttribute="leading" constant="20" id="7dq-5F-Hna"/>
+                                        <constraint firstItem="u51-YI-eWX" firstAttribute="top" secondItem="WuF-WC-hhE" secondAttribute="bottom" constant="8.0000000000000284" id="PUg-Gu-gcF"/>
+                                        <constraint firstAttribute="bottom" secondItem="u51-YI-eWX" secondAttribute="bottom" constant="22.666666666666657" id="gTD-RM-KoY"/>
+                                        <constraint firstItem="7Wk-A1-MQr" firstAttribute="top" secondItem="6Si-Ml-12Y" secondAttribute="top" constant="10" id="heU-qM-kpn"/>
+                                        <constraint firstItem="7Wk-A1-MQr" firstAttribute="centerX" secondItem="6Si-Ml-12Y" secondAttribute="centerX" id="nbF-n9-pn6"/>
+                                        <constraint firstItem="7Wk-A1-MQr" firstAttribute="centerX" secondItem="WuF-WC-hhE" secondAttribute="centerX" id="vjH-Rf-tBK"/>
+                                        <constraint firstItem="WuF-WC-hhE" firstAttribute="trailing" secondItem="u51-YI-eWX" secondAttribute="trailing" id="yZS-7v-Xgg"/>
                                     </constraints>
                                 </view>
                                 <prototypes>
@@ -82,6 +82,16 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="UQu-Lp-TmP"/>
                         <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="jjU-Dc-wOq" firstAttribute="top" secondItem="5NH-HA-hUH" secondAttribute="top" id="eJ1-S7-t9b"/>
+                            <constraint firstItem="jjU-Dc-wOq" firstAttribute="leading" secondItem="UQu-Lp-TmP" secondAttribute="leading" id="m4N-wD-XHN"/>
+                            <constraint firstItem="jjU-Dc-wOq" firstAttribute="trailing" secondItem="UQu-Lp-TmP" secondAttribute="trailing" id="rzQ-wJ-966"/>
+                            <constraint firstAttribute="bottom" secondItem="jjU-Dc-wOq" secondAttribute="bottom" id="tbl-bt-con"/>
+                            <constraint firstItem="jjU-Dc-wOq" firstAttribute="leading" secondItem="UQu-Lp-TmP" secondAttribute="leading" id="tbl-ld-con"/>
+                            <constraint firstItem="jjU-Dc-wOq" firstAttribute="top" secondItem="5NH-HA-hUH" secondAttribute="top" id="tbl-top-con"/>
+                            <constraint firstItem="UQu-Lp-TmP" firstAttribute="trailing" secondItem="jjU-Dc-wOq" secondAttribute="trailing" id="tbl-tr-con"/>
+                            <constraint firstAttribute="bottom" secondItem="jjU-Dc-wOq" secondAttribute="bottom" id="xz9-mR-Luy"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -95,7 +105,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="knV-BG-5aP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6947.3282442748086" y="147.88732394366198"/>
+            <point key="canvasLocation" x="6944" y="146"/>
         </scene>
     </scenes>
     <resources>

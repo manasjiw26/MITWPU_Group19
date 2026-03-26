@@ -90,6 +90,11 @@ class DataStore {
         coupleActivities    = []
         notifications       = []
         profileSections     = []
+        personalInfoSections = []
+        savedMemories       = []
+        loadPersonalInfoData()
+        loadProfileData()
+        loadSampleData()
     }
 
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
@@ -112,17 +117,21 @@ class DataStore {
                     continue
                 }
                 
+                let activityName = json.title ?? json.name ?? "Activity"
+                
                 let activity = Activity(
                     id: json.id,
-                    name: json.name,
+                    name: activityName,
                     description: json.description,
                     detailedDescription: json.detailedDescription,
+                    modalDescription: json.modalDescription,
                     image: json.image,
-                    time: json.time,
+                    time: json.time ?? "",
                     status: .none,
                     category: json.category,
                     scheduledDate: nil,
-                        steps: json.steps
+                    steps: json.steps,
+                    location: json.location
                 )
                 
                 if grouped[group] != nil {
@@ -336,8 +345,26 @@ class DataStore {
             let group = resolveSuggestionGroup(selection: selection)
             lastSuggestionGroup = group
             let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-            let count = Int.random(in: 3...5)
-            let result = diverseSelection(from: pool, count: count)
+            let count = Int.random(in: 3...4)
+
+            // Separate activities with steps vs without steps
+            let withSteps = pool.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
+            let withoutSteps = pool.filter { $0.steps == nil || ($0.steps?.isEmpty ?? true) }
+
+            // Pick (count - 1) from the non-step pool, then 1 activity with steps as the last item
+            let nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
+            let stepPick = withSteps.shuffled().first
+
+            var result = nonStepPicks
+            if let lastActivity = stepPick {
+                result.append(lastActivity)
+            } else {
+                // Fallback: if no step activity available, just use diverse selection
+                let result = diverseSelection(from: pool, count: count)
+                self.suggestedActivities = result
+                return result
+            }
+
             self.suggestedActivities = result
             return result
         }
@@ -391,8 +418,23 @@ class DataStore {
 
         // Exclude the just-completed activity
         let filtered = pool.filter { $0.coupleActivityId != coupleActivityId }
-        let count = Int.random(in: 3...5)
-        let result = diverseSelection(from: filtered, count: count)
+        let count = Int.random(in: 3...4)
+
+        // Separate activities with steps vs without steps
+        let withSteps = filtered.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
+        let withoutSteps = filtered.filter { $0.steps == nil || ($0.steps?.isEmpty ?? true) }
+
+        let nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
+        let stepPick = withSteps.shuffled().first
+
+        var result = nonStepPicks
+        if let lastActivity = stepPick {
+            result.append(lastActivity)
+        } else {
+            let result = diverseSelection(from: filtered, count: count)
+            self.suggestedActivities = result
+            return result
+        }
 
         self.suggestedActivities = result
         return result
@@ -401,6 +443,94 @@ class DataStore {
     private func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
+
+    /// Maps the three Quick Vibe Check answers to one of the 12 relationship titles.
+    /// Priority: most-specific combos first, generic catch-alls last.
+    func resolveVibeTitle(vibe: String, need: String, closeness: String) -> VibeTitle {
+        let v = normalize(vibe)
+        let n = normalize(need)
+        let c = normalize(closeness)
+
+        let isVibing = v == "vibing"
+        let isSynced = v == "synced"
+        let isMeh    = v == "meh"
+        let isDry    = v == "dry"
+
+        let isQualityTime = n == "quality time"
+        let isReassurance = n == "reassurance"
+        let isDeepConvo   = n == "deep convo"
+        let isSpace       = n == "space"
+
+        let isAttached     = c == "attached"
+        let isKindaClose   = c == "kinda close"
+        let isChill        = c == "chill"
+        let isDisconnected = c == "disconnected"
+
+        // 1. The Always-Attached
+        if isVibing && (isQualityTime || isReassurance || isDeepConvo) && isAttached {
+            return VibeTitle( name: "The Always-Attached",
+                             description: "You're inseparable right now—high energy, constant connection, and loving every second together.")
+        }
+        // 2. The In-Sync Duo
+        if isSynced && (isQualityTime || isDeepConvo || isReassurance) && isAttached {
+            return VibeTitle(name: "The In-Sync Duo",
+                             description: "Everything just flows—you're aligned, balanced, and naturally in sync with each other.")
+        }
+        // 9. The Power-Builders
+        if (isSynced || isVibing) && isSpace && isAttached {
+            return VibeTitle(name: "The Power-Builders",
+                             description: "You're focused, intentional, and building something meaningful together.")
+        }
+        // 10. The Mending Souls
+        if isMeh && (isReassurance || isDeepConvo) && isAttached {
+            return VibeTitle(name: "The Mending Souls",
+                             description: "You're putting in the effort to heal, grow, and make things better together.")
+        }
+        // 11. The Fresh-Start Pair
+        if isVibing && (isReassurance || isQualityTime) && isKindaClose {
+            return VibeTitle(name: "The Fresh-Start Pair",
+                             description: "Things are improving—you're rediscovering each other and rebuilding the spark.")
+        }
+        // 3. The Deep-Dive Duo
+        if isDeepConvo && (isAttached || ((isSynced || isVibing) && isKindaClose)) {
+            return VibeTitle(name: "The Deep-Dive Duo",
+                             description: "Your bond thrives on meaningful conversations and truly understanding each other.")
+        }
+        // 4. The Independent Hearts
+        if isSpace && (isAttached || ((isSynced || isVibing) && isKindaClose)) {
+            return VibeTitle(name: "The Independent Hearts",
+                             description: "You're strong together but equally value your individuality and personal space.")
+        }
+        // 5. The Reassurers
+        if isReassurance && (isAttached || ((isSynced || isVibing) && isKindaClose)) {
+            return VibeTitle(name: "The Reassurers",
+                             description: "Care and emotional safety come first—you constantly check in and support each other.")
+        }
+        // 6. The Routine-Steady
+        if (isSynced || isVibing) && isChill {
+            return VibeTitle(name: "The Routine-Steady",
+                             description: "Things feel calm and predictable—comfortable, but maybe missing a little spark.")
+        }
+        // 7. The Life-Logistics Team
+        if isMeh && ((isQualityTime && isChill) || isKindaClose) {
+            return VibeTitle(name: "The Life-Logistics Team",
+                             description: "You function like a perfect team in daily life, even if romance is on the backseat.")
+        }
+        // 8. The Wave-Riders
+        if (isVibing || isSynced) && isDisconnected {
+            return VibeTitle(name: "The Wave-Riders",
+                             description: "Your connection comes in highs and lows—passionate, but not always consistent.")
+        }
+        // 12. The High-Emotion Duo
+        if (isMeh || isDry) && isAttached {
+            return VibeTitle(name: "The High-Emotion Duo",
+                             description: "Big feelings, big energy—your relationship is intense, exciting, and evolving.")
+        }
+        // Default fallback
+        return VibeTitle(name: "The Wave-Riders",
+                         description: "Your connection comes in highs and lows—passionate, but not always consistent.")
+    }
+
 
     
     func getDailyCheckInQuestion(at index: Int) -> Question? {
@@ -574,11 +704,11 @@ class DataStore {
             Activity(
                 id: json.id,
                 coupleActivityId: nil,
-                name: json.name,
+                name: json.title ?? json.name ?? "Activity",
                 description: json.description,
                 detailedDescription: json.detailedDescription,
                 image: json.image,
-                time: json.time,
+                time: json.time ?? "",
                 status: .none,
                 category: json.category,
                 scheduledDate: nil
@@ -737,7 +867,8 @@ class DataStore {
                 ProfileSection(
                     title: "Account",
                     items: [
-                        ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true)
+                        ProfileItem(title: "Personal Info", iconName: "slider.horizontal.3", showsChevron: true),
+                        ProfileItem(title: "Partner Info", iconName: "slider.horizontal.3", showsChevron: true)
                     ]
                 ),
                 ProfileSection(
@@ -804,50 +935,54 @@ class DataStore {
     }
 
     func refreshUserProfileFromSupabase() async {
-        guard let authUser = SupabaseManager.shared.client.auth.currentUser else { return }
-        currentUserId = authUser.id
+            guard let authUser = SupabaseManager.shared.client.auth.currentUser else { return }
+            currentUserId = authUser.id
 
-        do {
-            let rows: [UserProfileRow] = try await SupabaseManager.shared.client
-                .from("users")
-                .select("name, birth_date, gender, assessment_answers")
-                .eq("user_id", value: authUser.id.uuidString)
-                .limit(1)
-                .execute()
-                .value
+            // Ensure section structures exist so setPersonalInfoValue has somewhere to write
+            if profileSections.isEmpty { loadProfileData() }
+            if personalInfoSections.isEmpty { loadPersonalInfoData() }
 
-            guard let row = rows.first else { return }
+            do {
+                let rows: [UserProfileRow] = try await SupabaseManager.shared.client
+                    .from("users")
+                    .select("name, birth_date, gender, assessment_answers")
+                    .eq("user_id", value: authUser.id.uuidString)
+                    .limit(1)
+                    .execute()
+                    .value
 
-            let name = (row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false)
-                ? row.name!
-                : "Name"
-            let email = authUser.email ?? "name@email.com"
-            let prefs = mapAssessmentAnswers(row.assessment_answers)
+                guard let row = rows.first else { return }
 
-            if userProfile == nil {
-                userProfile = UserProfile(name: name, email: email, profileImageName: "Profile", savedPreferences: prefs)
-            } else {
-                userProfile?.name = name
-                userProfile?.email = email
-                userProfile?.savedPreferences = prefs
-            }
+        let name = (row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false)
+        ? row.name!
+        : "Name"
+        let email = authUser.email ?? "name@email.com"
+        let prefs = mapAssessmentAnswers(row.assessment_answers)
 
-            setPersonalInfoValue(title: "Full Name", value: name)
-            setPersonalInfoValue(title: "Email", value: email)
-
-            let dobText = profileDOBText(from: row.birth_date)
-            if !dobText.isEmpty {
-                setPersonalInfoValue(title: "Date of Birth", value: dobText)
-            }
-
-            if let gender = row.gender?.trimmingCharacters(in: .whitespacesAndNewlines), !gender.isEmpty {
-                UserDefaults.standard.set(gender, forKey: "userGender")
-            }
-            reloadGenderDependentContent()
-        } catch {
+        if userProfile == nil {
+        userProfile = UserProfile(name: name, email: email, profileImageName: "Profile", savedPreferences: prefs)
+        } else {
+            userProfile?.name = name
+            userProfile?.email = email
+            userProfile?.savedPreferences = prefs
         }
-    }
 
+        setPersonalInfoValue(title: "Full Name", value: name)
+        setPersonalInfoValue(title: "Email", value: email)
+
+        let dobText = profileDOBText(from: row.birth_date)
+        if !dobText.isEmpty {
+            setPersonalInfoValue(title: "Date of Birth", value: dobText)
+        }
+
+        if let gender = row.gender?.trimmingCharacters(in: .whitespacesAndNewlines), !gender.isEmpty {
+            UserDefaults.standard.set(gender, forKey: "userGender")
+        }
+        reloadGenderDependentContent()
+    } catch {
+    }
+    }
+    
     func applyLocalBasicInfo(name: String, email: String?, birthDate: Date) {
         let emailValue = (email?.isEmpty == false) ? email! : "name@email.com"
         let dob = profileDOBFormatter.string(from: birthDate)
@@ -1151,21 +1286,21 @@ class DataStore {
     //steps to follow
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {
         // Check bondActivities JSON first for BUB activities
-        if let jsonActivity = bondJSONActivities.first(where: { $0.name == activityTitle }),
-           !jsonActivity.steps.isEmpty {
-            return parseJSONSteps(jsonActivity.steps)
+        if let jsonActivity = bondJSONActivities.first(where: { ($0.title ?? $0.name) == activityTitle }),
+           let steps = jsonActivity.steps, !steps.isEmpty {
+            return parseJSONSteps(steps)
         }
 
         // Check explore activities JSON (activities.json) for explore/her/him activities
-        if let jsonActivity = exploreJSONActivities.first(where: { $0.name == activityTitle }),
-           !jsonActivity.steps.isEmpty {
-            return parseJSONSteps(jsonActivity.steps)
+        if let jsonActivity = exploreJSONActivities.first(where: { ($0.title ?? $0.name) == activityTitle }),
+           let steps = jsonActivity.steps, !steps.isEmpty {
+            return parseJSONSteps(steps)
         }
         
         // Check suggested activities JSON (suggestedActivity.json)
-        if let jsonActivity = suggestedJSONActivities.first(where: { $0.name == activityTitle }),
-           !jsonActivity.steps.isEmpty {
-            return parseJSONSteps(jsonActivity.steps)
+        if let jsonActivity = suggestedJSONActivities.first(where: { ($0.title ?? $0.name) == activityTitle }),
+           let steps = jsonActivity.steps, !steps.isEmpty {
+            return parseJSONSteps(steps)
         }
 
         return []
@@ -1212,11 +1347,11 @@ class DataStore {
                     Activity(
                         id: json.id,
                         coupleActivityId: nil,
-                        name: json.name,
+                        name: json.title ?? json.name ?? "Activity",
                         description: json.description,
                         detailedDescription: json.detailedDescription,
                         image: json.image,
-                        time: json.time,
+                        time: json.time ?? "",
                         status: .none,
                         category: category,
                         scheduledDate: nil
@@ -1405,7 +1540,8 @@ class DataStore {
         return Array(shuffled.prefix(count))
     }
     func getOngoingActivities() -> [Activity] {
-        return activities.filter { $0.status == .ongoing }
+        // Only activities with steps should appear in ongoing
+        return activities.filter { $0.status == .ongoing && $0.steps != nil && !($0.steps?.isEmpty ?? true) }
     }
     func getCompletedActivities() -> [Activity] {
         return activities.filter { $0.status == .completed }

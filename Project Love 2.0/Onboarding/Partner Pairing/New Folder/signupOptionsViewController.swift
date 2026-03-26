@@ -22,8 +22,7 @@ class signupOptionsViewController: UIViewController {
         spinner.hidesWhenStopped = true
         view.addSubview(spinner)
     }
-   
-    // MARK: - Google Sign-In
+
     
     @IBAction func googleSignIn(_ sender: UIButton) {
         // 1. Read the iOS client ID from Info.plist
@@ -67,8 +66,6 @@ class signupOptionsViewController: UIViewController {
             }
         }
     }
-    
-    // MARK: - Supabase Auth with Google Token
     
     private func signInWithSupabase(idToken: String, accessToken: String) async {
         do {
@@ -114,39 +111,58 @@ class signupOptionsViewController: UIViewController {
             }
         }
     }
-    
-    // MARK: - Resume onboarding for returning Google users
-    
+  
     private func resumeOnboardingFlow(for dbUser: DBUser, userId: UUID) {
+        
         let defaults = UserDefaults.standard
         let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
         
+        let hasAssessment = !(dbUser.assessment_answers?.isEmpty ?? true)
+        let isPaired = (dbUser.relationship_id != nil)
+        
+        defaults.set(true, forKey: "hasCompletedAuth")
+        
+        // If the user row exists, they completed basic info (name/dob) to create it.
+        defaults.set(true, forKey: "hasCompletedBasicInfo")
+        defaults.set(hasAssessment, forKey: "hasCompletedAssessment")
+        defaults.set(isPaired, forKey: "hasCompletedPairing")
+        defaults.set(isPaired, forKey: "hasCompletedOnboarding")
+        
         if defaults.bool(forKey: "hasCompletedOnboarding") {
+            
             // Fully onboarded → go to main app
             let mainSB = UIStoryboard(name: "Main", bundle: nil)
+            
             if let mainVC = mainSB.instantiateInitialViewController() {
                 self.view.window?.rootViewController = mainVC
                 self.view.window?.makeKeyAndVisible()
             }
+            
         } else if defaults.bool(forKey: "hasCompletedPairing") {
+            
             let vc = storyboard.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
             navigationController?.pushViewController(vc, animated: true)
+            
         } else if defaults.bool(forKey: "hasCompletedAssessment") {
+            
             let vc = storyboard.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
             navigationController?.pushViewController(vc, animated: true)
+            
         } else if defaults.bool(forKey: "hasCompletedBasicInfo") {
+            
             let vc = storyboard.instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
+            vc.userId = userId
             navigationController?.pushViewController(vc, animated: true)
+            
         } else {
-            // Profile exists but basic info not completed locally → go to basic info
-            defaults.set(true, forKey: "hasCompletedAuth")
+            
+            // Fallback (shouldn't really hit this if row exists)
             let vc = storyboard.instantiateViewController(withIdentifier: "tellUsAboutYourselfViewController") as! tellUsAboutYourselfViewController
             vc.userId = userId
             navigationController?.pushViewController(vc, animated: true)
         }
     }
     
-    // MARK: - Email Sign Up
     
     @IBAction func signupEmailTapped(_ sender: Any) {
         let vc = UIStoryboard(
@@ -159,7 +175,6 @@ class signupOptionsViewController: UIViewController {
             navigationController?.pushViewController(vc, animated: true)
     }
     
-    // MARK: - Helpers
     
     private func showAlert(_ message: String) {
         let alert = UIAlertController(title: "Error",

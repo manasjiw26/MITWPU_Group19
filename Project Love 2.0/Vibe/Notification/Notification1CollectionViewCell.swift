@@ -24,20 +24,29 @@ class Notification1CollectionViewCell: UICollectionViewCell {
         notificationView.layer.cornerRadius = 10
         notificationView.layer.masksToBounds = true
         
+        
+        
     }
     func configure(with notification: AppNotification) {
         notificationImageView.layer.cornerRadius = 5
         titleLabel.text = notification.titleText
         
-        if notification.message.hasPrefix("Partner ") {
-                    notificationDescLabel.text = notification.message
-                } else {
-                    notificationDescLabel.text = "\(notification.senderName) \(notification.message)"
-                }
+        let lowercasedMsg = notification.message.lowercased()
+        
+        if lowercasedMsg.hasPrefix("partner") ||
+           lowercasedMsg.hasPrefix("your partner") ||
+           lowercasedMsg.hasPrefix("sent you a") {
+            
+            notificationDescLabel.text = notification.message
+            
+        } else {
+            
+            notificationDescLabel.text = "\(notification.senderName) \(notification.message)"
+        }
 
-                notificationDateLabel.text = notification.timeAgoText
-                notificationImageView.image = UIImage(systemName: notification.iconName)
-
-                notificationBackgroundView.alpha = notification.isRead ? 0.6 : 1.0
-            }
+        notificationDateLabel.text = notification.timeAgoText
+        notificationImageView.image = UIImage(systemName: notification.iconName)
+        
+        notificationBackgroundView.alpha = notification.isRead ? 0.6 : 1.0
+    }
 }

@@ -73,7 +73,14 @@ class StepsViewController: UIViewController {
         stepsTable.estimatedRowHeight = 200
 
         continueButton.configuration = .glass()
-        continueButton.setTitle("Continue", for: .normal)
+
+        // For Build Your Bond: only the final step (4th, index 3) shows "Continue" → feedback
+        // Steps 1-3 show "Done" → just dismiss
+        if bondName != nil && selectedActivityIndex != nil && selectedActivityIndex! < 3 {
+            continueButton.setTitle("Done", for: .normal)
+        } else {
+            continueButton.setTitle("Continue", for: .normal)
+        }
 
         tableBackgroundCell.layer.cornerRadius = 20
     }
@@ -114,13 +121,27 @@ class StepsViewController: UIViewController {
     
     @IBAction func continueButton(_ sender: Any) {
 
+        // For Build Your Bond intermediate steps (1-3): mark complete and dismiss
+        if bondName != nil, let index = selectedActivityIndex, index < 3 {
+            if let activity = activity {
+                DataStore.shared.markActivityCompleted(activity: activity)
+                bondDelegate?.didCompleteBondActivity()
+            }
+            dismiss(animated: true)
+            return
+        }
+
+        // Final step or regular activity: open feedback
+        // For BYB final step, use bondName as the title
+        let feedbackTitle = bondName ?? activitytitle
+
         let storyboard = UIStoryboard(name: "feedBack", bundle: nil)
         let feedbackVC = storyboard.instantiateViewController(
             withIdentifier: "FeedBackViewController"
         ) as! FeedBackViewController
 
         let feedbackItem = FeedBackGiven(
-            title: activitytitle,   
+            title: feedbackTitle,   
             subTitle: "Tell us how this activity made you feel",
             imageName: "camera",
             userMessage: nil,

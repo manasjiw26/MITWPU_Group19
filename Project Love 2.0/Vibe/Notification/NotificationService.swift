@@ -14,7 +14,22 @@ final class NotificationService {
     private init() {}
 
     private var supabase: SupabaseClient { SupabaseManager.shared.client }
-  
+    
+    /// Saves the Apple Push Notification device token to the user's profile in Supabase
+    func saveDeviceToken(_ token: String) async throws {
+        let session = try await supabase.auth.session
+        let currentUserId = session.user.id
+        
+        // This assumes you have an 'apns_token' column in your 'users' table.
+        // If you are using a separate table like 'user_device_tokens', change the table name here.
+        try await supabase
+            .from("users")
+            .update(["apns_token": token])
+            .eq("id", value: currentUserId.uuidString) // or whatever your primary key is for users
+            .execute()
+    }
+
+
        func fetchNotifications(for userId: UUID) async throws -> [AppNotification] {
             let rows: [NotificationRow] = try await supabase
                 .from("notifications")

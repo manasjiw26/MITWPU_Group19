@@ -2,7 +2,8 @@ import UIKit
 
 class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    // Built programmatically – no storyboard required
+    private var collectionView: UICollectionView!
     var activities: [Activity] = []
     
     override func viewDidLoad() {
@@ -13,10 +14,11 @@ class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDa
     }
     
     private func setupCollectionView() {
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemBackground
         collectionView.dataSource = self
         collectionView.delegate = self
-        
-        collectionView.setCollectionViewLayout(createLayout(), animated: false)
         
         collectionView.register(UINib(nibName: "ActivityCollectionViewCell", bundle: nil),
                                 forCellWithReuseIdentifier: "activity_cell")
@@ -26,8 +28,15 @@ class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDa
                                 withReuseIdentifier: "title_cell")
         
         collectionView.isScrollEnabled = false
-        
         collectionView.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 0)
+        
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     private func createLayout() -> UICollectionViewLayout {
@@ -129,14 +138,10 @@ class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDa
     }
 
     func calculateContentHeight() -> CGFloat {
-        
         collectionView.layoutIfNeeded()
-        
         let contentHeight = collectionView.collectionViewLayout.collectionViewContentSize.height
-        
         let topInset = collectionView.contentInset.top
         let bottomInset = collectionView.contentInset.bottom
-        
         return contentHeight + topInset + bottomInset
     }
 

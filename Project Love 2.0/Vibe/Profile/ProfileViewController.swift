@@ -59,9 +59,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     @objc private func closeButtonTapped() {
         dismiss(animated: true)
     }
-
-    // MARK: - Table
-
     func numberOfSections(in tableView: UITableView) -> Int {
         sections.count
     }
@@ -111,6 +108,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             let vc = UIStoryboard(name: "Profile_Info", bundle: nil)
                 .instantiateViewController(withIdentifier: "Personal_InfoViewController")
                 as! Personal_InfoViewController
+            navigationController?.pushViewController(vc, animated: true)
+
+        case "Partner Info":
+            let vc = PartnerInfoViewController()
             navigationController?.pushViewController(vc, animated: true)
 
         case "Special Dates":
@@ -189,30 +190,28 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     private func performDeleteAccount() {
-        guard let userId = DataStore.shared.currentUserId else { return }
-
         Task {
             do {
-                // Delete all user data from Supabase (cascade via RLS/FK) then delete auth user
                 let client = SupabaseManager.shared.client
 
-                // 1. Delete from users table (FK cascades to other tables)
-                try await client
-                    .from("users")
-                    .delete()
-                    .eq("user_id", value: userId.uuidString)
-                    .execute()
+                // 1. Execute the master deletion script on the server
+                // This will safely bypass foreign key locks by deleting all connected data first.
+                try await client.rpc("master_delete_user").execute()
 
-                // 2. Sign out and navigate to login
+                // 2. Sign out natively
                 try await client.auth.signOut()
 
                 DispatchQueue.main.async {
+                    if let domain = Bundle.main.bundleIdentifier {
+                        UserDefaults.standard.removePersistentDomain(forName: domain)
+                    }
                     DataStore.shared.clearSession()
                     self.navigateToLogin()
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.showError("Failed to delete account. Please try again.")
+                    self.showError("Deletion failed:\n\(error.localizedDescription)")
+                    print("Deletion error: \(error)")
                 }
             }
         }
@@ -221,10 +220,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - Helpers
 
     private func navigateToLogin() {
-        // Navigate to root / login screen
+        let defaults = UserDefaults.standard
+        defaults.set(false, forKey: "hasCompletedAuth")
+        defaults.set(false, forKey: "hasCompletedBasicInfo")
+        defaults.set(false, forKey: "hasCompletedAssessment")
+        defaults.set(false, forKey: "hasCompletedPairing")
+        defaults.set(false, forKey: "hasCompletedOnboarding")
+        
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let window = windowScene.windows.first {
-            let loginStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginStoryboard = UIStoryboard(name: "Onboarding", bundle: nil)
             window.rootViewController = loginStoryboard.instantiateInitialViewController()
             window.makeKeyAndVisible()
             UIView.transition(with: window,
@@ -238,5 +243,190 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+}
+
+class PartnerInfoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    private var tableView: UITableView!
+    private var emptyStateLabel: UILabel!
+    private var connectButton: UIButton!
+    
+    private struct PartnerInfoItemLocal {
+        let title: String
+        var value: String
+    }
+    
+    private var partnerItems: [PartnerInfoItemLocal] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Partner Info"
+        view.backgroundColor = .systemGroupedBackground
+        
+        setupUI()
+        setupHeaderView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        checkPartnerStatus()
+    }
+    
+    private func setupUI() {
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(tableView)
+        
+        emptyStateLabel = UILabel()
+        emptyStateLabel.text = "You are not connected to a partner."
+        emptyStateLabel.textColor = .secondaryLabel
+        emptyStateLabel.textAlignment = .center
+        emptyStateLabel.font = .preferredFont(forTextStyle: .headline)
+        emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyStateLabel)
+        
+        connectButton = UIButton(type: .system)
+        connectButton.setTitle("Connect to a Partner", for: .normal)
+        connectButton.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        connectButton.translatesAutoresizingMaskIntoConstraints = false
+        connectButton.addTarget(self, action: #selector(connectTapped), for: .touchUpInside)
+        view.addSubview(connectButton)
+        
+        NSLayoutConstraint.activate([
+            emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20),
+            connectButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            connectButton.topAnchor.constraint(equalTo: emptyStateLabel.bottomAnchor, constant: 16)
+        ])
+    }
+    
+    private func setupHeaderView() {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 200))
+        headerView.backgroundColor = .clear
+        
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "Profile") ?? UIImage(systemName: "person.crop.circle.fill")
+        imageView.contentMode = .scaleAspectFill
+        imageView.tintColor = .systemGray3
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
+        
+        headerView.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 50),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            imageView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+        
+        tableView.tableHeaderView = headerView
+    }
+    
+    private func checkPartnerStatus() {
+        if let partnerId = DataStore.shared.partnerUserId {
+            tableView.isHidden = false
+            emptyStateLabel.isHidden = true
+            connectButton.isHidden = true
+            fetchPartnerInfo(partnerId: partnerId)
+        } else {
+            tableView.isHidden = true
+            emptyStateLabel.isHidden = false
+            connectButton.isHidden = false
+        }
+    }
+    
+    private func fetchPartnerInfo(partnerId: UUID) {
+        Task {
+            do {
+                struct UserProfileRowLocal: Decodable {
+                    let name: String?
+                    let birth_date: String?
+                    let gender: String?
+                }
+                
+                let rows: [UserProfileRowLocal] = try await SupabaseManager.shared.client
+                    .from("users")
+                    .select("name, birth_date, gender")
+                    .eq("user_id", value: partnerId.uuidString)
+                    .limit(1)
+                    .execute()
+                    .value
+                
+                guard let row = rows.first else {
+                    print("DEBUG: Fetched partner info but got 0 rows. Check RLS policies or user ID: \(partnerId)")
+                    self.partnerItems = [
+                        PartnerInfoItemLocal(title: "Status", value: "Could not load data (0 rows)")
+                    ]
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                    return
+                }
+                
+                let name = row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false ? row.name! : "Unknown"
+                let gender = row.gender?.capitalized ?? "Unknown"
+                var dobString = "Unknown"
+                if let bd = row.birth_date {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    if let date = formatter.date(from: bd) {
+                        let displayFormatter = DateFormatter()
+                        displayFormatter.dateStyle = .medium
+                        dobString = displayFormatter.string(from: date)
+                    } else {
+                        dobString = bd
+                    }
+                }
+                
+                self.partnerItems = [
+                    PartnerInfoItemLocal(title: "Full Name", value: name),
+                    PartnerInfoItemLocal(title: "Gender", value: gender),
+                    PartnerInfoItemLocal(title: "Date of Birth", value: dobString)
+                ]
+                
+                print("DEBUG: Successfully fetched partner info: \(self.partnerItems)")
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            } catch {
+                print("DEBUG: Failed to fetch partner info. Error: \(error)")
+                self.partnerItems = [
+                    PartnerInfoItemLocal(title: "Error", value: "Failed to load")
+                ]
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    @objc private func connectTapped() {
+        let storyboard = UIStoryboard(name: "PartnerPairing", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "PartnerPairingViewController")
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - TableView
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return partnerItems.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Basic Information"
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: "cell")
+        cell.selectionStyle = .none
+        let item = partnerItems[indexPath.row]
+        cell.textLabel?.text = item.title
+        cell.detailTextLabel?.text = item.value
+        return cell
     }
 }

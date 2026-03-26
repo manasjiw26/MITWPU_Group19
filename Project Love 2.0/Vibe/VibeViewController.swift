@@ -12,7 +12,7 @@ protocol LoveTipsSelectionDelegate: AnyObject {
     func didUpdateSelectedTips(_ tips: [Tip])
 }
 
-class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate, UIAdaptivePresentationControllerDelegate {
+class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate, InfoModalDelegate, UIAdaptivePresentationControllerDelegate, SuggestedActivitiesModalDelegate {
     
     @IBOutlet weak var vibeCollectionView: UICollectionView!
     @IBOutlet weak var showAllActivityButton: UIButton!
@@ -31,6 +31,8 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var hasCompletedDailyCheckIn = false
     var suggestedActivities: [Activity] = []
     var selectedTips: [Tip] = []
+    var resolvedVibeTitle: VibeTitle?
+    var hasOpenedSuggestedModal = false
     
     let supabase = SupabaseManager.shared.client
     var partnerMoodTitle: String = "Waiting"
@@ -263,79 +265,25 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 }
             } else if section == 2 {
                 
-                // Daily check in (before completing exercise)
-                if !self.hasCompletedDailyCheckIn {
-
-                    let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1.0),
-                        heightDimension: .estimated(120)
-                    )
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                    let group = NSCollectionLayoutGroup.vertical(
-                        layoutSize: itemSize,
-                        subitems: [item]
-                    )
-
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(
-                        top: 12, leading: 16, bottom: 12, trailing: 16
-                    )
-
-                    return section
-                }
-                let cardWidth: CGFloat = 350
-                let spacing: CGFloat = 8
-                let estimatedHeight: CGFloat = 120
-
-                let activityCount = self.suggestedActivities.count
-                let totalWidth = (CGFloat(max(activityCount - 1, 0)) * spacing)
-                + (CGFloat(activityCount) * cardWidth)
-
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(totalWidth),
-                    heightDimension: .absolute(estimatedHeight)
-                )
-
-                let group = NSCollectionLayoutGroup.custom(layoutSize: groupSize) { environment in
-                    var items: [NSCollectionLayoutGroupCustomItem] = []
-                    var xOffset: CGFloat = 0
-
-                    for _ in 0..<self.suggestedActivities.count {
-                        let frame = CGRect(x: xOffset, y: 0, width: cardWidth, height: estimatedHeight)
-                        items.append(NSCollectionLayoutGroupCustomItem(frame: frame))
-                        xOffset += cardWidth + spacing
-                    }
-
-                    return items
-                }
-
-                let sectionLayout = NSCollectionLayoutSection(group: group)
-
-                sectionLayout.orthogonalScrollingBehavior = .continuous
-                sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 16, bottom: 12, trailing: 16)
-                sectionLayout.interGroupSpacing = 0
-                let titleSize = NSCollectionLayoutSize(
+                // Section 2 always shows a single DailyCheckIn card
+                // (default state or completed vibe-title state)
+                let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(52)
+                    heightDimension: .estimated(250)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: itemSize,
+                    subitems: [item]
                 )
 
-                let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: titleSize,
-                    elementKind: "title",
-                    alignment: .top
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(
+                    top: 12, leading: 16, bottom: 12, trailing: 16
                 )
 
-                titleHeader.contentInsets = NSDirectionalEdgeInsets(
-                    top: 16,
-                    leading: 0,
-                    bottom: 0,
-                    trailing: 16
-                )
-
-                sectionLayout.boundarySupplementaryItems = [titleHeader]
-
-                return sectionLayout
+                return section
             }
 
             else if section == 3 { //make her smile
@@ -697,11 +645,8 @@ extension VibeViewController:  UICollectionViewDataSource {
         else if section == 1 {
             return hasCheckedInToday ? 2 : 1
         } else if section == 2{
-            if hasCompletedDailyCheckIn {
-                        return suggestedActivities.count
-                    } else {
-                        return 1
-                    }
+            // Always 1 cell: either default check-in card or completed vibe-title card
+            return 1
         } else if section == 3 {
             return makeSmileData.count
         } else {
@@ -751,18 +696,20 @@ extension VibeViewController:  UICollectionViewDataSource {
         }
         
         else if indexPath.section == 2 {
-            if hasCompletedDailyCheckIn {
-                       // Show the standard Activity Cell
-                       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "suggestedActivity_cell", for: indexPath) as! SuggestedActivityCollectionViewCell
-                       cell.configureCells(activity: suggestedActivities[indexPath.row])
-                       return cell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
+            if hasCompletedDailyCheckIn, let vibeTitle = resolvedVibeTitle {
+                // Completed state: button text depends on activity count & modal state
+                cell.configureAsCompleted(
+                    vibeTitle: vibeTitle,
+                    remainingCount: suggestedActivities.count,
+                    hasOpenedModal: hasOpenedSuggestedModal
+                )
             } else {
-                       // Daily Check-In card (Locked state)
-                       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
-                       cell.configureCells()
-                       cell.delegate = self
-                       return cell
+                // Default state: Quick Vibe Check card
+                cell.configureCells()
             }
+            cell.delegate = self
+            return cell
         }
         
         else if indexPath.section == 3 {
@@ -786,9 +733,7 @@ extension VibeViewController:  UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         let title = collectionView.dequeueReusableSupplementaryView(ofKind: "title", withReuseIdentifier: "title_cell", for: indexPath) as! TitleCollectionResuableView
-        if indexPath.section == 2 {
-            title.configureTitle(title: "Suggested Activity", subtitle: "")
-        } else if indexPath.section == 3 {
+        if indexPath.section == 3 {
             title.configureTitle(title: "Make \(partnerDisplayText) Smile", subtitle: "")
         } else if indexPath.section == 4 {
             title.configureTitle(title: "Build Your Bond", subtitle: "Focus on one theme, grow as a couple.")
@@ -922,23 +867,7 @@ extension VibeViewController {
             present(vc, animated: true)
             return
         }
-        //section 2
-                if indexPath.section == 2 {
-                    // If daily check-in isn't done, we don't want to open activities yet
-                    guard hasCompletedDailyCheckIn else { return }
-                    guard indexPath.row < suggestedActivities.count else { return }
-
-                    let selectedActivity = suggestedActivities[indexPath.row]
-
-                    let destinationVC = SmallModalViewController( nibName: "SmallModalViewController", bundle: nil )
-                    destinationVC.selectedActivity = selectedActivity
-                    destinationVC.modalData = DataStore.shared.getSmallModalData(for: selectedActivity)
-                    destinationVC.flowSource = .activitiesForHer
-                    destinationVC.modalPresentationStyle = .overFullScreen
-                    destinationVC.delegate = self
-                    present(destinationVC, animated: false)
-                    return
-        }
+        // Section 2 taps are handled by the cell delegate (didTapShowSuggestedActivities)
 
         // Section 3- Make Her Smile
         if indexPath.section == 3 {
@@ -1086,14 +1015,70 @@ extension VibeViewController: LoveTipsSelectionDelegate {
     }
 }
 extension VibeViewController: DailyExerciseFlowDelegate {
-    func dailyExerciseDidFinish() {
+    func dailyExerciseDidFinish(with selection: DailyCheckInSelection) {
         self.hasCompletedDailyCheckIn = true
         self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+
+        // Resolve the matching vibe title from the user's answers
+        self.resolvedVibeTitle = DataStore.shared.resolveVibeTitle(
+            vibe: selection.vibe,
+            need: selection.need,
+            closeness: selection.closeness
+        )
+
         DispatchQueue.main.async {
-            // Regenerate layout because section 2 switches from
-            // a vertical daily-check-in card to horizontal scrolling activities
-            self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
-            self.vibeCollectionView.reloadData()
+            // Reload section 2 — the card updates in-place with the vibe title
+            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
+        }
+    }
+}
+
+// MARK: - Suggested Activities Modal
+extension VibeViewController {
+    func didTapShowSuggestedActivities() {
+        // Mark that the user has opened the modal at least once
+        hasOpenedSuggestedModal = true
+
+        let modalVC = SuggestedActivitiesModalViewController()
+        modalVC.suggestedActivities = self.suggestedActivities
+        modalVC.delegate = self
+        modalVC.modalPresentationStyle = .pageSheet
+
+        if let sheet = modalVC.sheetPresentationController {
+            let activityCount = suggestedActivities.count
+            let calculatedHeight = CGFloat(activityCount * 140) + 100
+            sheet.detents = [
+                .custom { _ in
+                    return min(calculatedHeight, 600)
+                }
+            ]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 28
+        }
+
+        // Reload the card so button text updates to "Continue"
+        vibeCollectionView.reloadSections(IndexSet(integer: 2))
+
+        present(modalVC, animated: true)
+    }
+
+    func didSelectSuggestedActivity(_ activity: Activity) {
+        // Same logic as the old section 2 tap handler
+        if activity.steps == nil || activity.steps?.isEmpty == true {
+            let storyboard = UIStoryboard(name: "InfoModal", bundle: nil)
+            let infoVC = storyboard.instantiateViewController(withIdentifier: "InfoModalViewController") as! InfoModalViewController
+            infoVC.activity = activity
+            infoVC.delegate = self
+            infoVC.modalPresentationStyle = .overFullScreen
+            present(infoVC, animated: false)
+        } else {
+            let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
+            destinationVC.selectedActivity = activity
+            destinationVC.modalData = DataStore.shared.getSmallModalData(for: activity)
+            destinationVC.flowSource = .activitiesForHer
+            destinationVC.modalPresentationStyle = .overFullScreen
+            destinationVC.delegate = self
+            present(destinationVC, animated: false)
         }
     }
 }
@@ -1176,8 +1161,7 @@ extension VibeViewController {
         }
     }
     @IBAction func showAllOngoingTapped(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Vibe", bundle: nil) // Update with your actual storyboard name
-        guard let modalVC = storyboard.instantiateViewController(withIdentifier: "OngoingActivitiesModalViewController") as? OngoingActivitiesModalViewController else { return }
+        let modalVC = OngoingActivitiesModalViewController()
         
         modalVC.modalPresentationStyle = .pageSheet
         
@@ -1196,5 +1180,17 @@ extension VibeViewController {
         }
         
         present(modalVC, animated: true)
+    }
+}
+
+// MARK: - InfoModalDelegate
+extension VibeViewController {
+    func didTapLetsDoThis(for activity: Activity) {
+        // Remove the activity from suggested activities
+        if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
+            suggestedActivities.remove(at: index)
+            DataStore.shared.suggestedActivities = suggestedActivities
+            vibeCollectionView.reloadSections(IndexSet(integer: 2))
+        }
     }
 }

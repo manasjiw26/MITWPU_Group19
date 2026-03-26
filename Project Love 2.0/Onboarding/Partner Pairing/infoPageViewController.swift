@@ -67,23 +67,28 @@ class infoPageViewController: UIViewController {
                currentPage += 1
                updateUI(animated: true, transitionSubtype: .fromRight)
            } else {
-               // Save onboarding completion
-               UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+               // Mark info pages as completed (not full onboarding yet)
+               UserDefaults.standard.set(true, forKey: "hasCompletedInfoPages")
 
-               // Load Main storyboard
-               let storyboard = UIStoryboard(name: "Main", bundle: nil)
+               // Navigate to Partner Pairing
+               let storyboard = UIStoryboard(name: "Onboarding", bundle: nil)
                
-               guard let mainVC = storyboard.instantiateInitialViewController() else {
+               guard let partnerVC = storyboard.instantiateViewController(
+                   withIdentifier: "PartnerVC"
+               ) as? partnerViewController else {
                    return
                }
+               partnerVC.view.backgroundColor = UIColor(named: "AppBackground")
 
-             
-               if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                  let sceneDelegate = windowScene.delegate as? SceneDelegate,
-                  let window = sceneDelegate.window {
-                   
-                   window.rootViewController = mainVC
-                   window.makeKeyAndVisible()
+               if let nav = self.navigationController {
+                   nav.pushViewController(partnerVC, animated: true)
+               } else {
+                   if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                      let window = sceneDelegate.window {
+                       window.rootViewController = UINavigationController(rootViewController: partnerVC)
+                       window.makeKeyAndVisible()
+                   }
                }
            }
     }

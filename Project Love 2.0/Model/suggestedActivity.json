@@ -2331,7 +2331,7 @@
       "description": "Send a short loving note right now to keep the good vibe going.",
       "modalDescription": "A quick note can lock in a good mood and make them feel chosen. Use this to say what you feel before the moment passes.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
       "id": 168,
@@ -2340,7 +2340,7 @@
       "description": "Send a playful nudge to celebrate your partner.",
       "modalDescription": "A playful nudge is a tiny celebration that lands big. Send it to spotlight something you adore about them.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
     },
     {
       "id": 169,
@@ -2349,7 +2349,7 @@
       "description": "Turn a good mood into a shared mini adventure.",
       "modalDescription": "Playful moments lower walls and make connection feel easy. Pick a light activity that matches today's energy.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful section"
     },
     {
       "id": 170,
@@ -2358,7 +2358,7 @@
       "description": "Bring back the spark with a short step by step journey.",
       "modalDescription": "This short journey brings back early spark through simple guided steps. It helps you both feel new and curious again.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Build Your Bond → Rekindle Honeymoon Phase"
     },
     {
       "id": 171,
@@ -2367,7 +2367,7 @@
       "description": "Pick a sweet idea for him to do for her.",
       "modalDescription": "Thoughtful ideas that make her feel cherished without a big setup. Choose one that fits her mood today.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Activities for Her"
     },
     {
       "id": 172,
@@ -2376,7 +2376,7 @@
       "description": "Get small calm gestures based on your partner mood.",
       "modalDescription": "Soft gestures can calm the day and say 'I'm here' without pressure. Pick one tip that feels natural for you.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Love Tips"
     },
     {
       "id": 173,
@@ -2385,7 +2385,7 @@
       "description": "Keep everyday closeness steady and warm.",
       "modalDescription": "Tiny shared moments keep closeness steady and warm. Choose a quick activity to stay connected.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → Daily Dose of Us section"
     },
     {
       "id": 174,
@@ -2394,7 +2394,7 @@
       "description": "Keep romance alive with a simple sweet act.",
       "modalDescription": "Small acts can say love louder than long talks. Pick one simple gesture to show care today.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → Acts of Love section"
     },
     {
       "id": 175,
@@ -2403,7 +2403,7 @@
       "description": "Save a small moment to revisit later.",
       "modalDescription": "Capture a small moment now so it can keep warming you later. These tiny memories become your shared anchors.",
       "image": "Activityimage",
-      "location": "Memory Jar page"
+      "location": "Memory Jar Tab → Tap + to Add a New Memory"
     },
     {
       "id": 176,
@@ -2412,7 +2412,7 @@
       "description": "Choose a growth focused activity to deepen understanding.",
       "modalDescription": "Growth prompts help you understand each other beyond the surface. Choose one to deepen the way you talk.",
       "image": "Rekindle",
-      "location": "Explore page"
+      "location": "Explore Tab → Meaning & Growth section"
     },
     {
       "id": 177,
@@ -2421,7 +2421,7 @@
       "description": "Have a real conversation with gentle structure.",
       "modalDescription": "A real conversation with gentle structure can clear the air. Use this to feel heard without defensiveness.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → No Filter Chats section"
     },
     {
       "id": 178,
@@ -2430,7 +2430,7 @@
       "description": "Follow a short journey to improve how you talk.",
       "modalDescription": "A guided path to speak and listen with more ease. It helps you build a calmer, clearer rhythm.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Build Your Bond → Good Communication"
     },
     {
       "id": 179,
@@ -2439,7 +2439,7 @@
       "description": "Get ideas that match your partner mood and your curiosity.",
       "modalDescription": "Ideas tuned to your partner's mood so your care lands well. Pick the one that feels right today.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Love Tips"
     },
     {
       "id": 180,
@@ -2448,7 +2448,7 @@
       "description": "Use step by step guidance to move through conflict.",
       "modalDescription": "Conflict feels safer when you have a shared map. This journey helps you move through tension as a team.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Build Your Bond → Navigate Conflict Together"
     },
     {
       "id": 181,
@@ -2457,7 +2457,7 @@
       "description": "Send a short note to soften things.",
       "modalDescription": "A short repair note can soften the edge and reopen care. Use it to show intention before the talk.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
       "id": 182,
@@ -2466,7 +2466,7 @@
       "description": "Send a gentle virtual hug as a soft reset.",
       "modalDescription": "A virtual hug is a soft reset when words feel heavy. Send it to offer comfort without pressure.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
     },
     {
       "id": 183,
@@ -2475,7 +2475,7 @@
       "description": "Revisit a memory that reminds you both of the good.",
       "modalDescription": "Revisiting a good memory reminds you both what still works. Let that warmth lower the noise.",
       "image": "Activityimage",
-      "location": "Memory Jar page"
+      "location": "Memory Jar Tab → Browse Saved Memories"
     },
     {
       "id": 184,
@@ -2484,7 +2484,7 @@
       "description": "Write a note now and schedule it for a softer moment.",
       "modalDescription": "Writing now lets you be thoughtful even if timing is off. Schedule it for the moment they need it most.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note → Schedule"
     },
     {
       "id": 185,
@@ -2493,7 +2493,7 @@
       "description": "Share a quiet memory without pressure to talk.",
       "modalDescription": "A quiet memory share can soothe without forcing a talk. Let the moment speak for itself.",
       "image": "Activityimage",
-      "location": "Memory Jar page"
+      "location": "Memory Jar Tab → Browse Saved Memories"
     },
     {
       "id": 186,
@@ -2502,7 +2502,7 @@
       "description": "Choose a tiny together moment that does not demand energy.",
       "modalDescription": "Low energy days still deserve connection. Choose a tiny together moment that feels easy.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → Daily Dose of Us section"
     },
     {
       "id": 187,
@@ -2511,7 +2511,7 @@
       "description": "Send a low pressure check in nudge.",
       "modalDescription": "A gentle check in says 'I'm here' without asking for a reply. Use it to keep care simple.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
     },
     {
       "id": 188,
@@ -2520,7 +2520,7 @@
       "description": "Offer reassurance with a clear short note.",
       "modalDescription": "Clear reassurance can steady a shaky moment. Write a few honest lines that make them feel safe.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
       "id": 189,
@@ -2529,7 +2529,7 @@
       "description": "Get quick ideas to help them feel safe.",
       "modalDescription": "Quick reassurance ideas help you show up with care. Choose one that fits their worry right now.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Love Tips"
     },
     {
       "id": 190,
@@ -2538,7 +2538,7 @@
       "description": "Use a small act of love to soothe insecurity.",
       "modalDescription": "A small act can soothe insecurity when words are hard. Pick a simple gesture that feels steady.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → Acts of Love section"
     },
     {
       "id": 191,
@@ -2547,7 +2547,7 @@
       "description": "Send a supportive touch nudge.",
       "modalDescription": "A supportive touch nudge asks for closeness in a soft way. Send it to invite warmth, not pressure.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
     },
     {
       "id": 192,
@@ -2556,7 +2556,7 @@
       "description": "Use the conflict journey to reset the tone.",
       "modalDescription": "Resetting the tone needs a shared path, not a winner. This journey helps you step back into 'us'.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Build Your Bond → Navigate Conflict Together"
     },
     {
       "id": 193,
@@ -2565,7 +2565,7 @@
       "description": "Use a real talk card to repair tension.",
       "modalDescription": "A structured real talk can repair tension without spiraling. Use it to listen first and soften the room.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → No Filter Chats section"
     },
     {
       "id": 194,
@@ -2574,7 +2574,7 @@
       "description": "Send a short apology or reset note.",
       "modalDescription": "A brief apology can shift the temperature and show accountability. Keep it honest, gentle, and clear.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
       "id": 195,
@@ -2583,7 +2583,7 @@
       "description": "Use a step to improve how you speak during tension.",
       "modalDescription": "When tension is high, guided communication lowers the heat. This journey helps you speak with care again.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Build Your Bond → Good Communication"
     },
     {
       "id": 196,
@@ -2592,7 +2592,7 @@
       "description": "Send a gentle note to reopen the door.",
       "modalDescription": "A small reconnect note opens the door without pushing. Use it to invite closeness at a gentle pace.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
       "id": 197,
@@ -2601,7 +2601,7 @@
       "description": "Start the communication journey to reconnect.",
       "modalDescription": "Reconnection grows when you slow down and listen well. This path helps you rebuild an easy rhythm.",
       "image": "Rekindle",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Build Your Bond → Good Communication"
     },
     {
       "id": 198,
@@ -2610,7 +2610,7 @@
       "description": "Pick a small together moment to ease distance.",
       "modalDescription": "Tiny shared moments can bridge distance. Choose one simple activity to feel near again.",
       "image": "Activityimage",
-      "location": "Explore page"
+      "location": "Explore Tab → Daily Dose of Us section"
     },
     {
       "id": 199,
@@ -2619,7 +2619,7 @@
       "description": "Revisit a memory and share one feeling.",
       "modalDescription": "Sharing a memory and one feeling brings you back to 'us'. Let the moment reconnect you.",
       "image": "Activityimage",
-      "location": "Memory Jar page"
+      "location": "Memory Jar Tab → Browse Saved Memories"
     },
     {
       "id": 200,
@@ -2628,7 +2628,7 @@
       "description": "Revisit a memory quietly on your own.",
       "modalDescription": "Revisiting alone can bring calm and perspective. Use this to ground yourself in good moments.",
       "image": "Activityimage",
-      "location": "Memory Jar page"
+      "location": "Memory Jar Tab → Browse Saved Memories"
     },
     {
       "id": 201,
@@ -2637,7 +2637,7 @@
       "description": "Draft a note now and send when ready.",
       "modalDescription": "Drafting now gives you space to choose the right time. Send it when your heart feels clear.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Send Love Note → Schedule"
     },
     {
       "id": 202,
@@ -2646,7 +2646,7 @@
       "description": "Send a tiny nudge that does not require a reply.",
       "modalDescription": "A tiny ping keeps connection alive without demanding energy. Send it to say you're present.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
     },
     {
       "id": 203,
@@ -2655,7 +2655,7 @@
       "description": "Choose a growth prompt you can do quietly.",
       "modalDescription": "Quiet growth prompts can help you understand yourself and the relationship. Choose one and go gently.",
       "image": "Rekindle",
-      "location": "Explore page"
+      "location": "Explore Tab → Meaning & Growth section"
     },
     {
       "id": 204,
@@ -2664,7 +2664,7 @@
       "description": "Use a playful activity to reconnect lightly.",
       "modalDescription": "Playfulness is a low-stakes way to reach out. Pick a light activity to soften the distance.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful section"
     },
     {
       "id": 205,
@@ -2673,7 +2673,7 @@
       "description": "Turn up the spark with a playful idea.",
       "modalDescription": "A playful spark can shift the mood fast. Choose a fun idea to turn up warmth and desire.",
       "image": "Rekindle",
-      "location": "Explore page"
+      "location": "Explore Tab → Spice It Up! section"
     },
     {
       "id": 206,
@@ -2682,7 +2682,7 @@
       "description": "Send a playful kiss nudge to break distance.",
       "modalDescription": "A playful kiss nudge brings a little spark without pressure. Send it to break the distance lightly.",
       "image": "Fun&Playful",
-      "location": "Explore page"
+      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
     },
     {
       "id": 207,
@@ -2691,7 +2691,7 @@
       "description": "Pick a thoughtful idea for her to do for him.",
       "modalDescription": "Thoughtful ideas that make him feel seen and appreciated. Choose one that matches his mood today.",
       "image": "Activityimage",
-      "location": "Vibe page"
+      "location": "Vibe Tab → Make Her Smile → Activities for Him"
     }
   ]
 }
