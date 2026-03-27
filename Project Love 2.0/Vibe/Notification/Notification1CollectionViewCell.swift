@@ -29,11 +29,14 @@ class Notification1CollectionViewCell: UICollectionViewCell {
         notificationImageView.layer.cornerRadius = 5
         titleLabel.text = notification.titleText
         
-        if notification.message.hasPrefix("Partner ") {
-                    notificationDescLabel.text = notification.message
-                } else {
-                    notificationDescLabel.text = "\(notification.senderName) \(notification.message)"
-                }
+        let lowercasedMsg = notification.message.lowercased()
+        if lowercasedMsg.hasPrefix("partner") || 
+           lowercasedMsg.hasPrefix("your partner") || 
+           lowercasedMsg.hasPrefix("sent you a") {
+            notificationDescLabel.text = notification.message
+        } else {
+            notificationDescLabel.text = "\(notification.senderName) \(notification.message)"
+        }
 
                 notificationDateLabel.text = notification.timeAgoText
                 notificationImageView.image = UIImage(systemName: notification.iconName)
