@@ -21,17 +21,25 @@ class partnerViewController: UIViewController {
         navigationItem.hidesBackButton = true
         navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
+
     
-  
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func skipTapped(_ sender: Any) {
+        
+        UserDefaults.standard.set(true, forKey: "hasCompletedPairing")
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        
+        view.isUserInteractionEnabled = true
+            
+        UserDefaults.standard.set(true, forKey: "didSkipPairing")
+            
+        let mainSB = UIStoryboard(name: "Main", bundle: nil)
+        guard let mainVC = mainSB.instantiateInitialViewController() else { return }
+            
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let sceneDelegate = windowScene.delegate as? SceneDelegate,
+           let window = sceneDelegate.window {
+            window.rootViewController = mainVC
+            window.makeKeyAndVisible()
+        }
     }
-    */
-
 }

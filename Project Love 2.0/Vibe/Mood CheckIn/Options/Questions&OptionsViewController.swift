@@ -1,4 +1,7 @@
 import UIKit
+import AVFoundation
+import SwiftUI
+import WebKit
 
 // This protocol manages the communication back to the VibeViewController
 protocol DailyExerciseFlowDelegate: AnyObject {
@@ -16,8 +19,17 @@ class Questions_OptionsViewController: UIViewController {
     // Result page outlets (4th step)
     @IBOutlet weak var resultContainerView: UIView!
     @IBOutlet weak var resultImageView: UIImageView!
+    @IBOutlet weak var resultVideoContainerView: UIView!
     @IBOutlet weak var resultTitleLabel: UILabel!
     @IBOutlet weak var resultDescriptionLabel: UILabel!
+
+    // AVPlayer for result-page video
+    private var resultQueuePlayer: AVQueuePlayer?
+    private var resultPlayerLooper: AVPlayerLooper?
+    private var resultPlayerLayer: AVPlayerLayer?
+
+    // SwiftUI hosting controller for GIF-based animations
+    private var gifHostingController: UIViewController?
 
     // MARK: - Properties
     weak var flowDelegate: DailyExerciseFlowDelegate?
@@ -101,6 +113,10 @@ class Questions_OptionsViewController: UIViewController {
         optionsCollectionView.isHidden = false
         resultContainerView.isHidden = true
 
+        // Restore left-alignment for question text
+        questionLabel.textAlignment = .left
+        questionLabel.font = UIFont.preferredFont(forTextStyle: .title1)
+
         let currentQ = questionsList[currentStep]
         questionLabel.text = currentQ.title
 
@@ -115,13 +131,28 @@ class Questions_OptionsViewController: UIViewController {
         optionsCollectionView.isHidden = true
         resultContainerView.isHidden = false
 
+        // Center the "Relationship Vibe" title
+        questionLabel.textAlignment = .center
+        questionLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         questionLabel.text = "Relationship Vibe"
 
-        resultImageView.image = UIImage(named: "DailyCheckIn")
+        // Hide the static image — video container takes over
+        resultImageView.isHidden = true
+        resultVideoContainerView.isHidden = false
 
         if let vibeTitle = resolvedVibeTitle {
             resultTitleLabel.text = vibeTitle.displayTitle
-            resultDescriptionLabel.text = vibeTitle.description
+
+            // Justified alignment for the rich page description
+            resultDescriptionLabel.text = vibeTitle.pageDescription
+            resultDescriptionLabel.textAlignment = .justified
+
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                // Route: GIF for categories with a transparent GIF asset,
+                //        video for everything else.
+                self.playResultVideo(named: self.videoName(for: vibeTitle))
+            }
         }
 
         // Progress bar at 100%
@@ -129,6 +160,99 @@ class Questions_OptionsViewController: UIViewController {
 
         nextButton.setTitle("Continue", for: .normal)
         nextButton.isEnabled = true
+    }
+
+    // MARK: - GIF / Video Playback
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // Keep the AVPlayerLayer frame in sync on resize
+        if let container = resultVideoContainerView {
+            resultPlayerLayer?.frame = container.bounds
+        }
+    }
+
+    /// Returns the GIF filename for a vibe category that has a transparent GIF asset.
+    /// Return nil for categories that should use the video player instead.
+    private func gifName(for vibeTitle: VibeTitle) -> String? {
+        switch vibeTitle.name {
+        case "The Always-Attached":  return "always_attached_doodles"
+        // Add more GIF mappings here as you add assets, e.g.:
+        // case "The In-Sync Duo":   return "in_sync_duo_doodles"
+        default:                     return nil  // fall back to video
+        }
+    }
+
+    /// Tears down both the GIF hosting controller and the AVPlayer.
+    private func stopMedia() {
+        // Remove GIF hosting controller
+        gifHostingController?.willMove(toParent: nil)
+        gifHostingController?.view.removeFromSuperview()
+        gifHostingController?.removeFromParent()
+        gifHostingController = nil
+
+        // Remove AVPlayer
+        resultPlayerLayer?.removeFromSuperlayer()
+        resultQueuePlayer?.pause()
+        resultQueuePlayer = nil
+        resultPlayerLooper = nil
+        resultPlayerLayer = nil
+    }
+
+    /// Maps each vibe category name to its bundled video filename (no extension).
+    private func videoName(for vibeTitle: VibeTitle) -> String {
+        switch vibeTitle.name {
+        case "The Always-Attached":   return "Doodles_Animated_Video_Generation"
+        case "The In-Sync Duo":       return "Doodles_Animated_Video_Generation"
+        case "The Deep-Dive Duo":     return "Doodles_Animated_Video_Generation"
+        case "The Independent Hearts":return "Doodles_Animated_Video_Generation"
+        case "The Reassurers":        return "Doodles_Animated_Video_Generation"
+        case "The Routine-Steady":    return "Doodles_Animated_Video_Generation"
+        case "The Life-Logistics Team":return "Doodles_Animated_Video_Generation"
+        case "The Wave-Riders":       return "Doodles_Animated_Video_Generation"
+        case "The Power-Builders":    return "Doodles_Animated_Video_Generation"
+        case "The Mending Souls":     return "Doodles_Animated_Video_Generation"
+        case "The Fresh-Start Pair":  return "Doodles_Animated_Video_Generation"
+        case "The High-Emotion Duo":  return "Doodles_Animated_Video_Generation"
+        default:                      return "Doodles_Animated_Video_Generation"
+        }
+    }
+
+    /// Loads and plays a looping video inside resultVideoContainerView.
+    /// Uses AVQueuePlayer + AVPlayerLooper — the correct Swift 6 / concurrency-safe
+    /// approach (avoids capturing non-Sendable AVPlayer in a @Sendable closure).
+    private func playResultVideo(named videoName: String) {
+        stopMedia()   // also removes any active GIF hosting controller
+
+        // Locate the video file in the main bundle (.mp4 preferred, .mov fallback)
+        guard let url = Bundle.main.url(forResource: videoName, withExtension: "mp4")
+                     ?? Bundle.main.url(forResource: videoName, withExtension: "mov") else {
+            return
+        }
+
+        let templateItem = AVPlayerItem(url: url)
+        let queuePlayer  = AVQueuePlayer(items: [templateItem])
+        // AVPlayerLooper keeps the queue player looping automatically
+        let looper = AVPlayerLooper(player: queuePlayer, templateItem: templateItem)
+
+        let playerLayer = AVPlayerLayer(player: queuePlayer)
+        playerLayer.videoGravity = .resizeAspect
+        playerLayer.frame = resultVideoContainerView.bounds
+        // nil background = fully transparent behind the video content (no black fill)
+        playerLayer.backgroundColor = nil
+
+        // Make the container itself fully transparent
+        resultVideoContainerView.isOpaque = false
+        resultVideoContainerView.backgroundColor = .clear
+        resultVideoContainerView.clipsToBounds = false
+        resultVideoContainerView.layer.addSublayer(playerLayer)
+
+        // Retain strongly so they aren't deallocated
+        resultQueuePlayer  = queuePlayer
+        resultPlayerLooper = looper
+        resultPlayerLayer  = playerLayer
+
+        queuePlayer.play()
     }
 
     // MARK: - Button Actions

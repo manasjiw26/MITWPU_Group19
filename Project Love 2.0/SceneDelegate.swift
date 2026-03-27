@@ -60,6 +60,52 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         window.makeKeyAndVisible()
+        // Listen for partner account deletion globally
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePartnerDeleted),
+            name: .partnerAccountDeleted,
+            object: nil
+        )
+    }
+
+    // MARK: - Partner Deletion Alert (fires on any screen)
+
+    @objc private func handlePartnerDeleted() {
+        guard let topVC = topViewController() else { return }
+
+        let alert = UIAlertController(
+            title: "Partner Left",
+            message: "Your partner has deleted their account. Pair with someone new to continue.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Pair", style: .default) { _ in
+            let storyboard = UIStoryboard(name: "PartnerPairing", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "PartnerPairingViewController")
+            let navVC = UINavigationController(rootViewController: vc)
+            navVC.modalPresentationStyle = .fullScreen
+            topVC.present(navVC, animated: true)
+        })
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            // Mirror "Skip Pairing" flow
+            UserDefaults.standard.set(true, forKey: "didSkipPairing")
+            DataStore.shared.currentRelationshipId = nil
+            DataStore.shared.partnerUserId = nil
+        })
+
+        topVC.present(alert, animated: true)
+    }
+
+    /// Walk the VC hierarchy to find the topmost presented controller.
+    private func topViewController() -> UIViewController? {
+        guard let root = window?.rootViewController else { return nil }
+        var top = root
+        while let presented = top.presentedViewController {
+            top = presented
+        }
+        return top
     }
 
     // MARK: - Google Sign-In URL handling

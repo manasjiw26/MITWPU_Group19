@@ -341,10 +341,18 @@ struct DailyCheckInSelection {
 
 struct VibeTitle {
     let name: String
-    let description: String
+    let description: String        // Short text used on the card after Continue
+    let pageDescription: String    // Rich text shown on the result page
 
     var displayTitle: String {
         return " \(name)"
+    }
+
+    /// Convenience init for cases where pageDescription matches description
+    init(name: String, description: String, pageDescription: String = "") {
+        self.name = name
+        self.description = description
+        self.pageDescription = pageDescription.isEmpty ? description : pageDescription
     }
 }
 

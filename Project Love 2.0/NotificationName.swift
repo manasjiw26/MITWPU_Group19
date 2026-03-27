@@ -15,4 +15,6 @@ extension Notification.Name {
 
     static let activitiesSynced =
         Notification.Name("activitiesSynced")
+    static let partnerAccountDeleted =
+        Notification.Name("partnerAccountDeleted")
 }

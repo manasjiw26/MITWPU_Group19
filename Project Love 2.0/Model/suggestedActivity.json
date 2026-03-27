@@ -2340,7 +2340,7 @@
       "description": "Send a playful nudge to celebrate your partner.",
       "modalDescription": "A playful nudge is a tiny celebration that lands big. Send it to spotlight something you adore about them.",
       "image": "Fun&Playful",
-      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
+      "location": "Explore Tab → Pick a Nudge"
     },
     {
       "id": 169,
@@ -2466,7 +2466,7 @@
       "description": "Send a gentle virtual hug as a soft reset.",
       "modalDescription": "A virtual hug is a soft reset when words feel heavy. Send it to offer comfort without pressure.",
       "image": "Fun&Playful",
-      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
+      "location": "Explore Tab → Pick a Nudge"
     },
     {
       "id": 183,
@@ -2511,7 +2511,7 @@
       "description": "Send a low pressure check in nudge.",
       "modalDescription": "A gentle check in says 'I'm here' without asking for a reply. Use it to keep care simple.",
       "image": "Fun&Playful",
-      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
+      "location": "Explore Tab → Pick a Nudge"
     },
     {
       "id": 188,
@@ -2547,7 +2547,7 @@
       "description": "Send a supportive touch nudge.",
       "modalDescription": "A supportive touch nudge asks for closeness in a soft way. Send it to invite warmth, not pressure.",
       "image": "Fun&Playful",
-      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
+      "location": "Explore Tab → Pick a Nudge"
     },
     {
       "id": 192,
@@ -2646,7 +2646,7 @@
       "description": "Send a tiny nudge that does not require a reply.",
       "modalDescription": "A tiny ping keeps connection alive without demanding energy. Send it to say you're present.",
       "image": "Fun&Playful",
-      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
+      "location": "Explore Tab → Pick a Nudge"
     },
     {
       "id": 203,
@@ -2682,7 +2682,7 @@
       "description": "Send a playful kiss nudge to break distance.",
       "modalDescription": "A playful kiss nudge brings a little spark without pressure. Send it to break the distance lightly.",
       "image": "Fun&Playful",
-      "location": "Explore Tab → Fun & Playful → Pick a Nudge"
+      "location": "Explore Tab → Pick a Nudge"
     },
     {
       "id": 207,

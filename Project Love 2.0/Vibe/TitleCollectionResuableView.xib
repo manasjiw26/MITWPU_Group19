@@ -13,21 +13,28 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lb8-vt-kTx">
-                    <rect key="frame" x="0.0" y="9" width="288" height="29"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lb8-vt-kTx">
+                    <rect key="frame" x="0.0" y="0.0" width="304" height="24"/>
                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iyH-Lg-CQ3">
-                    <rect key="frame" x="0.0" y="26" width="288" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iyH-Lg-CQ3">
+                    <rect key="frame" x="0.0" y="28" width="304" height="62"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
+            <constraints>
+                <constraint firstItem="Lb8-vt-kTx" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="top-title"/>
+                <constraint firstAttribute="trailing" secondItem="Lb8-vt-kTx" secondAttribute="trailing" constant="16" id="trail-title"/>
+                <constraint firstItem="Lb8-vt-kTx" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="lead-title"/>
+                <constraint firstItem="iyH-Lg-CQ3" firstAttribute="top" secondItem="Lb8-vt-kTx" secondAttribute="bottom" constant="4" id="top-subtitle"/>
+                <constraint firstAttribute="trailing" secondItem="iyH-Lg-CQ3" secondAttribute="trailing" constant="16" id="trail-subtitle"/>
+                <constraint firstItem="iyH-Lg-CQ3" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="lead-subtitle"/>
+                <constraint firstAttribute="bottom" secondItem="iyH-Lg-CQ3" secondAttribute="bottom" id="bot-subtitle"/>
+            </constraints>
             <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
             <connections>
                 <outlet property="subtitleLabel" destination="iyH-Lg-CQ3" id="WEU-Wd-99d"/>

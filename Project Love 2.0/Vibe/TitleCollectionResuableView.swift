@@ -11,6 +11,8 @@ class TitleCollectionResuableView: UICollectionReusableView {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
 
+    private let wScale = UIScreen.main.bounds.width / 393.0
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -20,10 +22,11 @@ class TitleCollectionResuableView: UICollectionReusableView {
         subtitleLabel.text = subtitle
 
         if title == "Nudges" {
-            titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+            titleLabel.font = UIFont.systemFont(ofSize: 24 * wScale, weight: .bold)
         } else {
-            titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+            titleLabel.font = UIFont.systemFont(ofSize: 20 * wScale, weight: .semibold)
         }
+        subtitleLabel.font = UIFont.systemFont(ofSize: 15 * wScale)
     }
 
 }

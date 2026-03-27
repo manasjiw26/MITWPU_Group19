@@ -23,7 +23,8 @@ class SuggestedActivitiesModalViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
-        cv.backgroundColor = .clear
+        cv.backgroundColor = UIColor.appBackground
+        
         return cv
     }()
 
@@ -31,13 +32,14 @@ class SuggestedActivitiesModalViewController: UIViewController {
         let label = UILabel()
         label.text = "Suggested Activities"
         label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = UIColor.appBackground
 
         view.addSubview(titleLabel)
         view.addSubview(collectionView)
@@ -81,8 +83,12 @@ extension SuggestedActivitiesModalViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension SuggestedActivitiesModalViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width - 32
-        return CGSize(width: width, height: 120)
+        // collectionView.bounds.width is 0 during viewDidLoad (layout not settled).
+        // Use the actual view width with a fallback to screen width.
+        let availableWidth = collectionView.bounds.width > 0
+            ? collectionView.bounds.width
+            : UIScreen.main.bounds.width
+        return CGSize(width: availableWidth - 32, height: 120)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

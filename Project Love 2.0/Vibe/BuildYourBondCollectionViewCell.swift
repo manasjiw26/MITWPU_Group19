@@ -11,6 +11,9 @@ class BuildYourBondCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var BackgroundImage : UIImageView!
+    
+    private let wScale = UIScreen.main.bounds.width / 393.0
+    
     override func awakeFromNib() {
         super.awakeFromNib()
        
@@ -28,6 +31,8 @@ class BuildYourBondCollectionViewCell: UICollectionViewCell {
         imageView.image = UIImage(named: bond.imageName)
         titleLabel.text = bond.name
         BackgroundImage.image = UIImage(named : "BUBBackround")
+        
+        titleLabel.font = UIFont.systemFont(ofSize: 18 * wScale, weight: .semibold)
     }
 
 }

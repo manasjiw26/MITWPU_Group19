@@ -67,6 +67,16 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         // Load user/relationship context from Supabase, then sync activities
         Task {
             await DataStore.shared.loadUserContext()
+            
+            let partnerWasDeleted = await DataStore.shared.checkPartnerDeletion()
+            if partnerWasDeleted {
+                // Post global notification — SceneDelegate shows the alert
+                NotificationCenter.default.post(name: .partnerAccountDeleted, object: nil)
+                return
+            }
+
+            // Start real-time listener for partner deletion (fires instantly)
+            DataStore.shared.startPartnerDeletionListener()
             DataStore.shared.syncActivitiesFromSupabase()
             await fetchPartnerMood()
         }
@@ -157,35 +167,37 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
     }
     
-    func generateLayout() ->UICollectionViewLayout{
+    func generateLayout() -> UICollectionViewLayout {
+        
         let layout = UICollectionViewCompositionalLayout { section, env in
             
             let largeTitleSize = NSCollectionLayoutSize(
-                   widthDimension: .fractionalWidth(1.0),
-                   heightDimension: .absolute(56)   // title + subtitle
-               )
-
-               let compactTitleSize = NSCollectionLayoutSize(
-                   widthDimension: .fractionalWidth(1.0),
-                   heightDimension: .absolute(34)   // title only
-               )
-
-               let largeTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                   layoutSize: largeTitleSize,
-                   elementKind: "title",
-                   alignment: .top
-               )
-
-               let compactTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
-                   layoutSize: compactTitleSize,
-                   elementKind: "title",
-                   alignment: .top
-               )
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(56)
+            )
+            
+            let compactTitleSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(34)
+            )
+            
+            let largeTitleHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: largeTitleSize,
+                elementKind: "title",
+                alignment: .top
+            )
+            
+            _ = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: compactTitleSize,
+                elementKind: "title",
+                alignment: .top
+            )
             
             if section == 0 {
-                                
+                
                 let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(52),heightDimension: .absolute(72)
+                    widthDimension: .absolute(52),
+                    heightDimension: .absolute(72)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
@@ -196,19 +208,24 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
-                    subitems: [item])
+                    subitems: [item]
+                )
                 group.interItemSpacing = .fixed(20)
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.orthogonalScrollingBehavior = .continuous
-                
                 section.interGroupSpacing = 10
-                section.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(
+                    top: 15, leading: 0, bottom: 15, trailing: 0
+                )
+                
                 return section
             }
-            else if section == 1  { //mood
+            
+            else if section == 1 {
                 
-                if !self.hasCheckedInToday { //how are feeling card
+                if !self.hasCheckedInToday {
+                    
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
                         heightDimension: .absolute(160)
@@ -219,172 +236,161 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         widthDimension: .fractionalWidth(1),
                         heightDimension: .absolute(160)
                     )
-                    let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                    
+                    let group = NSCollectionLayoutGroup.vertical(
+                        layoutSize: groupSize,
+                        subitems: [item]
+                    )
                     
                     let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 8, trailing: 16)
+                    section.contentInsets = NSDirectionalEdgeInsets(
+                        top: 12, leading: 16, bottom: 8, trailing: 16
+                    )
                     
                     return section
-                }
-                
-                else { //mood cards
+                } else {
+                    
                     let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(0.5),   
+                        widthDimension: .fractionalWidth(0.5),
                         heightDimension: .estimated(180)
                     )
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+                    
                     item.contentInsets = NSDirectionalEdgeInsets(
-                        top: 0,
-                        leading: 4,
-                        bottom: 0,
-                        trailing: 4
+                        top: 0, leading: 4, bottom: 0, trailing: 4
                     )
-
+                    
                     let groupSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1.0),
                         heightDimension: .estimated(220)
                     )
-
+                    
                     let group = NSCollectionLayoutGroup.horizontal(
                         layoutSize: groupSize,
                         subitems: [item, item]
                     )
-
+                    
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(
-                        top: 30,
-                        leading: 16,
-                        bottom: 12,
-                        trailing: 16
+                        top: 30, leading: 16, bottom: 12, trailing: 16
                     )
                     section.interGroupSpacing = 8
-
+                    
                     return section
-
                 }
-            } else if section == 2 {
+            }
+            
+            else if section == 2 {
                 
-                // Section 2 always shows a single DailyCheckIn card
-                // (default state or completed vibe-title state)
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .estimated(250)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+                
                 let group = NSCollectionLayoutGroup.vertical(
                     layoutSize: itemSize,
                     subitems: [item]
                 )
-
+                
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(
                     top: 12, leading: 16, bottom: 12, trailing: 16
                 )
-
+                
                 return section
             }
-
-            else if section == 3 { //make her smile
-
+            
+            else if section == 3 {
+                
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(100),
                     heightDimension: .absolute(120)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+                
                 let groupWidth: CGFloat = 332
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .absolute(groupWidth),
                     heightDimension: .absolute(120)
                 )
-
+                
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item, item, item]
                 )
                 group.interItemSpacing = .fixed(16)
-
+                
                 let section = NSCollectionLayoutSection(group: group)
-
+                
                 let containerWidth = env.container.effectiveContentSize.width
                 let sideInset = max((containerWidth - groupWidth) / 2, 16)
-
+                
                 section.contentInsets = NSDirectionalEdgeInsets(
                     top: 8,
                     leading: sideInset,
                     bottom: 12,
                     trailing: sideInset
                 )
-
+                
                 section.supplementaryContentInsetsReference = .none
-
+                
                 let titleSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .absolute(34)
                 )
-
+                
                 let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: titleSize,
                     elementKind: "title",
                     alignment: .top
                 )
-
+                
                 titleHeader.contentInsets = NSDirectionalEdgeInsets(
-                    top: 0,
-                    leading: 16,
-                    bottom: 0,
-                    trailing: 16
+                    top: 0, leading: 16, bottom: 0, trailing: 16
                 )
-
+                
                 section.boundarySupplementaryItems = [titleHeader]
                 section.orthogonalScrollingBehavior = .none
-
+                
                 return section
-            } else { // Section 4 - Build Your Bond (Peek Carousel)
-                // 1. Item takes up full width of the group
+            }
+            
+            else {
+                
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
                     heightDimension: .fractionalHeight(1.0)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                // 2. Group width is less than 1.0 (e.g., 0.8) to allow "peeking"
-                // Adjust fractionalWidth here: 0.8 means 80% of screen width
+                
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(0.59),
                     heightDimension: .absolute(290)
                 )
+                
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item]
                 )
-
+                
                 let section = NSCollectionLayoutSection(group: group)
-                
-                // 3. Carousel behavior: snaps to the center of the group
                 section.orthogonalScrollingBehavior = .groupPagingCentered
-                
-                // 4. Spacing between cards
                 section.interGroupSpacing = 0
                 
-                // 5. Section Insets
                 section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 16,
-                    leading: 16, // Centered paging handles side insets automatically
-                    bottom: 0,
-                    trailing: 0
+                    top: 16, leading: 16, bottom: 0, trailing: 0
                 )
-                // Add this inside the Section 4 else block
+                
                 section.visibleItemsInvalidationHandler = { (items, offset, env) in
+                    
                     let containerWidth = env.container.contentSize.width
                     let scrollOffset = offset.x
                     let viewportCenter = scrollOffset + (containerWidth / 2.0)
-
+                    
                     items.forEach { item in
-                        // 1. Determine the 'True' target center (Your existing logic)
+                        
                         var targetCenterX = viewportCenter
                         
                         if item.indexPath.item == 0 {
@@ -392,8 +398,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                             let transitionFactor = min(max(scrollOffset / 100, 0), 1)
                             targetCenterX = firstCardRestCenter + (transitionFactor * (viewportCenter - firstCardRestCenter))
                         }
-
-                        // 2. Calculate distance and normalization
+                        
                         let distanceFromCenter = abs(item.center.x - targetCenterX)
                         let range = containerWidth * 0.35
                         let normalizedDistance = min(distanceFromCenter / range, 1.0)
@@ -401,20 +406,18 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         item.alpha = 1.0
                         
                         if let cell = self.vibeCollectionView.cellForItem(at: item.indexPath) as? BuildYourBondCollectionViewCell {
-                            // --- Keep your Alpha Logic ---
+                            
                             let minAlpha: CGFloat = 0.4
                             cell.contentView.alpha = 1.0 - (normalizedDistance * (1.0 - minAlpha))
                             
-                            // --- ADD: Size Logic ---
-                            // 1.0 at center, 0.85 (15% smaller) at the edges
                             let minScale: CGFloat = 0.85
                             let scale = 1.0 - (normalizedDistance * (1.0 - minScale))
                             
-                            // Apply the shrinking transform
                             cell.contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
                         }
                     }
                 }
+                
                 section.boundarySupplementaryItems = [largeTitleHeader]
                 
                 return section

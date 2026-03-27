@@ -46,6 +46,7 @@ class DataStore {
     var currentRelationshipId: UUID?
     var partnerUserId: UUID?
 
+    private var relationshipChannel: RealtimeChannelV2?
     private(set) var allActivities: [Activity] = []
     private var bondJSONActivities: [JSONActivity] = []
     private var exploreJSONActivities: [JSONActivity] = []
@@ -80,6 +81,7 @@ class DataStore {
 
     /// Clears all user session data — call after sign out or account deletion.
     func clearSession() {
+        stopPartnerDeletionListener()
         currentUserId       = nil
         currentRelationshipId = nil
         partnerUserId       = nil
@@ -95,6 +97,7 @@ class DataStore {
         loadPersonalInfoData()
         loadProfileData()
         loadSampleData()
+        
     }
 
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
@@ -467,68 +470,166 @@ class DataStore {
         let isDisconnected = c == "disconnected"
 
         // 1. The Always-Attached
-        if isVibing && (isQualityTime || isReassurance || isDeepConvo) && isAttached {
-            return VibeTitle( name: "The Always-Attached",
-                             description: "You're inseparable right now—high energy, constant connection, and loving every second together.")
+        if isVibing && isQualityTime && isAttached {
+            return VibeTitle(name: "The Always-Attached",
+                             description: "You're inseparable right now—high energy, constant connection, and loving every second together.",
+                             pageDescription: "Since you're both vibing and prioritizing quality time, you've created a beautiful, high-energy bubble. Choosing to stay so attached right now means you aren't just 'hanging out'—you're fully immersed in each other's world, making every second together feel like a core memory.")
+        }
+        if isVibing && isReassurance && isAttached {
+            return VibeTitle(name: "The Always-Attached",
+                             description: "You're inseparable right now—high energy, constant connection, and loving every second together.",
+                             pageDescription: "You're combining a great vibe with intentional reassurance, which makes your current attached state feel incredibly secure. Hearing 'I've got you' while the energy is high acts like premium fuel for your connection, allowing you both to be your most vibrant, authentic selves.")
+        }
+        if isVibing && isDeepConvo && isAttached {
+            return VibeTitle(name: "The Always-Attached",
+                             description: "You're inseparable right now—high energy, constant connection, and loving every second together.",
+                             pageDescription: "By pairing a playful vibe with a deep conversation, you've reached a state of total attachment where your hearts and minds are perfectly locked in. This is that rare 'soulmate' energy where a silly joke can instantly transition into a profound realization about your future together.")
         }
         // 2. The In-Sync Duo
-        if isSynced && (isQualityTime || isDeepConvo || isReassurance) && isAttached {
+        if isSynced && isQualityTime && isAttached {
             return VibeTitle(name: "The In-Sync Duo",
-                             description: "Everything just flows—you're aligned, balanced, and naturally in sync with each other.")
+                             description: "Everything just flows—you're aligned, balanced, and naturally in sync with each other.",
+                             pageDescription: "Because you're feeling synced and making quality time a priority, being attached feels completely effortless. You're moving as one unit without even trying; there's no pressure to 'perform' because your natural alignment makes just being in the same room feel exactly right.")
+        }
+        if isSynced && isDeepConvo && isAttached {
+            return VibeTitle(name: "The In-Sync Duo",
+                             description: "Everything just flows—you're aligned, balanced, and naturally in sync with each other.",
+                             pageDescription: "You're finishing each other's sentences today. Because you're so synced, diving into a deep conversation only strengthens your attachment. It's one of those moments where you feel completely understood without having to over-explain a single thing.")
+        }
+        if isSynced && isReassurance && isAttached {
+            return VibeTitle(name: "The In-Sync Duo",
+                             description: "Everything just flows—you're aligned, balanced, and naturally in sync with each other.",
+                             pageDescription: "You're perfectly synced on where you stand, so adding reassurance to your attached state isn't about fixing a problem—it's about celebrating your strength. You're staying proactive about your affection, ensuring your foundation remains rock-solid.")
         }
         // 9. The Power-Builders
-        if (isSynced || isVibing) && isSpace && isAttached {
+        if isSynced && isSpace && isAttached {
             return VibeTitle(name: "The Power-Builders",
-                             description: "You're focused, intentional, and building something meaningful together.")
+                             description: "You're focused, intentional, and building something meaningful together.",
+                             pageDescription: "You are perfectly synced on your goals, so taking space doesn't weaken your attachment—it fuels it. This is 'power couple' energy: you're both working hard on your individual paths while remaining deeply tethered to your shared future.")
+        }
+        if isVibing && isSpace && isAttached {
+            return VibeTitle(name: "The Power-Builders",
+                             description: "You're focused, intentional, and building something meaningful together.",
+                             pageDescription: "The vibe is high because you're both thriving. By choosing space while staying attached, you're acting as each other's loudest fans from the sidelines. You have the trust to let each other grow without ever losing your grip on one another.")
         }
         // 10. The Mending Souls
-        if isMeh && (isReassurance || isDeepConvo) && isAttached {
+        if isMeh && isReassurance && isAttached {
             return VibeTitle(name: "The Mending Souls",
-                             description: "You're putting in the effort to heal, grow, and make things better together.")
+                             description: "You're putting in the effort to heal, grow, and make things better together.",
+                             pageDescription: "Even with a meh mood, you've reached for reassurance to keep your attachment strong. You're choosing to stay close through the 'work' of the relationship, proving that love is a verb and that you're committed to mending any gaps together.")
+        }
+        if isMeh && isDeepConvo && isAttached {
+            return VibeTitle(name: "The Mending Souls",
+                             description: "You're putting in the effort to heal, grow, and make things better together.",
+                             pageDescription: "You're using a deep conversation to tackle the meh feelings head-on. By staying attached while facing the tough stuff, you're doing the brave work required for a breakthrough. This is how a bond becomes unbreakable.")
         }
         // 11. The Fresh-Start Pair
-        if isVibing && (isReassurance || isQualityTime) && isKindaClose {
+        if isVibing && isReassurance && isKindaClose {
             return VibeTitle(name: "The Fresh-Start Pair",
-                             description: "Things are improving—you're rediscovering each other and rebuilding the spark.")
+                             description: "Things are improving—you're rediscovering each other and rebuilding the spark.",
+                             pageDescription: "The sun is breaking through! You're vibing again, and using reassurance to bridge the gap as you move from kinda close back to total intimacy. It's a hopeful, tender time where every positive interaction feels like a new beginning.")
+        }
+        if isVibing && isQualityTime && isKindaClose {
+            return VibeTitle(name: "The Fresh-Start Pair",
+                             description: "Things are improving—you're rediscovering each other and rebuilding the spark.",
+                             pageDescription: "You're rediscovering the fun! By pairing a great vibe with quality time, you're stepping out of old patterns. Staying kinda close gives you the room to 'date' each other again and rebuild that spark at a pace that feels fresh.")
         }
         // 3. The Deep-Dive Duo
-        if isDeepConvo && (isAttached || ((isSynced || isVibing) && isKindaClose)) {
+        if isDeepConvo && isAttached {
             return VibeTitle(name: "The Deep-Dive Duo",
-                             description: "Your bond thrives on meaningful conversations and truly understanding each other.")
+                             description: "Your bond thrives on meaningful conversations and truly understanding each other.",
+                             pageDescription: "Regardless of your general mood, choosing a deep conversation while staying so attached shows how much you value the 'truth' of your bond. This vulnerability is the glue keeping you tight today, proving you can handle the weight of real, unfiltered intimacy.")
+        }
+        if isSynced && isDeepConvo && isKindaClose {
+            return VibeTitle(name: "The Deep-Dive Duo",
+                             description: "Your bond thrives on meaningful conversations and truly understanding each other.",
+                             pageDescription: "You're perfectly synced in your thoughts, and using deep conversation to explore new layers. Even though you're keeping a little breathing room by staying kinda close, these meaningful talks are the bridge that keeps your hearts tethered and growing.")
+        }
+        if isVibing && isDeepConvo && isKindaClose {
+            return VibeTitle(name: "The Deep-Dive Duo",
+                             description: "Your bond thrives on meaningful conversations and truly understanding each other.",
+                             pageDescription: "Since the vibe is so good, it feels safe to open up. You're using deep conversation to rediscover each other, and staying kinda close allows that discovery to happen at a pace that feels natural, unforced, and exciting.")
         }
         // 4. The Independent Hearts
-        if isSpace && (isAttached || ((isSynced || isVibing) && isKindaClose)) {
+        if isSpace && isAttached {
             return VibeTitle(name: "The Independent Hearts",
-                             description: "You're strong together but equally value your individuality and personal space.")
+                             description: "You're strong together but equally value your individuality and personal space.",
+                             pageDescription: "You've chosen to take some space, yet you feel completely attached. This is the peak of relationship security—being able to thrive in your own separate lanes while knowing, with total certainty, that your partner is still your ultimate home base.")
+        }
+        if isSynced && isSpace && isKindaClose {
+            return VibeTitle(name: "The Independent Hearts",
+                             description: "You're strong together but equally value your individuality and personal space.",
+                             pageDescription: "You're both synced in your need for a breather. By choosing space while remaining kinda close, you're honoring your individuality without losing your connection. This balanced rhythm makes the moments when you do come together feel refreshed and intentional.")
+        }
+        if isVibing && isSpace && isKindaClose {
+            return VibeTitle(name: "The Independent Hearts",
+                             description: "You're strong together but equally value your individuality and personal space.",
+                             pageDescription: "The vibe is light and fun, which makes taking a little space feel healthy rather than distant. By staying kinda close, you're enjoying the best of both worlds: honoring the 'you' outside of the relationship while keeping the 'us' fresh and happy.")
         }
         // 5. The Reassurers
-        if isReassurance && (isAttached || ((isSynced || isVibing) && isKindaClose)) {
+        if isReassurance && isAttached {
             return VibeTitle(name: "The Reassurers",
-                             description: "Care and emotional safety come first—you constantly check in and support each other.")
+                             description: "Care and emotional safety come first—you constantly check in and support each other.",
+                             pageDescription: "You've prioritized reassurance above all else today, making your attached state feel like a safe harbor. Regardless of the outside world, that extra 'I'm here for you' is acting as a shield for your hearts, ensuring emotional safety comes first.")
+        }
+        if isSynced && isReassurance && isKindaClose {
+            return VibeTitle(name: "The Reassurers",
+                             description: "Care and emotional safety come first—you constantly check in and support each other.",
+                             pageDescription: "You're synced up and checking in. By offering reassurance while staying kinda close, you're reinforcing the 'why' behind your partnership. It's a soft, supportive way to keep your connection growing without the pressure of being inseparable.")
+        }
+        if isVibing && isReassurance && isKindaClose {
+            return VibeTitle(name: "The Reassurers",
+                             description: "Care and emotional safety come first—you constantly check in and support each other.",
+                             pageDescription: "With such a positive vibe, using reassurance right now is like pouring extra love into the 'emotional bank account.' Staying kinda close means you're giving each other room to breathe while making sure you both feel deeply seen and celebrated.")
         }
         // 6. The Routine-Steady
-        if (isSynced || isVibing) && isChill {
+        if isSynced && isChill {
             return VibeTitle(name: "The Routine-Steady",
-                             description: "Things feel calm and predictable—comfortable, but maybe missing a little spark.")
+                             description: "Things feel calm and predictable—comfortable, but maybe missing a little spark.",
+                             pageDescription: "You've hit a peaceful plateau. Because you're synced and feeling chill, there's no drama and no rush. This 'quiet comfort' is the result of a connection that doesn't need high-voltage energy to feel solid; your reliability is its own kind of romance.")
+        }
+        if isVibing && isChill {
+            return VibeTitle(name: "The Routine-Steady",
+                             description: "Things feel calm and predictable—comfortable, but maybe missing a little spark.",
+                             pageDescription: "The vibe is good and the connection is chill. You're finding joy in the simple, everyday version of your love. Without the pressure to solve problems or plan big events, you're just enjoying the relaxed rhythm of being a pair.")
         }
         // 7. The Life-Logistics Team
-        if isMeh && ((isQualityTime && isChill) || isKindaClose) {
+        if isMeh && isQualityTime && isChill {
             return VibeTitle(name: "The Life-Logistics Team",
-                             description: "You function like a perfect team in daily life, even if romance is on the backseat.")
+                             description: "You function like a perfect team in daily life, even if romance is on the backseat.",
+                             pageDescription: "Even if the mood feels a bit meh, you're still choosing quality time in a chill way. You're functioning like a solid team, successfully navigating the routine of life together. Your loyalty shows in the fact that you're still choosing each other's company.")
+        }
+        if isMeh && isKindaClose {
+            return VibeTitle(name: "The Life-Logistics Team",
+                             description: "You function like a perfect team in daily life, even if romance is on the backseat.",
+                             pageDescription: "Things might feel a little meh right now, but staying kinda close keeps you moving forward. You're checking off the boxes of daily life with efficiency, proving that a lasting relationship is a partnership of action and support, even when the spark is resting.")
         }
         // 8. The Wave-Riders
-        if (isVibing || isSynced) && isDisconnected {
+        if isVibing && isDisconnected {
             return VibeTitle(name: "The Wave-Riders",
-                             description: "Your connection comes in highs and lows—passionate, but not always consistent.")
+                             description: "Your connection comes in highs and lows—passionate, but not always consistent.",
+                             pageDescription: "You're vibing well in the moment, even if you feel a bit disconnected overall. It's like two separate islands enjoying the same beautiful sunset—enjoy the 'up' swing of the energy for what it is while you navigate the distance between you.")
+        }
+        if isSynced && isDisconnected {
+            return VibeTitle(name: "The Wave-Riders",
+                             description: "Your connection comes in highs and lows—passionate, but not always consistent.",
+                             pageDescription: "You're synced on the facts of life, but the emotional connection feels a bit disconnected today. You're moving in the same direction, navigating the ebb and flow of a complex duo, and showing that you can still function as a team even when you feel far apart.")
         }
         // 12. The High-Emotion Duo
-        if (isMeh || isDry) && isAttached {
+        if isMeh && isAttached {
             return VibeTitle(name: "The High-Emotion Duo",
-                             description: "Big feelings, big energy—your relationship is intense, exciting, and evolving.")
+                             description: "Big feelings, big energy—your relationship is intense, exciting, and evolving.",
+                             pageDescription: "The mood might be meh, but your attachment is fierce. You aren't letting a temporary feeling push you apart; instead, you're clinging tighter. This is a high-stakes, intense kind of loyalty that proves your commitment outweighs your current mood.")
+        }
+        if isDry && isAttached {
+            return VibeTitle(name: "The High-Emotion Duo",
+                             description: "Big feelings, big energy—your relationship is intense, exciting, and evolving.",
+                             pageDescription: "Things feel a bit dry or quiet, yet you've remained firmly attached. You're holding on through a lull in the spark, refusing to let a quiet day define your bond. You're in the trenches together, and that shared resilience is everything.")
         }
         // Default fallback
         return VibeTitle(name: "The Wave-Riders",
-                         description: "Your connection comes in highs and lows—passionate, but not always consistent.")
+                         description: "Your connection comes in highs and lows—passionate, but not always consistent.",
+                         pageDescription: "Your connection comes in highs and lows—passionate, but not always consistent. Enjoy the 'up' swing of the energy for what it is while you navigate the distance between you.")
     }
 
 
@@ -1502,7 +1603,94 @@ class DataStore {
             }
         }
     }
+    func checkPartnerDeletion() async -> Bool {
+        // Only relevant if we previously had an active relationship
+        guard currentRelationshipId != nil else { return false }
 
+        do {
+            let session = try await SupabaseManager.shared.client.auth.session
+            let uid = session.user.id
+
+            struct RelCheck: Decodable {
+                let relationship_id: UUID?
+            }
+
+            let rows: [RelCheck] = try await SupabaseManager.shared.client
+                .from("users")
+                .select("relationship_id")
+                .eq("user_id", value: uid.uuidString)
+                .limit(1)
+                .execute()
+                .value
+
+            // If the DB says relationship_id is now NULL → partner deleted
+            if let row = rows.first, row.relationship_id == nil {
+                // Clear local state
+                self.currentRelationshipId = nil
+                self.partnerUserId = nil
+                return true
+            }
+        } catch {
+            print("DEBUG: checkPartnerDeletion error: \(error)")
+        }
+
+        return false
+    }
+
+    /// Start a Supabase Realtime listener that fires instantly when
+    /// the partner deletes their account (our relationship_id becomes NULL).
+    func startPartnerDeletionListener() {
+        guard let uid = currentUserId,
+              currentRelationshipId != nil else { return }
+
+        let channel = SupabaseManager.shared.client.channel("partner-deletion")
+
+        let userChanges = channel.postgresChange(
+            UpdateAction.self,
+            schema: "public",
+            table: "users",
+            filter: "user_id=eq.\(uid.uuidString)"
+        )
+
+        Task {
+            do {
+                try await channel.subscribe()
+                self.relationshipChannel = channel
+
+                for await change in userChanges {
+                    let newRecord = change.record
+
+                    // Check if relationship_id was set to null
+                    if let relValue = newRecord["relationship_id"],
+                       relValue.value is NSNull || relValue.stringValue == nil || relValue.stringValue == "" {
+                        // Partner deleted their account
+                        await MainActor.run {
+                            self.currentRelationshipId = nil
+                            self.partnerUserId = nil
+                            NotificationCenter.default.post(
+                                name: .partnerAccountDeleted,
+                                object: nil
+                            )
+                        }
+                        // Unsubscribe after firing
+                        await channel.unsubscribe()
+                        self.relationshipChannel = nil
+                        break
+                    }
+                }
+            } catch {
+                print("DEBUG: partnerDeletionListener error: \(error)")
+            }
+        }
+    }
+
+    /// Stop listening for partner deletion (call on sign-out).
+    func stopPartnerDeletionListener() {
+        Task {
+            await relationshipChannel?.unsubscribe()
+            relationshipChannel = nil
+        }
+    }
     func getBuildYourBondPages(name : String) -> BuildYourBondpage? {
         return bondpage.first { $0.Name == name }
     }
