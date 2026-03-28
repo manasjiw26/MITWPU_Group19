@@ -160,6 +160,16 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                            _ = await DataStore.shared.refreshSuggestionsAfterFeedback(
                                       coupleActivityId: coupleActivityId
                                   )
+                           
+                           // Send notification to partner
+                           if let relationshipId = DataStore.shared.currentRelationshipId {
+                               try await NotificationService.shared.sendPartnerNotification(
+                                   relationshipId: relationshipId,
+                                   type: NotificationType.feedbackCompleted.rawValue,
+                                   message: "Your partner just finished their feedback for \(activity.name). Try doing yours!"
+                               )
+                           }
+                           
                            print(" Feedback saved for user:", userId)
                        } catch {
                            print(" Failed to save feedback:", error)

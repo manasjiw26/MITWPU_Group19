@@ -119,6 +119,7 @@ final class NotificationService {
         case "nudge_sent": return .nudgeSent
         case "love_tip_completed": return .loveTipCompleted
         case "love_tip_reacted": return .loveTipReacted
+        case "feedback_completed": return .feedbackCompleted
         default: return .activityStarted
         }
     }

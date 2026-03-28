@@ -348,6 +348,25 @@ struct VibeTitle {
         return " \(name)"
     }
 
+    /// Maps the vibe name to the corresponding image asset in Assets.xcassets
+    var imageName: String {
+        switch name {
+        case "The Always-Attached":   return "Alwaysa_Attached"
+        case "The In-Sync Duo":       return "InSync_Duo"
+        case "The Deep-Dive Duo":     return "Deep_Dive_Duo"
+        case "The Independent Hearts":return "Independent_hearts"
+        case "The Reassurers":        return "Reassurance"
+        case "The Routine-Steady":    return "Routine_steady"
+        case "The Life-Logistics Team":return "Life_Logistics_Team"
+        case "The Wave-Riders":       return "Wave_Riders"
+        case "The Power-Builders":    return "Power_Builders"
+        case "The Mending Souls":     return "Mending_Souls"
+        case "The Fresh-Start Pair":  return "Fresh_Start_Pair"
+        case "The High-Emotion Duo":  return "High_Emotion_Duo"
+        default:                      return "Alwaysa_Attached"
+        }
+    }
+
     /// Convenience init for cases where pageDescription matches description
     init(name: String, description: String, pageDescription: String = "") {
         self.name = name
@@ -508,6 +527,7 @@ enum NotificationType: String {
     case nudgeSent = "nudge_sent"
     case loveTipCompleted = "love_tip_completed"
     case loveTipReacted = "love_tip_reacted"
+    case feedbackCompleted = "feedback_completed"
     
     var titleText: String {
         switch self {
@@ -518,6 +538,7 @@ enum NotificationType: String {
         case .nudgeSent: return "SWEET NUDGE"
         case .loveTipCompleted: return "LOVE TIP COMPLETED"
         case .loveTipReacted: return "REACTION RECEIVED"
+        case .feedbackCompleted: return "FEEDBACK COMPLETED"
         }
     }
 
@@ -530,6 +551,7 @@ enum NotificationType: String {
         case .nudgeSent: return "heart.fill"
         case .loveTipCompleted: return "lightbulb.max.fill"
         case .loveTipReacted: return "heart.text.square.fill"
+        case .feedbackCompleted: return "checkmark.message.fill"
         }
     }
 }

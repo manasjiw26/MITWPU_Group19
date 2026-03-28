@@ -1728,8 +1728,10 @@ class DataStore {
         return Array(shuffled.prefix(count))
     }
     func getOngoingActivities() -> [Activity] {
-        // Only activities with steps should appear in ongoing
-        return activities.filter { $0.status == .ongoing && $0.steps != nil && !($0.steps?.isEmpty ?? true) }
+        // Return both preset and custom activities that are ongoing
+        let presetOngoing = activities.filter { $0.status == .ongoing }
+        let customOngoing = customActivities.filter { $0.status == .ongoing }
+        return presetOngoing + customOngoing
     }
     func getCompletedActivities() -> [Activity] {
         return activities.filter { $0.status == .completed }
@@ -1799,13 +1801,21 @@ class DataStore {
                         }
                         return ""
                     }()
+                    let status: ActivityStatus = {
+                        switch row.status {
+                        case "ongoing": return .ongoing
+                        case "completed": return .completed
+                        case "scheduled": return .scheduled
+                        default: return .none
+                        }
+                    }()
                     return Activity(
                         coupleActivityId: row.coupleActivityId,
                         name: row.activityName,
                         description: row.description ?? "",
                         image: "Activityimage",
                         time: displayDate,
-                        status: .ongoing,
+                        status: status,
                         category: "Custom"
                     )
                 }

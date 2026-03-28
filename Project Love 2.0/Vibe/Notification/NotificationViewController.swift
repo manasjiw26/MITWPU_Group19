@@ -89,6 +89,7 @@ final class NotificationViewController: UIViewController {
          case .nudgeSent: openNudge(notification)
          case .loveTipCompleted: openLoveTipCompleted(notification)
          case .loveTipReacted: openLoveTipReacted(notification)
+         case .feedbackCompleted: openFeedbackCompleted(notification)
          }
      }
     private func openNudge(_ notification: AppNotification) {
@@ -342,6 +343,17 @@ final class NotificationViewController: UIViewController {
          )
 
          alert.addAction(UIAlertAction(title: "Got it", style: .default))
+         present(alert, animated: true)
+     }
+
+     private func openFeedbackCompleted(_ notification: AppNotification) {
+         let alert = UIAlertController(
+             title: "Feedback Complete",
+             message: notification.message,
+             preferredStyle: .alert
+         )
+
+         alert.addAction(UIAlertAction(title: "Awesome", style: .default))
          present(alert, animated: true)
      }
  }

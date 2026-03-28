@@ -56,7 +56,7 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
         isCompletedState = true
         checkInTitleLabel.text = vibeTitle.displayTitle
         checkInSubTitleLabel.text = vibeTitle.description
-        checkInImageView.image = UIImage(named: "DailyCheckIn")
+        checkInImageView.image = UIImage(named: vibeTitle.imageName)
 
         actionButton.configuration = .filled()
         actionButton.configuration?.baseForegroundColor = .label

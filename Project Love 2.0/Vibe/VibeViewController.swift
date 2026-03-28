@@ -59,6 +59,12 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         // Refresh gender-dependent UI when preferences change (e.g. from Profile modal)
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(handleActivitiesSynced),
+            name: .activitiesSynced,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(handlePreferencesChanged),
             name: .preferencesDidChange,
             object: nil
@@ -967,6 +973,16 @@ extension VibeViewController {
             guard let self else { return }
 
             await DataStore.shared.refreshUserProfileFromSupabase()
+            
+            // Initial sync of activities from Supabase
+            DataStore.shared.syncActivitiesFromSupabase()
+
+            // Setup real-time listener for activities (if relationship_id exists)
+            if let relationshipId = DataStore.shared.currentRelationshipId {
+                SupabaseManager.shared.listenForActivityChanges(relationshipId: relationshipId) { [weak self] in
+                    DataStore.shared.syncActivitiesFromSupabase()
+                }
+            }
 
             await MainActor.run {
                 self.makeSmileData = [
@@ -976,7 +992,6 @@ extension VibeViewController {
                 ]
                 
                 // Always sync suggested activities from DataStore
-                // (covers post-feedback refreshes for both partners)
                 let latestSuggestions = DataStore.shared.getSuggestedActivities()
                 if self.hasCompletedDailyCheckIn && !latestSuggestions.isEmpty {
                     self.suggestedActivities = latestSuggestions
@@ -988,7 +1003,6 @@ extension VibeViewController {
             }
             await self.fetchMyMood()
             await self.fetchPartnerMood()
-            
         }
     }
 
@@ -1189,11 +1203,26 @@ extension VibeViewController {
 // MARK: - InfoModalDelegate
 extension VibeViewController {
     func didTapLetsDoThis(for activity: Activity) {
-        // Remove the activity from suggested activities
+        // Mark as ongoing in DataStore & Supabase
+        DataStore.shared.startActivity(activity) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.configureOngoingActivity()
+                self?.vibeCollectionView.reloadData()
+            }
+        }
+
+        // Remove the activity from suggested activities locally
         if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
             suggestedActivities.remove(at: index)
             DataStore.shared.suggestedActivities = suggestedActivities
             vibeCollectionView.reloadSections(IndexSet(integer: 2))
+        }
+    }
+
+    @objc private func handleActivitiesSynced() {
+        DispatchQueue.main.async {
+            self.configureOngoingActivity()
+            self.vibeCollectionView.reloadData()
         }
     }
 }
