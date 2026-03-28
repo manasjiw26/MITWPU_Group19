@@ -45,6 +45,7 @@ class DataStore {
     var currentUserId: UUID?
     var currentRelationshipId: UUID?
     var partnerUserId: UUID?
+    var isUserA: Bool = false
 
     private var relationshipChannel: RealtimeChannelV2?
     private(set) var allActivities: [Activity] = []
@@ -1731,7 +1732,26 @@ class DataStore {
         // Return both preset and custom activities that are ongoing
         let presetOngoing = activities.filter { $0.status == .ongoing }
         let customOngoing = customActivities.filter { $0.status == .ongoing }
-        return presetOngoing + customOngoing
+        let allOngoing = presetOngoing + customOngoing
+        
+        let excludedKeywords = ["nudge", "love note", "love tip", "memory jar", "explore"]
+        return allOngoing.filter { activity in
+            
+            // Filter out items that the current user has already given feedback for
+            if let id = activity.coupleActivityId,
+               let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
+                if isUserA && dbCoupleActivity.feedbackADone { return false }
+                if !isUserA && dbCoupleActivity.feedbackBDone { return false }
+            }
+            
+            let lowerName = activity.name.lowercased()
+            let lowerCategory = activity.category.lowercased()
+            
+            // Check if name OR category contains any of the excluded keywords
+            return !excludedKeywords.contains(where: { keyword in
+                lowerName.contains(keyword) || lowerCategory.contains(keyword)
+            })
+        }
     }
     func getCompletedActivities() -> [Activity] {
         return activities.filter { $0.status == .completed }
@@ -1762,6 +1782,7 @@ class DataStore {
                 self.partnerUserId = (relationship.user1_id == authUserId)
                     ? relationship.user2_id
                     : relationship.user1_id
+                self.isUserA = (relationship.user1_id == authUserId)
                 self.partnerAssessmentPreferences = nil
             } else {
             }

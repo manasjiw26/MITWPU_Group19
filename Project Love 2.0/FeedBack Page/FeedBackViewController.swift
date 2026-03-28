@@ -137,8 +137,6 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
     @IBAction func doneTapped(_ sender: UIButton) {
         
         if let activity = activity {
-               DataStore.shared.markActivityCompleted(activity: activity)
-
                // Submit feedback to Supabase (dual-user sync)
                if let coupleActivityId = activity.coupleActivityId,
                   let userId = DataStore.shared.currentUserId {
@@ -199,25 +197,11 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
            } else {
                dismissAll()
            }
-        
-        // Ongoing count
-        let ongoingCount = UserDefaults.standard.integer(
-            forKey: "ongoingActivityCount"
-        )
-        let newOngoing = max(0, ongoingCount - 1)
-        UserDefaults.standard.set(newOngoing, forKey: "ongoingActivityCount")
-        
-        // Completed count
-        let completedCount = UserDefaults.standard.integer(
-            forKey: "completedActivityCount"
-        )
-        UserDefaults.standard.set(
-            completedCount + 1,
-            forKey: "completedActivityCount"
-        )
-        
-        // Dismiss screens
-        var topVC: UIViewController? = self
+           
+           // Removed explicit UserDefaults count manipulation which was overriding server completion state
+           
+           // Dismiss screens
+           var topVC: UIViewController? = self
         while let presenter = topVC?.presentingViewController {
             topVC = presenter
         }
