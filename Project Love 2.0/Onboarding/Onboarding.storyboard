@@ -512,25 +512,12 @@
                                     <action selector="getStartedTapped:" destination="fhb-aG-ga5" eventType="touchUpInside" id="KjN-a5-7rY"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IZ0-Cp-Btj">
-                                <rect key="frame" x="229.66666666666663" y="262" width="143.33333333333337" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="dD0-l4-hi4"/>
-                                </constraints>
-                                <color key="tintColor" name="AccentColor"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Forgot Password ?">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
-                                </buttonConfiguration>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="c89-hF-kvC"/>
                         <color key="backgroundColor" name="AppBackground"/>
                         <constraints>
-                            <constraint firstItem="c89-hF-kvC" firstAttribute="trailing" secondItem="IZ0-Cp-Btj" secondAttribute="trailing" constant="20" id="3zb-YP-ebv"/>
                             <constraint firstItem="o8g-sx-0WL" firstAttribute="leading" secondItem="I8M-y5-MqO" secondAttribute="leading" constant="20" id="BPN-1e-TlG"/>
                             <constraint firstItem="SVb-2b-fCu" firstAttribute="top" secondItem="cwK-vg-Hth" secondAttribute="bottom" constant="12" id="FP3-ht-T5g"/>
-                            <constraint firstItem="IZ0-Cp-Btj" firstAttribute="top" secondItem="SVb-2b-fCu" secondAttribute="bottom" constant="8" symbolic="YES" id="ZFQ-iN-POD"/>
                             <constraint firstItem="c89-hF-kvC" firstAttribute="trailing" secondItem="SVb-2b-fCu" secondAttribute="trailing" constant="20" id="i3S-Py-lO6"/>
                             <constraint firstItem="c89-hF-kvC" firstAttribute="trailing" secondItem="o8g-sx-0WL" secondAttribute="trailing" constant="20" id="lGZ-tm-Bah"/>
                             <constraint firstItem="cwK-vg-Hth" firstAttribute="leading" secondItem="I8M-y5-MqO" secondAttribute="leading" constant="20" id="lWQ-1w-eOT"/>
@@ -1323,17 +1310,14 @@ bond together </string>
         <image name="partnerpairingheart" width="984" height="1080"/>
         <image name="person" catalog="system" width="128" height="121"/>
         <image name="square.and.arrow.down" catalog="system" width="114" height="128"/>
-        <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="AppBackground">
             <color red="0.94900000095367432" green="0.94900000095367432" blue="0.96899998188018799" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

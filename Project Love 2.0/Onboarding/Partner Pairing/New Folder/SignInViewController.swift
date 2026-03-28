@@ -17,6 +17,16 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     
     let spinner = UIActivityIndicatorView(style: .large)
     
+    private let forgotPasswordButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Forgot Password?", for: .normal)
+        btn.contentHorizontalAlignment = .right
+        btn.setTitleColor(.systemIndigo, for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +46,122 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         emailTF.returnKeyType = .next
         passwordTF.returnKeyType = .done
         
+        setupForgotPasswordButton()
+    }
+    
+    private func setupForgotPasswordButton() {
+        view.addSubview(forgotPasswordButton)
+        
+        // TFView array typically has the password container view at index 1
+        if TFView.count >= 2 {
+            let passwordView = TFView[1]
+            NSLayoutConstraint.activate([
+                forgotPasswordButton.topAnchor.constraint(equalTo: passwordView.bottomAnchor, constant: 8),
+                forgotPasswordButton.trailingAnchor.constraint(equalTo: passwordView.trailingAnchor),
+                forgotPasswordButton.heightAnchor.constraint(equalToConstant: 30)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                forgotPasswordButton.topAnchor.constraint(equalTo: passwordTF.bottomAnchor, constant: 16),
+                forgotPasswordButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                forgotPasswordButton.heightAnchor.constraint(equalToConstant: 30)
+            ])
+        }
+        
+        forgotPasswordButton.addTarget(self, action: #selector(forgotPasswordTapped), for: .touchUpInside)
+    }
+
+    @objc private func forgotPasswordTapped() {
+        let alert = UIAlertController(title: "Reset Password", message: "Enter your email address to receive a password reset link.", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "Email Address"
+            textField.keyboardType = .emailAddress
+            textField.text = self.emailTF.text // pre-fill
+        }
+        
+        let sendAction = UIAlertAction(title: "Send Link", style: .default) { _ in
+            guard let email = alert.textFields?.first?.text, !email.isEmpty else { return }
+            self.sendPasswordReset(email: email)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(sendAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+
+    private func sendPasswordReset(email: String) {
+        spinner.startAnimating()
+        Task {
+            do {
+                try await SupabaseManager.shared.client.auth.resetPasswordForEmail(email)
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.showOTPInputAlert(for: email)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.showAlert("Failed to send reset link: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func showOTPInputAlert(for email: String) {
+        let alert = UIAlertController(title: "Enter Reset Code", message: "Check your email for the 6-digit code.", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "6-digit OTP Code"
+            textField.keyboardType = .numberPad
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "New Password"
+            textField.isSecureTextEntry = true
+        }
+        
+        let verifyAction = UIAlertAction(title: "Update Password", style: .default) { _ in
+            guard let otp = alert.textFields?[0].text, !otp.isEmpty,
+                  let newPassword = alert.textFields?[1].text, !newPassword.isEmpty else {
+                self.showAlert("OTP and New Password cannot be empty.")
+                return
+            }
+            self.verifyOTPAndResetPassword(email: email, otp: otp, newPassword: newPassword)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(verifyAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+
+    private func verifyOTPAndResetPassword(email: String, otp: String, newPassword: String) {
+        spinner.startAnimating()
+        Task {
+            do {
+                // 1. Verify OTP
+                try await SupabaseManager.shared.client.auth.verifyOTP(
+                    email: email,
+                    token: otp,
+                    type: .recovery
+                )
+                
+                // 2. Update Password for the now-authenticated user
+                try await SupabaseManager.shared.client.auth.update(user: UserAttributes(password: newPassword))
+                
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.showAlert("Your password has been updated successfully! You can now log in.", title: "Success")
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.spinner.stopAnimating()
+                    self.showAlert("Failed to update password: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     @objc func dismissKeyboard() {
@@ -91,7 +217,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                 .value
 
             let userRow = rows.first
-            let hasAssessment = !(userRow?.assessment_answers?.isEmpty ?? true)
+            _ = !(userRow?.assessment_answers?.isEmpty ?? true)
             if let gender = userRow?.gender, !gender.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 UserDefaults.standard.set(gender, forKey: "userGender")
             }
@@ -157,8 +283,8 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         }
     
     }
-    func showAlert(_ message: String) {
-        let alert = UIAlertController(title: "Error",
+    func showAlert(_ message: String, title: String = "Error") {
+        let alert = UIAlertController(title: title,
                                       message: message,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
