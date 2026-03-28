@@ -17,8 +17,10 @@ class BuildYourBondCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
        
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = 20
         contentView.layer.masksToBounds = true
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor.systemGray5.cgColor
     }
     override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
         super.apply(layoutAttributes)

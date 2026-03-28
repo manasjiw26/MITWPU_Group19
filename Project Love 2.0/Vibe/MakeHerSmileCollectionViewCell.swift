@@ -18,7 +18,7 @@ class MakeHerSmileCollectionViewCell: UICollectionViewCell {
         
         contentView.layer.cornerRadius = 19 * wScale
         contentView.layer.masksToBounds = true
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = UIColor(red: 243/255, green: 244/255, blue: 246/255, alpha: 1.0)
         
     }
     

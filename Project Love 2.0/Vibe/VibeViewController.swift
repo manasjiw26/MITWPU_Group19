@@ -12,6 +12,26 @@ protocol LoveTipsSelectionDelegate: AnyObject {
     func didUpdateSelectedTips(_ tips: [Tip])
 }
 
+class SectionBackgroundDecorationView: UICollectionReusableView {
+    static let kind = "section-background"
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .white
+        layer.cornerRadius = 32
+        layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+    }
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+class PlainWhiteBackgroundView: UICollectionReusableView {
+    static let kind = "plain-white-background"
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .white
+    }
+    required init?(coder: NSCoder) { fatalError() }
+}
+
 class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate, InfoModalDelegate, UIAdaptivePresentationControllerDelegate, SuggestedActivitiesModalDelegate {
     
     @IBOutlet weak var vibeCollectionView: UICollectionView!
@@ -55,6 +75,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.delegate = self
         setupOngoing()
         configureOngoingActivity()
+        setupNavigationBar()
 
         // Refresh gender-dependent UI when preferences change (e.g. from Profile modal)
         NotificationCenter.default.addObserver(
@@ -96,6 +117,23 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         ]
         vibeCollectionView.reloadData()
     }
+
+    private func setupNavigationBar() {
+        let lavender = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = lavender
+        appearance.shadowColor = .clear
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+
     private func checkNotifications() {
         Task { @MainActor in
             do {
@@ -122,13 +160,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     }
     
     func setupOngoing(){
-            ongoingActivitiesView.layer.cornerRadius = ongoingActivitiesView.layer.frame.height / 2
-            secondOngoingActivityView.layer.cornerRadius = secondOngoingActivityView.layer.frame.height / 2
-            ongoingActivitiesView.layer.masksToBounds = true
-            secondOngoingActivityView.layer.masksToBounds = true
-            ongoingActivitiesView.applyLiquidGlassEffect(animated: false)
-            
-        }
+        ongoingActivitiesView.layer.cornerRadius = ongoingActivitiesView.layer.frame.height / 2
+        secondOngoingActivityView.layer.cornerRadius = secondOngoingActivityView.layer.frame.height / 2
+        ongoingActivitiesView.layer.masksToBounds = true
+        secondOngoingActivityView.layer.masksToBounds = true
+        ongoingActivitiesView.applyLiquidGlassEffect(animated: false)
+        
+        // Background color to match the image
+        vibeCollectionView.backgroundColor = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
+    }
         func configureOngoingActivity(){
             ongoingActivites = DataStore.shared.getOngoingActivities()
             if(ongoingActivites.count > 1){
@@ -170,7 +210,6 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "scheduleCalendar_cell"
         )
-
     }
     
     func generateLayout() -> UICollectionViewLayout {
@@ -228,19 +267,41 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 return section
             }
             
+            // Section 1: Quick Vibe Check (Moved from Section 2)
             else if section == 1 {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .estimated(220)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: itemSize,
+                    subitems: [item]
+                )
+                
+                let sectionLayout = NSCollectionLayoutSection(group: group)
+                sectionLayout.contentInsets = NSDirectionalEdgeInsets(
+                    top: 12, leading: 16, bottom: 12, trailing: 16
+                )
+                
+                return sectionLayout
+            }
+            
+            // Section 2: How are you feeling / Moods (Moved from Section 1)
+            else if section == 2 {
                 
                 if !self.hasCheckedInToday {
                     
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(160)
+                        heightDimension: .absolute(165)
                     )
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     
                     let groupSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(160)
+                        widthDimension: .fractionalWidth(1.0),
+                        heightDimension: .absolute(165)
                     )
                     
                     let group = NSCollectionLayoutGroup.vertical(
@@ -248,12 +309,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         subitems: [item]
                     )
                     
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(
-                        top: 12, leading: 16, bottom: 8, trailing: 16
+                    let sectionLayout = NSCollectionLayoutSection(group: group)
+                    sectionLayout.contentInsets = NSDirectionalEdgeInsets(
+                        top: 40, leading: 16, bottom: 0, trailing: 16
                     )
+                    sectionLayout.decorationItems = [
+                        NSCollectionLayoutDecorationItem.background(elementKind: SectionBackgroundDecorationView.kind)
+                    ]
                     
-                    return section
+                    return sectionLayout
                 } else {
                     
                     let itemSize = NSCollectionLayoutSize(
@@ -276,35 +340,17 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                         subitems: [item, item]
                     )
                     
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(
-                        top: 30, leading: 16, bottom: 12, trailing: 16
+                    let sectionLayout = NSCollectionLayoutSection(group: group)
+                    sectionLayout.contentInsets = NSDirectionalEdgeInsets(
+                        top: 30, leading: 16, bottom: 0, trailing: 16
                     )
-                    section.interGroupSpacing = 8
+                    sectionLayout.interGroupSpacing = 8
+                    sectionLayout.decorationItems = [
+                        NSCollectionLayoutDecorationItem.background(elementKind: SectionBackgroundDecorationView.kind)
+                    ]
                     
-                    return section
+                    return sectionLayout
                 }
-            }
-            
-            else if section == 2 {
-                
-                let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(250)
-                )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let group = NSCollectionLayoutGroup.vertical(
-                    layoutSize: itemSize,
-                    subitems: [item]
-                )
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 12, leading: 16, bottom: 12, trailing: 16
-                )
-                
-                return section
             }
             
             else if section == 3 {
@@ -328,19 +374,19 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 )
                 group.interItemSpacing = .fixed(16)
                 
-                let section = NSCollectionLayoutSection(group: group)
+                let sectionLayout = NSCollectionLayoutSection(group: group)
                 
                 let containerWidth = env.container.effectiveContentSize.width
                 let sideInset = max((containerWidth - groupWidth) / 2, 16)
                 
-                section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 8,
+                sectionLayout.contentInsets = NSDirectionalEdgeInsets(
+                    top: 0,
                     leading: sideInset,
-                    bottom: 12,
+                    bottom: 0,
                     trailing: sideInset
                 )
                 
-                section.supplementaryContentInsetsReference = .none
+                sectionLayout.supplementaryContentInsetsReference = .none
                 
                 let titleSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
@@ -357,10 +403,13 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     top: 0, leading: 16, bottom: 0, trailing: 16
                 )
                 
-                section.boundarySupplementaryItems = [titleHeader]
-                section.orthogonalScrollingBehavior = .none
+                sectionLayout.boundarySupplementaryItems = [titleHeader]
+                sectionLayout.orthogonalScrollingBehavior = .none
+                sectionLayout.decorationItems = [
+                    NSCollectionLayoutDecorationItem.background(elementKind: PlainWhiteBackgroundView.kind)
+                ]
                 
-                return section
+                return sectionLayout
             }
             
             else {
@@ -381,15 +430,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     subitems: [item]
                 )
                 
-                let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .groupPagingCentered
-                section.interGroupSpacing = 0
+                let sectionLayout = NSCollectionLayoutSection(group: group)
+                sectionLayout.orthogonalScrollingBehavior = .groupPagingCentered
+                sectionLayout.interGroupSpacing = 0
                 
-                section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 16, leading: 16, bottom: 0, trailing: 0
+                sectionLayout.contentInsets = NSDirectionalEdgeInsets(
+                    top: 0, leading: 16, bottom: 40, trailing: 16
                 )
                 
-                section.visibleItemsInvalidationHandler = { (items, offset, env) in
+                sectionLayout.visibleItemsInvalidationHandler = { (items, offset, env) in
                     
                     let containerWidth = env.container.contentSize.width
                     let scrollOffset = offset.x
@@ -424,11 +473,17 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     }
                 }
                 
-                section.boundarySupplementaryItems = [largeTitleHeader]
+                sectionLayout.boundarySupplementaryItems = [largeTitleHeader]
+                sectionLayout.decorationItems = [
+                    NSCollectionLayoutDecorationItem.background(elementKind: PlainWhiteBackgroundView.kind)
+                ]
                 
-                return section
+                return sectionLayout
             }
         }
+        
+        layout.register(SectionBackgroundDecorationView.self, forDecorationViewOfKind: SectionBackgroundDecorationView.kind)
+        layout.register(PlainWhiteBackgroundView.self, forDecorationViewOfKind: PlainWhiteBackgroundView.kind)
         
         return layout
     }
@@ -448,7 +503,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     withIdentifier: "TellMoodSelectionViewController"
                 ) as! TellMoodSelectionViewController
                 vc.delegate = self
-                vc.selectedIndexPath = IndexPath(item: 0, section: 1)
+                vc.selectedIndexPath = IndexPath(item: 0, section: 2)
                 vc.modalPresentationStyle = .pageSheet
                 self.present(vc, animated: true)
             })
@@ -522,7 +577,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 await MainActor.run {
                     self.myMoodTitle = moodLog.moods.title
                     self.myMoodImage = moodLog.moods.image
-                    self.vibeCollectionView.reloadSections(IndexSet(integer: 1))
+                    self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
                 }
             }
         } catch {
@@ -652,10 +707,11 @@ extension VibeViewController:  UICollectionViewDataSource {
             return 0
         }
         else if section == 1 {
-            return hasCheckedInToday ? 2 : 1
-        } else if section == 2{
-            // Always 1 cell: either default check-in card or completed vibe-title card
+            // Quick Vibe / Daily Check-in (Moved from section 2)
             return 1
+        } else if section == 2{
+            // Mood card (Moved from section 1)
+            return hasCheckedInToday ? 2 : 1
         } else if section == 3 {
             return makeSmileData.count
         } else {
@@ -666,6 +722,25 @@ extension VibeViewController:  UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.section == 1 {
+            // Daily Check-in Cell (Quick Vibe check)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
+            if hasCompletedDailyCheckIn, let vibeTitle = resolvedVibeTitle {
+                // Completed state: button text depends on activity count & modal state
+                cell.configureAsCompleted(
+                    vibeTitle: vibeTitle,
+                    remainingCount: suggestedActivities.count,
+                    hasOpenedModal: hasOpenedSuggestedModal
+                )
+            } else {
+                // Default state: Quick Vibe Check card
+                cell.configureCells()
+            }
+            cell.delegate = self
+            return cell
+        }
+        
+        else if indexPath.section == 2 {
+            // Mood Check-in Cells
             if hasCheckedInToday {
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "mood_checkin_cell",
@@ -702,23 +777,6 @@ extension VibeViewController:  UICollectionViewDataSource {
                 cell.configureCell()
                 return cell
             }
-        }
-        
-        else if indexPath.section == 2 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
-            if hasCompletedDailyCheckIn, let vibeTitle = resolvedVibeTitle {
-                // Completed state: button text depends on activity count & modal state
-                cell.configureAsCompleted(
-                    vibeTitle: vibeTitle,
-                    remainingCount: suggestedActivities.count,
-                    hasOpenedModal: hasOpenedSuggestedModal
-                )
-            } else {
-                // Default state: Quick Vibe Check card
-                cell.configureCells()
-            }
-            cell.delegate = self
-            return cell
         }
         
         else if indexPath.section == 3 {
@@ -848,8 +906,8 @@ extension VibeViewController:  UICollectionViewDataSource {
 extension VibeViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        // section 1 - How are you feeling today?
-        if indexPath.section == 1 && !hasCheckedInToday {
+        // section 2 - How are you feeling today?
+        if indexPath.section == 2 && !hasCheckedInToday {
 
             let storyboard = UIStoryboard(name: "tell_Mood", bundle: nil)
             let vc = storyboard.instantiateViewController(
@@ -858,7 +916,7 @@ extension VibeViewController {
 
             vc.delegate = self
             
-            vc.selectedIndexPath = IndexPath(item: 0, section: 1)
+            vc.selectedIndexPath = IndexPath(item: 0, section: 2)
             
             vc.modalPresentationStyle = .pageSheet
 
@@ -1044,8 +1102,8 @@ extension VibeViewController: DailyExerciseFlowDelegate {
         )
 
         DispatchQueue.main.async {
-            // Reload section 2 — the card updates in-place with the vibe title
-            self.vibeCollectionView.reloadSections(IndexSet(integer: 2))
+            // Reload section 1 — the card updates in-place with the vibe title
+            self.vibeCollectionView.reloadSections(IndexSet(integer: 1))
         }
     }
 }
@@ -1074,7 +1132,7 @@ extension VibeViewController {
         }
 
         // Reload the card so button text updates to "Continue"
-        vibeCollectionView.reloadSections(IndexSet(integer: 2))
+        vibeCollectionView.reloadSections(IndexSet(integer: 1))
 
         present(modalVC, animated: true)
     }
@@ -1215,7 +1273,7 @@ extension VibeViewController {
         if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
             suggestedActivities.remove(at: index)
             DataStore.shared.suggestedActivities = suggestedActivities
-            vibeCollectionView.reloadSections(IndexSet(integer: 2))
+            vibeCollectionView.reloadSections(IndexSet(integer: 1))
         }
     }
 

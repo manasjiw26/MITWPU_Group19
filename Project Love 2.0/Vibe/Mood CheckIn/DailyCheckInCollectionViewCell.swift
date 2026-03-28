@@ -22,12 +22,7 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
 
         layer.cornerRadius = 16
         layer.masksToBounds = false
-        backgroundColor = UIColor(
-            red: 168/255,
-            green: 171/255,
-            blue: 222/255,
-            alpha: 0.6
-        )
+        backgroundColor = .clear
     }
 
     override func prepareForReuse() {
@@ -40,14 +35,15 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
     func configureCells() {
         isCompletedState = false
         checkInTitleLabel.text = "Quick Vibe check"
-        checkInSubTitleLabel.text = "Questions to plan today's activities for you and your partner!"
+        checkInSubTitleLabel.text = "Questions to plan today's activities for you two."
         checkInImageView.image = UIImage(named: "DailyCheckIn")
 
         actionButton.configuration = .filled()
         actionButton.configuration?.title = "Let's do this"
         actionButton.configuration?.baseForegroundColor = .label
         actionButton.configuration?.baseBackgroundColor = .white
-        actionButton.configuration?.buttonSize = .large
+        actionButton.configuration?.buttonSize = .medium
+        actionButton.configuration?.cornerStyle = .capsule
     }
 
     // MARK: - Completed State (Shows Vibe Title)
