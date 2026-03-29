@@ -17,7 +17,7 @@ class MoodCardCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 28
         contentView.layer.masksToBounds = true
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = UIColor.appBackground
         
     }
     func configureCell(){
