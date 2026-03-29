@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Supabase
 
 protocol InfoModalDelegate: AnyObject {
     func didTapLetsDoThis(for activity: Activity)
@@ -93,13 +94,96 @@ class InfoModalViewController: UIViewController {
 
     @IBAction func letsDoThisButtonTapped(_ sender: Any) {
         let activityToRemove = activity
+        let presentingVC = self.presentingViewController
         UIView.animate(withDuration: 0.25, animations: {
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
             self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
         }) { _ in
             self.dismiss(animated: true) {
                 if let activity = activityToRemove {
-                    self.delegate?.didTapLetsDoThis(for: activity)
+                    if activity.name.lowercased().hasPrefix("love note") {
+                        let storyboard = UIStoryboard(name: "LoveNote", bundle: nil)
+                        let vc = storyboard.instantiateViewController(
+                            withIdentifier: "LoveNoteViewController"
+                        ) as! LoveNoteViewController
+                        vc.modalPresentationStyle = .overFullScreen
+                        vc.modalTransitionStyle = .crossDissolve
+                        
+                        vc.onSave = { message, scheduledDate in
+                            guard let relationshipId = DataStore.shared.currentRelationshipId,
+                                  let partnerId = DataStore.shared.partnerUserId,
+                                  let userId = DataStore.shared.currentUserId else { return }
+                            
+                            Task {
+                                do {
+                                    let payload = LoveNoteInsert(
+                                        relationship_id: relationshipId,
+                                        user_id: userId,
+                                        partner_user_id: partnerId,
+                                        message: message,
+                                        scheduled_for: scheduledDate,
+                                        is_sent: (scheduledDate == nil)
+                                    )
+                                    
+                                    let insertedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
+                                        .from("love_notes")
+                                        .insert(payload)
+                                        .select()
+                                        .execute()
+                                        .value
+                                    
+                                    if scheduledDate == nil {
+                                        do {
+                                            let loveNoteIdString = insertedNotes.first?.love_note_id.uuidString
+                                            try await NotificationService.shared.sendPartnerNotification(
+                                                relationshipId: relationshipId,
+                                                type: "love_note_sent",
+                                                message: "Your partner sent you a love note 💌",
+                                                entityType: "love_note",
+                                                entityId: loveNoteIdString
+                                            )
+                                        } catch {}
+                                    }
+                                } catch {
+                                    print("Failed to save love note from InfoModalViewController: \(error)")
+                                }
+                            }
+                        }
+                        
+                        presentingVC?.present(vc, animated: true)
+                    } else if activity.name.lowercased().hasPrefix("memory jar") {
+                        let storyboard = UIStoryboard(name: "MemoryJar", bundle: nil)
+                        let vc = storyboard.instantiateViewController(
+                            withIdentifier: "AddMemoryViewController"
+                        ) as! NewAddNewViewController
+                        vc.modalPresentationStyle = .fullScreen
+                        presentingVC?.present(vc, animated: true)
+                    } else if activity.name.lowercased().hasPrefix("love tips") {
+                        let storyboard = UIStoryboard(name: "LoveTips", bundle: nil)
+                        let vc = storyboard.instantiateViewController(
+                            withIdentifier: "LoveTipsVC"
+                        ) as! LoveTipsViewController
+                        vc.delegate = self.delegate as? LoveTipsSelectionDelegate
+                        if let sheet = vc.sheetPresentationController {
+                            sheet.detents = [.medium(), .large()]
+                            sheet.prefersGrabberVisible = true
+                            sheet.selectedDetentIdentifier = .medium
+                        }
+                        presentingVC?.present(vc, animated: true)
+                    } else if activity.name.lowercased().hasPrefix("nudge") {
+                        let storyboard = UIStoryboard(name: "NudgesModal", bundle: nil)
+                        let vc = storyboard.instantiateViewController(
+                            withIdentifier: "NudgesModalVC"
+                        ) as! NudgesModalViewController
+                        vc.rewards = DataStore.shared.rewards
+                        if let sheet = vc.sheetPresentationController {
+                            sheet.detents = [.custom { _ in return 180 }]
+                            sheet.prefersGrabberVisible = true
+                        }
+                        presentingVC?.present(vc, animated: true)
+                    } else {
+                        self.delegate?.didTapLetsDoThis(for: activity)
+                    }
                 }
             }
         }

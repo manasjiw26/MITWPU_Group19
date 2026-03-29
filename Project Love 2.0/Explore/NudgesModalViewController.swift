@@ -17,6 +17,9 @@ class NudgesModalViewController: UIViewController, UICollectionViewDelegate, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .systemBackground
+        nudgesCollectionView.backgroundColor = .clear
+        
         nudgesCollectionView.register(
             UINib(nibName: "RewardsCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "reward_cell"
