@@ -12,13 +12,22 @@ protocol LoveTipsSelectionDelegate: AnyObject {
     func didUpdateSelectedTips(_ tips: [Tip])
 }
 
+class TopRoundedBackgroundView: UICollectionReusableView {
+    static let kind = "top-rounded-background"
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = UIColor(named: "AppBackground") ?? UIColor(red: 242/255, green: 247/255, blue: 255/255, alpha: 1.0)
+        layer.cornerRadius = 32
+        layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+    }
+    required init?(coder: NSCoder) { fatalError() }
+}
+
 class SectionBackgroundDecorationView: UICollectionReusableView {
     static let kind = "section-background"
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
-        layer.cornerRadius = 32
-        layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        backgroundColor = UIColor(named: "AppBackground") ?? UIColor(red: 242/255, green: 247/255, blue: 255/255, alpha: 1.0)
     }
     required init?(coder: NSCoder) { fatalError() }
 }
@@ -27,7 +36,18 @@ class PlainWhiteBackgroundView: UICollectionReusableView {
     static let kind = "plain-white-background"
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .white
+        backgroundColor = UIColor(named: "AppBackground") ?? UIColor(red: 242/255, green: 247/255, blue: 255/255, alpha: 1.0)
+    }
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+class BottomRoundedBackgroundView: UICollectionReusableView {
+    static let kind = "bottom-rounded-background"
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = UIColor(named: "AppBackground") ?? UIColor(red: 242/255, green: 247/255, blue: 255/255, alpha: 1.0)
+        layer.cornerRadius = 32
+        layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
     }
     required init?(coder: NSCoder) { fatalError() }
 }
@@ -37,6 +57,8 @@ class PurpleSectionBackgroundView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
+        layer.cornerRadius = 32
+        layer.masksToBounds = true
     }
     required init?(coder: NSCoder) { fatalError() }
 }
@@ -124,6 +146,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             DataStore.shared.startPartnerDeletionListener()
             DataStore.shared.syncActivitiesFromSupabase()
             await fetchPartnerMood()
+            await fetchMyMood()
         }
     }
 
@@ -137,19 +160,25 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     }
 
     private func setupNavigationBar() {
-        let lavender = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = lavender
-        appearance.shadowColor = .clear
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+        let appBg = UIColor(named: "AppBackground") ?? UIColor(red: 242/255, green: 247/255, blue: 255/255, alpha: 1.0)
         
-        navigationItem.standardAppearance = appearance
-        navigationItem.scrollEdgeAppearance = appearance
-        navigationItem.compactAppearance = appearance
+        let standardAppearance = UINavigationBarAppearance()
+        standardAppearance.configureWithTransparentBackground()
+        standardAppearance.shadowColor = .clear
+        standardAppearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+        
+        let scrollEdgeAppearance = UINavigationBarAppearance()
+        scrollEdgeAppearance.configureWithTransparentBackground()
+        scrollEdgeAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        
+        navigationItem.standardAppearance = standardAppearance
+        navigationItem.scrollEdgeAppearance = scrollEdgeAppearance
+        navigationItem.compactAppearance = standardAppearance
+        
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.prefersLargeTitles = true
+        let lavender = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
+        view.backgroundColor = lavender
     }
 
     private func resetNavigationBarAppearance() {
@@ -189,7 +218,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         ongoingActivitiesView.layer.masksToBounds = true
         secondOngoingActivityView.layer.masksToBounds = true
         ongoingActivitiesView.applyLiquidGlassEffect(animated: false)
-        vibeCollectionView.backgroundColor = .white
+        vibeCollectionView.backgroundColor = .clear
     }
         func configureOngoingActivity(){
             ongoingActivites = DataStore.shared.getOngoingActivities()
@@ -294,7 +323,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 return section
             }
             
-            // Section 1: Quick Vibe Check (Moved from Section 2)
+            // Section 1: Quick Vibe Check
             else if section == VibeSection.quickVibe {
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
@@ -309,16 +338,14 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                    top: 8, leading: 16, bottom: 18, trailing: 16
+                    top: 10, leading: 1, bottom: 0, trailing: 16
                 )
-                sectionLayout.decorationItems = [
-                    NSCollectionLayoutDecorationItem.background(elementKind: PurpleSectionBackgroundView.kind)
-                ]
+                // No decoration — purple view.backgroundColor shows through naturally
                 
                 return sectionLayout
             }
             
-            // Section 2: How are you feeling / Moods (Moved from Section 1)
+            // Section 2: How are you feeling / Moods
             else if section == VibeSection.mood {
                 
                 if !self.hasCheckedInToday {
@@ -341,10 +368,10 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     
                     let sectionLayout = NSCollectionLayoutSection(group: group)
                     sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                        top: 14, leading: 16, bottom: 8, trailing: 16
+                        top: 14, leading: 16, bottom: 16, trailing: 16
                     )
                     sectionLayout.decorationItems = [
-                        NSCollectionLayoutDecorationItem.background(elementKind: SectionBackgroundDecorationView.kind)
+                        NSCollectionLayoutDecorationItem.background(elementKind: TopRoundedBackgroundView.kind)
                     ]
                     
                     return sectionLayout
@@ -376,7 +403,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     )
                     sectionLayout.interGroupSpacing = 8
                     sectionLayout.decorationItems = [
-                        NSCollectionLayoutDecorationItem.background(elementKind: SectionBackgroundDecorationView.kind)
+                        NSCollectionLayoutDecorationItem.background(elementKind: TopRoundedBackgroundView.kind)
                     ]
                     
                     return sectionLayout
@@ -526,9 +553,10 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             }
         }
         
-        layout.register(SectionBackgroundDecorationView.self, forDecorationViewOfKind: SectionBackgroundDecorationView.kind)
+        layout.register(TopRoundedBackgroundView.self, forDecorationViewOfKind: TopRoundedBackgroundView.kind)
         layout.register(PlainWhiteBackgroundView.self, forDecorationViewOfKind: PlainWhiteBackgroundView.kind)
         layout.register(PurpleSectionBackgroundView.self, forDecorationViewOfKind: PurpleSectionBackgroundView.kind)
+        layout.register(BottomRoundedBackgroundView.self, forDecorationViewOfKind: BottomRoundedBackgroundView.kind)
         
         return layout
     }
