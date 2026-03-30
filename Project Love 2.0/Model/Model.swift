@@ -345,7 +345,7 @@ struct VibeTitle {
     let pageDescription: String    // Rich text shown on the result page
 
     var displayTitle: String {
-        return " \(name)"
+        return "\(name)"
     }
 
     /// Maps the vibe name to the corresponding image asset in Assets.xcassets

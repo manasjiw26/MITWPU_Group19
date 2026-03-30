@@ -18,19 +18,19 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Quick Vibe check" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rWm-mi-iuW">
-                        <rect key="frame" x="16" y="50" width="181" height="27.666666666666671"/>
+                        <rect key="frame" x="16" y="50" width="210" height="27.666666666666671"/>
                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="23"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zyx-nl-JMe">
-                        <rect key="frame" x="20" y="102.66666666666667" width="177" height="15.666666666666671"/>
+                        <rect key="frame" x="20" y="92.666666666666671" width="206" height="15.666666666666671"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQf-9w-fYq">
-                        <rect key="frame" x="16" y="173.33333333333334" width="177" height="50"/>
+                        <rect key="frame" x="16" y="163.33333333333334" width="177" height="50"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="177" id="90P-91-SN6"/>
                         </constraints>
@@ -56,17 +56,17 @@
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="iI6-ZC-kjE" firstAttribute="leading" secondItem="Zyx-nl-JMe" secondAttribute="trailing" id="2Bd-Jx-HEt"/>
                 <constraint firstAttribute="trailing" secondItem="iI6-ZC-kjE" secondAttribute="trailing" id="2rz-pu-tkl"/>
-                <constraint firstItem="iI6-ZC-kjE" firstAttribute="leading" secondItem="rWm-mi-iuW" secondAttribute="trailing" id="61q-9F-atY"/>
                 <constraint firstItem="iI6-ZC-kjE" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="He0-Mk-gYh"/>
                 <constraint firstItem="fQf-9w-fYq" firstAttribute="top" secondItem="Zyx-nl-JMe" secondAttribute="bottom" constant="55" id="Oh9-pK-ScN"/>
+                <constraint firstAttribute="trailing" secondItem="Zyx-nl-JMe" secondAttribute="trailing" constant="180" id="Tlq-vX-rXJ"/>
                 <constraint firstItem="rWm-mi-iuW" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="50" id="Yje-CR-vku"/>
                 <constraint firstItem="rWm-mi-iuW" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="cyt-QU-J9y"/>
+                <constraint firstAttribute="trailing" secondItem="rWm-mi-iuW" secondAttribute="trailing" constant="180" id="fGz-XK-yPK"/>
                 <constraint firstItem="fQf-9w-fYq" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="16" id="hRU-CU-a3h"/>
                 <constraint firstItem="Zyx-nl-JMe" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="20" id="zuF-rQ-lpQ"/>
                 <constraint firstItem="iI6-ZC-kjE" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="height" multiplier="209:250" id="zum-rL-5wC"/>
-                <constraint firstItem="Zyx-nl-JMe" firstAttribute="top" secondItem="rWm-mi-iuW" secondAttribute="bottom" constant="25" id="zy5-0b-e14"/>
+                <constraint firstItem="Zyx-nl-JMe" firstAttribute="top" secondItem="rWm-mi-iuW" secondAttribute="bottom" constant="15" id="zy5-0b-e14"/>
             </constraints>
             <size key="customSize" width="406" height="250"/>
             <connections>

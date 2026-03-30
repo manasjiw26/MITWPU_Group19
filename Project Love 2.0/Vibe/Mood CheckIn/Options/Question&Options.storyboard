@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="15" width="393" height="54"/>
                                 <color key="backgroundColor" name="AppBackground"/>
                                 <items>
-                                    <navigationItem title="Title" id="7dk-zJ-m3F">
+                                    <navigationItem id="7dk-zJ-m3F">
                                         <barButtonItem key="leftBarButtonItem" image="chevron.left" catalog="system" id="dCh-Bk-vzo">
                                             <connections>
                                                 <action selector="backButtonTapped:" destination="Yfi-b7-c4R" id="yP0-rL-da5"/>

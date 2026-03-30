@@ -338,7 +338,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                    top: 10, leading: 1, bottom: 20, trailing: 16
+                    top: -20, leading: 1, bottom: 20, trailing: 16
                 )
                 // No decoration — purple view.backgroundColor shows through naturally
                 
@@ -368,7 +368,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     
                     let sectionLayout = NSCollectionLayoutSection(group: group)
                     sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                        top: 24, leading: 16, bottom: 24, trailing: 16
+                        top: 15, leading: 16, bottom: 24, trailing: 16
                     )
                     sectionLayout.decorationItems = [
                         NSCollectionLayoutDecorationItem.background(elementKind: TopRoundedBackgroundView.kind)
@@ -399,7 +399,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     
                     let sectionLayout = NSCollectionLayoutSection(group: group)
                     sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                        top: 24, leading: 16, bottom: 24, trailing: 16
+                        top: 15, leading: 16, bottom: 24, trailing: 16
                     )
                     sectionLayout.interGroupSpacing = 8
                     sectionLayout.decorationItems = [
