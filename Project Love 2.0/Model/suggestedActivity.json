@@ -2363,15 +2363,6 @@
     {
       "id": 171,
       "category": "B",
-      "title": "Love Tips: Gentle Gestures",
-      "description": "Get small calm gestures based on your partner mood.",
-      "modalDescription": "Soft gestures can calm the day and say 'I'm here' without pressure.",
-      "image": "Rekindle",
-      "location": "Vibe Tab → Make Her Smile → Love Tips"
-    },
-    {
-      "id": 172,
-      "category": "B",
       "title": "Explore: Daily Dose of Us",
       "description": "Keep everyday closeness steady and warm.",
       "modalDescription": "Tiny shared moments keep closeness steady and warm.",
@@ -2379,7 +2370,7 @@
       "location": "Explore Tab → Daily Dose of Us section"
     },
     {
-      "id": 173,
+      "id": 172,
       "category": "B",
       "title": "Explore: Acts of Love",
       "description": "Keep romance alive with a simple sweet act.",
@@ -2388,7 +2379,7 @@
       "location": "Explore Tab → Acts of Love section"
     },
     {
-      "id": 174,
+      "id": 173,
       "category": "B",
       "title": "Memory Jar: Add a Memory",
       "description": "Save a small moment to revisit later.",
@@ -2397,7 +2388,7 @@
       "location": "Memory Jar Tab → Tap + to Add a New Memory"
     },
     {
-      "id": 175,
+      "id": 174,
       "category": "C",
       "title": "Explore: Meaning & Growth",
       "description": "Choose a growth focused activity to deepen understanding.",
@@ -2406,7 +2397,7 @@
       "location": "Explore Tab → Meaning & Growth section"
     },
     {
-      "id": 176,
+      "id": 175,
       "category": "C",
       "title": "Explore: No Filter Chats",
       "description": "Have a real conversation with gentle structure.",
@@ -2415,16 +2406,7 @@
       "location": "Explore Tab → No Filter Chats section"
     },
     {
-      "id": 177,
-      "category": "C",
-      "title": "Love Tips: Mood Based Ideas",
-      "description": "Get ideas that match your partner mood and your curiosity.",
-      "modalDescription": "Ideas tuned to your partner's mood so your care lands well.",
-      "image": "Rekindle",
-      "location": "Vibe Tab → Make Her Smile → Love Tips"
-    },
-    {
-      "id": 178,
+      "id": 176,
       "category": "D",
       "title": "Love Note: Repair Note",
       "description": "Send a short note to soften things.",
@@ -2433,7 +2415,7 @@
       "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
-      "id": 179,
+      "id": 177,
       "category": "D",
       "title": "Nudge: Comfort Hug",
       "description": "Send a gentle virtual hug as a soft reset.",
@@ -2442,7 +2424,7 @@
       "location": "Explore Page → Nudges"
     },
     {
-      "id": 180,
+      "id": 178,
       "category": "E",
       "title": "Love Note: Schedule for Later",
       "description": "Write a note now and schedule it for a softer moment.",
@@ -2451,7 +2433,7 @@
       "location": "Vibe Tab → Make Her Smile → Send Love Note → Schedule"
     },
     {
-      "id": 181,
+      "id": 179,
       "category": "E",
       "title": "Memory Jar: Quiet Revisit",
       "description": "Share a quiet memory without pressure to talk.",
@@ -2460,7 +2442,7 @@
       "location": "Memory Jar Tab → Browse Saved Memories"
     },
     {
-      "id": 182,
+      "id": 180,
       "category": "E",
       "title": "Explore: Daily Dose of Us (Low Effort)",
       "description": "Choose a tiny together moment that does not demand energy.",
@@ -2469,7 +2451,7 @@
       "location": "Explore Tab → Daily Dose of Us section"
     },
     {
-      "id": 183,
+      "id": 181,
       "category": "E",
       "title": "Nudge: Soft Check In",
       "description": "Send a low pressure check in nudge.",
@@ -2478,7 +2460,7 @@
       "location": "Explore Page → Nudges"
     },
     {
-      "id": 184,
+      "id": 182,
       "category": "F",
       "title": "Love Note: Reassure",
       "description": "Offer reassurance with a clear short note.",
@@ -2487,16 +2469,7 @@
       "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
-      "id": 185,
-      "category": "F",
-      "title": "Love Tips: Reassurance List",
-      "description": "Get quick ideas to help them feel safe.",
-      "modalDescription": "Quick reassurance ideas help you show up with care.",
-      "image": "Rekindle",
-      "location": "Vibe Tab → Make Her Smile → Love Tips"
-    },
-    {
-      "id": 186,
+      "id": 183,
       "category": "F",
       "title": "Explore: Acts of Love (Reassure)",
       "description": "Use a small act of love to soothe insecurity.",
@@ -2505,7 +2478,7 @@
       "location": "Explore Tab → Acts of Love section"
     },
     {
-      "id": 187,
+      "id": 184,
       "category": "F",
       "title": "Nudge: Hold Me",
       "description": "Send a supportive touch nudge.",
@@ -2514,7 +2487,7 @@
       "location": "Explore Page → Nudges"
     },
     {
-      "id": 188,
+      "id": 185,
       "category": "G",
       "title": "Explore: No Filter Chats (Repair)",
       "description": "Use a real talk card to repair tension.",
@@ -2523,7 +2496,7 @@
       "location": "Explore Tab → No Filter Chats section"
     },
     {
-      "id": 189,
+      "id": 186,
       "category": "G",
       "title": "Love Note: Reset Apology",
       "description": "Send a short apology or reset note.",
@@ -2532,7 +2505,7 @@
       "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
-      "id": 190,
+      "id": 187,
       "category": "H",
       "title": "Love Note: Reconnect",
       "description": "Send a gentle note to reopen the door.",
@@ -2541,7 +2514,7 @@
       "location": "Vibe Tab → Make Her Smile → Send Love Note"
     },
     {
-      "id": 191,
+      "id": 188,
       "category": "H",
       "title": "Explore: Daily Dose of Us (Reconnect)",
       "description": "Pick a small together moment to ease distance.",
@@ -2550,7 +2523,7 @@
       "location": "Explore Tab → Daily Dose of Us section"
     },
     {
-      "id": 192,
+      "id": 189,
       "category": "I",
       "title": "Love Note: When Ready",
       "description": "Draft a note now and send when ready.",
@@ -2559,7 +2532,7 @@
       "location": "Vibe Tab → Make Her Smile → Send Love Note → Schedule"
     },
     {
-      "id": 193,
+      "id": 190,
       "category": "I",
       "title": "Nudge: Low Pressure Ping",
       "description": "Send a tiny nudge that does not require a reply.",
@@ -2568,7 +2541,7 @@
       "location": "Explore Page → Nudges"
     },
     {
-      "id": 194,
+      "id": 191,
       "category": "I",
       "title": "Explore: Meaning & Growth (Solo)",
       "description": "Choose a growth prompt you can do quietly.",
@@ -2577,7 +2550,7 @@
       "location": "Explore Tab → Meaning & Growth section"
     },
     {
-      "id": 195,
+      "id": 192,
       "category": "J",
       "title": "Explore: Fun & Playful (Reach Out)",
       "description": "Use a playful activity to reconnect lightly.",
@@ -2586,7 +2559,7 @@
       "location": "Explore Tab → Fun & Playful section"
     },
     {
-      "id": 196,
+      "id": 193,
       "category": "J",
       "title": "Explore: Spice It Up!",
       "description": "Turn up the spark with a playful idea.",
@@ -2595,7 +2568,7 @@
       "location": "Explore Tab → Spice It Up! section"
     },
     {
-      "id": 197,
+      "id": 194,
       "category": "J",
       "title": "Nudge: Playful Kiss",
       "description": "Send a playful kiss nudge to break distance.",
@@ -2604,7 +2577,7 @@
       "location": "Explore Page → Nudges"
     },
     {
-      "id": 198,
+      "id": 195,
       "category": "J",
       "title": "Activities For Him: Thoughtful Ideas",
       "description": "Pick a thoughtful idea for her to do for him.",

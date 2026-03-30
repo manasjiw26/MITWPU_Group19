@@ -36,10 +36,10 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
 
         // Configure Labels
         checkInTitleLabel.numberOfLines = 0
-        checkInTitleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        checkInTitleLabel.font = .systemFont(ofSize: 25, weight: .bold)
         
         checkInSubTitleLabel.numberOfLines = 0
-        checkInSubTitleLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        checkInSubTitleLabel.font = .systemFont(ofSize: 14, weight: .regular)
         checkInSubTitleLabel.textColor = .darkGray
 
         checkInImageView.contentMode = .scaleAspectFit
@@ -84,7 +84,7 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
     func configureCells() {
         isCompletedState = false
         checkInTitleLabel.text = "Quick Vibe check"
-        checkInSubTitleLabel.text = "Questions to plan today's activities for you two."
+        checkInSubTitleLabel.text = "Questions to gauge today’s relationship vibe & plan activities."
         checkInImageView.image = UIImage(named: "DailyCheckIn")
 
         actionButton.configuration = .filled()

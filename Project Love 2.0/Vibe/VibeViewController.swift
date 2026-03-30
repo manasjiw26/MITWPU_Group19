@@ -102,12 +102,23 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var didScrollToMiddle = false
     var BuildBond : [BuildYourBond] = []
     var selectedbondOption: BuildYourBond?
-    var hasCompletedDailyCheckIn = false
+    // These three are stored in DataStore.shared so they persist across tab switches
+    var hasCompletedDailyCheckIn: Bool {
+        get { DataStore.shared.hasCompletedDailyCheckIn }
+        set { DataStore.shared.hasCompletedDailyCheckIn = newValue }
+    }
+    var resolvedVibeTitle: VibeTitle? {
+        get { DataStore.shared.resolvedVibeTitle }
+        set { DataStore.shared.resolvedVibeTitle = newValue }
+    }
+    var hasAchievedNewVibe: Bool {
+        get { DataStore.shared.hasAchievedNewVibe }
+        set { DataStore.shared.hasAchievedNewVibe = newValue }
+    }
+
     var suggestedActivities: [Activity] = []
     var selectedTips: [Tip] = []
-    var resolvedVibeTitle: VibeTitle?
     var hasOpenedSuggestedModal = false
-    var hasAchievedNewVibe = false
     /// Tracks which suggested activity launched the SmallModal so we can remove it on Begin/Schedule
     var pendingSuggestedActivity: Activity?
     
@@ -126,7 +137,12 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         title = "Vibe"
         checkNotifications()
         BuildBond = dataStore.loadBuildYourbond()
-        suggestedActivities = DataStore.shared.getSuggestedActivities()
+        // Only load suggestedActivities if the vibe hasn't been achieved yet
+        if !hasAchievedNewVibe {
+            suggestedActivities = DataStore.shared.getSuggestedActivities()
+        } else {
+            suggestedActivities = []
+        }
         registerCell()
         vibeCollectionView.setCollectionViewLayout(generateLayout(), animated: true)
         vibeCollectionView.dataSource = self
@@ -347,7 +363,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             else if section == VibeSection.quickVibe {
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(150)
+                    heightDimension: .estimated(220)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
@@ -859,18 +875,6 @@ extension VibeViewController:  UICollectionViewDataSource {
                             hasOpenedModal: hasOpenedSuggestedModal
                         )
                         cell.delegate = self
-                        
-                        // Show alert, and only swap UI once user taps Awesome
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController(title: "New Vibe Achieved! 🎉", message: "Congratulations! You have reached a new relationship vibe:\n\n\(resultantTitle)", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Awesome!", style: .default, handler: { _ in
-                                self.hasAchievedNewVibe = true
-                                self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
-                            }))
-                            // Prevent re-triggering while alert is showing
-                            self.hasAchievedNewVibe = true
-                            self.present(alert, animated: true, completion: nil)
-                        }
                         return cell
                         
                     } else {
@@ -1191,6 +1195,26 @@ extension VibeViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        // Only show the "New Vibe" alert once (hasAchievedNewVibe is persisted in DataStore)
+        if hasCompletedDailyCheckIn, suggestedActivities.isEmpty, !hasAchievedNewVibe, let vibeTitle = resolvedVibeTitle {
+            self.hasAchievedNewVibe = true
+            
+            let currentVibe = vibeTitle.displayTitle
+            let resultantTitle = RelationshipVibeDisplayCollectionViewCell.vibeResultMap[currentVibe] ?? "New Vibe Achieved"
+            
+            // Adding a small delay ensures any dismissing modals are fully gone
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                let alert = UIAlertController(title: "New Vibe Achieved! 🎉", message: "Congratulations! You have reached a new relationship vibe: \(resultantTitle)", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Awesome!", style: .default, handler: { [weak self] _ in
+                    self?.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+        } else if hasAchievedNewVibe {
+            // Already achieved — just make sure the empty cell is showing (e.g. after returning from another tab)
+            vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+        }
 
         if moodChannel == nil {
             Task {
@@ -1231,12 +1255,19 @@ extension VibeViewController {
                     MakeSmile(types: "Activities for \(self.partnerDisplayText)", imageName: "checklist")
                 ]
                 
-                // Always sync suggested activities from DataStore
-                let latestSuggestions = DataStore.shared.getSuggestedActivities()
-                if self.hasCompletedDailyCheckIn && !latestSuggestions.isEmpty {
-                    self.suggestedActivities = latestSuggestions
+                // Sync suggested activities from DataStore — but never overwrite
+                // when the user has already achieved a new vibe (suggestedActivities must stay empty)
+                if !self.hasAchievedNewVibe {
+                    let latestSuggestions = DataStore.shared.getSuggestedActivities()
+                    if self.hasCompletedDailyCheckIn && !latestSuggestions.isEmpty {
+                        self.suggestedActivities = latestSuggestions
+                    }
+                } else {
+                    // Vibe already achieved — force suggestedActivities to empty
+                    self.suggestedActivities = []
+                    DataStore.shared.suggestedActivities = []
                 }
-                
+
                 self.configureOngoingActivity()
                 self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
                 self.vibeCollectionView.reloadData()

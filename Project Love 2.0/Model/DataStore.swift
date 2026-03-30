@@ -41,7 +41,12 @@ class DataStore {
     private var lastDailyCheckInSelection: DailyCheckInSelection?
 
     var specialDates: [SpecialDate] = []
-    
+
+    // MARK: - Vibe Session State (persisted across tab switches)
+    var hasCompletedDailyCheckIn: Bool = false
+    var resolvedVibeTitle: VibeTitle? = nil
+    var hasAchievedNewVibe: Bool = false
+
     var currentUserId: UUID?
     var currentRelationshipId: UUID?
     var partnerUserId: UUID?
@@ -95,10 +100,14 @@ class DataStore {
         profileSections     = []
         personalInfoSections = []
         savedMemories       = []
+        // Reset vibe session state on sign-out
+        hasCompletedDailyCheckIn = false
+        resolvedVibeTitle        = nil
+        hasAchievedNewVibe       = false
+        suggestedActivities      = []
         loadPersonalInfoData()
         loadProfileData()
         loadSampleData()
-        
     }
 
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
