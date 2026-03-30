@@ -661,8 +661,8 @@ class DataStore {
                 QnAQuestion(
                     questionText: "What’s your gender?",
                     options: [
-        QnAOption(text: "Male", isSelected: false),
-        QnAOption(text: "Female", isSelected: false)
+        QnAOption(text: "Him", isSelected: false),
+        QnAOption(text: "Her", isSelected: false)
                     ]
                 ),
 
@@ -1037,23 +1037,23 @@ class DataStore {
     }
 
     func refreshUserProfileFromSupabase() async {
-            guard let authUser = SupabaseManager.shared.client.auth.currentUser else { return }
-            currentUserId = authUser.id
+        guard let authUser = SupabaseManager.shared.client.auth.currentUser else { return }
+        currentUserId = authUser.id
 
-            // Ensure section structures exist so setPersonalInfoValue has somewhere to write
-            if profileSections.isEmpty { loadProfileData() }
-            if personalInfoSections.isEmpty { loadPersonalInfoData() }
+        // Ensure section structures exist so setPersonalInfoValue has somewhere to write
+        if profileSections.isEmpty { loadProfileData() }
+        if personalInfoSections.isEmpty { loadPersonalInfoData() }
 
-            do {
-                let rows: [UserProfileRow] = try await SupabaseManager.shared.client
-                    .from("users")
-                    .select("name, birth_date, gender, assessment_answers")
-                    .eq("user_id", value: authUser.id.uuidString)
-                    .limit(1)
-                    .execute()
-                    .value
+        do {
+            let rows: [UserProfileRow] = try await SupabaseManager.shared.client
+                    .from("users")
+                    .select("name, birth_date, gender, assessment_answers")
+                    .eq("user_id", value: authUser.id.uuidString)
+                    .limit(1)
+                    .execute()
+                    .value
 
-                guard let row = rows.first else { return }
+            guard let row = rows.first else { return }
 
         let name = (row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false)
         ? row.name!

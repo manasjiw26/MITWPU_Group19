@@ -266,8 +266,8 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     func generateLayout() -> UICollectionViewLayout {
         
         let layout = UICollectionViewCompositionalLayout { section, env in
-            let headerToItemsSpacing: CGFloat = 4
-            let sectionTopSpacing: CGFloat = 18
+            let headerToItemsSpacing: CGFloat = 8
+            let sectionTopSpacing: CGFloat = 24
             
             let largeTitleSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
@@ -338,7 +338,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                    top: 10, leading: 1, bottom: 0, trailing: 16
+                    top: 10, leading: 1, bottom: 20, trailing: 16
                 )
                 // No decoration — purple view.backgroundColor shows through naturally
                 
@@ -368,7 +368,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     
                     let sectionLayout = NSCollectionLayoutSection(group: group)
                     sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                        top: 14, leading: 16, bottom: 16, trailing: 16
+                        top: 24, leading: 16, bottom: 24, trailing: 16
                     )
                     sectionLayout.decorationItems = [
                         NSCollectionLayoutDecorationItem.background(elementKind: TopRoundedBackgroundView.kind)
@@ -399,7 +399,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     
                     let sectionLayout = NSCollectionLayoutSection(group: group)
                     sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                        top: 14, leading: 16, bottom: 16, trailing: 16
+                        top: 24, leading: 16, bottom: 24, trailing: 16
                     )
                     sectionLayout.interGroupSpacing = 8
                     sectionLayout.decorationItems = [
@@ -413,15 +413,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             else if section == VibeSection.makeSmile {
                 
                 let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(100),
-                    heightDimension: .absolute(120)
+                    widthDimension: .absolute(105),
+                    heightDimension: .absolute(125)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
-                let groupWidth: CGFloat = 332
+                //let groupWidth: CGFloat = 332
                 
                 let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(groupWidth),
+                    widthDimension: .fractionalWidth(1),
                     heightDimension: .absolute(120)
                 )
                 
@@ -429,25 +429,25 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     layoutSize: groupSize,
                     subitems: [item, item, item]
                 )
-                group.interItemSpacing = .fixed(16)
+                group.interItemSpacing = .fixed(25)
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 
                 let containerWidth = env.container.effectiveContentSize.width
-                let sideInset = max((containerWidth - groupWidth) / 2, 16)
+                //let sideInset = max((containerWidth - groupWidth) / 2, 16)
                 
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
                     top: 0,
-                    leading: sideInset,
-                    bottom: 20,
-                    trailing: sideInset
+                    leading: 16,
+                    bottom: 24,
+                    trailing: 16
                 )
                 
                 sectionLayout.supplementaryContentInsetsReference = .none
                 
                 let titleSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(50)
+                    heightDimension: .absolute(36)
                 )
                 
                 let titleHeader = NSCollectionLayoutBoundarySupplementaryItem(
@@ -458,7 +458,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 titleHeader.edgeSpacing = NSCollectionLayoutEdgeSpacing(
                     leading: nil,
-                    top: .fixed(16),
+                    top: .fixed(24),
                     trailing: nil,
                     bottom: nil
                 )
@@ -466,7 +466,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 titleHeader.contentInsets = NSDirectionalEdgeInsets(
                     top: 0,
                     leading: 16,
-                    bottom: 6,   
+                    bottom: 0,   
                     trailing: 16
                 )
                 
@@ -502,7 +502,14 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 sectionLayout.interGroupSpacing = 0
                 
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                    top: 8, leading: 16, bottom: 32, trailing: 16
+                    top: 0, leading: 16, bottom: 32, trailing: 16
+                )
+                
+                largeTitleHeader.edgeSpacing = NSCollectionLayoutEdgeSpacing(
+                    leading: nil,
+                    top: .fixed(26),
+                    trailing: nil,
+                    bottom: nil
                 )
                 
                 largeTitleHeader.contentInsets = NSDirectionalEdgeInsets(
@@ -545,9 +552,10 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 }
                 
                 sectionLayout.boundarySupplementaryItems = [largeTitleHeader]
-                sectionLayout.decorationItems = [
-                    NSCollectionLayoutDecorationItem.background(elementKind: PlainWhiteBackgroundView.kind)
-                ]
+                
+                let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: PlainWhiteBackgroundView.kind)
+                backgroundItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: -1000, trailing: 0)
+                sectionLayout.decorationItems = [backgroundItem]
                 
                 return sectionLayout
             }
