@@ -7,12 +7,13 @@
 
 import UIKit
 
-class NudgesModalViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class NudgesModalViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var nudgesCollectionView: UICollectionView!
     @IBOutlet weak var titleLabel: UILabel!
     
     var rewards: [Reward] = []
+    var onNudgeSent: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,17 +60,38 @@ class NudgesModalViewController: UIViewController, UICollectionViewDelegate, UIC
         modalVC.onProgressUpdate = { [weak self] newStep in
             self?.rewards[indexPath.row].progressStep = newStep
             collectionView.reloadItems(at: [indexPath])
+            if newStep == 4 {
+                self?.onNudgeSent?()
+            }
+        }
+        
+        modalVC.onCompletionDismissal = { [weak self] in
+            // When RewardModalViewController finishes dismissing, dismiss this NudgesModalViewController too
+            self?.dismiss(animated: true)
         }
         
         modalVC.modalPresentationStyle = .pageSheet
         
         if let sheet = modalVC.sheetPresentationController {
-            sheet.detents = [
-                .custom { _ in return 350 }
-            ]
+            sheet.detents = [.medium()]
             sheet.preferredCornerRadius = 30
         }
         
         self.present(modalVC, animated: true)
+    }
+    
+    // MARK: - UICollectionViewDelegateFlowLayout
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // Image is 1:1 constrained to width. We want width ~80 and height ~80 + 30 (for label)
+        return CGSize(width: 85, height: 120)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
 }

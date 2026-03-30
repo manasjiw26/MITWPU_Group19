@@ -95,12 +95,21 @@ class InfoModalViewController: UIViewController {
     @IBAction func letsDoThisButtonTapped(_ sender: Any) {
         let activityToRemove = activity
         let presentingVC = self.presentingViewController
+        let delegateToNotify = self.delegate
+        
         UIView.animate(withDuration: 0.25, animations: {
             self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
             self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
         }) { _ in
             self.dismiss(animated: true) {
                 if let activity = activityToRemove {
+                    
+                    let completeActivity = {
+                        DispatchQueue.main.async {
+                            delegateToNotify?.didTapLetsDoThis(for: activity)
+                        }
+                    }
+                    
                     if activity.name.lowercased().hasPrefix("love note") {
                         let storyboard = UIStoryboard(name: "LoveNote", bundle: nil)
                         let vc = storyboard.instantiateViewController(
@@ -144,6 +153,8 @@ class InfoModalViewController: UIViewController {
                                             )
                                         } catch {}
                                     }
+                                    
+                                    completeActivity()
                                 } catch {
                                     print("Failed to save love note from InfoModalViewController: \(error)")
                                 }
@@ -157,6 +168,9 @@ class InfoModalViewController: UIViewController {
                             withIdentifier: "AddMemoryViewController"
                         ) as! NewAddNewViewController
                         vc.modalPresentationStyle = .fullScreen
+                        vc.onMemorySaved = {
+                            completeActivity()
+                        }
                         presentingVC?.present(vc, animated: true)
                     } else if activity.name.lowercased().hasPrefix("love tips") {
                         let storyboard = UIStoryboard(name: "LoveTips", bundle: nil)
@@ -164,6 +178,9 @@ class InfoModalViewController: UIViewController {
                             withIdentifier: "LoveTipsVC"
                         ) as! LoveTipsViewController
                         vc.delegate = self.delegate as? LoveTipsSelectionDelegate
+                        vc.onTipsSaved = {
+                            completeActivity()
+                        }
                         if let sheet = vc.sheetPresentationController {
                             sheet.detents = [.medium(), .large()]
                             sheet.prefersGrabberVisible = true
@@ -176,13 +193,17 @@ class InfoModalViewController: UIViewController {
                             withIdentifier: "NudgesModalVC"
                         ) as! NudgesModalViewController
                         vc.rewards = DataStore.shared.rewards
+                        vc.onNudgeSent = {
+                            completeActivity()
+                        }
                         if let sheet = vc.sheetPresentationController {
                             sheet.detents = [.custom { _ in return 180 }]
                             sheet.prefersGrabberVisible = true
                         }
                         presentingVC?.present(vc, animated: true)
                     } else {
-                        self.delegate?.didTapLetsDoThis(for: activity)
+                        // Note: non-special activities are completed immediately
+                        completeActivity()
                     }
                 }
             }

@@ -12,6 +12,8 @@ class NewAddNewViewController: UIViewController {
     @IBOutlet weak var descriptionTextView: UITextView!
     @IBOutlet weak var memoryImageView: UIImageView!
     
+    var onMemorySaved: (() -> Void)?
+    
     let supabase = SupabaseManager.shared.client
 
     private let datePicker = UIDatePicker()
@@ -173,6 +175,7 @@ class NewAddNewViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 alert.dismiss(animated: true) {
                     self.dismiss(animated: true) {
+                        self.onMemorySaved?()
                         // Post AFTER fully dismissed → heart appears back on the jar screen
                         NotificationCenter.default.post(
                             name: NSNotification.Name("MemoryAdded"),

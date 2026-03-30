@@ -92,6 +92,8 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var selectedTips: [Tip] = []
     var resolvedVibeTitle: VibeTitle?
     var hasOpenedSuggestedModal = false
+    /// Tracks which suggested activity launched the SmallModal so we can remove it on Begin/Schedule
+    var pendingSuggestedActivity: Activity?
     
     let supabase = SupabaseManager.shared.client
     var partnerMoodTitle: String = "Waiting"
@@ -339,7 +341,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                    top: -20, leading: 1, bottom: 20, trailing: 16
+                    top: 10, leading: 1, bottom: 20, trailing: 16
                 )
                 // No decoration — purple view.backgroundColor shows through naturally
                 
@@ -596,9 +598,17 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         performSegue(withIdentifier: "openQuestions", sender: self)
     }
     func didStartActivity() {
-
+        // If this was triggered from the suggested activities modal, remove it and advance the progress bar
+        if let activity = pendingSuggestedActivity {
+            if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
+                suggestedActivities.remove(at: index)
+                DataStore.shared.suggestedActivities = suggestedActivities
+            }
+            pendingSuggestedActivity = nil
+        }
         DispatchQueue.main.async {
-            self.vibeCollectionView.reloadData()
+            self.configureOngoingActivity()
+            self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
         }
     }
     
@@ -1249,6 +1259,8 @@ extension VibeViewController {
             infoVC.modalPresentationStyle = .overFullScreen
             present(infoVC, animated: false)
         } else {
+            // Remember which suggested activity this is so we can dismiss it on Begin/Schedule
+            pendingSuggestedActivity = activity
             let destinationVC = SmallModalViewController(nibName: "SmallModalViewController", bundle: nil)
             destinationVC.selectedActivity = activity
             destinationVC.modalData = DataStore.shared.getSmallModalData(for: activity)

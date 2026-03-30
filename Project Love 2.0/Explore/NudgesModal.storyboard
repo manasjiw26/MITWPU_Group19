@@ -17,19 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndg-gb-001">
-                                <rect key="frame" x="178.66666666666666" y="10" width="36" height="5"/>
-                                <color key="backgroundColor" systemColor="tertiaryLabelColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="5" id="gb-h-001"/>
-                                    <constraint firstAttribute="width" constant="36" id="gb-w-001"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <real key="value" value="2.5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
+
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nudges" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ndg-tl-001">
                                 <rect key="frame" x="20" y="26" width="353" height="26"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
@@ -56,10 +44,8 @@
                             <constraint firstItem="ndg-cv-001" firstAttribute="leading" secondItem="ndg-vw-001" secondAttribute="leading" id="c-cv-lead"/>
                             <constraint firstItem="ndg-cv-001" firstAttribute="top" secondItem="ndg-tl-001" secondAttribute="bottom" constant="16" id="c-cv-top"/>
                             <constraint firstItem="ndg-sa-001" firstAttribute="trailing" secondItem="ndg-cv-001" secondAttribute="trailing" id="c-cv-trail"/>
-                            <constraint firstItem="ndg-gb-001" firstAttribute="centerX" secondItem="ndg-vw-001" secondAttribute="centerX" id="c-gb-cx"/>
-                            <constraint firstItem="ndg-gb-001" firstAttribute="top" secondItem="ndg-vw-001" secondAttribute="top" constant="10" id="c-gb-top"/>
                             <constraint firstItem="ndg-tl-001" firstAttribute="leading" secondItem="ndg-vw-001" secondAttribute="leading" constant="20" id="c-tl-lead"/>
-                            <constraint firstItem="ndg-tl-001" firstAttribute="top" secondItem="ndg-gb-001" secondAttribute="bottom" constant="11" id="c-tl-top"/>
+                            <constraint firstItem="ndg-tl-001" firstAttribute="top" secondItem="ndg-sa-001" secondAttribute="top" constant="16" id="c-tl-top"/>
                             <constraint firstItem="ndg-sa-001" firstAttribute="trailing" secondItem="ndg-tl-001" secondAttribute="trailing" constant="20" id="c-tl-trail"/>
                         </constraints>
                     </view>

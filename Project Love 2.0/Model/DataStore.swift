@@ -349,7 +349,7 @@ class DataStore {
             let group = resolveSuggestionGroup(selection: selection)
             lastSuggestionGroup = group
             let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-            let count = Int.random(in: 3...4)
+            let count = 4
 
             // Separate activities with steps vs without steps
             let withSteps = pool.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
@@ -422,7 +422,7 @@ class DataStore {
 
         // Exclude the just-completed activity
         let filtered = pool.filter { $0.coupleActivityId != coupleActivityId }
-        let count = Int.random(in: 3...4)
+        let count = 4
 
         // Separate activities with steps vs without steps
         let withSteps = filtered.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }

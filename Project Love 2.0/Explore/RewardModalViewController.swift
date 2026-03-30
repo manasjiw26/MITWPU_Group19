@@ -17,6 +17,7 @@ class RewardModalViewController: UIViewController {
     
     var rewardName: String?
     var onProgressUpdate: ((Int) -> Void)?
+    var onCompletionDismissal: (() -> Void)?
 
     private var step = 0
 
@@ -90,6 +91,7 @@ class RewardModalViewController: UIViewController {
         step += 1
         updateRing()
         playStepHaptic()
+        onProgressUpdate?(step)
 
         if step == 4 {
             playSuccessHaptic()
@@ -120,7 +122,9 @@ class RewardModalViewController: UIViewController {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             alert.dismiss(animated: true) {
-                self.dismiss(animated: true)
+                self.dismiss(animated: true) {
+                    self.onCompletionDismissal?()
+                }
             }
         }
     }

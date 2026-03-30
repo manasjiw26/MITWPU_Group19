@@ -16,6 +16,7 @@ class LoveTipsViewController: UIViewController, UITableViewDelegate, UITableView
     
     weak var delegate: LoveTipsSelectionDelegate?
     var selectedTips: [Tip] = [] // Passed from VibeVC
+    var onTipsSaved: (() -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +52,7 @@ class LoveTipsViewController: UIViewController, UITableViewDelegate, UITableView
         
         selectedTips.append(contentsOf: newlySelected)
         delegate?.didUpdateSelectedTips(selectedTips)
+        onTipsSaved?()
 
         let vc = UIStoryboard(name: "LoveTipsSelected", bundle: nil).instantiateViewController(withIdentifier: "LoveTipsSelectedViewController") as! LoveTipsSelectedViewController
         vc.selectedTips = selectedTips
