@@ -352,25 +352,32 @@ class DataStore {
             let count = 4
 
             // Separate activities with steps vs without steps
-            let withSteps = pool.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
-            let withoutSteps = pool.filter { $0.steps == nil || ($0.steps?.isEmpty ?? true) }
+            let withSteps    = pool.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
+            let withoutSteps = pool.filter { $0.steps == nil  ||  ($0.steps?.isEmpty ?? true) }
 
-            // Pick (count - 1) from the non-step pool, then 1 activity with steps as the last item
-            let nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
-            let stepPick = withSteps.shuffled().first
+            // Try to build: (count-1) non-step picks + 1 step pick
+            var nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
+            let stepPick     = withSteps.shuffled().first
 
             var result = nonStepPicks
             if let lastActivity = stepPick {
                 result.append(lastActivity)
-            } else {
-                // Fallback: if no step activity available, just use diverse selection
-                let result = diverseSelection(from: pool, count: count)
-                self.suggestedActivities = result
-                return result
             }
 
-            self.suggestedActivities = result
-            return result
+            // Pad to exactly `count` if we're short (e.g. no step activity or thin pool)
+            if result.count < count {
+                let usedNames = Set(result.map { $0.name })
+                let extras = pool.shuffled().filter { !usedNames.contains($0.name) }
+                for extra in extras {
+                    guard result.count < count else { break }
+                    result.append(extra)
+                }
+            }
+
+            // Trim to exactly `count` (should never exceed, but be safe)
+            let final = materializeSuggestedActivities(Array(result.prefix(count)))
+            self.suggestedActivities = final
+            return final
         }
     private func preferredNeed(from tags: [String]) -> String? {
         // Priority: Connecting > Relaxing > Fun
@@ -435,17 +442,64 @@ class DataStore {
         if let lastActivity = stepPick {
             result.append(lastActivity)
         } else {
-            let result = diverseSelection(from: filtered, count: count)
+            let result = materializeSuggestedActivities(diverseSelection(from: filtered, count: count))
             self.suggestedActivities = result
             return result
         }
 
+        result = materializeSuggestedActivities(result)
         self.suggestedActivities = result
         return result
     }
 
     private func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+
+    private func exploreCategoryName(from suggestion: Activity) -> String? {
+        let trimmedName = suggestion.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmedName.hasPrefix("Explore:") else { return nil }
+
+        let rawCategory = trimmedName
+            .replacingOccurrences(of: "Explore:", with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let cleanedCategory = rawCategory.replacingOccurrences(
+            of: "\\s*\\([^)]*\\)\\s*$",
+            with: "",
+            options: .regularExpression
+        )
+
+        return cleanedCategory.isEmpty ? nil : cleanedCategory
+    }
+
+    private func materializeExploreSuggestion(
+        _ suggestion: Activity,
+        usedNames: inout Set<String>
+    ) -> Activity {
+        guard let categoryName = exploreCategoryName(from: suggestion) else {
+            usedNames.insert(suggestion.name.lowercased())
+            return suggestion
+        }
+
+        let candidates = activities
+            .filter { $0.category == categoryName }
+            .shuffled()
+
+        if let concreteActivity = candidates.first(where: { candidate in
+            !usedNames.contains(candidate.name.lowercased())
+        }) {
+            usedNames.insert(concreteActivity.name.lowercased())
+            return concreteActivity
+        }
+
+        usedNames.insert(suggestion.name.lowercased())
+        return suggestion
+    }
+
+    private func materializeSuggestedActivities(_ suggestions: [Activity]) -> [Activity] {
+        var usedNames = Set<String>()
+        return suggestions.map { materializeExploreSuggestion($0, usedNames: &usedNames) }
     }
 
     /// Maps the three Quick Vibe Check answers to one of the 12 relationship titles.
@@ -834,7 +888,7 @@ class DataStore {
         let newBatch = getMoreActivities(excluding: self.suggestedActivities)
         guard !newBatch.isEmpty else { return self.suggestedActivities }
         // Append to existing activities, cap at 6
-        let combined = self.suggestedActivities + newBatch
+        let combined = self.suggestedActivities + materializeSuggestedActivities(newBatch)
         self.suggestedActivities = Array(combined.prefix(6))
         return self.suggestedActivities
     }

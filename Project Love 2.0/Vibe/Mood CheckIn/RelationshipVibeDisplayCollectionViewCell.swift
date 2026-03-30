@@ -17,10 +17,16 @@ class RelationshipVibeDisplayCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var dotsTopConstraint: NSLayoutConstraint?
     @IBOutlet weak var buttonTopConstraint: NSLayoutConstraint?
     
+    /// Left label — shows the current relationship vibe
+    @IBOutlet weak var currentVibeLabel: UILabel?
+    /// Right label — shows the resultant vibe after completing suggested activities
+    @IBOutlet weak var resultVibeLabel: UILabel?
+    
     @IBOutlet weak var dot1: UIView?
     @IBOutlet weak var dot2: UIView?
     @IBOutlet weak var dot3: UIView?
     @IBOutlet weak var dot4: UIView?
+    @IBOutlet weak var dot5: UIView?
 
     weak var delegate: DailyCheckInCellDelegate?
 
@@ -37,7 +43,7 @@ class RelationshipVibeDisplayCollectionViewCell: UICollectionViewCell {
         actionButton.addTarget(self, action: #selector(getExerciseButton(_:)), for: .touchUpInside)
         
         // Make dots round
-        [dot1, dot2, dot3, dot4].compactMap { $0 }.forEach {
+        [dot1, dot2, dot3, dot4, dot5].compactMap { $0 }.forEach {
             $0.layer.cornerRadius = ($0.frame.height > 0 ? $0.frame.height : 12) / 2
             $0.layer.masksToBounds = true
         }
@@ -71,12 +77,33 @@ class RelationshipVibeDisplayCollectionViewCell: UICollectionViewCell {
         buttonTopConstraint?.constant = 8
     }
 
+    // MARK: - Vibe progression map
+    static let vibeResultMap: [String: String] = [
+        "The Always-Attached":    "The Unbreakable Bond",
+        "The In-Sync Duo":        "The Effortless Flow",
+        "The Power-Builders":     "The Power Couple",
+        "The Mending Souls":      "The Healed & Stronger",
+        "The Fresh-Start Pair":   "The Rekindled Flame",
+        "The Deep-Dive Duo":      "The Soul-Connected",
+        "The Independent Hearts": "The Perfect Balance",
+        "The Reassurers":         "The Safe Haven",
+        "The Routine-Steady":     "The Revived Rhythm",
+        "The Life-Logistics Team":"The Thriving Partners",
+        "The Wave-Riders":        "The Steady Tide",
+        "The High-Emotion Duo":   "The Grounded Passion"
+    ]
+
     // MARK: - Completed State
     func configureAsCompleted(vibeTitle: VibeTitle, totalCount: Int, remainingCount: Int, hasOpenedModal: Bool) {
         isCompletedState = true
         titleLabel.text = vibeTitle.displayTitle
         subtitleLabel?.text = vibeTitle.description
         vibeImageView.image = UIImage(named: vibeTitle.imageName)
+        
+        // Populate the current & resultant vibe labels
+        let currentVibe = vibeTitle.displayTitle
+        currentVibeLabel?.text = currentVibe
+        resultVibeLabel?.text = Self.vibeResultMap[currentVibe] ?? currentVibe
 
         actionButton.configuration = .filled()
         actionButton.configuration?.baseForegroundColor = .label
@@ -91,7 +118,7 @@ class RelationshipVibeDisplayCollectionViewCell: UICollectionViewCell {
             actionButton.configuration?.title = "Continue"
             actionButton.isEnabled = true
         } else {
-            actionButton.configuration?.title = "Done ✅"
+            actionButton.configuration?.title = "Done"
             actionButton.isEnabled = false
         }
         
@@ -101,22 +128,18 @@ class RelationshipVibeDisplayCollectionViewCell: UICollectionViewCell {
         dotsTopConstraint?.constant = 22
         buttonTopConstraint?.constant = 20
         
-        // Progress logic: 4 dots means 3 intervals.
+        // Progress logic: bar fills from 0 → 1 over totalCount completions.
+        // Each of the 5 dots lights when the bar reaches its fractional position.
         let completed = totalCount - remainingCount
-        let progress = min(Float(completed) / 3.0, 1.0)
+        let progress: Float = totalCount > 0 ? min(Float(completed) / Float(totalCount), 1.0) : 0.0
         progressView?.progress = progress
         
-        // Map progress to the 4 dots
-        let dots = [dot1, dot2, dot3, dot4]
+        // Dot[i] lights when progress >= i / totalCount  (evenly spaced across the bar)
+        let purpleColor = UIColor(red: 128/255, green: 99/255, blue: 181/255, alpha: 1.0)
+        let dots = [dot1, dot2, dot3, dot4, dot5]
         for (index, dot) in dots.enumerated() {
-            let threshold = Float(index) / 3.0 // 0.0, 0.33, 0.66, 1.0
-            
-            if progress >= threshold || (index == 0 && completed >= 0) {
-                // Reached or passed this dot
-                dot?.backgroundColor = UIColor(red: 128/255, green: 99/255, blue: 181/255, alpha: 1.0)
-            } else {
-                dot?.backgroundColor = .white
-            }
+            let threshold: Float = totalCount > 0 ? Float(index) / Float(totalCount) : 0
+            dot?.backgroundColor = progress >= threshold ? purpleColor : .white
         }
     }
 

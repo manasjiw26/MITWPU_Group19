@@ -49,6 +49,7 @@
                 <constraint firstItem="scv-eE-fT0" firstAttribute="top" secondItem="EWR-iE-A0c" secondAttribute="bottom" constant="-10" id="Orh-0M-kFo"/>
                 <constraint firstItem="dDX-qc-tZn" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="XVQ-4k-dij"/>
                 <constraint firstItem="scv-eE-fT0" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="j9j-r5-Toj"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="dDX-qc-tZn" secondAttribute="bottom" constant="20" id="Hbb-K6-R29"/>
             </constraints>
             <size key="customSize" width="478" height="377"/>
             <connections>

@@ -9,7 +9,7 @@ import UIKit
 import Supabase
 
 protocol InfoModalDelegate: AnyObject {
-    func didTapLetsDoThis(for activity: Activity)
+    func didTapLetsDoThis(for activity: Activity, openSteps: Bool)
 }
 
 class InfoModalViewController: UIViewController {
@@ -106,7 +106,7 @@ class InfoModalViewController: UIViewController {
                     
                     let completeActivity = {
                         DispatchQueue.main.async {
-                            delegateToNotify?.didTapLetsDoThis(for: activity)
+                            delegateToNotify?.didTapLetsDoThis(for: activity, openSteps: false)
                         }
                     }
                     
@@ -202,8 +202,9 @@ class InfoModalViewController: UIViewController {
                         }
                         presentingVC?.present(vc, animated: true)
                     } else {
-                        // Note: non-special activities are completed immediately
-                        completeActivity()
+                        DispatchQueue.main.async {
+                            delegateToNotify?.didTapLetsDoThis(for: activity, openSteps: true)
+                        }
                     }
                 }
             }

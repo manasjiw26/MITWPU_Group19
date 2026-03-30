@@ -116,7 +116,7 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
             actionButton.configuration?.title = "Continue"
         } else {
             // All activities done — show "Done"
-            actionButton.configuration?.title = "Done ✅"
+            actionButton.configuration?.title = "Done"
             actionButton.isEnabled = false
         }
     }

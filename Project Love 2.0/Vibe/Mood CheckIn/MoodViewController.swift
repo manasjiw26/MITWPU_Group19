@@ -458,7 +458,32 @@ extension MoodViewController: TellMoodSelectionDelegate {
 
 // MARK: - InfoModalDelegate
 extension MoodViewController {
-    func didTapLetsDoThis(for activity: Activity) {
+    private func presentSteps(for activity: Activity) {
+        let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+        guard let stepsVC = storyboard.instantiateViewController(withIdentifier: "StepsViewController") as? StepsViewController else {
+            return
+        }
+
+        stepsVC.activity = activity
+        stepsVC.flowSource = .explore
+        stepsVC.modalPresentationStyle = .fullScreen
+        present(stepsVC, animated: true)
+    }
+
+    func didTapLetsDoThis(for activity: Activity, openSteps: Bool) {
+        DataStore.shared.startActivity(activity) { [weak self] coupleActivityId in
+            guard let self else { return }
+
+            var startedActivity = activity
+            startedActivity.coupleActivityId = coupleActivityId
+
+            DispatchQueue.main.async {
+                if openSteps {
+                    self.presentSteps(for: startedActivity)
+                }
+            }
+        }
+
         if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
             suggestedActivities.remove(at: index)
             DataStore.shared.suggestedActivities = suggestedActivities

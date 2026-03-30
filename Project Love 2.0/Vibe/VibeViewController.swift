@@ -71,6 +71,21 @@ private enum VibeSection {
     static let buildBond = 4
 }
 
+fileprivate let resultantVibeDescriptions: [String: String] = [
+    "The Unbreakable Bond": "You’ve turned intense connection into something steady, secure, and deeply rooted.",
+    "The Effortless Flow": "You now move together with complete ease—understanding, supporting, and uplifting each other naturally.",
+    "The Power Couple": "You’ve transformed intention into impact—growing individually while thriving as a strong, united team.",
+    "The Healed & Stronger": "You faced the hard parts together and came out stronger, closer, and more resilient than before.",
+    "The Rekindled Flame": "What once needed effort now feels alive again—your spark is back, brighter and more exciting.",
+    "The Soul-Connected": "You’ve built a rare level of understanding where both your hearts and minds feel truly seen.",
+    "The Perfect Balance": "You’ve mastered the balance of individuality and togetherness, making your bond both free and strong.",
+    "The Safe Haven": "Your relationship has become a place of complete emotional safety, trust, and comfort.",
+    "The Revived Rhythm": "You’ve brought energy back into your routine, turning comfort into something exciting again.",
+    "The Thriving Partners": "You’ve moved beyond just functioning together—you’re now truly enjoying and choosing each other.",
+    "The Steady Tide": "Your ups and downs have settled into a stable, dependable connection you can both rely on.",
+    "The Grounded Passion": "Your intensity is now balanced with stability, creating a love that’s both deep and secure."
+]
+
 class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInCellDelegate, TellMoodSelectionDelegate, DailyCheckInCellDelegate, SmallModalDelegate, InfoModalDelegate, UIAdaptivePresentationControllerDelegate, SuggestedActivitiesModalDelegate {
     
     @IBOutlet weak var vibeCollectionView: UICollectionView!
@@ -92,6 +107,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
     var selectedTips: [Tip] = []
     var resolvedVibeTitle: VibeTitle?
     var hasOpenedSuggestedModal = false
+    var hasAchievedNewVibe = false
     /// Tracks which suggested activity launched the SmallModal so we can remove it on Begin/Schedule
     var pendingSuggestedActivity: Activity?
     
@@ -260,6 +276,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.register(UINib(nibName: "RelationshipVibeDisplayCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "relationship_vibe_cell")
         vibeCollectionView.register(UINib(nibName: "SuggestedActivityCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "suggestedActivity_cell")
         vibeCollectionView.register(UINib(nibName: "RefreshActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "refresh_cell")
+        vibeCollectionView.register(UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "empty_cell")
         vibeCollectionView.register(
             UINib(nibName: "ScheduleCalendarCollectionViewCell", bundle: nil),
             forCellWithReuseIdentifier: "scheduleCalendar_cell"
@@ -341,7 +358,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
-                    top: 10, leading: 1, bottom: 20, trailing: 16
+                    top: 10, leading: 1, bottom: 20, trailing: 1
                 )
                 // No decoration — purple view.backgroundColor shows through naturally
                 
@@ -826,17 +843,71 @@ extension VibeViewController:  UICollectionViewDataSource {
         if indexPath.section == VibeSection.quickVibe {
             // Daily Check-in Cell (Quick Vibe check)
             if hasCompletedDailyCheckIn, let vibeTitle = resolvedVibeTitle {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "relationship_vibe_cell", for: indexPath) as! RelationshipVibeDisplayCollectionViewCell
-                // We use a max of 4 for total count, or suggestedActivities.count if it happens to be greater
-                let totalCount = max(4, suggestedActivities.count)
-                cell.configureAsCompleted(
-                    vibeTitle: vibeTitle,
-                    totalCount: totalCount,
-                    remainingCount: suggestedActivities.count,
-                    hasOpenedModal: hasOpenedSuggestedModal
-                )
-                cell.delegate = self
-                return cell
+                if suggestedActivities.isEmpty {
+                    let currentVibe = vibeTitle.displayTitle
+                    let resultantTitle = RelationshipVibeDisplayCollectionViewCell.vibeResultMap[currentVibe] ?? "New Vibe Achieved"
+                    let description = resultantVibeDescriptions[resultantTitle] ?? "You have achieved a new relationship vibe."
+                    
+                    if !hasAchievedNewVibe {
+                        // Show the old cell but fully completed (remainingCount: 0)
+                        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "relationship_vibe_cell", for: indexPath) as! RelationshipVibeDisplayCollectionViewCell
+                        let totalCount = 4
+                        cell.configureAsCompleted(
+                            vibeTitle: vibeTitle,
+                            totalCount: totalCount,
+                            remainingCount: 0,
+                            hasOpenedModal: hasOpenedSuggestedModal
+                        )
+                        cell.delegate = self
+                        
+                        // Show alert, and only swap UI once user taps Awesome
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(title: "New Vibe Achieved! 🎉", message: "Congratulations! You have reached a new relationship vibe:\n\n\(resultantTitle)", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Awesome!", style: .default, handler: { _ in
+                                self.hasAchievedNewVibe = true
+                                self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+                            }))
+                            // Prevent re-triggering while alert is showing
+                            self.hasAchievedNewVibe = true
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                        return cell
+                        
+                    } else {
+                        // User dismissed the alert already -> change UI to Empty State Cell
+                        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "empty_cell", for: indexPath) as! EmptyStateCollectioViewCellCollectionViewCell
+                        
+                        let imageMap: [String: String] = [
+                            "The Unbreakable Bond": "Unbreakable_bond",
+                            "The Effortless Flow": "effortless_flow",
+                            "The Power Couple": "power_couple",
+                            "The Healed & Stronger": "healed_&_stronger",
+                            "The Rekindled Flame": "Rekindled_Flame",
+                            "The Soul-Connected": "soul_connected",
+                            "The Perfect Balance": "perfect_balance",
+                            "The Safe Haven": "Safe_Haven",
+                            "The Revived Rhythm": "Revived_Rhythm",
+                            "The Thriving Partners": "Thriving_Partners",
+                            "The Steady Tide": "steady_tide",
+                            "The Grounded Passion": "Grounded_Passion"
+                        ]
+                        let imageName = imageMap[resultantTitle] ?? vibeTitle.imageName
+                        
+                        cell.configure(title: resultantTitle, subtitle: description, imageName: imageName)
+                        return cell
+                    }
+                } else {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "relationship_vibe_cell", for: indexPath) as! RelationshipVibeDisplayCollectionViewCell
+                    let totalCount = 4
+                    cell.configureAsCompleted(
+                        vibeTitle: vibeTitle,
+                        totalCount: totalCount,
+                        remainingCount: suggestedActivities.count,
+                        hasOpenedModal: hasOpenedSuggestedModal
+                    )
+                    cell.delegate = self
+                    return cell
+                }
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
                 cell.configureCells()
@@ -1374,12 +1445,33 @@ extension VibeViewController {
 
 // MARK: - InfoModalDelegate
 extension VibeViewController {
-    func didTapLetsDoThis(for activity: Activity) {
+    private func presentSteps(for activity: Activity) {
+        let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+        guard let stepsVC = storyboard.instantiateViewController(withIdentifier: "StepsViewController") as? StepsViewController else {
+            return
+        }
+
+        stepsVC.activity = activity
+        stepsVC.flowSource = .explore
+        stepsVC.modalPresentationStyle = .fullScreen
+        present(stepsVC, animated: true)
+    }
+
+    func didTapLetsDoThis(for activity: Activity, openSteps: Bool) {
         // Mark as ongoing in DataStore & Supabase
-        DataStore.shared.startActivity(activity) { [weak self] _ in
+        DataStore.shared.startActivity(activity) { [weak self] coupleActivityId in
+            guard let self else { return }
+
+            var startedActivity = activity
+            startedActivity.coupleActivityId = coupleActivityId
+
             DispatchQueue.main.async {
-                self?.configureOngoingActivity()
-                self?.vibeCollectionView.reloadData()
+                self.configureOngoingActivity()
+                self.vibeCollectionView.reloadData()
+
+                if openSteps {
+                    self.presentSteps(for: startedActivity)
+                }
             }
         }
 
