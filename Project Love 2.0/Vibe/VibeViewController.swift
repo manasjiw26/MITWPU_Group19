@@ -255,6 +255,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.register(UINib(nibName: "TitleCollectionResuableView", bundle: nil), forSupplementaryViewOfKind: "title", withReuseIdentifier: "title_cell")
         vibeCollectionView.register(UINib(nibName: "MoodCheckInCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "mood_checkin_cell")
         vibeCollectionView.register(UINib(nibName: "DailyCheckInCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "daily_CheckIn")
+        vibeCollectionView.register(UINib(nibName: "RelationshipVibeDisplayCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "relationship_vibe_cell")
         vibeCollectionView.register(UINib(nibName: "SuggestedActivityCollectionViewCell", bundle: nil),forCellWithReuseIdentifier: "suggestedActivity_cell")
         vibeCollectionView.register(UINib(nibName: "RefreshActivityCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "refresh_cell")
         vibeCollectionView.register(
@@ -327,7 +328,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             else if section == VibeSection.quickVibe {
                 let itemSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(220)
+                    heightDimension: .estimated(150)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
@@ -814,20 +815,24 @@ extension VibeViewController:  UICollectionViewDataSource {
         
         if indexPath.section == VibeSection.quickVibe {
             // Daily Check-in Cell (Quick Vibe check)
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
             if hasCompletedDailyCheckIn, let vibeTitle = resolvedVibeTitle {
-                // Completed state: button text depends on activity count & modal state
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "relationship_vibe_cell", for: indexPath) as! RelationshipVibeDisplayCollectionViewCell
+                // We use a max of 4 for total count, or suggestedActivities.count if it happens to be greater
+                let totalCount = max(4, suggestedActivities.count)
                 cell.configureAsCompleted(
                     vibeTitle: vibeTitle,
+                    totalCount: totalCount,
                     remainingCount: suggestedActivities.count,
                     hasOpenedModal: hasOpenedSuggestedModal
                 )
+                cell.delegate = self
+                return cell
             } else {
-                // Default state: Quick Vibe Check card
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "daily_CheckIn", for: indexPath) as! DailyCheckInCollectionViewCell
                 cell.configureCells()
+                cell.delegate = self
+                return cell
             }
-            cell.delegate = self
-            return cell
         }
         
         else if indexPath.section == VibeSection.mood {

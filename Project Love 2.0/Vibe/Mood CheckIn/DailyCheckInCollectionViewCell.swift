@@ -36,17 +36,17 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
 
         // Configure Labels
         checkInTitleLabel.numberOfLines = 0
-        checkInTitleLabel.font = .systemFont(ofSize: 22, weight: .bold)
+        checkInTitleLabel.font = .systemFont(ofSize: 17, weight: .bold)
         
         checkInSubTitleLabel.numberOfLines = 0
-        checkInSubTitleLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        checkInSubTitleLabel.font = .systemFont(ofSize: 12, weight: .regular)
         checkInSubTitleLabel.textColor = .darkGray
 
         checkInImageView.contentMode = .scaleAspectFit
 
         let leftStack = UIStackView(arrangedSubviews: [checkInTitleLabel, checkInSubTitleLabel, actionButton])
         leftStack.axis = .vertical
-        leftStack.spacing = 16
+        leftStack.spacing = 8
         leftStack.alignment = .leading
         leftStack.distribution = .fill
 
@@ -57,20 +57,20 @@ class DailyCheckInCollectionViewCell: UICollectionViewCell {
         checkInImageView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            leftStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            leftStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
-            contentView.bottomAnchor.constraint(equalTo: leftStack.bottomAnchor, constant: 4),
-            leftStack.trailingAnchor.constraint(equalTo: checkInImageView.leadingAnchor, constant: -16),
+            leftStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            leftStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 14),
+            contentView.bottomAnchor.constraint(equalTo: leftStack.bottomAnchor, constant: 10),
+            leftStack.trailingAnchor.constraint(equalTo: checkInImageView.leadingAnchor, constant: -12),
 
             // Button sizing
-            actionButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 140),
-            actionButton.heightAnchor.constraint(equalToConstant: 44),
+            actionButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
+            actionButton.heightAnchor.constraint(equalToConstant: 34),
 
             // Image
-            checkInImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            checkInImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14),
             checkInImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            checkInImageView.widthAnchor.constraint(equalToConstant: 130),
-            checkInImageView.heightAnchor.constraint(equalToConstant: 110)
+            checkInImageView.widthAnchor.constraint(equalToConstant: 90),
+            checkInImageView.heightAnchor.constraint(equalToConstant: 80)
         ])
     }
 
