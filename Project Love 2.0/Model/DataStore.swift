@@ -1079,8 +1079,8 @@ class DataStore {
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased() ?? ""
         switch gender {
-        case "male":   return "her"
-        case "female": return "him"
+        case "him":   return "her"
+        case "her": return "him"
         default:       return "them"
         }
     }
