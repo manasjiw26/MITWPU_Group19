@@ -73,7 +73,7 @@ extension ScheduleCalendarCollectionViewCell: UICalendarViewDelegate {
         }
 
         return hasActivity
-            ? .default(color: UIColor(named: "PurpleColor")!, size: .small)
+            ? .default(color: .systemRed, size: .small)
             : nil
     }
 }

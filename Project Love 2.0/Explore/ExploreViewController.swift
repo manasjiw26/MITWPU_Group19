@@ -52,6 +52,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
 
     @objc private func handleActivitiesSynced() {
         activity_collection.reloadData()
+        updateCalendarBadge()
     }
     private func isEmptyState() -> Bool {
         if selectedSegmentIndex == 1 {
@@ -110,6 +111,33 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
 
             navigationController?.pushViewController(calendarVC, animated: true)
     }
+
+    private func updateCalendarBadge() {
+        let hasScheduled = DataStore.shared.allActivities.contains { $0.status == .scheduled }
+
+        // Remove existing badge if any
+        calendarButton.subviews.filter { $0.tag == 999 }.forEach { $0.removeFromSuperview() }
+
+        if hasScheduled {
+            let dotSize: CGFloat = 10
+            let dot = UIView()
+            dot.backgroundColor = .systemRed
+            dot.layer.cornerRadius = dotSize / 2
+            dot.layer.borderWidth = 1.5
+            dot.layer.borderColor = UIColor.white.cgColor
+            dot.tag = 999
+            dot.isUserInteractionEnabled = false
+            dot.translatesAutoresizingMaskIntoConstraints = false
+            calendarButton.addSubview(dot)
+
+            NSLayoutConstraint.activate([
+                dot.widthAnchor.constraint(equalToConstant: dotSize),
+                dot.heightAnchor.constraint(equalToConstant: dotSize),
+                dot.topAnchor.constraint(equalTo: calendarButton.topAnchor, constant: 5),
+                dot.trailingAnchor.constraint(equalTo: calendarButton.trailingAnchor, constant: -5)
+            ])
+        }
+    }
     
     func registerCell() {
         activity_collection.register(UINib(nibName: "RewardsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "reward_cell")
@@ -164,6 +192,7 @@ class ExploreViewController: UIViewController, UICollectionViewDelegate {
         }
 
         activity_collection.reloadData()
+        updateCalendarBadge()
     }
     
     func generateLayout()->UICollectionViewLayout{

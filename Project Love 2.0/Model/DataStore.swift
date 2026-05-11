@@ -1956,6 +1956,8 @@ class DataStore {
                     }
                 }
 
+                self.buildAllActivities()
+
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
