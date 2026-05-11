@@ -84,6 +84,7 @@ final class NotificationService {
             .value
 
         guard let relationship = relationships.first else {
+            print("DEBUG sendPartnerNotification: no relationship found for \(relationshipId)")
             return
         }
 
@@ -92,10 +93,32 @@ final class NotificationService {
             : relationship.user1_id
 
         // 3. Insert the notification row
+        try await sendDirectNotification(
+            relationshipId: relationshipId,
+            senderUserId: currentUserId,
+            receiverUserId: partnerUserId,
+            type: type,
+            message: message,
+            entityType: entityType,
+            entityId: entityId
+        )
+    }
+
+    /// Send a notification with explicit sender and receiver IDs.
+    /// Use this when you already know both user IDs (e.g. from a love note row).
+    func sendDirectNotification(
+        relationshipId: UUID,
+        senderUserId: UUID,
+        receiverUserId: UUID,
+        type: String,
+        message: String,
+        entityType: String? = nil,
+        entityId: String? = nil
+    ) async throws {
         let insert = NotificationInsert(
             relationship_id: relationshipId.uuidString,
-            sender_user_id: currentUserId.uuidString,
-            receiver_user_id: partnerUserId.uuidString,
+            sender_user_id: senderUserId.uuidString,
+            receiver_user_id: receiverUserId.uuidString,
             type: type,
             message: message,
             entity_type: entityType,
@@ -107,6 +130,7 @@ final class NotificationService {
             .insert(insert)
             .execute()
 
+        print("DEBUG sendDirectNotification: sent \(type) from \(senderUserId) to \(receiverUserId)")
     }
 
     

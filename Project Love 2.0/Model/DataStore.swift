@@ -1847,9 +1847,52 @@ class DataStore {
                     : relationship.user1_id
                 self.isUserA = (relationship.user1_id == authUserId)
                 self.partnerAssessmentPreferences = nil
+
+                // Check for overdue scheduled love notes on every app launch
+                await checkScheduledLoveNotes(relationshipId: relationship.relationship_id)
             } else {
             }
         } catch {
+        }
+    }
+
+    /// Flip overdue scheduled love notes to is_sent=true and notify the receiver.
+    /// Runs on app launch (from loadUserContext) so it works even if the
+    /// Love Note screen is never opened.
+    func checkScheduledLoveNotes(relationshipId: UUID) async {
+        do {
+            let updatedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
+                .from("love_notes")
+                .update(["is_sent": true])
+                .eq("relationship_id", value: relationshipId.uuidString)
+                .eq("is_sent", value: false)
+                .lte("scheduled_for", value: Date().ISO8601Format())
+                .not("scheduled_for", operator: .is, value: "null")
+                .select()
+                .execute()
+                .value
+
+            for note in updatedNotes {
+                do {
+                    try await NotificationService.shared.sendDirectNotification(
+                        relationshipId: relationshipId,
+                        senderUserId: note.user_id,
+                        receiverUserId: note.partner_user_id,
+                        type: "love_note_sent",
+                        message: "Your partner sent you a love note 💌",
+                        entityType: "love_note",
+                        entityId: note.love_note_id.uuidString
+                    )
+                } catch {
+                    print("DEBUG checkScheduledLoveNotes notification error: \(error)")
+                }
+            }
+
+            if !updatedNotes.isEmpty {
+                print("DEBUG checkScheduledLoveNotes: flipped \(updatedNotes.count) notes")
+            }
+        } catch {
+            print("DEBUG checkScheduledLoveNotes error: \(error)")
         }
     }
 

@@ -383,6 +383,27 @@ final class NotificationViewController: UIViewController {
                 ))
                 .eq("love_note_id", value: noteId.uuidString)
                 .execute()
+
+            // Send a notification to the original sender that their note got a reaction
+            let session = try await SupabaseManager.shared.client.auth.session
+            let currentUserId = session.user.id
+            let relationships: [DBRelationship] = try await SupabaseManager.shared.client
+                .from("relationships")
+                .select()
+                .or("user1_id.eq.\(currentUserId),user2_id.eq.\(currentUserId)")
+                .limit(1)
+                .execute()
+                .value
+
+            if let relationship = relationships.first {
+                try await NotificationService.shared.sendPartnerNotification(
+                    relationshipId: relationship.relationship_id,
+                    type: "love_tip_reacted",
+                    message: "Your partner reacted \(emoji) to your love note 💌",
+                    entityType: "love_note",
+                    entityId: noteId.uuidString
+                )
+            }
         } catch {
         }
     }

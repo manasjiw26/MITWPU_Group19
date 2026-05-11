@@ -144,8 +144,10 @@ class InfoModalViewController: UIViewController {
                                     if scheduledDate == nil {
                                         do {
                                             let loveNoteIdString = insertedNotes.first?.love_note_id.uuidString
-                                            try await NotificationService.shared.sendPartnerNotification(
+                                            try await NotificationService.shared.sendDirectNotification(
                                                 relationshipId: relationshipId,
+                                                senderUserId: userId,
+                                                receiverUserId: partnerId,
                                                 type: "love_note_sent",
                                                 message: "Your partner sent you a love note 💌",
                                                 entityType: "love_note",

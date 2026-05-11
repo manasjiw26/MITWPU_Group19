@@ -28,6 +28,15 @@ class WriteActivityViewController: UIViewController {
         descriptionActivity.layer.masksToBounds = true
 
         setupDatePicker()
+
+        // Dismiss date picker / keyboard when tapping anywhere outside
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     private func setupDatePicker() {

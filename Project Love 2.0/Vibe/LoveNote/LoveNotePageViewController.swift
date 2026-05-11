@@ -116,9 +116,9 @@ class LoveNotePageViewController: UIViewController {
 
         private func markDueScheduledNotesAsSent(relationshipId: UUID, currentUserId: UUID) async {
             do {
-                // NOTE: Do NOT filter by user_id here.
-                // Either device (sender OR partner) should be able to flip is_sent = true
-                // for any overdue scheduled note in the relationship.
+                // Either device can flip is_sent = true for overdue notes.
+                // sendDirectNotification uses note.user_id → note.partner_user_id
+                // so the notification always goes to the correct receiver.
                 let updatedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
                     .from("love_notes")
                     .update(["is_sent": true])
@@ -132,14 +132,18 @@ class LoveNotePageViewController: UIViewController {
 
                 for note in updatedNotes {
                     do {
-                        try await NotificationService.shared.sendPartnerNotification(
+                        // Use sendDirectNotification with known sender/receiver from the note
+                        try await NotificationService.shared.sendDirectNotification(
                             relationshipId: relationshipId,
+                            senderUserId: note.user_id,
+                            receiverUserId: note.partner_user_id,
                             type: "love_note_sent",
                             message: "Your partner sent you a love note 💌",
                             entityType: "love_note",
                             entityId: note.love_note_id.uuidString
                         )
                     } catch {
+                        print("DEBUG markDueScheduled notification error: \(error)")
                     }
                 }
     } catch {
@@ -232,14 +236,18 @@ class LoveNotePageViewController: UIViewController {
                 if scheduledDate == nil { // send notification only for immediate send
                     do {
                         let loveNoteIdString = insertedNotes.first?.love_note_id.uuidString
-                        try await NotificationService.shared.sendPartnerNotification(
+                        // Use sendDirectNotification with explicit sender/receiver
+                        try await NotificationService.shared.sendDirectNotification(
                             relationshipId: currentRelationshipId,
+                            senderUserId: authUserId,
+                            receiverUserId: partnerUserId,
                             type: "love_note_sent",
                             message: "Your partner sent you a love note 💌",
                             entityType: "love_note",
                             entityId: loveNoteIdString
                         )
                     } catch {
+                        print("DEBUG createLoveNote notification error: \(error)")
                     }
                 }
 
@@ -406,9 +414,20 @@ extension LoveNotePageViewController: UICollectionViewDelegate, UICollectionView
                     reaction: emoji,
                     reacted_at: Date().ISO8601Format()
                 ))
-
                 .eq("love_note_id", value: noteId.uuidString)
                 .execute()
+
+            // Send a notification to the original sender that their note got a reaction
+            if let currentRelationshipId = currentRelationshipId {
+                try await NotificationService.shared.sendPartnerNotification(
+                    relationshipId: currentRelationshipId,
+                    type: "love_tip_reacted",
+                    message: "Your partner reacted \(emoji) to your love note 💌",
+                    entityType: "love_note",
+                    entityId: noteId.uuidString
+                )
+            }
+
             await fetchLoveNotes()
         } catch {
         }
