@@ -166,7 +166,8 @@ class NewAddNewViewController: UIViewController {
                 title:          title,
                 description:    description,
                 isoDate:        isoDate,
-                fileName:       fileName
+                fileName:       fileName,
+                location:       locationTextField.text ?? ""
             )
 
             // ── 4. Dismiss with confirmation, THEN add heart ───────────────────

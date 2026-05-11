@@ -254,6 +254,38 @@ final class SupabaseManager {
             }
         }
     }
+
+    /// Persist edits to a memory's metadata fields in Supabase.
+    /// Called after the user changes title, description, date, or location.
+    func updateMemory(
+        memoryId: UUID,
+        title: String,
+        description: String,
+        date: Date,
+        location: String
+    ) async throws {
+        let isoDate = ISO8601DateFormatter().string(from: date)
+
+        // Core fields — guaranteed to exist in the memories table
+        try await client
+            .from("memories")
+            .update([
+                "title":       title,
+                "description": description,
+                "memory_date": isoDate
+            ])
+            .eq("memory_id", value: memoryId.uuidString)
+            .execute()
+
+        // Location — best-effort (column may not exist yet)
+        if !location.isEmpty {
+            try? await client
+                .from("memories")
+                .update(["location": location])
+                .eq("memory_id", value: memoryId.uuidString)
+                .execute()
+        }
+    }
     func updateUserMood(moodTitle: String) async throws {
 
             guard let currentUserId = currentUserId,

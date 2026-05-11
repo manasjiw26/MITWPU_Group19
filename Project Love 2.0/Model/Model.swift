@@ -385,6 +385,7 @@ struct MemoryModel: Decodable {
     let image_path: String
     let memory_date: String
     let is_synced: Bool
+    let location: String?
     
     enum CodingKeys: String, CodingKey {
         case id = "memory_id"
@@ -395,6 +396,7 @@ struct MemoryModel: Decodable {
         case image_path
         case memory_date
         case is_synced
+        case location
     }
     
 }

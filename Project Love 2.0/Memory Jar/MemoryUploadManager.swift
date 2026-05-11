@@ -13,14 +13,15 @@ final class MemoryUploadManager {
     // MARK: - Public
 
     func uploadMemory(
-        memoryId: UUID,           // caller-generated — must match the local Memory.id
+        memoryId: UUID,
         userId: String,
         relationshipId: UUID,
         imageData: Data,
         title: String,
         description: String,
         isoDate: String,
-        fileName: String
+        fileName: String,
+        location: String
     ) {
         var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
         backgroundTaskID = UIApplication.shared.beginBackgroundTask(withName: "MemoryUpload") {
@@ -51,6 +52,15 @@ final class MemoryUploadManager {
                         ]
                     ])
                     .execute()
+
+                // Best-effort: set location if the column exists
+                if !location.isEmpty {
+                    try? await supabase
+                        .from("memories")
+                        .update(["location": location])
+                        .eq("memory_id", value: memoryId.uuidString)
+                        .execute()
+                }
 
                 // ── Step 3: Notify partner ─────────────────────────────────────
                 try? await NotificationService.shared.sendPartnerNotification(

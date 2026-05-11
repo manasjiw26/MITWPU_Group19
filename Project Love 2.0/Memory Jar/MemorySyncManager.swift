@@ -185,7 +185,7 @@ final class MemorySyncManager {
             id:             item.id,
             date:           date,
             imageName:      item.image_path,
-            location:       "",
+            location:       item.location ?? "",
             title:          item.title,
             description:    item.description ?? "",
             uiImage:        MemoryFileManager.loadImage(fileName: item.image_path),

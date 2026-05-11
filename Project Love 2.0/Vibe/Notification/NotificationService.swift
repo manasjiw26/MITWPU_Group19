@@ -161,7 +161,7 @@ final class NotificationService {
             id:             row.id,
             date:           date,
             imageName:      row.image_path,
-            location:       "",
+            location:       row.location ?? "",
             title:          row.title,
             description:    row.description ?? "",
             uiImage:        MemoryFileManager.loadImage(fileName: row.image_path),

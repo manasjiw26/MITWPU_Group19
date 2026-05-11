@@ -150,7 +150,7 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                     id:             item.id,
                     date:           date,
                     imageName:      item.image_path,
-                    location:       "",
+                    location:       item.location ?? "",
                     title:          item.title,
                     description:    item.description ?? "",
                     uiImage:        uiImage,

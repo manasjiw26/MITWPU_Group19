@@ -58,6 +58,25 @@ class memoryPhotoViewController: UIViewController,
         tabBarController?.tabBar.isHidden = false
     }
 
+    /// Persist the current memory's metadata to Supabase after a local edit.
+    private func persistMemoryEdit() {
+        guard currentIndex < dataStore.savedMemories.count else { return }
+        let memory = dataStore.savedMemories[currentIndex]
+        Task {
+            do {
+                try await SupabaseManager.shared.updateMemory(
+                    memoryId: memory.id,
+                    title: memory.title,
+                    description: memory.description,
+                    date: memory.date,
+                    location: memory.location
+                )
+            } catch {
+                print("[memoryPhotoVC] Failed to persist edit: \(error)")
+            }
+        }
+    }
+
     @IBAction func closeButton(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -163,6 +182,7 @@ class memoryPhotoViewController: UIViewController,
 
             dataStore.savedMemories[self.currentIndex].title = text
             self.updateUI()
+            self.persistMemoryEdit()
         })
 
         present(alert, animated: true)
@@ -184,6 +204,7 @@ class memoryPhotoViewController: UIViewController,
             let text = alert?.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             dataStore.savedMemories[self.currentIndex].description = text
             self.updateUI()
+            self.persistMemoryEdit()
         })
 
         present(alert, animated: true)
@@ -207,6 +228,7 @@ class memoryPhotoViewController: UIViewController,
             guard let self else { return }
             dataStore.savedMemories[self.currentIndex].date = datePicker.date
             self.updateUI()
+            self.persistMemoryEdit()
         })
 
         present(alert, animated: true)
@@ -228,6 +250,7 @@ class memoryPhotoViewController: UIViewController,
     func didSelectLocation(_ name: String) {
         dataStore.savedMemories[currentIndex].location = name
         updateUI()
+        persistMemoryEdit()
     }
 
     func deleteMemory() {
