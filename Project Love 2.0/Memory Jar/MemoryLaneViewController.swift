@@ -13,9 +13,10 @@ class MemoryLaneViewController: UIViewController,
         memoryLaneItemCollectionView.dataSource = self
         memoryLaneItemCollectionView.delegate = self
 
+        // Register the same empty-state cell used by the Ongoing section
         memoryLaneItemCollectionView.register(
-            UINib(nibName: "memoryEmptyStateCollectionViewCell", bundle: nil),
-            forCellWithReuseIdentifier: "emptyMemoryState"
+            UINib(nibName: "EmptyStateCollectioViewCellCollectionViewCell", bundle: nil),
+            forCellWithReuseIdentifier: "empty_cell"
         )
 
         refreshUI()
@@ -38,11 +39,23 @@ class MemoryLaneViewController: UIViewController,
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return dataStore.savedMemories.count
+        return isEmptyState ? 1 : dataStore.savedMemories.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        if isEmptyState {
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "empty_cell", for: indexPath
+            ) as! EmptyStateCollectioViewCellCollectionViewCell
+            cell.configure(
+                title: "No memories yet",
+                subtitle: "Start capturing your special moments together — they'll appear here.",
+                imageName: "empty_memory"
+            )
+            return cell
+        }
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "MemoryGridCell",
@@ -70,6 +83,7 @@ class MemoryLaneViewController: UIViewController,
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
 
+        guard !isEmptyState else { return }
         guard indexPath.item < dataStore.savedMemories.count else { return }
 
         let storyboard = UIStoryboard(name: "MemoryJar", bundle: nil)
@@ -82,6 +96,27 @@ class MemoryLaneViewController: UIViewController,
     }
 
     private func generateLayout() -> UICollectionViewLayout {
+
+        if isEmptyState {
+            // Match the Ongoing empty-state layout: full-width, vertically centered
+            let availableHeight = view.frame.height
+                - (navigationController?.navigationBar.frame.maxY ?? 0)
+                - (tabBarController?.tabBar.frame.height ?? 0)
+            let cellHeight: CGFloat = 450
+            let topInset = max(0, (availableHeight - cellHeight) / 2)
+
+            let itemSize  = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(cellHeight)
+            )
+            let item      = NSCollectionLayoutItem(layoutSize: itemSize)
+            let group     = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+            let section   = NSCollectionLayoutSection(group: group)
+            section.contentInsets = NSDirectionalEdgeInsets(
+                top: topInset, leading: 16, bottom: 16, trailing: 16
+            )
+            return UICollectionViewCompositionalLayout(section: section)
+        }
 
         let spacing: CGFloat = 2
         let columns: CGFloat = 3
@@ -114,3 +149,4 @@ class MemoryLaneViewController: UIViewController,
         return UICollectionViewCompositionalLayout(section: section)
     }
 }
+

@@ -135,4 +135,38 @@ final class NotificationService {
            return LoveNote.fromDB(row, currentUserId: currentUserId)
        }
 
+    /// Fetches a single memory row from Supabase, downloads and caches the image
+    /// from Supabase Storage if it isn't already on disk, and returns a fully
+    /// populated `Memory` ready for the detail modal.
+    func fetchMemory(id: String) async throws -> Memory {
+        let row: MemoryModel = try await supabase
+            .from("memories")
+            .select()
+            .eq("memory_id", value: id)
+            .single()
+            .execute()
+            .value
+
+        // Download the image from Supabase Storage if not already cached locally
+        if MemoryFileManager.loadImage(fileName: row.image_path) == nil {
+            let imageData = try await supabase.storage
+                .from("memory-images")
+                .download(path: row.image_path)
+            MemoryFileManager.saveImage(data: imageData, fileName: row.image_path)
+        }
+
+        let date = ISO8601DateFormatter().date(from: row.memory_date) ?? Date()
+
+        return Memory(
+            id:             row.id,
+            date:           date,
+            imageName:      row.image_path,
+            location:       "",
+            title:          row.title,
+            description:    row.description ?? "",
+            uiImage:        MemoryFileManager.loadImage(fileName: row.image_path),
+            localImagePath: MemoryFileManager.localURL(for: row.image_path).path
+        )
+    }
+
 }

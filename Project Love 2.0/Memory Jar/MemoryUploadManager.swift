@@ -56,9 +56,9 @@ final class MemoryUploadManager {
                 try? await NotificationService.shared.sendPartnerNotification(
                     relationshipId: relationshipId,
                     type: "memory_added",
-                    message: "Your partner added a new memory for you 💌",
+                    message: "Your partner just added a new memory. Click to reveal!",
                     entityType: "memory",
-                    entityId: nil
+                    entityId: memoryId.uuidString
                 )
 
             } catch {

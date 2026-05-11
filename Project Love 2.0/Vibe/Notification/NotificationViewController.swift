@@ -192,8 +192,38 @@ final class NotificationViewController: UIViewController {
     }
     
     private func openMemory(_ notification: AppNotification) {
-        NotificationCenter.default.post(name: NSNotification.Name("OpenMemory"), object: 0)
-     }
+        guard let memoryId = notification.entityId else {
+            showMemoryAlert(for: notification)
+            return
+        }
+
+        Task { @MainActor in
+            do {
+                let memory = try await NotificationService.shared.fetchMemory(id: memoryId)
+
+                let storyboard = UIStoryboard(name: "MemoryJar", bundle: nil)
+                if let displayVC = storyboard.instantiateViewController(
+                    withIdentifier: "memoryDisplay"
+                ) as? memoryDisplay {
+                    displayVC.memory = memory
+                    displayVC.modalPresentationStyle = .pageSheet
+                    self.present(displayVC, animated: true)
+                }
+            } catch {
+                showMemoryAlert(for: notification)
+            }
+        }
+    }
+
+    private func showMemoryAlert(for notification: AppNotification) {
+        let alert = UIAlertController(
+            title: "New Memory",
+            message: notification.message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Close", style: .default))
+        present(alert, animated: true)
+    }
 
     private func openActivity(_ notification: AppNotification) {
         guard let activityName = extractActivityName(from: notification.message) else {
