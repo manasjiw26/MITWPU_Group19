@@ -155,7 +155,7 @@ class LoveNoteDetail2ViewController: UIViewController, UICollectionViewDelegate,
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: id, for: indexPath)
         
         if let scheduleCell = cell as? LNScheduleCollectionViewCell {
-            scheduleCell.configureCells(with: note, isEditing: true)
+            scheduleCell.configureCells(with: note, isEditing: note.isSender)
             scheduleCell.delegate = self
         } else if let receiveCell = cell as? LNReceiveCollectionViewCell {
             receiveCell.configureCells(with: note)

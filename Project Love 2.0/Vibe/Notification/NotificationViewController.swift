@@ -5,6 +5,7 @@ import Supabase
 final class NotificationViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    private var channel: RealtimeChannelV2?
   
     private var notifications: [AppNotification] = []
 
@@ -12,6 +13,13 @@ final class NotificationViewController: UIViewController {
          super.viewDidLoad()
          setupCollectionView()
          loadNotifications()
+         subscribeToNotifications()
+     }
+
+     deinit {
+         if let channel = channel {
+             Task { await SupabaseManager.shared.client.removeChannel(channel) }
+         }
      }
 
      private func setupCollectionView() {
@@ -65,6 +73,34 @@ final class NotificationViewController: UIViewController {
          }
          return layout
      }
+
+    private func subscribeToNotifications() {
+        Task { @MainActor in
+            do {
+                let session = try await SupabaseManager.shared.client.auth.session
+                let userId = session.user.id
+                
+                let ch = SupabaseManager.shared.client.channel("public:notifications:\(userId.uuidString)")
+                self.channel = ch
+                
+                let insertions = ch.postgresChange(
+                    InsertAction.self,
+                    schema: "public",
+                    table: "notifications",
+                    filter: "receiver_user_id=eq.\(userId.uuidString)"
+                )
+                
+                await ch.subscribe()
+                
+                for await change in insertions {
+                    // Refresh the list when a new notification arrives
+                    loadNotifications()
+                }
+            } catch {
+                print("Realtime subscription error: \(error)")
+            }
+        }
+    }
 
     private func loadNotifications() {
         Task { @MainActor in
@@ -142,7 +178,8 @@ final class NotificationViewController: UIViewController {
             reaction: nil,
             reactedAt: nil,
             isSent: false,
-            status: .loveTipCompleted
+            status: .loveTipCompleted, 
+            isSender: false
         )
 
         detailVC.note = mockNote

@@ -434,6 +434,7 @@ struct LoveNote {
     var reactedAt: Date?
     var isSent: Bool
     let status: LoveNoteStatus
+    let isSender: Bool
 }
 extension LoveNote {
     static func fromDB(_ row: DBLoveNote, currentUserId: UUID) -> LoveNote {
@@ -447,6 +448,8 @@ extension LoveNote {
             ? (row.user_id == currentUserId ? .sent : .received)
             : .scheduled
 
+        let isSender = (row.user_id == currentUserId)
+
         return LoveNote(
             id: row.love_note_id,
             relationshipId: row.relationship_id,
@@ -458,7 +461,8 @@ extension LoveNote {
             reaction: row.reaction,
             reactedAt: row.reacted_at,
             isSent: effectivelySent,
-            status: status
+            status: status,
+            isSender: isSender
         )
     }
 }
