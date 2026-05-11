@@ -23,6 +23,31 @@ class memoryPhotoViewController: UIViewController,
         setupSwipes()
         setupThumbnails()
         updateUI()
+
+        // Refresh when the partner edits this memory's metadata via Realtime
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMemoryUpdated(_:)),
+            name: NSNotification.Name("MemoryUpdated"),
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    /// Partner edited a memory's location / title / description / date.
+    /// The dataStore is already up-to-date — just refresh the visible UI.
+    @objc private func handleMemoryUpdated(_ notification: Notification) {
+        guard let updatedId = notification.object as? UUID else { return }
+        // Only reload if the updated memory is the one currently displayed
+        guard currentIndex < dataStore.savedMemories.count,
+              dataStore.savedMemories[currentIndex].id == updatedId else { return }
+        DispatchQueue.main.async {
+            self.updateUI()
+            self.thumbnailsCollectionView.reloadData()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

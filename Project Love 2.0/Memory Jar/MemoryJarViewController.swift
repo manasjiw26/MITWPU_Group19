@@ -45,6 +45,13 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             name: NSNotification.Name("OpenMemory"),
             object: nil
         )
+        // Partner edited a memory's metadata (location, title, description, date)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleUpdatedMemory(_:)),
+            name: NSNotification.Name("MemoryUpdated"),
+            object: nil
+        )
 
         memoryLaneCollectionView.alwaysBounceVertical  = false
         memoryLaneCollectionView.showsVerticalScrollIndicator = false
@@ -226,6 +233,14 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                     self.memoryLaneCollectionView.scrollToItem(at: indexPath, at: .right, animated: true)
                 }
             }
+        }
+    }
+
+    /// Called when the partner edits a memory's metadata (location, title, description, date).
+    /// The dataStore has already been updated in-place by MemorySyncManager — just reload the UI.
+    @objc func handleUpdatedMemory(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.memoryLaneCollectionView.reloadData()
         }
     }
 

@@ -16,6 +16,28 @@ class memoryDisplay: UIViewController {
         super.viewDidLoad()
         setupUI()
         displayMemoryData()
+
+        // Refresh if the partner edits this memory while the sheet is open
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMemoryUpdated(_:)),
+            name: NSNotification.Name("MemoryUpdated"),
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleMemoryUpdated(_ notification: Notification) {
+        guard let updatedId = notification.object as? UUID,
+              let current = memory, current.id == updatedId else { return }
+        // Re-read the latest data from the shared dataStore
+        if let fresh = dataStore.savedMemories.first(where: { $0.id == updatedId }) {
+            self.memory = fresh
+            displayMemoryData()
+        }
     }
 
     private func setupUI() {

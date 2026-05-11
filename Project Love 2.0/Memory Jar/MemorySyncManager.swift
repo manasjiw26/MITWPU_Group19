@@ -123,20 +123,48 @@ final class MemorySyncManager {
     }
 
     private func handleUpdate(record: [String: AnyJSON]) async {
+        guard let uploaderIdStr = stringValue(record["user_id"]) else { return }
+
+        // ── Case 1: My own row got is_synced = true → clean up Supabase Storage ──
+        if uploaderIdStr == currentUserId?.uuidString {
+            guard
+                let imagePath = stringValue(record["image_path"]),
+                boolValue(record["is_synced"]) == true
+            else { return }
+
+            do {
+                try await supabase.storage
+                    .from("memory-images")
+                    .remove(paths: [imagePath])
+            } catch {
+                print("[MemorySyncManager] Failed to delete \(imagePath): \(error)")
+            }
+            return
+        }
+
+        // ── Case 2: Partner updated metadata (location / title / description / date) ──
+        // Decode the full record so we can read all fields.
         guard
-            let uploaderIdStr = stringValue(record["user_id"]),
-            uploaderIdStr     == currentUserId?.uuidString,   // only react to my own rows
-            let imagePath     = stringValue(record["image_path"]),
-            boolValue(record["is_synced"]) == true            // only when synced flag flipped
+            let jsonData = try? JSONEncoder().encode(record),
+            let item     = try? JSONDecoder().decode(MemoryModel.self, from: jsonData)
         else { return }
 
-        do {
-            try await supabase.storage
-                .from("memory-images")
-                .remove(paths: [imagePath])
-            
-        } catch {
-            print("[MemorySyncManager] Failed to delete \(imagePath): \(error)")
+        let updatedDate = ISO8601DateFormatter().date(from: item.memory_date) ?? Date()
+
+        await MainActor.run {
+            // Update the existing entry in the shared data store in-place.
+            if let idx = dataStore.savedMemories.firstIndex(where: { $0.id == item.id }) {
+                dataStore.savedMemories[idx].location    = item.location ?? ""
+                dataStore.savedMemories[idx].title       = item.title
+                dataStore.savedMemories[idx].description = item.description ?? ""
+                dataStore.savedMemories[idx].date        = updatedDate
+            }
+
+            // Broadcast so any open UI (MemoryJarVC, memoryPhotoVC, etc.) can refresh.
+            NotificationCenter.default.post(
+                name: NSNotification.Name("MemoryUpdated"),
+                object: item.id        // UUID of the changed memory
+            )
         }
     }
 
