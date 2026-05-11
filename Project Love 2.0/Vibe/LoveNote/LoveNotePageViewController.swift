@@ -93,17 +93,22 @@ class LoveNotePageViewController: UIViewController {
             do {
                 await markDueScheduledNotesAsSent(relationshipId: currentRelationshipId, currentUserId: currentUserId)
 
+                let nowISO = Date().ISO8601Format()
+                // Fetch notes that are:
+                // 1. Already sent (is_sent=true) — visible to both
+                // 2. Still scheduled (is_sent=false) AND I am the sender — sender sees their own pending notes
+                // 3. Overdue (scheduled_for <= now, is_sent=false) — partner sees them immediately even
+                //    if the flag hasn't been flipped yet
                 let rows: [DBLoveNote] = try await SupabaseManager.shared.client
                     .from("love_notes")
                     .select()
                     .eq("relationship_id", value: currentRelationshipId.uuidString)
-                    .or("is_sent.eq.true,and(is_sent.eq.false,user_id.eq.\(currentUserId.uuidString))")
+                    .or("is_sent.eq.true,and(is_sent.eq.false,user_id.eq.\(currentUserId.uuidString)),and(is_sent.eq.false,scheduled_for.lte.\(nowISO))")
                     .order("created_at", ascending: false)
                     .execute()
                     .value
 
-                let visibleRows = rows.filter { $0.is_sent || $0.user_id == currentUserId }
-                allNotes = visibleRows.map { LoveNote.fromDB($0, currentUserId: currentUserId) }
+                allNotes = rows.map { LoveNote.fromDB($0, currentUserId: currentUserId) }
                 applyFilter()
             } catch {
             }
@@ -111,13 +116,16 @@ class LoveNotePageViewController: UIViewController {
 
         private func markDueScheduledNotesAsSent(relationshipId: UUID, currentUserId: UUID) async {
             do {
+                // NOTE: Do NOT filter by user_id here.
+                // Either device (sender OR partner) should be able to flip is_sent = true
+                // for any overdue scheduled note in the relationship.
                 let updatedNotes: [DBLoveNote] = try await SupabaseManager.shared.client
                     .from("love_notes")
                     .update(["is_sent": true])
                     .eq("relationship_id", value: relationshipId.uuidString)
-                    .eq("user_id", value: currentUserId.uuidString)
                     .eq("is_sent", value: false)
                     .lte("scheduled_for", value: Date().ISO8601Format())
+                    .not("scheduled_for", operator: .is, value: "null")
                     .select()
                     .execute()
                     .value

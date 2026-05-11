@@ -435,7 +435,13 @@ struct LoveNote {
 }
 extension LoveNote {
     static func fromDB(_ row: DBLoveNote, currentUserId: UUID) -> LoveNote {
-        let status: LoveNoteStatus = row.is_sent
+        // Treat the note as "effectively sent" if:
+        // - is_sent flag is already true, OR
+        // - scheduled_for is in the past (overdue but flag not yet flipped by any device)
+        let isOverdue = row.scheduled_for.map { $0 <= Date() } ?? false
+        let effectivelySent = row.is_sent || isOverdue
+
+        let status: LoveNoteStatus = effectivelySent
             ? (row.user_id == currentUserId ? .sent : .received)
             : .scheduled
 
@@ -449,7 +455,7 @@ extension LoveNote {
             scheduledDate: row.scheduled_for,
             reaction: row.reaction,
             reactedAt: row.reacted_at,
-            isSent: row.is_sent,
+            isSent: effectivelySent,
             status: status
         )
     }
