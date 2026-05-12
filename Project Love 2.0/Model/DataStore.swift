@@ -1645,16 +1645,21 @@ class DataStore {
                     self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
                 }
 
-                // Send notification to partner (same pattern as Love Notes & Memories)
-                do {
-                    try await NotificationService.shared.sendPartnerNotification(
-                        relationshipId: relationshipId,
-                        type: "activity_started",
-                        message: "Your partner started an activity: \(activity.name) 💫",
-                        entityType: "activity",
-                        entityId: coupleActivity.coupleActivityId.uuidString
-                    )
-                } catch {
+                // Send notification to partner — but skip Memory Jar activities:
+                // those already send a "memory_added" notification inside
+                // MemoryUploadManager once the memory is actually saved.
+                let isMemoryJarActivity = activity.name.lowercased().hasPrefix("memory jar")
+                if !isMemoryJarActivity {
+                    do {
+                        try await NotificationService.shared.sendPartnerNotification(
+                            relationshipId: relationshipId,
+                            type: "activity_started",
+                            message: "Your partner started an activity: \(activity.name) 💫",
+                            entityType: "activity",
+                            entityId: coupleActivity.coupleActivityId.uuidString
+                        )
+                    } catch {
+                    }
                 }
 
                 DispatchQueue.main.async {

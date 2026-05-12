@@ -23,13 +23,15 @@ class MakeHerSmileCollectionViewCell: UICollectionViewCell {
     }
     
     func configureCell(item: MakeSmile) {
-        let config = UIImage.SymbolConfiguration(weight: .bold)
+        // Scale symbol size with screen width so it fits narrower cells (e.g. iPhone 16e)
+        let pointSize = max(28 * wScale, 22)
+        let config = UIImage.SymbolConfiguration(pointSize: pointSize, weight: .bold)
         imageView.image = UIImage(systemName: item.imageName, withConfiguration: config)
         imageView.tintColor = UIColor(red: 0.50, green: 0.39, blue: 0.71, alpha: 1.0)
         titleLabel.text = item.types
-        titleLabel.font = UIFont.systemFont(ofSize: 14 * wScale, weight: .semibold)
+        titleLabel.font = UIFont.systemFont(ofSize: 13 * wScale, weight: .semibold)
         titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.minimumScaleFactor = 0.8
+        titleLabel.minimumScaleFactor = 0.7
     }
 
 }

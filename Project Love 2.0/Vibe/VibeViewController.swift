@@ -448,24 +448,24 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             
             else if section == VibeSection.makeSmile {
                 
+                // Use fractional widths so cards scale on all screen sizes (iPhone 16e, etc.)
                 let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .absolute(105),
-                    heightDimension: .absolute(125)
+                    widthDimension: .fractionalWidth(1/3),
+                    heightDimension: .fractionalHeight(1.0)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                //let groupWidth: CGFloat = 332
+                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6)
                 
                 let groupSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(120)
+                    heightDimension: .absolute(115)
                 )
                 
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item, item, item]
                 )
-                group.interItemSpacing = .fixed(25)
+                group.interItemSpacing = .fixed(0)
                 
                 let sectionLayout = NSCollectionLayoutSection(group: group)
                 
