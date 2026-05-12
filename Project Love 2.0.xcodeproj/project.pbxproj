@@ -11,12 +11,49 @@
 		19D35C762F5E8FCF00FE3092 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 19D35C752F5E8FCF00FE3092 /* GoogleSignInSwift */; };
 		19DF906C2F39EB5800604C6A /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 19DF906B2F39EB5800604C6A /* Supabase */; };
 		1F1788AC2EF35C9F00976F75 /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1F1788AB2EF35C9F00976F75 /* MessageKit */; };
+		547394792FB1E59000DE3958 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 547394782FB1E59000DE3958 /* WidgetKit.framework */; };
+		5473947B2FB1E59000DE3958 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5473947A2FB1E59000DE3958 /* SwiftUI.framework */; };
+		547394882FB1E59100DE3958 /* MemoryJarWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 547394772FB1E59000DE3958 /* MemoryJarWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		547394922FB1E95B00DE3958 /* WidgetMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547394902FB1E95B00DE3958 /* WidgetMemoryStore.swift */; };
+		547394932FB1E95B00DE3958 /* WidgetMemoryPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5473948F2FB1E95B00DE3958 /* WidgetMemoryPayload.swift */; };
+		547394942FB1E95B00DE3958 /* WidgetMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547394902FB1E95B00DE3958 /* WidgetMemoryStore.swift */; };
+		547394952FB1E95B00DE3958 /* WidgetMemoryPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5473948F2FB1E95B00DE3958 /* WidgetMemoryPayload.swift */; };
 		547903A62F2129CF00246001 /* Tink.caf in Resources */ = {isa = PBXBuildFile; fileRef = 547903A32F2129CF00246001 /* Tink.caf */; };
 		547903A72F2129CF00246001 /* GlassSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 547903A42F2129CF00246001 /* GlassSound.mp3 */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		547394862FB1E59100DE3958 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1909FEDF2ED5D2B80007823D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 547394762FB1E59000DE3958;
+			remoteInfo = MemoryJarWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5473948D2FB1E59100DE3958 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				547394882FB1E59100DE3958 /* MemoryJarWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1909FEE72ED5D2B80007823D /* Project Love 2.0.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project Love 2.0.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		547394772FB1E59000DE3958 /* MemoryJarWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MemoryJarWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		547394782FB1E59000DE3958 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		5473947A2FB1E59000DE3958 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		5473948E2FB1E6C200DE3958 /* MemoryJarWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MemoryJarWidgetExtension.entitlements; sourceTree = "<group>"; };
+		5473948F2FB1E95B00DE3958 /* WidgetMemoryPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMemoryPayload.swift; sourceTree = "<group>"; };
+		547394902FB1E95B00DE3958 /* WidgetMemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMemoryStore.swift; sourceTree = "<group>"; };
 		547903A32F2129CF00246001 /* Tink.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Tink.caf; sourceTree = "<group>"; };
 		547903A42F2129CF00246001 /* GlassSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = GlassSound.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -26,8 +63,19 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				MemoryJarWidget/Assets.xcassets,
+				MemoryJarWidget/Info.plist,
+				MemoryJarWidget/MemoryJarWidget.swift,
 			);
 			target = 1909FEE62ED5D2B80007823D /* Project Love 2.0 */;
+		};
+		5473949E2FB2527000DE3958 /* Exceptions for "Project Love 2.0" folder in "MemoryJarWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				MemoryJarWidget/Assets.xcassets,
+				MemoryJarWidget/MemoryJarWidget.swift,
+			);
+			target = 547394762FB1E59000DE3958 /* MemoryJarWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -36,6 +84,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				1909FEF92ED5D2B90007823D /* Exceptions for "Project Love 2.0" folder in "Project Love 2.0" target */,
+				5473949E2FB2527000DE3958 /* Exceptions for "Project Love 2.0" folder in "MemoryJarWidgetExtension" target */,
 			);
 			path = "Project Love 2.0";
 			sourceTree = "<group>";
@@ -54,12 +103,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		547394742FB1E59000DE3958 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5473947B2FB1E59000DE3958 /* SwiftUI.framework in Frameworks */,
+				547394792FB1E59000DE3958 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1909FEDE2ED5D2B80007823D = {
 			isa = PBXGroup;
 			children = (
+				547394912FB1E95B00DE3958 /* Shared */,
+				5473948E2FB1E6C200DE3958 /* MemoryJarWidgetExtension.entitlements */,
 				547903A52F2129CF00246001 /* Resources */,
 				1909FEE92ED5D2B80007823D /* Project Love 2.0 */,
 				19DF906A2F39EB5800604C6A /* Frameworks */,
@@ -71,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				1909FEE72ED5D2B80007823D /* Project Love 2.0.app */,
+				547394772FB1E59000DE3958 /* MemoryJarWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -78,8 +139,19 @@
 		19DF906A2F39EB5800604C6A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				547394782FB1E59000DE3958 /* WidgetKit.framework */,
+				5473947A2FB1E59000DE3958 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		547394912FB1E95B00DE3958 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				5473948F2FB1E95B00DE3958 /* WidgetMemoryPayload.swift */,
+				547394902FB1E95B00DE3958 /* WidgetMemoryStore.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		547903A52F2129CF00246001 /* Resources */ = {
@@ -101,10 +173,12 @@
 				1909FEE32ED5D2B80007823D /* Sources */,
 				1909FEE42ED5D2B80007823D /* Frameworks */,
 				1909FEE52ED5D2B80007823D /* Resources */,
+				5473948D2FB1E59100DE3958 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				547394872FB1E59100DE3958 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				1909FEE92ED5D2B80007823D /* Project Love 2.0 */,
@@ -120,6 +194,25 @@
 			productReference = 1909FEE72ED5D2B80007823D /* Project Love 2.0.app */;
 			productType = "com.apple.product-type.application";
 		};
+		547394762FB1E59000DE3958 /* MemoryJarWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 547394892FB1E59100DE3958 /* Build configuration list for PBXNativeTarget "MemoryJarWidgetExtension" */;
+			buildPhases = (
+				547394732FB1E59000DE3958 /* Sources */,
+				547394742FB1E59000DE3958 /* Frameworks */,
+				547394752FB1E59000DE3958 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MemoryJarWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = MemoryJarWidgetExtension;
+			productReference = 547394772FB1E59000DE3958 /* MemoryJarWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -127,12 +220,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2610;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
 					1909FEE62ED5D2B80007823D = {
 						CreatedOnToolsVersion = 26.1.1;
 						LastSwiftMigration = 2620;
+					};
+					547394762FB1E59000DE3958 = {
+						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
@@ -156,6 +252,7 @@
 			projectRoot = "";
 			targets = (
 				1909FEE62ED5D2B80007823D /* Project Love 2.0 */,
+				547394762FB1E59000DE3958 /* MemoryJarWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -170,6 +267,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		547394752FB1E59000DE3958 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -177,10 +281,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				547394942FB1E95B00DE3958 /* WidgetMemoryStore.swift in Sources */,
+				547394952FB1E95B00DE3958 /* WidgetMemoryPayload.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		547394732FB1E59000DE3958 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				547394922FB1E95B00DE3958 /* WidgetMemoryStore.swift in Sources */,
+				547394932FB1E95B00DE3958 /* WidgetMemoryPayload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		547394872FB1E59100DE3958 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 547394762FB1E59000DE3958 /* MemoryJarWidgetExtension */;
+			targetProxy = 547394862FB1E59100DE3958 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1909FEFB2ED5D2B90007823D /* Debug */ = {
@@ -189,6 +312,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Project Love 2.0/Project Love 2.0.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -228,6 +352,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Project Love 2.0/Project Love 2.0.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -379,6 +504,72 @@
 			};
 			name = Release;
 		};
+		5473948A2FB1E59100DE3958 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MemoryJarWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H55S6G6GC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MemoryJarWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MemoryJarWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = TwoOfUs.in.MemoryJarWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5473948B2FB1E59100DE3958 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MemoryJarWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H55S6G6GC;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MemoryJarWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MemoryJarWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = TwoOfUs.in.MemoryJarWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -396,6 +587,15 @@
 			buildConfigurations = (
 				1909FEFB2ED5D2B90007823D /* Debug */,
 				1909FEFC2ED5D2B90007823D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		547394892FB1E59100DE3958 /* Build configuration list for PBXNativeTarget "MemoryJarWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5473948A2FB1E59100DE3958 /* Debug */,
+				5473948B2FB1E59100DE3958 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

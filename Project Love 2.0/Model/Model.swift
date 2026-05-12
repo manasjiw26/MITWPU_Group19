@@ -175,7 +175,7 @@ struct MemoryCategory {
     let title: String
     var items: [MemoryItem]
 }
-struct Memory {
+struct Memory: WidgetMemorySource {
     var id: UUID = UUID()
     var date: Date = Date()
     var imageName: String

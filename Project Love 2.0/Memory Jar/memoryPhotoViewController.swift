@@ -96,6 +96,8 @@ class memoryPhotoViewController: UIViewController,
                     date: memory.date,
                     location: memory.location
                 )
+                // Refresh widget if this is the latest memory
+                WidgetMemoryStore.update(memories: dataStore.savedMemories)
             } catch {
                 print("[memoryPhotoVC] Failed to persist edit: \(error)")
             }

@@ -112,7 +112,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let url = URLContexts.first?.url else { return }
+
+        // Handle widget deep-link: memorylane://open?id=<memoryId>
+        if url.scheme == "memorylane" {
+            navigateToMemoryJar()
+            return
+        }
+
+        // Handle Google Sign-In callback
         GIDSignIn.sharedInstance.handle(url)
+    }
+
+    /// Switches to the Memory Jar tab when the widget is tapped.
+    private func navigateToMemoryJar() {
+        guard let tabBarController = window?.rootViewController as? UITabBarController else { return }
+        // Memory Jar is typically the 3rd tab (index 2) — adjust if needed
+        tabBarController.selectedIndex = 2
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

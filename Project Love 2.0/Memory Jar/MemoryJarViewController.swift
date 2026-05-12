@@ -167,6 +167,10 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
 
             // 6. Update data store and reveal UI — hearts and photos appear simultaneously
             dataStore.savedMemories = convertedMemories
+            
+            // 7. Update home screen widget with the latest memory
+            WidgetMemoryStore.update(memories: dataStore.savedMemories)
+            
             stopLoading(isInitialLoad: isInitialLoad)
             refreshMemoryLaneUI()
             syncJarHearts()
@@ -223,6 +227,8 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
             dataStore.savedMemories.append(localMemory)
             self.refreshMemoryLaneUI()
 
+            WidgetMemoryStore.update(memories: dataStore.savedMemories)
+
             if let scene = self.MemoryJarView.scene as? MemoryJarScene {
                 let newIndex = dataStore.savedMemories.count - 1
                 guard newIndex >= 0 else { return }
@@ -241,6 +247,9 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
     @objc func handleUpdatedMemory(_ notification: Notification) {
         DispatchQueue.main.async {
             self.memoryLaneCollectionView.reloadData()
+
+            // Refresh widget if the updated memory is the latest
+            WidgetMemoryStore.update(memories: dataStore.savedMemories)
         }
     }
 
@@ -255,6 +264,9 @@ class MemoryJarViewController: UIViewController, UICollectionViewDataSource, UIC
                 scene.removeHeart(memoryID: deletedId)
             }
             self.refreshMemoryLaneUI()
+
+            // Update widget to show the new latest memory, or clear if none left
+            WidgetMemoryStore.update(memories: dataStore.savedMemories)
 
             // If the user is currently viewing this memory, pop back to the jar
             if let navVC = self.navigationController,
