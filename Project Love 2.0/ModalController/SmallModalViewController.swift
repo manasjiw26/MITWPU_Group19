@@ -63,6 +63,17 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
             mainImage.image = UIImage(named: activity.image)
             clockImage.image = UIImage(systemName: "clock")
             clockImage.tintColor = .black
+            
+            switch activity.status {
+            case .ongoing:
+                beginButton.setTitle("Continue", for: .normal)
+            case .completed:
+                beginButton.setTitle("Completed", for: .normal)
+                beginButton.isEnabled = false
+                scheduleButton.isHidden = true
+            default:
+                break // Already set to "Begin"
+            }
         }
 
         //  Dim background

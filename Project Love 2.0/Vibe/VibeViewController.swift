@@ -164,6 +164,12 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             name: .preferencesDidChange,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDayChange),
+            name: UIApplication.significantTimeChangeNotification,
+            object: nil
+        )
 
         // Load user/relationship context from Supabase, then sync activities
         Task {
@@ -181,6 +187,14 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
             DataStore.shared.syncActivitiesFromSupabase()
             await fetchPartnerMood()
             await fetchMyMood()
+        }
+    }
+
+    @objc private func handleDayChange() {
+        Task {
+            DataStore.shared.hasCompletedDailyCheckIn = false
+            await fetchMyMood()
+            await fetchPartnerMood()
         }
     }
 
@@ -450,33 +464,34 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 
                 // Use fractional widths so cards scale on all screen sizes (iPhone 16e, etc.)
                 let itemSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1/3),
-                    heightDimension: .fractionalHeight(1.0)
+                    widthDimension: .absolute(100),   // ← from V2
+                    heightDimension: .absolute(120)   // ← from V2
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6)
-                
+
+                let containerWidth = env.container.effectiveContentSize.width
+                let groupWidth: CGFloat = 332         // ← from V2
+
                 let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(115)
+                    widthDimension: .absolute(groupWidth),  // ← from V2
+                    heightDimension: .absolute(120)         // ← from V2
                 )
-                
+
                 let group = NSCollectionLayoutGroup.horizontal(
                     layoutSize: groupSize,
                     subitems: [item, item, item]
                 )
-                group.interItemSpacing = .fixed(0)
-                
+                group.interItemSpacing = .fixed(16)   // ← from V2
+
                 let sectionLayout = NSCollectionLayoutSection(group: group)
-                
-                let containerWidth = env.container.effectiveContentSize.width
-                //let sideInset = max((containerWidth - groupWidth) / 2, 16)
-                
+
+                let sideInset = max((containerWidth - groupWidth) / 2, 16)  // ← from V2
+
                 sectionLayout.contentInsets = NSDirectionalEdgeInsets(
                     top: 0,
-                    leading: 16,
-                    bottom: 24,
-                    trailing: 16
+                    leading: sideInset,    // ← from V2
+                    bottom: 20,
+                    trailing: sideInset    // ← from V2
                 )
                 
                 sectionLayout.supplementaryContentInsetsReference = .none
@@ -662,12 +677,17 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 return
             }
 
+            let startOfDay = Calendar.current.startOfDay(for: Date())
+            let formatter = ISO8601DateFormatter()
+            let startOfDayString = formatter.string(from: startOfDay)
+
             // Use DBMoodLogWithMood (the struct you defined earlier)
             let moods: [DBMoodLogWithMood] = try await supabase
                 .from("user_mood_logs")
                 .select("*, moods(*)")
                 .eq("relationship_id", value: relationship.relationship_id)
                 .neq("user_id", value: currentUserId)
+                .gte("created_at", value: startOfDayString)
                 .order("created_at", ascending: false)
                 .limit(1)
                 .execute()
@@ -675,8 +695,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
 
             if let moodLog = moods.first {
                 await MainActor.run {
-                
                     self.updateMoodUI(with: moodLog)
+                }
+            } else {
+                await MainActor.run {
+                    if self.partnerMoodTitle != "Waiting" || self.partnerMoodImage != "waiting" {
+                        self.partnerMoodTitle = "Waiting"
+                        self.partnerMoodImage = "waiting"
+                        self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.mood))
+                    }
                 }
             }
 
@@ -687,12 +714,17 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         guard let currentUserId = supabase.auth.currentUser?.id,
                   let relationshipId = DataStore.shared.currentRelationshipId else { return }
 
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        let formatter = ISO8601DateFormatter()
+        let startOfDayString = formatter.string(from: startOfDay)
+
         do {
             let moods: [DBMoodLogWithMood] = try await supabase
                    .from("user_mood_logs")
                    .select("*, moods(*)")
                    .eq("relationship_id", value: relationshipId.uuidString)
                    .eq("user_id", value: currentUserId.uuidString)
+                   .gte("created_at", value: startOfDayString)
                    .order("created_at", ascending: false)
                    .limit(1)
                    .execute()
@@ -706,6 +738,15 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                     if self.myMoodTitle != newTitle || self.myMoodImage != newImage {
                         self.myMoodTitle = newTitle
                         self.myMoodImage = newImage
+                        self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
+                        self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.mood))
+                    }
+                }
+            } else {
+                await MainActor.run {
+                    if self.myMoodTitle != "Not set" || self.myMoodImage != "neutral" {
+                        self.myMoodTitle = "Not set"
+                        self.myMoodImage = "neutral"
                         self.vibeCollectionView.setCollectionViewLayout(self.generateLayout(), animated: false)
                         self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.mood))
                     }

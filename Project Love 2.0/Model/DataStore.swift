@@ -508,7 +508,17 @@ class DataStore {
 
     private func materializeSuggestedActivities(_ suggestions: [Activity]) -> [Activity] {
         var usedNames = Set<String>()
-        return suggestions.map { materializeExploreSuggestion($0, usedNames: &usedNames) }
+        return suggestions.map { suggestion in
+            var mat = materializeExploreSuggestion(suggestion, usedNames: &usedNames)
+            
+            if let existing = self.activities.first(where: { $0.name == mat.name }) {
+                mat.status = existing.status
+                mat.coupleActivityId = existing.coupleActivityId
+                mat.scheduledDate = existing.scheduledDate
+            }
+            
+            return mat
+        }
     }
 
     /// Maps the three Quick Vibe Check answers to one of the 12 relationship titles.
