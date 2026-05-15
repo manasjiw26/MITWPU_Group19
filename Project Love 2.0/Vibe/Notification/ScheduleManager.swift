@@ -45,10 +45,11 @@ class ScheduleManager {
         let center = UNUserNotificationCenter.current()
         
         let content = UNMutableNotificationContent()
-        content.title = "Project Love"
+        content.title = "TwoOfUs"
         content.body = message
         content.sound = .default
         content.userInfo = ["notificationType": "motivational"]
+        content.launchImageName = "AppIcon"
         
         // Calculate the future date
         var dateComponents = DateComponents()
