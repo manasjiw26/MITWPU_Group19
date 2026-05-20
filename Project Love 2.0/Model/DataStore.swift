@@ -1266,9 +1266,8 @@ class DataStore {
             Reward(image: "Send_Flower", name: "Flower", emoji: "🌻", progressStep: 0),
             Reward(image: "Send_Kiss", name: "Kiss", emoji: "😘", progressStep: 0),
             Reward(image: "Send_Heart", name: "Heart", emoji: "🫶🏻", progressStep: 0),
-            Reward(image: "Send_Note", name: "Note", emoji: "💌", progressStep: 0),
             Reward(image: "Send_Wave", name: "Wave", emoji: "👋", progressStep: 0),
-            Reward(image: "Send_Hug", name: "High five", emoji: "🙌", progressStep: 0)
+            Reward(image: "High_five", name: "High five", emoji: "🙌", progressStep: 0)
         ]
         
         self.rewards = sampleRewards
