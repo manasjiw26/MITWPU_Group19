@@ -225,8 +225,22 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.prefersLargeTitles = true
+        
         let lavender = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
-        view.backgroundColor = lavender
+        view.backgroundColor = appBg
+        
+        // Use a CALayer for the top half of the screen to preserve the theme without bleeding into the bottom tab bar area.
+        // We use a CALayer instead of a UIView because inserting a UIView at index 0 breaks the large title slide up behavior 
+        // (iOS requires the scroll view to be the first subview for large titles to collapse correctly).
+        let layerName = "PurpleTopLayer"
+        if view.layer.sublayers?.first(where: { $0.name == layerName }) == nil {
+            let purpleLayer = CALayer()
+            purpleLayer.name = layerName
+            purpleLayer.backgroundColor = lavender.cgColor
+            // Height covers roughly the top half; width handles large devices.
+            purpleLayer.frame = CGRect(x: 0, y: -1000, width: 2000, height: 1600)
+            view.layer.insertSublayer(purpleLayer, at: 0)
+        }
     }
 
     private func resetNavigationBarAppearance() {
@@ -269,7 +283,7 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         vibeCollectionView.backgroundColor = .clear
     }
         func configureOngoingActivity(){
-            ongoingActivites = DataStore.shared.getOngoingActivities()
+            ongoingActivites = DataStore.shared.getOngoingActivities(forVibePage: true)
             if(ongoingActivites.count > 1){
                 ongoingActivitiesView.isHidden = false
                 showAllActivityButton.isHidden = false
@@ -1273,6 +1287,9 @@ extension VibeViewController {
         super.viewWillAppear(animated)
         setupNavigationBar()
         checkNotifications()
+        
+        // Refresh Daily Check In state to reset it if it's a new day
+        DataStore.shared.loadDailyCheckInState()
 
         Task { [weak self] in
             guard let self else { return }
@@ -1473,7 +1490,7 @@ extension VibeViewController {
     
     /// Call this inside your configureOngoingActivity() to manage the two-view stack
     func updateActivityStackVisibility() {
-        let activities = DataStore.shared.getOngoingActivities()
+        let activities = DataStore.shared.getOngoingActivities(forVibePage: true)
         
         if activities.count > 1 {
             // Two or more activities: show both views for the "stacked" effect
@@ -1499,7 +1516,7 @@ extension VibeViewController {
         
         if let sheet = modalVC.sheetPresentationController {
             // We force the layout immediately to get the activity count
-            let activitiesCount = DataStore.shared.getOngoingActivities().prefix(3).count
+            let activitiesCount = DataStore.shared.getOngoingActivities(forVibePage: true).prefix(3).count
             let calculatedHeight = CGFloat(activitiesCount * 115) + CGFloat((activitiesCount - 1) * 12) + 100
             
             sheet.detents = [

@@ -46,6 +46,8 @@ class DataStore {
     var hasCompletedDailyCheckIn: Bool = false
     var resolvedVibeTitle: VibeTitle? = nil
     var hasAchievedNewVibe: Bool = false
+    var sessionCancelledActivities: Set<UUID> = []
+    var sessionCancelledActivityNames: Set<String> = []
 
     var currentUserId: UUID?
     var currentRelationshipId: UUID?
@@ -83,6 +85,37 @@ class DataStore {
         buildAllActivities()
         loadDailyCheckInQuestions()
         loadOnboardingQnA()
+        loadDailyCheckInState()
+    }
+
+    private func saveDailyCheckInState(selection: DailyCheckInSelection) {
+        UserDefaults.standard.set(Date(), forKey: "lastDailyCheckInDate")
+        UserDefaults.standard.set(selection.mood, forKey: "lastCheckInMood")
+        UserDefaults.standard.set(selection.closeness, forKey: "lastCheckInCloseness")
+        UserDefaults.standard.set(selection.vibe, forKey: "lastCheckInVibe")
+        UserDefaults.standard.set(selection.need, forKey: "lastCheckInNeed")
+    }
+
+    func loadDailyCheckInState() {
+        if let lastDate = UserDefaults.standard.object(forKey: "lastDailyCheckInDate") as? Date {
+            if Calendar.current.isDateInToday(lastDate) {
+                let mood = UserDefaults.standard.string(forKey: "lastCheckInMood") ?? ""
+                let closeness = UserDefaults.standard.string(forKey: "lastCheckInCloseness") ?? ""
+                let vibe = UserDefaults.standard.string(forKey: "lastCheckInVibe") ?? ""
+                let need = UserDefaults.standard.string(forKey: "lastCheckInNeed") ?? ""
+                
+                let selection = DailyCheckInSelection(mood: mood, closeness: closeness, vibe: vibe, need: need)
+                self.lastDailyCheckInSelection = selection
+                self.hasCompletedDailyCheckIn = true
+                self.resolvedVibeTitle = resolveVibeTitle(vibe: vibe, need: need, closeness: closeness)
+                
+                getSuggestedActivitiesForDailyCheckIn(selection: selection)
+            } else {
+                self.hasCompletedDailyCheckIn = false
+                self.lastDailyCheckInSelection = nil
+                self.resolvedVibeTitle = nil
+            }
+        }
     }
 
     /// Clears all user session data — call after sign out or account deletion.
@@ -355,6 +388,7 @@ class DataStore {
         @discardableResult
         func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection) -> [Activity] {
             lastDailyCheckInSelection = selection
+            saveDailyCheckInState(selection: selection)
             let group = resolveSuggestionGroup(selection: selection)
             lastSuggestionGroup = group
             let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
@@ -1617,7 +1651,15 @@ class DataStore {
         updateStatus(for: activity, status: .ongoing, scheduledDate: nil)
     }
     func markActivityNone(activity: Activity) {
-        updateStatus(for: activity, status: .none, scheduledDate: nil)
+        // We no longer update the actual status to `.none` because we want
+        // the activity to remain visible as ongoing on the Explore page.
+        // We only hide it from the Vibe page by tracking it here.
+        if let coupleActivityId = activity.coupleActivityId {
+            sessionCancelledActivities.insert(coupleActivityId)
+        }
+        sessionCancelledActivityNames.insert(activity.name)
+        
+        NotificationCenter.default.post(name: .activitiesSynced, object: nil)
     }
 
     func startActivity(_ activity: Activity, completion: ((UUID?) -> Void)? = nil) {
@@ -1806,14 +1848,14 @@ class DataStore {
         let shuffled = pool.shuffled(using: &rng)
         return Array(shuffled.prefix(count))
     }
-    func getOngoingActivities() -> [Activity] {
+    func getOngoingActivities(forVibePage: Bool = false) -> [Activity] {
         // Return both preset and custom activities that are ongoing
         let presetOngoing = activities.filter { $0.status == .ongoing }
         let customOngoing = customActivities.filter { $0.status == .ongoing }
         let allOngoing = presetOngoing + customOngoing
         
         let excludedKeywords = ["nudge", "love note", "love tip", "memory jar", "explore"]
-        return allOngoing.filter { activity in
+        let filtered = allOngoing.filter { activity in
             
             // Filter out items that the current user has already given feedback for
             if let id = activity.coupleActivityId,
@@ -1830,9 +1872,43 @@ class DataStore {
                 lowerName.contains(keyword) || lowerCategory.contains(keyword)
             })
         }
+        
+        if forVibePage {
+            return filtered.filter { activity in
+                if let id = activity.coupleActivityId, sessionCancelledActivities.contains(id) {
+                    return false
+                }
+                if sessionCancelledActivityNames.contains(activity.name) {
+                    return false
+                }
+                return true
+            }
+        }
+        
+        return filtered
     }
     func getCompletedActivities() -> [Activity] {
-        return activities.filter { $0.status == .completed }
+        let presetCompleted = activities.filter { activity in
+            if activity.status == .completed { return true }
+            if let id = activity.coupleActivityId,
+               let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
+                if isUserA && dbCoupleActivity.feedbackADone { return true }
+                if !isUserA && dbCoupleActivity.feedbackBDone { return true }
+            }
+            return false
+        }
+        
+        let customCompleted = customActivities.filter { activity in
+            if activity.status == .completed { return true }
+            if let id = activity.coupleActivityId,
+               let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
+                if isUserA && dbCoupleActivity.feedbackADone { return true }
+                if !isUserA && dbCoupleActivity.feedbackBDone { return true }
+            }
+            return false
+        }
+        
+        return presetCompleted + customCompleted
     }
 
     // MARK: - Supabase Context
@@ -1922,6 +1998,7 @@ class DataStore {
                 let remote = try await SupabaseManager.shared.fetchAllCoupleActivities(
                     relationshipId: relationshipId
                 )
+                
                 self.coupleActivities = remote
 
                 // Separate custom vs preset rows
@@ -2179,6 +2256,7 @@ class DataStore {
 
     private func updateStatus(for activity: Activity, status: ActivityStatus, scheduledDate: Date?) {
         updateStatus(in: &activities, for: activity, status: status, scheduledDate: scheduledDate)
+        updateStatus(in: &customActivities, for: activity, status: status, scheduledDate: scheduledDate)
         updateStatus(in: &suggestedActivities, for: activity, status: status, scheduledDate: scheduledDate)
 
         for pageIndex in bondpage.indices {

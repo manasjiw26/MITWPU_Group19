@@ -71,6 +71,14 @@ final class SupabaseManager {
         return result
     }
 
+    func updateCoupleActivityStatus(coupleActivityId: UUID, status: String) async throws {
+        try await client
+            .from("couple_activities")
+            .update(["status": status])
+            .eq("couple_activity_id", value: coupleActivityId.uuidString)
+            .execute()
+    }
+
     func fetchActivities( relationshipId: UUID, status: String ) async throws -> [DBCoupleActivity] {
         let result: [DBCoupleActivity] = try await client
             .from("couple_activities")

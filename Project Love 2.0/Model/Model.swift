@@ -594,7 +594,7 @@ struct DBCoupleActivity: Codable {
     let relationshipId: UUID
     let activityId: Int?
     let activityName: String
-    let status: String
+    var status: String
     let startedBy: UUID
     let startedAt: Date
     let scheduledDate: Date?

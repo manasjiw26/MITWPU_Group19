@@ -13,6 +13,7 @@ class NewAddNewViewController: UIViewController {
     @IBOutlet weak var memoryImageView: UIImageView!
     
     var onMemorySaved: (() -> Void)?
+    var photoSelected: Bool = false
     
     let supabase = SupabaseManager.shared.client
 
@@ -108,9 +109,11 @@ class NewAddNewViewController: UIViewController {
 
     @MainActor
     private func saveMemoryToSupabase() async {
-        guard let image = memoryImageView.image,
+        // Ensure a user-selected photo is present
+        guard photoSelected,
+              let image = memoryImageView.image,
               let imageData = image.jpegData(compressionQuality: 0.8) else {
-            showError(message: "Please select a photo.")
+            showError(message: "Please select a photo before adding a memory.")
             return
         }
 
@@ -263,6 +266,7 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate,
             DispatchQueue.main.async {
                 if let image = img as? UIImage {
                     self?.memoryImageView.image = image
+                    self?.photoSelected = true
                 }
             }
         }
@@ -273,8 +277,10 @@ extension NewAddNewViewController: PHPickerViewControllerDelegate,
         picker.dismiss(animated: true)
         if let edited = info[.editedImage] as? UIImage {
             memoryImageView.image = edited
+            photoSelected = true
         } else if let original = info[.originalImage] as? UIImage {
             memoryImageView.image = original
+            photoSelected = true
         }
     }
 }

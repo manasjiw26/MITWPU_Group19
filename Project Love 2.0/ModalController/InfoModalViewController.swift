@@ -169,7 +169,11 @@ class InfoModalViewController: UIViewController {
                         let vc = storyboard.instantiateViewController(
                             withIdentifier: "AddMemoryViewController"
                         ) as! NewAddNewViewController
-                        vc.modalPresentationStyle = .fullScreen
+                        vc.modalPresentationStyle = .pageSheet
+                        if let sheet = vc.sheetPresentationController {
+                            sheet.prefersGrabberVisible = true
+                            sheet.preferredCornerRadius = 28
+                        }
                         vc.onMemorySaved = {
                             completeActivity()
                         }

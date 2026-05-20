@@ -9,7 +9,7 @@ class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        activities = Array(DataStore.shared.getOngoingActivities().prefix(3))
+        activities = Array(DataStore.shared.getOngoingActivities(forVibePage: true).prefix(3))
         setupCollectionView()
     }
     
