@@ -125,15 +125,7 @@ class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDa
             stepsVC.activitytitle = selectedActivity.name
             stepsVC.activity = selectedActivity
             stepsVC.flowSource = .explore
-            stepsVC.modalPresentationStyle = .fullScreen
-            
-            self.dismiss(animated: true) {
-                if let rootVC = UIApplication.shared.connectedScenes
-                    .compactMap({ ($0 as? UIWindowScene)?.keyWindow })
-                    .first?.rootViewController {
-                    rootVC.present(stepsVC, animated: true)
-                }
-            }
+            self.navigationController?.pushViewController(stepsVC, animated: true)
         }
     }
 

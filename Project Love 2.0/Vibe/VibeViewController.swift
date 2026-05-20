@@ -1447,15 +1447,9 @@ extension VibeViewController {
             if let stepsVC = storyboard.instantiateViewController(withIdentifier: "StepsViewController") as? StepsViewController {
                 stepsVC.activitytitle = activity.name
                 stepsVC.activity = activity
-                
-                // Setting flowSource to .vibe (assuming you have this case) or .explore
-                // to ensure the back button/completion logic knows where it came from
                 stepsVC.flowSource = .explore
                 
-                stepsVC.modalPresentationStyle = .fullScreen
-                
-                // 4. Present the steps
-                self.present(stepsVC, animated: true, completion: nil)
+                self.navigationController?.pushViewController(stepsVC, animated: true)
             }
         }
     /// Logic for the cross button to remove an activity and update the UI stack
@@ -1511,10 +1505,12 @@ extension VibeViewController {
     }
     @IBAction func showAllOngoingTapped(_ sender: UIButton) {
         let modalVC = OngoingActivitiesModalViewController()
+        let navController = UINavigationController(rootViewController: modalVC)
+        navController.isNavigationBarHidden = true
         
-        modalVC.modalPresentationStyle = .pageSheet
+        navController.modalPresentationStyle = .pageSheet
         
-        if let sheet = modalVC.sheetPresentationController {
+        if let sheet = navController.sheetPresentationController {
             // We force the layout immediately to get the activity count
             let activitiesCount = DataStore.shared.getOngoingActivities(forVibePage: true).prefix(3).count
             let calculatedHeight = CGFloat(activitiesCount * 115) + CGFloat((activitiesCount - 1) * 12) + 100
@@ -1528,7 +1524,7 @@ extension VibeViewController {
             sheet.preferredCornerRadius = 28
         }
         
-        present(modalVC, animated: true)
+        present(navController, animated: true)
     }
 }
 
@@ -1542,8 +1538,7 @@ extension VibeViewController {
 
         stepsVC.activity = activity
         stepsVC.flowSource = .explore
-        stepsVC.modalPresentationStyle = .fullScreen
-        present(stepsVC, animated: true)
+        navigationController?.pushViewController(stepsVC, animated: true)
     }
 
     func didTapLetsDoThis(for activity: Activity, openSteps: Bool) {

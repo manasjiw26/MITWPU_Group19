@@ -30,20 +30,10 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var backgroundView: UIView!
     
     private let placeholderText = "Type here..."
-    
-    private let backButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        let image = UIImage(
-            systemName: "chevron.left",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
-        )
-        button.setImage(image, for: .normal)
-        button.tintColor = .black
-        
-        return button
-    }()
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.hidesBottomBarWhenPushed = true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,9 +58,6 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
         
         doneButton.configuration = .glass()
         doneButton.setTitle("Done", for: .normal)
-        
-        setupBackButton()
-        backButton.configuration = .glass()
         
         titleLabel.text = feedbackItem?.title
         subtitleLabel.text = feedbackItem?.subTitle
@@ -108,32 +95,6 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    private func setupBackButton() {
-        view.addSubview(backButton)
-        
-        backButton.addTarget(
-            self,
-            action: #selector(backTapped),
-            for: .touchUpInside
-        )
-        
-        NSLayoutConstraint.activate([
-            backButton.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 0
-            ),
-            backButton.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 16
-            ),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44)
-        ])
-    }
-    
-    @objc private func backTapped() {
-        dismiss(animated: true)
-    }
     @IBAction func doneTapped(_ sender: UIButton) {
         
         if let activity = activity {

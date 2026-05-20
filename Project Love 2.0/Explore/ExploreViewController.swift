@@ -569,8 +569,7 @@ extension ExploreViewController: ActivityHeaderDelegate {
                 stepsVC.activitytitle = activity.name
                 stepsVC.activity = activity
                 stepsVC.flowSource = .explore
-                stepsVC.modalPresentationStyle = .fullScreen
-                self.present(stepsVC, animated: true, completion: nil)
+                self.navigationController?.pushViewController(stepsVC, animated: true)
             }
 
 //        case 2: // Completed → Open feedback / summary

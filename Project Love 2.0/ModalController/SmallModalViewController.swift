@@ -131,38 +131,39 @@ class SmallModalViewController: UIViewController, ScheduleCalendarDelegate {
 
         guard var activity = selectedActivity else { return }
 
-        // Disable button to prevent double-taps while waiting
         (sender as? UIButton)?.isEnabled = false
 
-        DataStore.shared.startActivity(activity) { [weak self] coupleActivityId in
-            guard let self = self else { return }
+        let storyboard = UIStoryboard(name: "Steps", bundle: nil)
+        let stepsVC = storyboard.instantiateViewController(
+            withIdentifier: "StepsViewController"
+        ) as! StepsViewController
 
-            // Set the coupleActivityId so feedback can be saved later
-            activity.coupleActivityId = coupleActivityId
+        stepsVC.activity = activity
+        stepsVC.flowSource = self.flowSource
+        stepsVC.selectedActivityIndex = self.selectedActivityIndex
+        stepsVC.bondName = self.bondName
+        stepsVC.bondDelegate = self.presentingViewController as? BondActivityCompletionDelegate
 
-            self.delegate?.didStartActivity()
-
-            let storyboard = UIStoryboard(name: "Steps", bundle: nil)
-            let stepsVC = storyboard.instantiateViewController(
-                withIdentifier: "StepsViewController"
-            ) as! StepsViewController
-
-            stepsVC.activity = activity
-            stepsVC.flowSource = self.flowSource
-            stepsVC.modalPresentationStyle = .fullScreen
-
-            stepsVC.selectedActivityIndex = self.selectedActivityIndex
-            stepsVC.bondName = self.bondName
-            stepsVC.bondDelegate = self.presentingViewController as? BondActivityCompletionDelegate
-
-            if let presenter = self.presentingViewController {
-                UIView.animate(withDuration: 0.1) {
-                    self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
-                    self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
-                }
-                self.dismiss(animated: true) {
-                    presenter.present(stepsVC, animated: true)
-                }
+        if let presenter = self.presentingViewController {
+            UIView.animate(withDuration: 0.1) {
+                self.view.backgroundColor = UIColor.black.withAlphaComponent(0)
+                self.modalView.transform = CGAffineTransform(translationX: 0, y: 400)
+            }
+            self.dismiss(animated: true) {
+                let navController = (presenter as? UITabBarController)?.selectedViewController as? UINavigationController
+                    ?? presenter as? UINavigationController
+                    ?? presenter.navigationController
+                    
+                navController?.pushViewController(stepsVC, animated: true)
+                
+                self.delegate?.didStartActivity()
+            }
+        }
+        
+        // Run network call in the background to avoid delay
+        DataStore.shared.startActivity(activity) { coupleActivityId in
+            DispatchQueue.main.async {
+                stepsVC.activity?.coupleActivityId = coupleActivityId
             }
         }
     }

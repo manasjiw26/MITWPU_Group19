@@ -27,21 +27,11 @@ class StepsViewController: UIViewController {
     @IBOutlet var subtitle1: UILabel!
     
     @IBOutlet weak var combinedLabel: UILabel!
- 
-    private let backButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        let image = UIImage(
-            systemName: "chevron.left",
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
-        )
-        button.setImage(image, for: .normal)
-        button.tintColor = .black
-        
-        return button
-    }()
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.hidesBottomBarWhenPushed = true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,9 +50,6 @@ class StepsViewController: UIViewController {
         stepsTable.dataSource = self
         stepsTable.delegate = self
         stepsTable.reloadData()
-
-        setupBackButton()
-        backButton.configuration = .glass()
 
         stepsTable.allowsSelection = true
         stepsTable.separatorStyle = .none
@@ -84,34 +71,6 @@ class StepsViewController: UIViewController {
 
         tableBackgroundCell.layer.cornerRadius = 20
     }
-    
-    private func setupBackButton() {
-        view.addSubview(backButton)
-        
-        backButton.addTarget(
-            self,
-            action: #selector(backTapped),
-            for: .touchUpInside
-        )
-        
-        NSLayoutConstraint.activate([
-            backButton.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 0
-            ),
-            backButton.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 16
-            ),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44)
-        ])
-    }
-    
-    @objc private func backTapped() {
-        dismiss(animated: true)
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -127,7 +86,11 @@ class StepsViewController: UIViewController {
                 DataStore.shared.markActivityCompleted(activity: activity)
                 bondDelegate?.didCompleteBondActivity()
             }
-            dismiss(animated: true)
+            if let nav = navigationController {
+                nav.popViewController(animated: true)
+            } else {
+                dismiss(animated: true)
+            }
             return
         }
 
@@ -155,10 +118,8 @@ class StepsViewController: UIViewController {
         feedbackVC.bondName = bondName
         feedbackVC.selectedActivityIndex = selectedActivityIndex
         feedbackVC.bondDelegate = bondDelegate
-
-        feedbackVC.modalPresentationStyle = .fullScreen
         
-        present(feedbackVC, animated: true)
+        navigationController?.pushViewController(feedbackVC, animated: true)
     }
 }
 
