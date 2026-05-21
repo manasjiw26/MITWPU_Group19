@@ -53,6 +53,7 @@ class MoodViewController: UIViewController, SmallModalDelegate, InfoModalDelegat
 
         //  Update moods
         moods = DataStore.shared.moods
+        suggestedActivities = DataStore.shared.getSuggestedActivities()
 
         //  Reload Activity Stats section
         MoodCheckIn.reloadSections(IndexSet(integer: 2))
@@ -480,14 +481,12 @@ extension MoodViewController {
             DispatchQueue.main.async {
                 if openSteps {
                     self.presentSteps(for: startedActivity)
+                } else {
+                    DataStore.shared.markActivityCompleted(activity: startedActivity)
+                    self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+                    self.MoodCheckIn.reloadSections(IndexSet(integer: 1))
                 }
             }
-        }
-
-        if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
-            suggestedActivities.remove(at: index)
-            DataStore.shared.suggestedActivities = suggestedActivities
-            MoodCheckIn.reloadSections(IndexSet(integer: 1))
         }
     }
 }
