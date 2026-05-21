@@ -466,7 +466,13 @@ extension MoodViewController {
 
         stepsVC.activity = activity
         stepsVC.flowSource = .explore
-        navigationController?.pushViewController(stepsVC, animated: true)
+        
+        if let navController = self.navigationController {
+            navController.pushViewController(stepsVC, animated: true)
+        } else {
+            stepsVC.modalPresentationStyle = .fullScreen
+            present(stepsVC, animated: true)
+        }
     }
 
     func didTapLetsDoThis(for activity: Activity, openSteps: Bool) {

@@ -225,22 +225,8 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.prefersLargeTitles = true
-        
         let lavender = UIColor(red: 206/255, green: 213/255, blue: 243/255, alpha: 1.0)
-        view.backgroundColor = appBg
-        
-        // Use a CALayer for the top half of the screen to preserve the theme without bleeding into the bottom tab bar area.
-        // We use a CALayer instead of a UIView because inserting a UIView at index 0 breaks the large title slide up behavior 
-        // (iOS requires the scroll view to be the first subview for large titles to collapse correctly).
-        let layerName = "PurpleTopLayer"
-        if view.layer.sublayers?.first(where: { $0.name == layerName }) == nil {
-            let purpleLayer = CALayer()
-            purpleLayer.name = layerName
-            purpleLayer.backgroundColor = lavender.cgColor
-            // Height covers roughly the top half; width handles large devices.
-            purpleLayer.frame = CGRect(x: 0, y: -1000, width: 2000, height: 1600)
-            view.layer.insertSublayer(purpleLayer, at: 0)
-        }
+        view.backgroundColor = lavender
     }
 
     private func resetNavigationBarAppearance() {
@@ -660,12 +646,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         performSegue(withIdentifier: "openQuestions", sender: self)
     }
     func didStartActivity() {
-        // If this was triggered from the suggested activities modal, remove it and advance the progress bar
+        // If this was triggered from the suggested activities modal, just start it.
+        // It will be removed when marked as completed.
         if let activity = pendingSuggestedActivity {
-            if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
-                suggestedActivities.remove(at: index)
-                DataStore.shared.suggestedActivities = suggestedActivities
-            }
             pendingSuggestedActivity = nil
         }
         DispatchQueue.main.async {
@@ -713,9 +696,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 }
             } else {
                 await MainActor.run {
-                    if self.partnerMoodTitle != "Waiting.." || self.partnerMoodImage != "Empty_mood" {
-                        self.partnerMoodTitle = "Waiting.."
-                        self.partnerMoodImage = "Empty_mood"
+                    if self.partnerMoodTitle != "Waiting" || self.partnerMoodImage != "waiting" {
+                        self.partnerMoodTitle = "Waiting"
+                        self.partnerMoodImage = "waiting"
                         self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.mood))
                     }
                 }
@@ -1251,22 +1234,9 @@ extension VibeViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Only show the "New Vibe" alert once (hasAchievedNewVibe is persisted in DataStore)
-        if hasCompletedDailyCheckIn, suggestedActivities.isEmpty, !hasAchievedNewVibe, let vibeTitle = resolvedVibeTitle {
-            self.hasAchievedNewVibe = true
-            
-            let currentVibe = vibeTitle.displayTitle
-            let resultantTitle = RelationshipVibeDisplayCollectionViewCell.vibeResultMap[currentVibe] ?? "New Vibe Achieved"
-            
-            // Adding a small delay ensures any dismissing modals are fully gone
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                let alert = UIAlertController(title: "New Vibe Achieved! 🎉", message: "Congratulations! You have reached a new relationship vibe: \(resultantTitle)", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Awesome!", style: .default, handler: { [weak self] _ in
-                    self?.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
-                }))
-                self.present(alert, animated: true, completion: nil)
-            }
-        } else if hasAchievedNewVibe {
+        showNewVibeAchievementIfNeeded()
+        
+        if hasAchievedNewVibe {
             // Already achieved — just make sure the empty cell is showing (e.g. after returning from another tab)
             vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
         }
@@ -1287,9 +1257,6 @@ extension VibeViewController {
         super.viewWillAppear(animated)
         setupNavigationBar()
         checkNotifications()
-        
-        // Refresh Daily Check In state to reset it if it's a new day
-        DataStore.shared.loadDailyCheckInState()
 
         Task { [weak self] in
             guard let self else { return }
@@ -1317,7 +1284,7 @@ extension VibeViewController {
                 // when the user has already achieved a new vibe (suggestedActivities must stay empty)
                 if !self.hasAchievedNewVibe {
                     let latestSuggestions = DataStore.shared.getSuggestedActivities()
-                    if self.hasCompletedDailyCheckIn && !latestSuggestions.isEmpty {
+                    if self.hasCompletedDailyCheckIn {
                         self.suggestedActivities = latestSuggestions
                     }
                 } else {
@@ -1352,6 +1319,60 @@ extension VibeViewController {
     func reloadData() {
         vibeCollectionView.reloadData()
         
+    }
+    
+    private func showNewVibeAchievementIfNeeded(after delay: TimeInterval = 0) {
+        let presentAchievement = { [weak self] in
+            guard let self else { return }
+            guard self.hasCompletedDailyCheckIn, !self.hasAchievedNewVibe, let vibeTitle = self.resolvedVibeTitle else { return }
+            
+            self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+            guard self.suggestedActivities.isEmpty else {
+                self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+                return
+            }
+            
+            self.hasAchievedNewVibe = true
+            DataStore.shared.suggestedActivities = []
+            self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+            
+            let currentVibe = vibeTitle.displayTitle
+            let resultantTitle = RelationshipVibeDisplayCollectionViewCell.vibeResultMap[currentVibe] ?? "New Vibe Achieved"
+            let alert = UIAlertController(
+                title: "New Vibe Achieved! 🎉",
+                message: "Congratulations! You have reached a new relationship vibe: \(resultantTitle)",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "Awesome!", style: .default, handler: { [weak self] _ in
+                self?.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+            }))
+            
+            let presenter = self.visibleViewController(from: self.view.window?.rootViewController) ?? self
+            guard presenter.presentedViewController as? UIAlertController == nil else { return }
+            presenter.present(alert, animated: true)
+        }
+        
+        if delay > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: presentAchievement)
+        } else {
+            DispatchQueue.main.async(execute: presentAchievement)
+        }
+    }
+    
+    private func visibleViewController(from base: UIViewController?) -> UIViewController? {
+        if let navigationController = base as? UINavigationController {
+            return visibleViewController(from: navigationController.visibleViewController)
+        }
+        
+        if let tabBarController = base as? UITabBarController {
+            return visibleViewController(from: tabBarController.selectedViewController)
+        }
+        
+        if let presented = base?.presentedViewController, !presented.isBeingDismissed {
+            return visibleViewController(from: presented)
+        }
+        
+        return base
     }
 }
 
@@ -1449,6 +1470,7 @@ extension VibeViewController {
                 stepsVC.activity = activity
                 stepsVC.flowSource = .explore
                 
+                // 4. Push onto the navigation stack so the user gets a back button
                 self.navigationController?.pushViewController(stepsVC, animated: true)
             }
         }
@@ -1484,7 +1506,7 @@ extension VibeViewController {
     
     /// Call this inside your configureOngoingActivity() to manage the two-view stack
     func updateActivityStackVisibility() {
-        let activities = DataStore.shared.getOngoingActivities(forVibePage: true)
+        let activities = DataStore.shared.getOngoingActivities()
         
         if activities.count > 1 {
             // Two or more activities: show both views for the "stacked" effect
@@ -1505,14 +1527,12 @@ extension VibeViewController {
     }
     @IBAction func showAllOngoingTapped(_ sender: UIButton) {
         let modalVC = OngoingActivitiesModalViewController()
-        let navController = UINavigationController(rootViewController: modalVC)
-        navController.isNavigationBarHidden = true
         
-        navController.modalPresentationStyle = .pageSheet
+        modalVC.modalPresentationStyle = .pageSheet
         
-        if let sheet = navController.sheetPresentationController {
+        if let sheet = modalVC.sheetPresentationController {
             // We force the layout immediately to get the activity count
-            let activitiesCount = DataStore.shared.getOngoingActivities(forVibePage: true).prefix(3).count
+            let activitiesCount = DataStore.shared.getOngoingActivities().prefix(3).count
             let calculatedHeight = CGFloat(activitiesCount * 115) + CGFloat((activitiesCount - 1) * 12) + 100
             
             sheet.detents = [
@@ -1524,7 +1544,7 @@ extension VibeViewController {
             sheet.preferredCornerRadius = 28
         }
         
-        present(navController, animated: true)
+        present(modalVC, animated: true)
     }
 }
 
@@ -1538,7 +1558,13 @@ extension VibeViewController {
 
         stepsVC.activity = activity
         stepsVC.flowSource = .explore
-        navigationController?.pushViewController(stepsVC, animated: true)
+        
+        if let navController = self.navigationController {
+            navController.pushViewController(stepsVC, animated: true)
+        } else {
+            stepsVC.modalPresentationStyle = .fullScreen
+            present(stepsVC, animated: true)
+        }
     }
 
     func didTapLetsDoThis(for activity: Activity, openSteps: Bool) {
@@ -1550,27 +1576,35 @@ extension VibeViewController {
             startedActivity.coupleActivityId = coupleActivityId
 
             DispatchQueue.main.async {
-                self.configureOngoingActivity()
-                self.vibeCollectionView.reloadData()
-
                 if openSteps {
                     self.presentSteps(for: startedActivity)
+                } else {
+                    DataStore.shared.markActivityCompleted(activity: startedActivity)
+                    self.suggestedActivities = DataStore.shared.getSuggestedActivities()
                 }
-            }
-        }
 
-        // Remove the activity from suggested activities locally
-        if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
-            suggestedActivities.remove(at: index)
-            DataStore.shared.suggestedActivities = suggestedActivities
-            vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+                self.configureOngoingActivity()
+                self.vibeCollectionView.reloadData()
+            }
         }
     }
 
     @objc private func handleActivitiesSynced() {
         DispatchQueue.main.async {
+            if self.hasAchievedNewVibe {
+                self.suggestedActivities = []
+                DataStore.shared.suggestedActivities = []
+            } else if self.hasCompletedDailyCheckIn {
+                self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+            } else {
+                self.suggestedActivities.removeAll { activity in
+                    DataStore.shared.isActivityCompleted(activity)
+                }
+            }
+
             self.configureOngoingActivity()
             self.vibeCollectionView.reloadData()
+            self.showNewVibeAchievementIfNeeded(after: 0.5)
         }
     }
 }

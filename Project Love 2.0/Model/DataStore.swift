@@ -18,7 +18,11 @@ class DataStore {
     var activityCategory: [ActivityCategory] = []
     var coupleActivities: [DBCoupleActivity] = []
     
-    var suggestedActivities: [Activity] = []
+    var suggestedActivities: [Activity] = [] {
+        didSet {
+            saveSuggestedActivitiesToUserDefaults()
+        }
+    }
     var buildYourBond : [BuildYourBond] = []
     var bondpage: [BuildYourBondpage] = []
     var tips: [Tip] = []
@@ -39,21 +43,28 @@ class DataStore {
     var currentQnA: QnAData = QnAData( title: "", questions: [QnAQuestion(questionText: "", options: [] )])
     var dailyCheckInQuestions: [Question] = []
     private var lastDailyCheckInSelection: DailyCheckInSelection?
-
+    
     var specialDates: [SpecialDate] = []
-
+    
     // MARK: - Vibe Session State (persisted across tab switches)
     var hasCompletedDailyCheckIn: Bool = false
     var resolvedVibeTitle: VibeTitle? = nil
-    var hasAchievedNewVibe: Bool = false
+    var hasAchievedNewVibe: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasAchievedNewVibe")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "hasAchievedNewVibe")
+        }
+    }
     var sessionCancelledActivities: Set<UUID> = []
     var sessionCancelledActivityNames: Set<String> = []
-
+    
     var currentUserId: UUID?
     var currentRelationshipId: UUID?
     var partnerUserId: UUID?
     var isUserA: Bool = false
-
+    
     private var relationshipChannel: RealtimeChannelV2?
     private(set) var allActivities: [Activity] = []
     private var bondJSONActivities: [JSONActivity] = []
@@ -68,8 +79,8 @@ class DataStore {
     lazy var groupedSuggestedActivities: [SuggestionGroup: [Activity]] = makeGroupedSuggestedActivities()
     private var lastSuggestionGroup: SuggestionGroup?
     private var partnerAssessmentPreferences: [Int: Set<Int>]?
-
-  
+    
+    
     init() {
         loadSampleData()
         loadSampleRewards()
@@ -85,9 +96,10 @@ class DataStore {
         buildAllActivities()
         loadDailyCheckInQuestions()
         loadOnboardingQnA()
+        self.suggestedActivities = loadSuggestedActivitiesFromUserDefaults()
         loadDailyCheckInState()
     }
-
+    
     private func saveDailyCheckInState(selection: DailyCheckInSelection) {
         UserDefaults.standard.set(Date(), forKey: "lastDailyCheckInDate")
         UserDefaults.standard.set(selection.mood, forKey: "lastCheckInMood")
@@ -95,7 +107,7 @@ class DataStore {
         UserDefaults.standard.set(selection.vibe, forKey: "lastCheckInVibe")
         UserDefaults.standard.set(selection.need, forKey: "lastCheckInNeed")
     }
-
+    
     func loadDailyCheckInState() {
         if let lastDate = UserDefaults.standard.object(forKey: "lastDailyCheckInDate") as? Date {
             if Calendar.current.isDateInToday(lastDate) {
@@ -109,15 +121,42 @@ class DataStore {
                 self.hasCompletedDailyCheckIn = true
                 self.resolvedVibeTitle = resolveVibeTitle(vibe: vibe, need: need, closeness: closeness)
                 
-                getSuggestedActivitiesForDailyCheckIn(selection: selection)
+                // Only generate a fresh list when none exists yet for this session,
+                // and the user has not already achieved a new vibe.
+                if suggestedActivities.isEmpty && !hasAchievedNewVibe {
+                    getSuggestedActivitiesForDailyCheckIn(selection: selection)
+                }
             } else {
                 self.hasCompletedDailyCheckIn = false
                 self.lastDailyCheckInSelection = nil
                 self.resolvedVibeTitle = nil
+                self.hasAchievedNewVibe = false
+                self.suggestedActivities = []
             }
         }
     }
-
+    
+    private func saveSuggestedActivitiesToUserDefaults() {
+        do {
+            let data = try JSONEncoder().encode(suggestedActivities)
+            UserDefaults.standard.set(data, forKey: "suggestedActivities")
+        } catch {
+            print("Error encoding suggestedActivities: \(error)")
+        }
+    }
+    
+    private func loadSuggestedActivitiesFromUserDefaults() -> [Activity] {
+        guard let data = UserDefaults.standard.data(forKey: "suggestedActivities") else {
+            return []
+        }
+        do {
+            return try JSONDecoder().decode([Activity].self, from: data)
+        } catch {
+            print("Error decoding suggestedActivities: \(error)")
+            return []
+        }
+    }
+    
     /// Clears all user session data — call after sign out or account deletion.
     func clearSession() {
         stopPartnerDeletionListener()
@@ -138,11 +177,18 @@ class DataStore {
         resolvedVibeTitle        = nil
         hasAchievedNewVibe       = false
         suggestedActivities      = []
+        
+        UserDefaults.standard.removeObject(forKey: "lastDailyCheckInDate")
+        UserDefaults.standard.removeObject(forKey: "lastCheckInMood")
+        UserDefaults.standard.removeObject(forKey: "lastCheckInCloseness")
+        UserDefaults.standard.removeObject(forKey: "lastCheckInVibe")
+        UserDefaults.standard.removeObject(forKey: "lastCheckInNeed")
+        
         loadPersonalInfoData()
         loadProfileData()
         loadSampleData()
     }
-
+    
     private func makeGroupedSuggestedActivities() -> [SuggestionGroup: [Activity]] {
         guard let url = Bundle.main.url(forResource: "suggestedActivity", withExtension: "json") else {
             return [:]
@@ -186,242 +232,242 @@ class DataStore {
                     grouped[group] = [activity]
                 }
             }
-                return grouped
-            } catch {
-                return [:]
-            }
-
+            return grouped
+        } catch {
+            return [:]
         }
+        
+    }
     func resolveSuggestionGroup(selection: DailyCheckInSelection) -> SuggestionGroup {
-            let mood = normalize(selection.mood)
-            let closeness = normalize(selection.closeness) // disconnected/chill/attached/kinda close/very distant/very close/somewhat close/a bit distant
-            let vibe = normalize(selection.vibe)           // dry/meh/synced/vibing/smooth/neutral/a little off/tense
-            let need = normalize(selection.need)           // reassurance/quality time/space/deep convo/comfort/connection/fun
-
-            let isVeryClose = (closeness == "attached" || closeness == "very close")
-            let isSomewhatClose = (closeness == "kinda close" || closeness == "chill" || closeness == "somewhat close")
-            let isBitDistant = (closeness == "a bit distant")
-            let isVeryDistant = (closeness == "disconnected" || closeness == "very distant")
-
-            let isSmooth = (vibe == "synced" || vibe == "vibing" || vibe == "smooth")
-            let isNeutral = (vibe == "meh" || vibe == "neutral")
-            let isLittleOff = (vibe == "dry" || vibe == "a little off")
-            let isTense = (vibe == "tense")
-
-            let isComfort = (need == "reassurance" || need == "comfort")
-            let isConnection = (need == "quality time" || need == "deep convo" || need == "connection")
-            let isFun = (need == "fun")
-            let isSpace = (need == "space")
-
-            // EDGE CASES
-            // Case 1: Positive but very distant + comfort => Group I
-            if ["joyful", "playful", "satisfied", "adventurous", "calm", "peaceful", "productive", "curious", "determined"].contains(mood),
-               isVeryDistant,
-               isComfort {
-                return .I
-            }
-            
-            // Case 2: Angry but need connection => Group G
-            if mood == "angry",
-               (isSomewhatClose || isVeryClose),
-               isTense,
-               isConnection {
-                return .G
-            }
-            
-            // Case 3: Drained but wants fun => Group A (Positive & Aligned via Need override)
-            if mood == "drained",
-               (isVeryClose || isSomewhatClose),
-               isFun {
-                return .A // The rules say "Covered under Positive but Low Energy -> reclassified via Need override"
-            }
-            
-            // Case 4: Attached + very close + smooth + space => Group E
-            if mood == "attached",
-               isVeryClose,
-               isSmooth,
-               isSpace {
-                return .E
-            }
-            
-            // Case 5: Calm + very distant + fun => Group J
-            if mood == "calm",
-               isVeryDistant,
-               isNeutral,
-               isFun {
-                return .J
-            }
-            
-
-            // STANDARD RULES
-            // GROUP G: Tense but Still Engaged
-            if ["angry", "regretful", "disappointed"].contains(mood),
-               (isVeryClose || isSomewhatClose),
-               isTense,
-               (isComfort || isSpace) {
-                return .G
-            }
-
-            // GROUP E: Close but Overstimulated
-            if ["drained", "peaceful"].contains(mood),
-               (isVeryClose || isSomewhatClose),
-               (isNeutral || isSmooth),
-               isSpace {
-                return .E
-            }
-
-            // GROUP I: Distant & Self-Preserving
-            if ["drained", "angry", "disappointed"].contains(mood),
-               isVeryDistant,
-               (isLittleOff || isTense),
-               isSpace {
-                return .I
-            }
-            
-            // GROUP J: Distant but Playful Reach
-            if ["playful", "curious"].contains(mood),
-               isBitDistant,
-               isNeutral,
-               isFun {
-                return .J
-            }
-
-            // GROUP H: Distant but Wanting Repair
-            if ["sad", "curious", "regretful"].contains(mood),
-               isBitDistant,
-               (isNeutral || isLittleOff),
-               isConnection {
-                return .H
-            }
-
-            // GROUP F: Attached but Insecure
-            if mood == "attached",
-               (isSomewhatClose || isBitDistant),
-               (isNeutral || isLittleOff),
-               (isComfort || isConnection) {
-                return .F
-            }
-
-            // GROUP D: Close but Emotionally Off
-            if ["calm", "curious", "regretful", "attached"].contains(mood),
-               isVeryClose,
-               isLittleOff,
-               (isConnection || isComfort) {
-                return .D
-            }
-
-            // GROUP A: Positive & Aligned
-            if ["joyful", "playful", "satisfied", "adventurous"].contains(mood),
-               (isVeryClose || isSomewhatClose),
-               isSmooth,
-               (isFun || isConnection) {
-                return .A
-            }
-
-            // GROUP B: Calm & Stable
-            if ["calm", "peaceful", "productive"].contains(mood),
-               (isSmooth || isNeutral),
-               isConnection {
-                return .B
-            }
-
-            // GROUP C: Curious / Growth-Oriented
-            if ["curious", "determined", "productive"].contains(mood),
-               isNeutral,
-               (isConnection || isFun) {
-                return .C
-            }
-
-            // Catch-alls
-            if isSpace { return .E }
-            if isTense { return .G }
-            if isVeryDistant { return .I }
-            if isBitDistant { return .H }
+        let mood = normalize(selection.mood)
+        let closeness = normalize(selection.closeness) // disconnected/chill/attached/kinda close/very distant/very close/somewhat close/a bit distant
+        let vibe = normalize(selection.vibe)           // dry/meh/synced/vibing/smooth/neutral/a little off/tense
+        let need = normalize(selection.need)           // reassurance/quality time/space/deep convo/comfort/connection/fun
+        
+        let isVeryClose = (closeness == "attached" || closeness == "very close")
+        let isSomewhatClose = (closeness == "kinda close" || closeness == "chill" || closeness == "somewhat close")
+        let isBitDistant = (closeness == "a bit distant")
+        let isVeryDistant = (closeness == "disconnected" || closeness == "very distant")
+        
+        let isSmooth = (vibe == "synced" || vibe == "vibing" || vibe == "smooth")
+        let isNeutral = (vibe == "meh" || vibe == "neutral")
+        let isLittleOff = (vibe == "dry" || vibe == "a little off")
+        let isTense = (vibe == "tense")
+        
+        let isComfort = (need == "reassurance" || need == "comfort")
+        let isConnection = (need == "quality time" || need == "deep convo" || need == "connection")
+        let isFun = (need == "fun")
+        let isSpace = (need == "space")
+        
+        // EDGE CASES
+        // Case 1: Positive but very distant + comfort => Group I
+        if ["joyful", "playful", "satisfied", "adventurous", "calm", "peaceful", "productive", "curious", "determined"].contains(mood),
+           isVeryDistant,
+           isComfort {
+            return .I
+        }
+        
+        // Case 2: Angry but need connection => Group G
+        if mood == "angry",
+           (isSomewhatClose || isVeryClose),
+           isTense,
+           isConnection {
+            return .G
+        }
+        
+        // Case 3: Drained but wants fun => Group A (Positive & Aligned via Need override)
+        if mood == "drained",
+           (isVeryClose || isSomewhatClose),
+           isFun {
+            return .A // The rules say "Covered under Positive but Low Energy -> reclassified via Need override"
+        }
+        
+        // Case 4: Attached + very close + smooth + space => Group E
+        if mood == "attached",
+           isVeryClose,
+           isSmooth,
+           isSpace {
+            return .E
+        }
+        
+        // Case 5: Calm + very distant + fun => Group J
+        if mood == "calm",
+           isVeryDistant,
+           isNeutral,
+           isFun {
+            return .J
+        }
+        
+        
+        // STANDARD RULES
+        // GROUP G: Tense but Still Engaged
+        if ["angry", "regretful", "disappointed"].contains(mood),
+           (isVeryClose || isSomewhatClose),
+           isTense,
+           (isComfort || isSpace) {
+            return .G
+        }
+        
+        // GROUP E: Close but Overstimulated
+        if ["drained", "peaceful"].contains(mood),
+           (isVeryClose || isSomewhatClose),
+           (isNeutral || isSmooth),
+           isSpace {
+            return .E
+        }
+        
+        // GROUP I: Distant & Self-Preserving
+        if ["drained", "angry", "disappointed"].contains(mood),
+           isVeryDistant,
+           (isLittleOff || isTense),
+           isSpace {
+            return .I
+        }
+        
+        // GROUP J: Distant but Playful Reach
+        if ["playful", "curious"].contains(mood),
+           isBitDistant,
+           isNeutral,
+           isFun {
+            return .J
+        }
+        
+        // GROUP H: Distant but Wanting Repair
+        if ["sad", "curious", "regretful"].contains(mood),
+           isBitDistant,
+           (isNeutral || isLittleOff),
+           isConnection {
+            return .H
+        }
+        
+        // GROUP F: Attached but Insecure
+        if mood == "attached",
+           (isSomewhatClose || isBitDistant),
+           (isNeutral || isLittleOff),
+           (isComfort || isConnection) {
+            return .F
+        }
+        
+        // GROUP D: Close but Emotionally Off
+        if ["calm", "curious", "regretful", "attached"].contains(mood),
+           isVeryClose,
+           isLittleOff,
+           (isConnection || isComfort) {
+            return .D
+        }
+        
+        // GROUP A: Positive & Aligned
+        if ["joyful", "playful", "satisfied", "adventurous"].contains(mood),
+           (isVeryClose || isSomewhatClose),
+           isSmooth,
+           (isFun || isConnection) {
+            return .A
+        }
+        
+        // GROUP B: Calm & Stable
+        if ["calm", "peaceful", "productive"].contains(mood),
+           (isSmooth || isNeutral),
+           isConnection {
             return .B
         }
+        
+        // GROUP C: Curious / Growth-Oriented
+        if ["curious", "determined", "productive"].contains(mood),
+           isNeutral,
+           (isConnection || isFun) {
+            return .C
+        }
+        
+        // Catch-alls
+        if isSpace { return .E }
+        if isTense { return .G }
+        if isVeryDistant { return .I }
+        if isBitDistant { return .H }
+        return .B
+    }
     
-        /// Returns the "type" prefix for a suggested activity name.
-        /// e.g. "Love Note: Sweet Morning" → "Love Note",
-        ///      "Blindfolded Route Road"   → "Activity"
-        func suggestionTypePrefix(_ name: String) -> String {
-            if let colonIndex = name.firstIndex(of: ":") {
-                return String(name[name.startIndex..<colonIndex]).trimmingCharacters(in: .whitespaces)
-            }
-            return "Activity"
+    /// Returns the "type" prefix for a suggested activity name.
+    /// e.g. "Love Note: Sweet Morning" → "Love Note",
+    ///      "Blindfolded Route Road"   → "Activity"
+    func suggestionTypePrefix(_ name: String) -> String {
+        if let colonIndex = name.firstIndex(of: ":") {
+            return String(name[name.startIndex..<colonIndex]).trimmingCharacters(in: .whitespaces)
         }
-
-        /// Picks `count` activities from `pool` ensuring no two share the same type prefix.
-        /// First selects one item per type (shuffled), then fills remaining slots from leftover items.
-        private func diverseSelection(from pool: [Activity], count: Int) -> [Activity] {
-            // Group by type prefix
-            var byType: [String: [Activity]] = [:]
-            for a in pool.shuffled() {
-                let key = suggestionTypePrefix(a.name)
-                byType[key, default: []].append(a)
+        return "Activity"
+    }
+    
+    /// Picks `count` activities from `pool` ensuring no two share the same type prefix.
+    /// First selects one item per type (shuffled), then fills remaining slots from leftover items.
+    private func diverseSelection(from pool: [Activity], count: Int) -> [Activity] {
+        // Group by type prefix
+        var byType: [String: [Activity]] = [:]
+        for a in pool.shuffled() {
+            let key = suggestionTypePrefix(a.name)
+            byType[key, default: []].append(a)
+        }
+        
+        var result: [Activity] = []
+        var usedTypes: Set<String> = []
+        
+        // 1. Pick one from each type (shuffled order)
+        for (type, items) in byType.shuffled() {
+            guard result.count < count else { break }
+            if let pick = items.first {
+                result.append(pick)
+                usedTypes.insert(type)
             }
-
-            var result: [Activity] = []
-            var usedTypes: Set<String> = []
-
-            // 1. Pick one from each type (shuffled order)
-            for (type, items) in byType.shuffled() {
+        }
+        
+        // 2. If we still need more, fill from remaining items (avoiding duplicates)
+        if result.count < count {
+            let usedNames = Set(result.map { $0.name })
+            let remaining = pool.shuffled().filter { !usedNames.contains($0.name) }
+            for item in remaining {
                 guard result.count < count else { break }
-                if let pick = items.first {
-                    result.append(pick)
-                    usedTypes.insert(type)
-                }
+                result.append(item)
             }
-
-            // 2. If we still need more, fill from remaining items (avoiding duplicates)
-            if result.count < count {
-                let usedNames = Set(result.map { $0.name })
-                let remaining = pool.shuffled().filter { !usedNames.contains($0.name) }
-                for item in remaining {
-                    guard result.count < count else { break }
-                    result.append(item)
-                }
-            }
-
-            return result
         }
-
-        @discardableResult
-        func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection) -> [Activity] {
-            lastDailyCheckInSelection = selection
-            saveDailyCheckInState(selection: selection)
-            let group = resolveSuggestionGroup(selection: selection)
-            lastSuggestionGroup = group
-            let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-            let count = 4
-
-            // Separate activities with steps vs without steps
-            let withSteps    = pool.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
-            let withoutSteps = pool.filter { $0.steps == nil  ||  ($0.steps?.isEmpty ?? true) }
-
-            // Try to build: (count-1) non-step picks + 1 step pick
-            var nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
-            let stepPick     = withSteps.shuffled().first
-
-            var result = nonStepPicks
-            if let lastActivity = stepPick {
-                result.append(lastActivity)
-            }
-
-            // Pad to exactly `count` if we're short (e.g. no step activity or thin pool)
-            if result.count < count {
-                let usedNames = Set(result.map { $0.name })
-                let extras = pool.shuffled().filter { !usedNames.contains($0.name) }
-                for extra in extras {
-                    guard result.count < count else { break }
-                    result.append(extra)
-                }
-            }
-
-            // Trim to exactly `count` (should never exceed, but be safe)
-            let final = materializeSuggestedActivities(Array(result.prefix(count)))
-            self.suggestedActivities = final
-            return final
+        
+        return result
+    }
+    
+    @discardableResult
+    func getSuggestedActivitiesForDailyCheckIn(selection: DailyCheckInSelection) -> [Activity] {
+        lastDailyCheckInSelection = selection
+        saveDailyCheckInState(selection: selection)
+        let group = resolveSuggestionGroup(selection: selection)
+        lastSuggestionGroup = group
+        let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
+        let count = 4
+        
+        // Separate activities with steps vs without steps
+        let withSteps    = pool.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
+        let withoutSteps = pool.filter { $0.steps == nil  ||  ($0.steps?.isEmpty ?? true) }
+        
+        // Try to build: (count-1) non-step picks + 1 step pick
+        var nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
+        let stepPick     = withSteps.shuffled().first
+        
+        var result = nonStepPicks
+        if let lastActivity = stepPick {
+            result.append(lastActivity)
         }
+        
+        // Pad to exactly `count` if we're short (e.g. no step activity or thin pool)
+        if result.count < count {
+            let usedNames = Set(result.map { $0.name })
+            let extras = pool.shuffled().filter { !usedNames.contains($0.name) }
+            for extra in extras {
+                guard result.count < count else { break }
+                result.append(extra)
+            }
+        }
+        
+        // Trim to exactly `count` (should never exceed, but be safe)
+        let final = materializeSuggestedActivities(Array(result.prefix(count)))
+        self.suggestedActivities = final
+        return final
+    }
     private func preferredNeed(from tags: [String]) -> String? {
         // Priority: Connecting > Relaxing > Fun
         if tags.contains("Connecting") { return "connection" }
@@ -436,7 +482,7 @@ class DataStore {
     private func pairMood(from feedback: DBActivityFeedback?, fallback: String) -> String {
         let moods = [feedback?.userAMood, feedback?.userBMood].compactMap { $0 }
         if moods.isEmpty { return fallback }
-
+        
         let negative = ["angry", "regretful", "disappointed", "sad", "drained"]
         if let m = moods.first(where: { negative.contains($0.lowercased()) }) {
             return m
@@ -445,42 +491,42 @@ class DataStore {
     }
     func refreshSuggestionsAfterFeedback(coupleActivityId: UUID) async -> [Activity] {
         let feedback = try? await SupabaseManager.shared.fetchFeedbackForActivity(coupleActivityId: coupleActivityId)
-
+        
         let base = lastDailyCheckInSelection ?? DailyCheckInSelection(
             mood: "Calm",
             closeness: "Chill",
             vibe: "Neutral",
             need: "Connection"
         )
-
+        
         let updatedMood = pairMood(from: feedback, fallback: base.mood)
-
+        
         let tags = (feedback?.userATags ?? []) + (feedback?.userBTags ?? [])
         let needOverride = preferredNeed(from: tags) ?? negativeNeedOverride(from: tags)
-
+        
         let newSelection = DailyCheckInSelection(
             mood: updatedMood,
             closeness: base.closeness,
             vibe: base.vibe,
             need: needOverride ?? base.need
         )
-
+        
         let group = resolveSuggestionGroup(selection: newSelection)
         lastSuggestionGroup = group
-
+        
         let pool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-
+        
         // Exclude the just-completed activity
         let filtered = pool.filter { $0.coupleActivityId != coupleActivityId }
         let count = 4
-
+        
         // Separate activities with steps vs without steps
         let withSteps = filtered.filter { $0.steps != nil && !($0.steps?.isEmpty ?? true) }
         let withoutSteps = filtered.filter { $0.steps == nil || ($0.steps?.isEmpty ?? true) }
-
+        
         let nonStepPicks = diverseSelection(from: withoutSteps, count: count - 1)
         let stepPick = withSteps.shuffled().first
-
+        
         var result = nonStepPicks
         if let lastActivity = stepPick {
             result.append(lastActivity)
@@ -489,33 +535,33 @@ class DataStore {
             self.suggestedActivities = result
             return result
         }
-
+        
         result = materializeSuggestedActivities(result)
         self.suggestedActivities = result
         return result
     }
-
+    
     private func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
-
+    
     private func exploreCategoryName(from suggestion: Activity) -> String? {
         let trimmedName = suggestion.name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmedName.hasPrefix("Explore:") else { return nil }
-
+        
         let rawCategory = trimmedName
             .replacingOccurrences(of: "Explore:", with: "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
+        
         let cleanedCategory = rawCategory.replacingOccurrences(
             of: "\\s*\\([^)]*\\)\\s*$",
             with: "",
             options: .regularExpression
         )
-
+        
         return cleanedCategory.isEmpty ? nil : cleanedCategory
     }
-
+    
     private func materializeExploreSuggestion(
         _ suggestion: Activity,
         usedNames: inout Set<String>
@@ -524,22 +570,22 @@ class DataStore {
             usedNames.insert(suggestion.name.lowercased())
             return suggestion
         }
-
+        
         let candidates = activities
             .filter { $0.category == categoryName }
             .shuffled()
-
+        
         if let concreteActivity = candidates.first(where: { candidate in
             !usedNames.contains(candidate.name.lowercased())
         }) {
             usedNames.insert(concreteActivity.name.lowercased())
             return concreteActivity
         }
-
+        
         usedNames.insert(suggestion.name.lowercased())
         return suggestion
     }
-
+    
     private func materializeSuggestedActivities(_ suggestions: [Activity]) -> [Activity] {
         var usedNames = Set<String>()
         return suggestions.map { suggestion in
@@ -554,29 +600,29 @@ class DataStore {
             return mat
         }
     }
-
+    
     /// Maps the three Quick Vibe Check answers to one of the 12 relationship titles.
     /// Priority: most-specific combos first, generic catch-alls last.
     func resolveVibeTitle(vibe: String, need: String, closeness: String) -> VibeTitle {
         let v = normalize(vibe)
         let n = normalize(need)
         let c = normalize(closeness)
-
+        
         let isVibing = v == "vibing"
         let isSynced = v == "synced"
         let isMeh    = v == "meh"
         let isDry    = v == "dry"
-
+        
         let isQualityTime = n == "quality time"
         let isReassurance = n == "reassurance"
         let isDeepConvo   = n == "deep convo"
         let isSpace       = n == "space"
-
+        
         let isAttached     = c == "attached"
         let isKindaClose   = c == "kinda close"
         let isChill        = c == "chill"
         let isDisconnected = c == "disconnected"
-
+        
         // 1. The Always-Attached
         if isVibing && isQualityTime && isAttached {
             return VibeTitle(name: "The Always-Attached",
@@ -739,18 +785,18 @@ class DataStore {
                          description: "Your connection comes in highs and lows—passionate, but not always consistent.",
                          pageDescription: "Your connection comes in highs and lows—passionate, but not always consistent. Enjoy the 'up' swing of the energy for what it is while you navigate the distance between you.")
     }
-
-
+    
+    
     
     func getDailyCheckInQuestion(at index: Int) -> Question? {
-            guard index >= 0 && index < dailyCheckInQuestions.count else { return nil }
-            return dailyCheckInQuestions[index]
-        }
+        guard index >= 0 && index < dailyCheckInQuestions.count else { return nil }
+        return dailyCheckInQuestions[index]
+    }
     // Notification
     func addNotification(_ notification: AppNotification) {
         notifications.insert(notification, at: 0)
     }
-
+    
     func getNotifications() -> [AppNotification] {
         notifications
     }
@@ -763,52 +809,52 @@ class DataStore {
         currentQnA = QnAData(
             title: "Tell us about you",
             questions: [
-
+                
                 // Gender
                 QnAQuestion(
                     questionText: "What’s your gender?",
                     options: [
-        QnAOption(text: "Him", isSelected: false),
-        QnAOption(text: "Her", isSelected: false)
+                        QnAOption(text: "Him", isSelected: false),
+                        QnAOption(text: "Her", isSelected: false)
                     ]
                 ),
-
+                
                 // Love Language
                 QnAQuestion(
-        questionText: "What’s your love language?",
-        options: [
-        QnAOption(text: "Acts of service", isSelected: false),
-        QnAOption(text: "Small gestures", isSelected: false),
-        QnAOption(text: "Quality time", isSelected: false),
-        QnAOption(text: "Physical touch", isSelected: false),
-        QnAOption(text: "Words of affirmation", isSelected: false)
-        ]
+                    questionText: "What’s your love language?",
+                    options: [
+                        QnAOption(text: "Acts of service", isSelected: false),
+                        QnAOption(text: "Small gestures", isSelected: false),
+                        QnAOption(text: "Quality time", isSelected: false),
+                        QnAOption(text: "Physical touch", isSelected: false),
+                        QnAOption(text: "Words of affirmation", isSelected: false)
+                    ]
                 ),
-
+                
                 // Relationship Type
                 QnAQuestion(
                     questionText: "What’s your relationship type?",
                     options: [
-        QnAOption(text: "Dating", isSelected: false),
-        QnAOption(text: "Situationship", isSelected: false),
-        QnAOption(text: "Live-In relationship", isSelected: false),
-        QnAOption(text: "Long-Distance relationship", isSelected: false),
-        QnAOption(text: "Married", isSelected: false)
+                        QnAOption(text: "Dating", isSelected: false),
+                        QnAOption(text: "Situationship", isSelected: false),
+                        QnAOption(text: "Live-In relationship", isSelected: false),
+                        QnAOption(text: "Long-Distance relationship", isSelected: false),
+                        QnAOption(text: "Married", isSelected: false)
                     ]
                 ),
-
+                
                 // Feeling cared
                 QnAQuestion(
-        questionText: "What makes you feel cared?",
-        options: [
-        QnAOption(text: "Encouragement", isSelected: false),
-        QnAOption(text: "Surprises", isSelected: false),
-        QnAOption(text: "Quality time", isSelected: false),
-        QnAOption(text: "Acts of service", isSelected: false),
-        QnAOption(text: "Validation", isSelected: false),
-        QnAOption(text: "Small gifts", isSelected: false),
-        QnAOption(text: "Compliments", isSelected: false)
-        ]
+                    questionText: "What makes you feel cared?",
+                    options: [
+                        QnAOption(text: "Encouragement", isSelected: false),
+                        QnAOption(text: "Surprises", isSelected: false),
+                        QnAOption(text: "Quality time", isSelected: false),
+                        QnAOption(text: "Acts of service", isSelected: false),
+                        QnAOption(text: "Validation", isSelected: false),
+                        QnAOption(text: "Small gifts", isSelected: false),
+                        QnAOption(text: "Compliments", isSelected: false)
+                    ]
                 )
             ]
         )
@@ -816,9 +862,9 @@ class DataStore {
     
     // update mood
     func saveFeedback(_ feedback: FeedBackGiven) {
-            savedFeedback.append(feedback)
-        }
-
+        savedFeedback.append(feedback)
+    }
+    
     private func mood(by id: Int) -> Mood? {
         moodOptions.first { $0.id == id }
     }
@@ -839,7 +885,7 @@ class DataStore {
             customActivities.append(newActivity)
             return
         }
-
+        
         let insert = CoupleActivityInsert(
             relationshipId: relationshipId,
             activityId: nil,
@@ -850,7 +896,7 @@ class DataStore {
             isCustom: true,
             description: description
         )
-
+        
         Task {
             do {
                 let dbRow: DBCoupleActivity = try await SupabaseManager.shared.client
@@ -860,7 +906,7 @@ class DataStore {
                     .single()
                     .execute()
                     .value
-
+                
                 let newActivity = Activity(
                     coupleActivityId: dbRow.coupleActivityId,
                     name: dbRow.activityName,
@@ -897,7 +943,7 @@ class DataStore {
         guard let url = Bundle.main.url(forResource: "activities", withExtension: "json") else {
             return
         }
-
+        
         let parsed: ActivitiesJSON
         do {
             let data = try Data(contentsOf: url)
@@ -905,10 +951,10 @@ class DataStore {
         } catch {
             return
         }
-
+        
         // Store raw JSON activities (with steps) for loadSteps() lookups
         self.exploreJSONActivities = parsed.activities
-
+        
         self.activities = parsed.activities.map { json in
             Activity(
                 id: json.id,
@@ -933,9 +979,9 @@ class DataStore {
         ]
         self.dailyCheckInQuestions = sampleQuestions
     }
-
-
- 
+    
+    
+    
     func getRefreshSuggestedActivities() -> [Activity] {
         guard lastSuggestionGroup != nil else { return [] }
         let newBatch = getMoreActivities(excluding: self.suggestedActivities)
@@ -957,12 +1003,12 @@ class DataStore {
                 timerLabel: activity.time
             )
         }
-
+        
         // Otherwise check hardcoded smallmodal data
         if let existing = smallmodal.first(where: { $0.title == activity.name }) {
             return existing
         }
-
+        
         // Fallback: use activity.description
         return SmallModalData(
             title: activity.name,
@@ -973,61 +1019,61 @@ class DataStore {
         )
     }
     func getSteps(for activity: Activity) -> [StepsToFollow] {
-            if let jsonSteps = activity.steps, !jsonSteps.isEmpty {
-                return jsonSteps.enumerated().map { index, stepStr in
-                    var titleStr = "Step \(index + 1)"
-                    var descStr = stepStr
-                    
-                    let cleanStepStr = stepStr.replacingOccurrences(of: "^\\d+\\.\\s*", with: "", options: .regularExpression)
-                    let parts = cleanStepStr.split(separator: ".", maxSplits: 1)
-                    
-                    if parts.count == 2 {
-                        titleStr = String(parts[0]).trimmingCharacters(in: .whitespaces)
-                        descStr = String(parts[1]).trimmingCharacters(in: .whitespaces)
-                        if !descStr.hasSuffix(".") && !descStr.isEmpty {
-                            descStr += "."
-                        }
-                    } else {
-                        descStr = cleanStepStr
+        if let jsonSteps = activity.steps, !jsonSteps.isEmpty {
+            return jsonSteps.enumerated().map { index, stepStr in
+                var titleStr = "Step \(index + 1)"
+                var descStr = stepStr
+                
+                let cleanStepStr = stepStr.replacingOccurrences(of: "^\\d+\\.\\s*", with: "", options: .regularExpression)
+                let parts = cleanStepStr.split(separator: ".", maxSplits: 1)
+                
+                if parts.count == 2 {
+                    titleStr = String(parts[0]).trimmingCharacters(in: .whitespaces)
+                    descStr = String(parts[1]).trimmingCharacters(in: .whitespaces)
+                    if !descStr.hasSuffix(".") && !descStr.isEmpty {
+                        descStr += "."
                     }
-                    
-                    return StepsToFollow(number: index + 1, title: titleStr, descriptionLabel: descStr)
+                } else {
+                    descStr = cleanStepStr
                 }
+                
+                return StepsToFollow(number: index + 1, title: titleStr, descriptionLabel: descStr)
             }
-
-            let mapped = loadSteps(for: activity.name)
-            if !mapped.isEmpty { return mapped }
-
-            return [
-                StepsToFollow(number: 1, title: "Set intention", descriptionLabel: "Start with: \"What do we need right now?\""),
-                StepsToFollow(number: 2, title: "Do the activity", descriptionLabel: activity.description),
-                StepsToFollow(number: 3, title: "Reflect", descriptionLabel: "Share one line: \"This felt ___ for me.\"")
-    ]
+        }
+        
+        let mapped = loadSteps(for: activity.name)
+        if !mapped.isEmpty { return mapped }
+        
+        return [
+            StepsToFollow(number: 1, title: "Set intention", descriptionLabel: "Start with: \"What do we need right now?\""),
+            StepsToFollow(number: 2, title: "Do the activity", descriptionLabel: activity.description),
+            StepsToFollow(number: 3, title: "Reflect", descriptionLabel: "Share one line: \"This felt ___ for me.\"")
+        ]
     }
-
+    
     
     func getMoreActivities(excluding current: [Activity]) -> [Activity] {
-            guard let group = lastSuggestionGroup else { return [] }
-            let sourcePool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
-            
-            let currentNames = Set(current.map { $0.name.lowercased() })
-            let remaining = sourcePool.filter { new in
-                !currentNames.contains(new.name.lowercased())
-            }
-            
-            if remaining.count >= 3 {
-                return Array(remaining.shuffled().prefix(3))
-            } else if !remaining.isEmpty {
-                return remaining.shuffled()
-            } else {
-                // All exhausted — pick 3 from the full pool that aren't already shown
-                return Array(sourcePool.shuffled().prefix(3))
-            }
+        guard let group = lastSuggestionGroup else { return [] }
+        let sourcePool = groupedSuggestedActivities[group] ?? Array(groupedSuggestedActivities.values.flatMap { $0 })
+        
+        let currentNames = Set(current.map { $0.name.lowercased() })
+        let remaining = sourcePool.filter { new in
+            !currentNames.contains(new.name.lowercased())
         }
-
+        
+        if remaining.count >= 3 {
+            return Array(remaining.shuffled().prefix(3))
+        } else if !remaining.isEmpty {
+            return remaining.shuffled()
+        } else {
+            // All exhausted — pick 3 from the full pool that aren't already shown
+            return Array(sourcePool.shuffled().prefix(3))
+        }
+    }
+    
     func getActivities(forCategoryName name: String) -> [Activity] {
-            return activities.filter { $0.category == name }
-        }
+        return activities.filter { $0.category == name }
+    }
     func loadActivityCategory() {
         let sampleCategory: [ActivityCategory] = [
             ActivityCategory(name: "Fun & Playful", description: "Turn your ‘meh’ days into mini adventures.", image: "Fun&Playful"),
@@ -1070,7 +1116,7 @@ class DataStore {
                 savedPreferences: [:]
             )
         }
-
+        
         if profileSections.isEmpty {
             profileSections = [
                 ProfileSection(
@@ -1105,20 +1151,20 @@ class DataStore {
             ]
         }
     }
-
+    
     private struct UserProfileRow: Decodable {
         let name: String?
         let birth_date: String?
         let gender: String?
         let assessment_answers: [String: [Int]]?
     }
-
+    
     private struct ProfileUpdatePayload: Encodable {
         let name: String
         let birth_date: String
     }
-
-     var partnerPronoun: String {
+    
+    var partnerPronoun: String {
         let gender = UserDefaults.standard.string(forKey: "userGender")?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased() ?? ""
@@ -1132,7 +1178,7 @@ class DataStore {
         switch partnerPronoun {
         case "her": return "her"
         case "him": return "his"
-            default: return "their"
+        default: return "their"
         }
     }
     var partnerDisplayText: String {
@@ -1142,84 +1188,84 @@ class DataStore {
         default: return "Partner"
         }
     }
-
+    
     func refreshUserProfileFromSupabase() async {
         guard let authUser = SupabaseManager.shared.client.auth.currentUser else { return }
         currentUserId = authUser.id
-
+        
         // Ensure section structures exist so setPersonalInfoValue has somewhere to write
         if profileSections.isEmpty { loadProfileData() }
         if personalInfoSections.isEmpty { loadPersonalInfoData() }
-
+        
         do {
             let rows: [UserProfileRow] = try await SupabaseManager.shared.client
-                    .from("users")
-                    .select("name, birth_date, gender, assessment_answers")
-                    .eq("user_id", value: authUser.id.uuidString)
-                    .limit(1)
-                    .execute()
-                    .value
-
+                .from("users")
+                .select("name, birth_date, gender, assessment_answers")
+                .eq("user_id", value: authUser.id.uuidString)
+                .limit(1)
+                .execute()
+                .value
+            
             guard let row = rows.first else { return }
-
-        let name = (row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false)
-        ? row.name!
-        : "Name"
-        let email = authUser.email ?? "name@email.com"
-        let prefs = mapAssessmentAnswers(row.assessment_answers)
-
-        if userProfile == nil {
-        userProfile = UserProfile(name: name, email: email, profileImageName: "Profile", savedPreferences: prefs)
-        } else {
-            userProfile?.name = name
-            userProfile?.email = email
-            userProfile?.savedPreferences = prefs
+            
+            let name = (row.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false)
+            ? row.name!
+            : "Name"
+            let email = authUser.email ?? "name@email.com"
+            let prefs = mapAssessmentAnswers(row.assessment_answers)
+            
+            if userProfile == nil {
+                userProfile = UserProfile(name: name, email: email, profileImageName: "Profile", savedPreferences: prefs)
+            } else {
+                userProfile?.name = name
+                userProfile?.email = email
+                userProfile?.savedPreferences = prefs
+            }
+            
+            setPersonalInfoValue(title: "Full Name", value: name)
+            setPersonalInfoValue(title: "Email", value: email)
+            
+            let dobText = profileDOBText(from: row.birth_date)
+            if !dobText.isEmpty {
+                setPersonalInfoValue(title: "Date of Birth", value: dobText)
+            }
+            
+            if let gender = row.gender?.trimmingCharacters(in: .whitespacesAndNewlines), !gender.isEmpty {
+                UserDefaults.standard.set(gender, forKey: "userGender")
+            }
+            reloadGenderDependentContent()
+        } catch {
         }
-
-        setPersonalInfoValue(title: "Full Name", value: name)
-        setPersonalInfoValue(title: "Email", value: email)
-
-        let dobText = profileDOBText(from: row.birth_date)
-        if !dobText.isEmpty {
-            setPersonalInfoValue(title: "Date of Birth", value: dobText)
-        }
-
-        if let gender = row.gender?.trimmingCharacters(in: .whitespacesAndNewlines), !gender.isEmpty {
-            UserDefaults.standard.set(gender, forKey: "userGender")
-        }
-        reloadGenderDependentContent()
-    } catch {
-    }
     }
     
     func applyLocalBasicInfo(name: String, email: String?, birthDate: Date) {
         let emailValue = (email?.isEmpty == false) ? email! : "name@email.com"
         let dob = profileDOBFormatter.string(from: birthDate)
-
+        
         if userProfile == nil {
             userProfile = UserProfile(name: name, email: emailValue, profileImageName: "Profile", savedPreferences: [:])
         } else {
             userProfile?.name = name
             userProfile?.email = emailValue
         }
-
+        
         setPersonalInfoValue(title: "Full Name", value: name)
         setPersonalInfoValue(title: "Email", value: emailValue)
         setPersonalInfoValue(title: "Date of Birth", value: dob)
     }
-
+    
     private var profileDOBFormatter: DateFormatter {
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "dd/MM/yyyy"
         return f
     }
-
+    
     private func profileDOBText(from raw: String?) -> String {
         guard let raw, !raw.isEmpty else { return "" }
         let parser = DateFormatter()
         parser.locale = Locale(identifier: "en_US_POSIX")
-
+        
         for format in ["yyyy-MM-dd", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX", "yyyy-MM-dd'T'HH:mm:ssXXXXX"] {
             parser.dateFormat = format
             if let date = parser.date(from: raw) {
@@ -1228,7 +1274,7 @@ class DataStore {
         }
         return raw
     }
-
+    
     private func mapAssessmentAnswers(_ answers: [String: [Int]]?) -> [Int: Set<Int>] {
         guard let answers else { return [:] }
         var mapped: [Int: Set<Int>] = [:]
@@ -1237,7 +1283,7 @@ class DataStore {
         }
         return mapped
     }
-
+    
     private func setPersonalInfoValue(title: String, value: String) {
         for sectionIndex in personalInfoSections.indices {
             if let itemIndex = personalInfoSections[sectionIndex].items.firstIndex(where: { $0.title == title }) {
@@ -1245,19 +1291,19 @@ class DataStore {
             }
         }
     }
-
+    
     /// Persist name, email, and DOB edits to the Supabase `users` table.
     func updateProfileInSupabase(name: String, email: String, dob: Date) {
         guard let userId = SupabaseManager.shared.currentUserId else { return }
-
+        
         let dobString = profileDOBFormatter.string(from: dob)
-
+        
         // Convert dd/MM/yyyy → yyyy-MM-dd for Supabase
         let isoFormatter = DateFormatter()
         isoFormatter.locale = Locale(identifier: "en_US_POSIX")
         isoFormatter.dateFormat = "yyyy-MM-dd"
         let isoDOB = isoFormatter.string(from: dob)
-
+        
         Task {
             do {
                 let payload = ProfileUpdatePayload(name: name, birth_date: isoDOB)
@@ -1270,36 +1316,36 @@ class DataStore {
             }
         }
     }
-
+    
     /// Rebuilds gender-dependent content (tips) after a gender preference change.
     func reloadGenderDependentContent() {
         loadSampleTips()
     }
-
+    
     
     
     func loadSampleQuestions () {
         let sampleQuestions: [Question] = [
             Question(
-                       title: "How close do you feel to your partner today so far?",
-                       options: ["Very close", "Somewhat close", "A bit distant", "Very distant"]
-                   ),
-
-                   Question(
-                       title: "How has your vibe been with each other today so far?",
-                       options: ["Smooth", "Neutral", "A little off", "Tense"]
-                   ),
-
-                   Question(
-                       title: "What do you feel you need from your partner right now?",
-                       options: ["Comfort", "Connection", "Fun", "Space"]
-                   ),
-
-                   Question(
-                       title: "How open are you to doing something together right now?",
-                       options: ["Very open", "Somewhat open", "Not right now, but later", "Not in the mood"]
-                   )
-               ]
+                title: "How close do you feel to your partner today so far?",
+                options: ["Very close", "Somewhat close", "A bit distant", "Very distant"]
+            ),
+            
+            Question(
+                title: "How has your vibe been with each other today so far?",
+                options: ["Smooth", "Neutral", "A little off", "Tense"]
+            ),
+            
+            Question(
+                title: "What do you feel you need from your partner right now?",
+                options: ["Comfort", "Connection", "Fun", "Space"]
+            ),
+            
+            Question(
+                title: "How open are you to doing something together right now?",
+                options: ["Very open", "Somewhat open", "Not right now, but later", "Not in the mood"]
+            )
+        ]
         self.questions = sampleQuestions
     }
     
@@ -1333,22 +1379,22 @@ class DataStore {
         self.tips = resolvedTips
         return resolvedTips
     }
-
+    
     private struct PartnerAssessmentRow: Decodable {
         let assessment_answers: [String: [Int]]?
     }
-
+    
     private func fetchPartnerAssessmentPreferences() async -> [Int: Set<Int>] {
         if let partnerAssessmentPreferences {
             return partnerAssessmentPreferences
         }
-
+        
         if partnerUserId == nil {
             await loadUserContext()
         }
-
+        
         guard let partnerUserId else { return [:] }
-
+        
         do {
             let rows: [PartnerAssessmentRow] = try await SupabaseManager.shared.client
                 .from("users")
@@ -1357,7 +1403,7 @@ class DataStore {
                 .limit(1)
                 .execute()
                 .value
-
+            
             let mapped = mapAssessmentAnswers(rows.first?.assessment_answers)
             partnerAssessmentPreferences = mapped
             return mapped
@@ -1365,38 +1411,38 @@ class DataStore {
             return [:]
         }
     }
-
+    
     private func personalizedLoveTips(from preferences: [Int: Set<Int>]) -> [Tip] {
         let payload = loadLoveTipsPayload()
         guard !payload.tips.isEmpty else { return [] }
-
+        
         let loveLanguage = selectedOptionTexts(for: 1, from: preferences)
         let relationshipType = selectedOptionTexts(for: 2, from: preferences)
         let carePreferences = selectedOptionTexts(for: 3, from: preferences)
-
+        
         let scored = payload.tips.compactMap { rule -> (LoveTipRule, Int)? in
             let relationshipMatches = rule.relationshipTypes.isEmpty || !relationshipType.isDisjoint(with: Set(rule.relationshipTypes))
             guard relationshipMatches else { return nil }
-
+            
             var score = 0
             score += matchScore(selected: loveLanguage, candidates: rule.loveLanguages, weight: 3)
             score += matchScore(selected: carePreferences, candidates: rule.carePreferences, weight: 2)
             score += matchScore(selected: relationshipType, candidates: rule.relationshipTypes, weight: 1)
-
+            
             if score == 0 {
                 return nil
             }
-
+            
             return (rule, score)
         }
-
+        
         let sortedRules = scored
             .sorted { lhs, rhs in
                 if lhs.1 != rhs.1 { return lhs.1 > rhs.1 }
                 return lhs.0.id < rhs.0.id
             }
             .map(\.0)
-
+        
         var seenTitles = Set<String>()
         return sortedRules.compactMap { rule in
             let resolvedTitle = renderLoveTip(rule.title)
@@ -1404,12 +1450,12 @@ class DataStore {
             return Tip(title: resolvedTitle)
         }
     }
-
+    
     private func loadLoveTipsPayload() -> LoveTipsPayload {
         guard let url = Bundle.main.url(forResource: "loveTips", withExtension: "json") else {
             return LoveTipsPayload(tips: [])
         }
-
+        
         do {
             let data = try Data(contentsOf: url)
             return try JSONDecoder().decode(LoveTipsPayload.self, from: data)
@@ -1417,36 +1463,36 @@ class DataStore {
             return LoveTipsPayload(tips: [])
         }
     }
-
+    
     private func jsonBackedLoveTips() -> [Tip] {
         let payload = loadLoveTipsPayload()
         let rendered = payload.tips.map { Tip(title: renderLoveTip($0.title)) }
         return rendered.isEmpty ? fallbackLoveTips() : rendered
     }
-
+    
     private func selectedOptionTexts(for questionIndex: Int, from preferences: [Int: Set<Int>]) -> Set<String> {
         guard currentQnA.questions.indices.contains(questionIndex) else { return [] }
         let options = currentQnA.questions[questionIndex].options
         let selectedIndexes = preferences[questionIndex] ?? []
-
+        
         return Set(selectedIndexes.compactMap { index in
             guard options.indices.contains(index) else { return nil }
             return options[index].text
         })
     }
-
+    
     private func matchScore(selected: Set<String>, candidates: [String], weight: Int) -> Int {
         guard !selected.isEmpty, !candidates.isEmpty else { return 0 }
         return selected.intersection(Set(candidates)).count * weight
     }
-
+    
     private func renderLoveTip(_ title: String) -> String {
         title
             .replacingOccurrences(of: "{partner}", with: partnerPronoun)
             .replacingOccurrences(of: "{partnerPossessive}", with: partnerPossessivePronoun)
             .replacingOccurrences(of: "{Partner}", with: partnerDisplayText.lowercased())
     }
-
+    
     private func fallbackLoveTips() -> [Tip] {
         [
             Tip(title: renderLoveTip("Bring {partner} a comfort drink without asking.")),
@@ -1465,7 +1511,7 @@ class DataStore {
             "Rekindle Honeymoon Phase": "Rekindle",
             "Establishing Good Communication": "Communication"
         ]
-
+        
         // Extract unique categories preserving order of first appearance
         var seen = Set<String>()
         var categories: [String] = []
@@ -1475,7 +1521,7 @@ class DataStore {
                 categories.append(activity.category)
             }
         }
-
+        
         return categories.map { category in
             BuildYourBond(
                 name: category,
@@ -1491,7 +1537,7 @@ class DataStore {
         ]
         return mood
     }
-
+    
     //steps to follow
     func loadSteps(for activityTitle: String) -> [StepsToFollow] {
         // Check bondActivities JSON first for BUB activities
@@ -1499,7 +1545,7 @@ class DataStore {
            let steps = jsonActivity.steps, !steps.isEmpty {
             return parseJSONSteps(steps)
         }
-
+        
         // Check explore activities JSON (activities.json) for explore/her/him activities
         if let jsonActivity = exploreJSONActivities.first(where: { ($0.title ?? $0.name) == activityTitle }),
            let steps = jsonActivity.steps, !steps.isEmpty {
@@ -1511,10 +1557,10 @@ class DataStore {
            let steps = jsonActivity.steps, !steps.isEmpty {
             return parseJSONSteps(steps)
         }
-
+        
         return []
     }
-
+    
     /// Parses step strings in "1. Title. Description" format into StepsToFollow objects
     private func parseJSONSteps(_ steps: [String]) -> [StepsToFollow] {
         return steps.enumerated().map { index, stepString in
@@ -1547,7 +1593,7 @@ class DataStore {
             self.bondJSONActivities = parsed.activities
         } else {
         }
-
+        
         // Helper to get activities for a specific category from JSON
         func activitiesFor(_ category: String) -> [Activity] {
             let jsonFiltered = bondJSONActivities.filter { $0.category == category }
@@ -1569,11 +1615,11 @@ class DataStore {
             }
             return [] // will use fallback below
         }
-
+        
         let conflictActivities = activitiesFor("Navigate Conflict Together")
         let communicationActivities = activitiesFor("Establishing Good Communication")
         let rekindleActivities = activitiesFor("Rekindle Honeymoon Phase")
-
+        
         let bond: [BuildYourBondpage] = [
             BuildYourBondpage(
                 Name: "Navigate Conflict Together",
@@ -1616,35 +1662,50 @@ class DataStore {
     // Badge Popup Data
     func getBadgePopupData(for bondName: String) -> BadgePopupData? {
         switch bondName {
-
+            
         case "Navigate Conflict Together":
             return BadgePopupData(
                 title: "Harmony Seeker",
                 subtitle: "You’ve mastered the art of peaceful resolution.",
                 imageName: "HarmonySeekerBadge"
             )
-
+            
         case "Establishing Good Communication":
             return BadgePopupData(
                 title: "Communication Champ",
                 subtitle: "You’ve built a strong foundation of open dialogue.",
                 imageName: "communicationChampBadge"
             )
-
+            
         case "Rekindle Honeymoon Phase":
             return BadgePopupData(
                 title: "Spark Keeper",
                 subtitle: "You’ve reignited closeness and emotional warmth.",
                 imageName: "sparkKeeperBadge"
             )
-
+            
         default:
             return nil
         }
     }
-
+    
     func markActivityCompleted(activity: Activity) {
         updateStatus(for: activity, status: .completed, scheduledDate: nil)
+        removeSuggestedActivity(activity)
+        
+        guard let coupleActivityId = activity.coupleActivityId else {
+            return
+        }
+        
+        Task {
+            do {
+                try await SupabaseManager.shared.completeActivity(
+                    coupleActivityId: coupleActivityId
+                )
+            } catch {
+                print("Failed to mark activity completed in Supabase: \(error)")
+            }
+        }
     }
     
     func markActivityOngoing(activity: Activity) {
@@ -1661,9 +1722,9 @@ class DataStore {
         
         NotificationCenter.default.post(name: .activitiesSynced, object: nil)
     }
-
+    
     func startActivity(_ activity: Activity, completion: ((UUID?) -> Void)? = nil) {
-
+        
         if let index = activities.firstIndex(where: {
             $0.name == activity.name &&
             $0.category == activity.category
@@ -1674,14 +1735,14 @@ class DataStore {
             newActivity.status = .ongoing
             activities.append(newActivity)
         }
-
+        
         // Also insert into Supabase so partner's device sees it
         guard let relationshipId = currentRelationshipId,
               let userId = currentUserId else {
             completion?(nil)
             return
         }
-
+        
         Task {
             do {
                 let coupleActivity = try await SupabaseManager.shared.startActivityForCouple(
@@ -1689,14 +1750,14 @@ class DataStore {
                     userId: userId,
                     activity: activity
                 )
-
+                
                 // Store the coupleActivityId back on the local activity
                 if let index = self.activities.firstIndex(where: {
                     $0.name == activity.name && $0.category == activity.category
                 }) {
                     self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
                 }
-
+                
                 // Send notification to partner — but skip Memory Jar activities:
                 // those already send a "memory_added" notification inside
                 // MemoryUploadManager once the memory is actually saved.
@@ -1716,7 +1777,7 @@ class DataStore {
                     } catch {
                     }
                 }
-
+                
                 DispatchQueue.main.async {
                     completion?(coupleActivity.coupleActivityId)
                 }
@@ -1730,15 +1791,15 @@ class DataStore {
     func checkPartnerDeletion() async -> Bool {
         // Only relevant if we previously had an active relationship
         guard currentRelationshipId != nil else { return false }
-
+        
         do {
             let session = try await SupabaseManager.shared.client.auth.session
             let uid = session.user.id
-
+            
             struct RelCheck: Decodable {
                 let relationship_id: UUID?
             }
-
+            
             let rows: [RelCheck] = try await SupabaseManager.shared.client
                 .from("users")
                 .select("relationship_id")
@@ -1746,7 +1807,7 @@ class DataStore {
                 .limit(1)
                 .execute()
                 .value
-
+            
             // If the DB says relationship_id is now NULL → partner deleted
             if let row = rows.first, row.relationship_id == nil {
                 // Clear local state
@@ -1757,33 +1818,33 @@ class DataStore {
         } catch {
             print("DEBUG: checkPartnerDeletion error: \(error)")
         }
-
+        
         return false
     }
-
+    
     /// Start a Supabase Realtime listener that fires instantly when
     /// the partner deletes their account (our relationship_id becomes NULL).
     func startPartnerDeletionListener() {
         guard let uid = currentUserId,
               currentRelationshipId != nil else { return }
-
+        
         let channel = SupabaseManager.shared.client.channel("partner-deletion")
-
+        
         let userChanges = channel.postgresChange(
             UpdateAction.self,
             schema: "public",
             table: "users",
             filter: "user_id=eq.\(uid.uuidString)"
         )
-
+        
         Task {
             do {
                 try await channel.subscribe()
                 self.relationshipChannel = channel
-
+                
                 for await change in userChanges {
                     let newRecord = change.record
-
+                    
                     // Check if relationship_id was set to null
                     if let relValue = newRecord["relationship_id"],
                        relValue.value is NSNull || relValue.stringValue == nil || relValue.stringValue == "" {
@@ -1807,7 +1868,7 @@ class DataStore {
             }
         }
     }
-
+    
     /// Stop listening for partner deletion (call on sign-out).
     func stopPartnerDeletionListener() {
         Task {
@@ -1818,11 +1879,11 @@ class DataStore {
     func getBuildYourBondPages(name : String) -> BuildYourBondpage? {
         return bondpage.first { $0.Name == name }
     }
-
+    
     func setHisMood(_ mood: Mood) {
         HisMood = mood
     }
-
+    
     func setHerMood(moodId: Int) {
         HerMood = mood(by: moodId)
     }
@@ -1836,17 +1897,17 @@ class DataStore {
     func getActivities() -> [Activity] {
         return activities
     }
-
+    
     func getDailyRandomActivities(count: Int = 6) -> [Activity] {
         let categoryName = "Activities for \(partnerDisplayText)"
         let pool = activities.filter { $0.category == categoryName }
         guard !pool.isEmpty else { return [] }
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: Date())
-            let daySeed = (components.year ?? 0) * 10000
+                let daySeed = (components.year ?? 0) * 10000
         + (components.month ?? 0) * 100
         + (components.day ?? 0)
-
+        
         var rng = SeededRandomNumberGenerator(seed: UInt64(daySeed))
         let shuffled = pool.shuffled(using: &rng)
         return Array(shuffled.prefix(count))
@@ -1890,16 +1951,16 @@ class DataStore {
         
         return filtered
     }
-
+    
     private func isActivityFullyCompleted(_ activity: Activity) -> Bool {
         if let id = activity.coupleActivityId,
            let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
             return dbCoupleActivity.feedbackADone && dbCoupleActivity.feedbackBDone
         }
-
+        
         return activity.status == .completed
     }
-
+    
     func getCompletedActivities() -> [Activity] {
         let presetCompleted = activities.filter { activity in
             isActivityFullyCompleted(activity)
@@ -1911,9 +1972,9 @@ class DataStore {
         
         return presetCompleted + customCompleted
     }
-
+    
     // MARK: - Supabase Context
-
+    
     /// Fetch and store the current user's ID, relationship ID, and partner's ID from Supabase.
     /// Must be called once after login (e.g. from VibeViewController.viewDidLoad).
     func loadUserContext() async {
@@ -1921,7 +1982,7 @@ class DataStore {
             let session = try await SupabaseManager.shared.client.auth.session
             let authUserId = session.user.id
             self.currentUserId = authUserId
-
+            
             // Find the active relationship
             let rows: [DBRelationship] = try await SupabaseManager.shared.client
                 .from("relationships")
@@ -1931,15 +1992,15 @@ class DataStore {
                 .limit(1)
                 .execute()
                 .value
-
+            
             if let relationship = rows.first {
                 self.currentRelationshipId = relationship.relationship_id
                 self.partnerUserId = (relationship.user1_id == authUserId)
-                    ? relationship.user2_id
-                    : relationship.user1_id
+                ? relationship.user2_id
+                : relationship.user1_id
                 self.isUserA = (relationship.user1_id == authUserId)
                 self.partnerAssessmentPreferences = nil
-
+                
                 // Check for overdue scheduled love notes on every app launch
                 await checkScheduledLoveNotes(relationshipId: relationship.relationship_id)
             } else {
@@ -1947,7 +2008,7 @@ class DataStore {
         } catch {
         }
     }
-
+    
     /// Flip overdue scheduled love notes to is_sent=true and notify the receiver.
     /// Runs on app launch (from loadUserContext) so it works even if the
     /// Love Note screen is never opened.
@@ -1963,7 +2024,7 @@ class DataStore {
                 .select()
                 .execute()
                 .value
-
+            
             for note in updatedNotes {
                 do {
                     try await NotificationService.shared.sendDirectNotification(
@@ -1979,7 +2040,7 @@ class DataStore {
                     print("DEBUG checkScheduledLoveNotes notification error: \(error)")
                 }
             }
-
+            
             if !updatedNotes.isEmpty {
                 print("DEBUG checkScheduledLoveNotes: flipped \(updatedNotes.count) notes")
             }
@@ -1987,13 +2048,13 @@ class DataStore {
             print("DEBUG checkScheduledLoveNotes error: \(error)")
         }
     }
-
+    
     // MARK: - Supabase Sync
-
+    
     /// Fetch all couple_activities from Supabase and update local activity statuses
     func syncActivitiesFromSupabase() {
         guard let relationshipId = currentRelationshipId else { return }
-
+        
         Task {
             do {
                 let remote = try await SupabaseManager.shared.fetchAllCoupleActivities(
@@ -2001,11 +2062,11 @@ class DataStore {
                 )
                 
                 self.coupleActivities = remote
-
+                
                 // Separate custom vs preset rows
                 let customRows  = remote.filter { $0.isCustom }
                 let presetRows  = remote.filter { !$0.isCustom }
-
+                
                 // Rebuild customActivities from Supabase — convert scheduledDate → display string
                 let dateFormatter: DateFormatter = {
                     let f = DateFormatter()
@@ -2013,7 +2074,7 @@ class DataStore {
                     f.dateStyle = .medium
                     return f
                 }()
-
+                
                 let synced = customRows.map { row -> Activity in
                     let displayDate: String = {
                         if let scheduled = row.scheduledDate {
@@ -2041,7 +2102,7 @@ class DataStore {
                     )
                 }
                 self.customActivities = synced
-
+                
                 // Sync preset activities as before
                 for coupleActivity in presetRows {
                     if let index = self.activities.firstIndex(where: {
@@ -2056,7 +2117,7 @@ class DataStore {
                             default: return .none
                             }
                         }()
-
+                        
                         switch syncedStatus {
                         case .ongoing:
                             self.activities[index].status = .ongoing
@@ -2082,11 +2143,11 @@ class DataStore {
                             default: return .none
                             }
                         }()
-
+                        
                         let match = self.exploreJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
-                            self.bondJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
-                            self.suggestedJSONActivities.first(where: { $0.name == coupleActivity.activityName })
-
+                        self.bondJSONActivities.first(where: { $0.name == coupleActivity.activityName }) ??
+                        self.suggestedJSONActivities.first(where: { $0.name == coupleActivity.activityName })
+                        
                         let newActivity = Activity(
                             id: coupleActivity.activityId,
                             coupleActivityId: coupleActivity.coupleActivityId,
@@ -2103,9 +2164,9 @@ class DataStore {
                         self.activities.append(newActivity)
                     }
                 }
-
+                
                 self.buildAllActivities()
-
+                
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .activitiesSynced, object: nil)
                 }
@@ -2121,308 +2182,321 @@ class DataStore {
         return moods
     }
     func getSuggestedActivities() -> [Activity] {
-        return suggestedActivities
+        return suggestedActivities.filter { !isActivityCompleted($0) }
     }
-    func updateScheduledDate(for activity: Activity, date: Date) {
-        var scheduledActivity = activity
-        scheduledActivity.status = .scheduled
-        scheduledActivity.scheduledDate = date
-
-        let updatedActivities = updateActivity(in: &activities, with: scheduledActivity)
-        let updatedSuggestedActivities = updateActivity(in: &suggestedActivities, with: scheduledActivity)
-        var updatedBondActivity = false
-
-        for pageIndex in bondpage.indices {
-            let didUpdate = updateActivity(in: &bondpage[pageIndex].activity, with: scheduledActivity)
-            updatedBondActivity = updatedBondActivity || didUpdate
+    func isActivityCompleted(_ activity: Activity) -> Bool {
+        if let match = activities.first(where: { matchesActivity($0, activity) }) {
+            return match.status == .completed
         }
-
-        if !updatedActivities && !updatedSuggestedActivities && !updatedBondActivity {
-            activities.append(scheduledActivity)
+        
+        if let match = allActivities.first(where: { matchesActivity($0, activity) }) {
+            return match.status == .completed
         }
-
+        
+        return activity.status == .completed
+    }
+    
+    func removeSuggestedActivity(_ activity: Activity) {
+        suggestedActivities.removeAll { matchesActivity($0, activity) }
         buildAllActivities()
-
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .activitiesSynced, object: nil)
-        }
-
-        guard let relationshipId = currentRelationshipId,
-              let userId = currentUserId else {
-            return
-        }
-
-        Task {
-            do {
-                let coupleActivity = try await SupabaseManager.shared.scheduleActivity(
-                    relationshipId: relationshipId,
-                    userId: userId,
-                    activity: scheduledActivity,
-                    scheduledDate: date
-                )
-
-                DispatchQueue.main.async {
-                    self.updateCoupleActivityId(
-                        for: scheduledActivity,
-                        coupleActivityId: coupleActivity.coupleActivityId
-                    )
-                    NotificationCenter.default.post(name: .activitiesSynced, object: nil)
-                }
-            } catch {
-                
-            }
-        }
-    }
-
-    func getScheduledActivities() -> [Activity] {
-        return activities.filter {
-            $0.status == .scheduled && $0.scheduledDate != nil
-        }
-    }
-    func buildAllActivities() {
-        var mergedActivities: [Activity] = []
-
-        // Explore
-        mergeActivities(from: activities, into: &mergedActivities)
-
-        // Suggested (Vibe)
-        mergeActivities(from: suggestedActivities, into: &mergedActivities)
-
-        // Build Your Bond
-        bondpage.forEach { page in
-            mergeActivities(from: page.activity, into: &mergedActivities)
-        }
-
-        allActivities = mergedActivities
-    }
-
-    @discardableResult
-    private func updateActivity(in source: inout [Activity], with updatedActivity: Activity) -> Bool {
-        if let index = source.firstIndex(where: { matchesActivity($0, updatedActivity) }) {
-            source[index] = mergeActivity(source[index], with: updatedActivity)
-            return true
-        }
-
-        return false
-    }
-
-    private func updateCoupleActivityId(for activity: Activity, coupleActivityId: UUID) {
-        updateCoupleActivityId(in: &activities, for: activity, coupleActivityId: coupleActivityId)
-        updateCoupleActivityId(in: &suggestedActivities, for: activity, coupleActivityId: coupleActivityId)
-
-        for pageIndex in bondpage.indices {
-            updateCoupleActivityId(
-                in: &bondpage[pageIndex].activity,
-                for: activity,
-                coupleActivityId: coupleActivityId
-            )
-        }
-
-        buildAllActivities()
-    }
-
-    private func updateCoupleActivityId(
-        in source: inout [Activity],
-        for activity: Activity,
-        coupleActivityId: UUID
-    ) {
-        guard let index = source.firstIndex(where: { matchesActivity($0, activity) }) else {
-            return
-        }
-
-        source[index].coupleActivityId = coupleActivityId
-    }
-
-    private func matchesActivity(_ lhs: Activity, _ rhs: Activity) -> Bool {
-        if let lhsId = lhs.id, let rhsId = rhs.id, lhsId == rhsId {
-            return true
-        }
-
-        return lhs.name == rhs.name && lhs.category == rhs.category
-    }
-
-    private func mergeActivity(_ existing: Activity, with updated: Activity) -> Activity {
-        Activity(
-            id: existing.id ?? updated.id,
-            coupleActivityId: updated.coupleActivityId ?? existing.coupleActivityId,
-            name: updated.name,
-            description: updated.description,
-            detailedDescription: updated.detailedDescription ?? existing.detailedDescription,
-            image: updated.image,
-            time: updated.time,
-            status: updated.status,
-            category: updated.category,
-            scheduledDate: updated.scheduledDate,
-            steps: updated.steps ?? existing.steps
-        )
-    }
-
-    private func mergeActivities(from source: [Activity], into target: inout [Activity]) {
-        for activity in source {
-            if let index = target.firstIndex(where: { matchesActivity($0, activity) }) {
-                target[index] = mergeActivity(target[index], with: activity)
-            } else {
-                target.append(activity)
-            }
-        }
-    }
-
-    private func updateStatus(for activity: Activity, status: ActivityStatus, scheduledDate: Date?) {
-        updateStatus(in: &activities, for: activity, status: status, scheduledDate: scheduledDate)
-        updateStatus(in: &customActivities, for: activity, status: status, scheduledDate: scheduledDate)
-        updateStatus(in: &suggestedActivities, for: activity, status: status, scheduledDate: scheduledDate)
-
-        for pageIndex in bondpage.indices {
-            updateStatus(
-                in: &bondpage[pageIndex].activity,
-                for: activity,
-                status: status,
-                scheduledDate: scheduledDate
-            )
-        }
-
-        buildAllActivities()
-
+        
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: .activitiesSynced, object: nil)
         }
     }
-
-    private func updateStatus(
-        in source: inout [Activity],
-        for activity: Activity,
-        status: ActivityStatus,
-        scheduledDate: Date?
-    ) {
-        guard let index = source.firstIndex(where: { matchesActivity($0, activity) }) else {
-            return
-        }
-
-        source[index].status = status
-        source[index].scheduledDate = scheduledDate
-    }
-    
-    //small modal data — now fully driven by JSON via getSmallModalData()
-    func loadSmallModalData() {
-        self.smallmodal = []
-    }
-
-    
-    func feedBackData() -> [FeedBackGiven] {
-        [
-            FeedBackGiven(
-                title: "Chill and Glow Sesh",
-                subTitle:"Tell us how this activity made you feel",
-                imageName: "camera",
-                userMessage: nil,
-                selectedMood: nil
-            ),
+        func updateScheduledDate(for activity: Activity, date: Date) {
+            var scheduledActivity = activity
+            scheduledActivity.status = .scheduled
+            scheduledActivity.scheduledDate = date
             
-            FeedBackGiven(
-                title: "Petal Hunt",
-                subTitle: "Tell us how this activity made you feel",
-                imageName: "camera",
-                userMessage: nil,
-                selectedMood: nil
-                )]
-    }
-
-    //mood options
-    func loadMoodOptions() -> [Mood] {
-        return [
-            Mood(id: 1, title: "Joyful", imageName: "Joyful"),
-            Mood(id: 2, title: "Playful", imageName: "Playful"),
-            Mood(id: 3, title: "Peaceful", imageName: "Peaceful"),
-
-            Mood(id: 4, title: "Satisfied", imageName: "Satisfied"),
-            Mood(id: 5, title: "Calm", imageName: "Calm"),
-            Mood(id: 6, title: "Productive", imageName: "Productive"),
-
-            Mood(id: 7, title: "Determined", imageName: "Determined"),
-            Mood(id: 8, title: "Adventurous", imageName: "Adventurous"),
-            Mood(id: 9, title: "Curious", imageName: "Curious"),
-
-            Mood(id: 10, title: "Attached", imageName: "Attached"),
-            Mood(id: 11, title: "Regretful", imageName: "Regretful"),
-            Mood(id: 12, title: "Sad", imageName: "Sad"),
-
-            Mood(id: 13, title: "Disappointed", imageName: "Disappointed"),
-            Mood(id: 14, title: "Drained", imageName: "Drained"),
-            Mood(id: 15, title: "Angry", imageName: "Angry")
-        ]
-    }
-    
-    
-    // unlock of activities in build your bond
-    func unlockNextBondActivity( bondName: String, completedIndex: Int) {
-       
-        guard let pageIndex = bondpage.firstIndex(where: { $0.Name == bondName }) else {
-              return
-          }
-
-          // Mark current as completed
-          bondpage[pageIndex].activity[completedIndex].status = .completed
-
-          // Unlock next if exists
-          let nextIndex = completedIndex + 1
-          if nextIndex < bondpage[pageIndex].activity.count {
-              bondpage[pageIndex].activity[nextIndex].status = .none
-          }
-    }
-}
-
-// Create one shared instance
-let dataStore = DataStore()
-
-extension UIView {
-    func applyLiquidGlassEffect(animated: Bool = true) {
-        let existingGlassView = self.subviews.first { $0 is UIVisualEffectView }
-        if existingGlassView != nil {
-            return
+            let updatedActivities = updateActivity(in: &activities, with: scheduledActivity)
+            let updatedSuggestedActivities = updateActivity(in: &suggestedActivities, with: scheduledActivity)
+            var updatedBondActivity = false
+            
+            for pageIndex in bondpage.indices {
+                let didUpdate = updateActivity(in: &bondpage[pageIndex].activity, with: scheduledActivity)
+                updatedBondActivity = updatedBondActivity || didUpdate
+            }
+            
+            if !updatedActivities && !updatedSuggestedActivities && !updatedBondActivity {
+                activities.append(scheduledActivity)
+            }
+            
+            buildAllActivities()
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+            }
+            
+            guard let relationshipId = currentRelationshipId,
+                  let userId = currentUserId else {
+                return
+            }
+            
+            Task {
+                do {
+                    let coupleActivity = try await SupabaseManager.shared.scheduleActivity(
+                        relationshipId: relationshipId,
+                        userId: userId,
+                        activity: scheduledActivity,
+                        scheduledDate: date
+                    )
+                    
+                    DispatchQueue.main.async {
+                        self.updateCoupleActivityId(
+                            for: scheduledActivity,
+                            coupleActivityId: coupleActivity.coupleActivityId
+                        )
+                        NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+                    }
+                } catch {
+                    
+                }
+            }
         }
-
-        let glassEffectView = UIVisualEffectView()
-        glassEffectView.isUserInteractionEnabled = false
-        glassEffectView.translatesAutoresizingMaskIntoConstraints = false
-        self.insertSubview(glassEffectView, at: 0)
-
-        NSLayoutConstraint.activate([
-            glassEffectView.topAnchor.constraint(equalTo: self.topAnchor),
-            glassEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            glassEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            glassEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-        ])
-
-        if #available(iOS 17.0, *) {
-            let glassEffect = UIGlassEffect()
-            if animated {
-                UIView.animate(withDuration: 0.3) {
+        
+        func getScheduledActivities() -> [Activity] {
+            return activities.filter {
+                $0.status == .scheduled && $0.scheduledDate != nil
+            }
+        }
+        func buildAllActivities() {
+            var mergedActivities: [Activity] = []
+            
+            // Explore
+            mergeActivities(from: activities, into: &mergedActivities)
+            
+            // Suggested (Vibe)
+            mergeActivities(from: suggestedActivities, into: &mergedActivities)
+            
+            // Build Your Bond
+            bondpage.forEach { page in
+                mergeActivities(from: page.activity, into: &mergedActivities)
+            }
+            
+            allActivities = mergedActivities
+        }
+        
+        @discardableResult
+        private func updateActivity(in source: inout [Activity], with updatedActivity: Activity) -> Bool {
+            if let index = source.firstIndex(where: { matchesActivity($0, updatedActivity) }) {
+                source[index] = mergeActivity(source[index], with: updatedActivity)
+                return true
+            }
+            
+            return false
+        }
+        
+        private func updateCoupleActivityId(for activity: Activity, coupleActivityId: UUID) {
+            updateCoupleActivityId(in: &activities, for: activity, coupleActivityId: coupleActivityId)
+            updateCoupleActivityId(in: &suggestedActivities, for: activity, coupleActivityId: coupleActivityId)
+            
+            for pageIndex in bondpage.indices {
+                updateCoupleActivityId(
+                    in: &bondpage[pageIndex].activity,
+                    for: activity,
+                    coupleActivityId: coupleActivityId
+                )
+            }
+            
+            buildAllActivities()
+        }
+        
+        private func updateCoupleActivityId(
+            in source: inout [Activity],
+            for activity: Activity,
+            coupleActivityId: UUID
+        ) {
+            guard let index = source.firstIndex(where: { matchesActivity($0, activity) }) else {
+                return
+            }
+            
+            source[index].coupleActivityId = coupleActivityId
+        }
+        
+        private func matchesActivity(_ lhs: Activity, _ rhs: Activity) -> Bool {
+            if let lhsId = lhs.id, let rhsId = rhs.id, lhsId == rhsId {
+                return true
+            }
+            
+            return lhs.name == rhs.name && lhs.category == rhs.category
+        }
+        
+        private func mergeActivity(_ existing: Activity, with updated: Activity) -> Activity {
+            Activity(
+                id: existing.id ?? updated.id,
+                coupleActivityId: updated.coupleActivityId ?? existing.coupleActivityId,
+                name: updated.name,
+                description: updated.description,
+                detailedDescription: updated.detailedDescription ?? existing.detailedDescription,
+                image: updated.image,
+                time: updated.time,
+                status: updated.status,
+                category: updated.category,
+                scheduledDate: updated.scheduledDate,
+                steps: updated.steps ?? existing.steps
+            )
+        }
+        
+        private func mergeActivities(from source: [Activity], into target: inout [Activity]) {
+            for activity in source {
+                if let index = target.firstIndex(where: { matchesActivity($0, activity) }) {
+                    target[index] = mergeActivity(target[index], with: activity)
+                } else {
+                    target.append(activity)
+                }
+            }
+        }
+        
+        private func updateStatus(for activity: Activity, status: ActivityStatus, scheduledDate: Date?) {
+            updateStatus(in: &activities, for: activity, status: status, scheduledDate: scheduledDate)
+            updateStatus(in: &customActivities, for: activity, status: status, scheduledDate: scheduledDate)
+            updateStatus(in: &suggestedActivities, for: activity, status: status, scheduledDate: scheduledDate)
+            
+            
+            buildAllActivities()
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+            }
+        }
+        
+        private func updateStatus(
+            in source: inout [Activity],
+            for activity: Activity,
+            status: ActivityStatus,
+            scheduledDate: Date?
+        ) {
+            guard let index = source.firstIndex(where: { matchesActivity($0, activity) }) else {
+                return
+            }
+            
+            source[index].status = status
+            source[index].scheduledDate = scheduledDate
+        }
+        
+        //small modal data — now fully driven by JSON via getSmallModalData()
+        func loadSmallModalData() {
+            self.smallmodal = []
+        }
+        
+        
+        func feedBackData() -> [FeedBackGiven] {
+            [
+                FeedBackGiven(
+                    title: "Chill and Glow Sesh",
+                    subTitle:"Tell us how this activity made you feel",
+                    imageName: "camera",
+                    userMessage: nil,
+                    selectedMood: nil
+                ),
+                
+                FeedBackGiven(
+                    title: "Petal Hunt",
+                    subTitle: "Tell us how this activity made you feel",
+                    imageName: "camera",
+                    userMessage: nil,
+                    selectedMood: nil
+                )]
+        }
+        
+        //mood options
+        func loadMoodOptions() -> [Mood] {
+            return [
+                Mood(id: 1, title: "Joyful", imageName: "Joyful"),
+                Mood(id: 2, title: "Playful", imageName: "Playful"),
+                Mood(id: 3, title: "Peaceful", imageName: "Peaceful"),
+                
+                Mood(id: 4, title: "Satisfied", imageName: "Satisfied"),
+                Mood(id: 5, title: "Calm", imageName: "Calm"),
+                Mood(id: 6, title: "Productive", imageName: "Productive"),
+                
+                Mood(id: 7, title: "Determined", imageName: "Determined"),
+                Mood(id: 8, title: "Adventurous", imageName: "Adventurous"),
+                Mood(id: 9, title: "Curious", imageName: "Curious"),
+                
+                Mood(id: 10, title: "Attached", imageName: "Attached"),
+                Mood(id: 11, title: "Regretful", imageName: "Regretful"),
+                Mood(id: 12, title: "Sad", imageName: "Sad"),
+                
+                Mood(id: 13, title: "Disappointed", imageName: "Disappointed"),
+                Mood(id: 14, title: "Drained", imageName: "Drained"),
+                Mood(id: 15, title: "Angry", imageName: "Angry")
+            ]
+        }
+        
+        
+        // unlock of activities in build your bond
+        func unlockNextBondActivity( bondName: String, completedIndex: Int) {
+            
+            guard let pageIndex = bondpage.firstIndex(where: { $0.Name == bondName }) else {
+                return
+            }
+            
+            // Mark current as completed
+            bondpage[pageIndex].activity[completedIndex].status = .completed
+            
+            // Unlock next if exists
+            let nextIndex = completedIndex + 1
+            if nextIndex < bondpage[pageIndex].activity.count {
+                bondpage[pageIndex].activity[nextIndex].status = .none
+            }
+        }
+    }
+    
+    // Create one shared instance
+    let dataStore = DataStore()
+    
+    extension UIView {
+        func applyLiquidGlassEffect(animated: Bool = true) {
+            let existingGlassView = self.subviews.first { $0 is UIVisualEffectView }
+            if existingGlassView != nil {
+                return
+            }
+            
+            let glassEffectView = UIVisualEffectView()
+            glassEffectView.isUserInteractionEnabled = false
+            glassEffectView.translatesAutoresizingMaskIntoConstraints = false
+            self.insertSubview(glassEffectView, at: 0)
+            
+            NSLayoutConstraint.activate([
+                glassEffectView.topAnchor.constraint(equalTo: self.topAnchor),
+                glassEffectView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+                glassEffectView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+                glassEffectView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            ])
+            
+            if #available(iOS 17.0, *) {
+                let glassEffect = UIGlassEffect()
+                if animated {
+                    UIView.animate(withDuration: 0.3) {
+                        glassEffectView.effect = glassEffect
+                    }
+                } else {
                     glassEffectView.effect = glassEffect
                 }
             } else {
-                glassEffectView.effect = glassEffect
+                let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
+                glassEffectView.effect = blurEffect
             }
-        } else {
-            let blurEffect = UIBlurEffect(style: .systemUltraThinMaterial)
-            glassEffectView.effect = blurEffect
+            
+            glassEffectView.layer.cornerRadius = self.layer.cornerRadius
+            glassEffectView.clipsToBounds = true
         }
-
-        glassEffectView.layer.cornerRadius = self.layer.cornerRadius
-        glassEffectView.clipsToBounds = true
     }
-}
-
-// MARK: - Seeded RNG for deterministic daily shuffles
-struct SeededRandomNumberGenerator: RandomNumberGenerator {
-    private var state: UInt64
-
-    init(seed: UInt64) {
-        state = seed
+    
+    // MARK: - Seeded RNG for deterministic daily shuffles
+    struct SeededRandomNumberGenerator: RandomNumberGenerator {
+        private var state: UInt64
+        
+        init(seed: UInt64) {
+            state = seed
+        }
+        
+        mutating func next() -> UInt64 {
+            // Linear congruential generator (same constants as glibc)
+            state = state &* 6364136223846793005 &+ 1442695040888963407
+            return state
+        }
     }
 
-    mutating func next() -> UInt64 {
-        // Linear congruential generator (same constants as glibc)
-        state = state &* 6364136223846793005 &+ 1442695040888963407
-        return state
-    }
-}

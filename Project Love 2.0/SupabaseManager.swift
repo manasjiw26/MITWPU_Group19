@@ -103,6 +103,16 @@ final class SupabaseManager {
 
         return result
     }
+    func completeActivity(coupleActivityId: UUID) async throws {
+            try await client
+                .from("couple_activities")
+                .update([
+                    "status": "completed",
+                    "completed_at": Date().ISO8601Format()
+                ])
+                .eq("couple_activity_id", value: coupleActivityId.uuidString)
+                .execute()
+        }
 
     func submitFeedback( coupleActivityId: UUID, userId: UUID, mood: String, message: String?, feedbackTags: [String], feedbackScore: Int ) async throws {
         // 1. Determine if current user is user A (user1) or user B (user2)

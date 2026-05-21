@@ -99,6 +99,8 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
         
         if let activity = activity {
                // Submit feedback to Supabase (dual-user sync)
+            DataStore.shared.markActivityCompleted(activity: activity)
+            
                if let coupleActivityId = activity.coupleActivityId,
                   let userId = DataStore.shared.currentUserId {
                    let mood = feedbackItem?.selectedMood ?? "None"
@@ -116,9 +118,10 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
                                feedbackTags: tags,
                                feedbackScore: score
                            )
-                           _ = await DataStore.shared.refreshSuggestionsAfterFeedback(
-                                      coupleActivityId: coupleActivityId
-                                  )
+                           // Do NOT call refreshSuggestionsAfterFeedback here.
+                           // The completed activity is already marked via markActivityCompleted(),
+                           // and getSuggestedActivities() filters out completed ones automatically.
+                           // Refreshing here would replace the entire list with new shuffled activities.
                            
                            // Send notification to partner
                            if let relationshipId = DataStore.shared.currentRelationshipId {
