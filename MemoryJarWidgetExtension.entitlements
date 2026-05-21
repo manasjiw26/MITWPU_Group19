@@ -4,7 +4,8 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.TwoOfUs.in</string>
+		<string>group.TwoOfUs.in.shivangi</string>
+		<string>group.TWOOFUS1.in</string>
 	</array>
 </dict>
 </plist>

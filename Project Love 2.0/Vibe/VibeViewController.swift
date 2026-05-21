@@ -646,12 +646,9 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
         performSegue(withIdentifier: "openQuestions", sender: self)
     }
     func didStartActivity() {
-        // If this was triggered from the suggested activities modal, remove it and advance the progress bar
+        // If this was triggered from the suggested activities modal, just start it.
+        // It will be removed when marked as completed.
         if let activity = pendingSuggestedActivity {
-            if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
-                suggestedActivities.remove(at: index)
-                DataStore.shared.suggestedActivities = suggestedActivities
-            }
             pendingSuggestedActivity = nil
         }
         DispatchQueue.main.async {
@@ -1300,7 +1297,7 @@ extension VibeViewController {
                 // when the user has already achieved a new vibe (suggestedActivities must stay empty)
                 if !self.hasAchievedNewVibe {
                     let latestSuggestions = DataStore.shared.getSuggestedActivities()
-                    if self.hasCompletedDailyCheckIn && !latestSuggestions.isEmpty {
+                    if self.hasCompletedDailyCheckIn {
                         self.suggestedActivities = latestSuggestions
                     }
                 } else {
@@ -1538,25 +1535,32 @@ extension VibeViewController {
             startedActivity.coupleActivityId = coupleActivityId
 
             DispatchQueue.main.async {
-                self.configureOngoingActivity()
-                self.vibeCollectionView.reloadData()
-
                 if openSteps {
                     self.presentSteps(for: startedActivity)
+                } else {
+                    DataStore.shared.markActivityCompleted(activity: startedActivity)
+                    self.suggestedActivities = DataStore.shared.getSuggestedActivities()
                 }
-            }
-        }
 
-        // Remove the activity from suggested activities locally
-        if let index = suggestedActivities.firstIndex(where: { $0.name == activity.name && $0.category == activity.category }) {
-            suggestedActivities.remove(at: index)
-            DataStore.shared.suggestedActivities = suggestedActivities
-            vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.quickVibe))
+                self.configureOngoingActivity()
+                self.vibeCollectionView.reloadData()
+            }
         }
     }
 
     @objc private func handleActivitiesSynced() {
         DispatchQueue.main.async {
+            if self.hasAchievedNewVibe {
+                self.suggestedActivities = []
+                DataStore.shared.suggestedActivities = []
+            } else if self.hasCompletedDailyCheckIn {
+                self.suggestedActivities = DataStore.shared.getSuggestedActivities()
+            } else {
+                self.suggestedActivities.removeAll { activity in
+                    DataStore.shared.isActivityCompleted(activity)
+                }
+            }
+
             self.configureOngoingActivity()
             self.vibeCollectionView.reloadData()
         }

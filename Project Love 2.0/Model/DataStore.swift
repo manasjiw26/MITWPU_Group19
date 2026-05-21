@@ -452,12 +452,10 @@ class DataStore {
             result.append(lastActivity)
         } else {
             let result = materializeSuggestedActivities(diverseSelection(from: filtered, count: count))
-            self.suggestedActivities = result
             return result
         }
 
         result = materializeSuggestedActivities(result)
-        self.suggestedActivities = result
         return result
     }
 
@@ -1611,6 +1609,21 @@ class DataStore {
 
     func markActivityCompleted(activity: Activity) {
         updateStatus(for: activity, status: .completed, scheduledDate: nil)
+        removeSuggestedActivity(activity)
+
+        guard let coupleActivityId = activity.coupleActivityId else {
+            return
+        }
+
+        Task {
+            do {
+                try await SupabaseManager.shared.completeActivity(
+                    coupleActivityId: coupleActivityId
+                )
+            } catch {
+                print("Failed to mark activity completed in Supabase: \(error)")
+            }
+        }
     }
     
     func markActivityOngoing(activity: Activity) {
@@ -1626,12 +1639,14 @@ class DataStore {
             $0.name == activity.name &&
             $0.category == activity.category
         }) {
-            activities[index].status = .ongoing
+            // Do nothing here, updateStatus below handles it
         } else {
             var newActivity = activity
             newActivity.status = .ongoing
             activities.append(newActivity)
         }
+        
+        self.markActivityOngoing(activity: activity)
 
         // Also insert into Supabase so partner's device sees it
         guard let relationshipId = currentRelationshipId,
@@ -1648,12 +1663,8 @@ class DataStore {
                     activity: activity
                 )
 
-                // Store the coupleActivityId back on the local activity
-                if let index = self.activities.firstIndex(where: {
-                    $0.name == activity.name && $0.category == activity.category
-                }) {
-                    self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
-                }
+                // Store the coupleActivityId back on the local activity in all arrays
+                self.updateCoupleActivityId(for: activity, coupleActivityId: coupleActivity.coupleActivityId)
 
                 // Send notification to partner — but skip Memory Jar activities:
                 // those already send a "memory_added" notification inside
@@ -2031,7 +2042,28 @@ class DataStore {
         return moods
     }
     func getSuggestedActivities() -> [Activity] {
-        return suggestedActivities
+        return suggestedActivities.filter { !isActivityCompleted($0) }
+    }
+
+    func isActivityCompleted(_ activity: Activity) -> Bool {
+        if let match = activities.first(where: { matchesActivity($0, activity) }) {
+            return match.status == .completed
+        }
+
+        if let match = allActivities.first(where: { matchesActivity($0, activity) }) {
+            return match.status == .completed
+        }
+
+        return activity.status == .completed
+    }
+
+    func removeSuggestedActivity(_ activity: Activity) {
+        suggestedActivities.removeAll { matchesActivity($0, activity) }
+        buildAllActivities()
+
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .activitiesSynced, object: nil)
+        }
     }
     func updateScheduledDate(for activity: Activity, date: Date) {
         var scheduledActivity = activity

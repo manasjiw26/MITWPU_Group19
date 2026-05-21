@@ -137,6 +137,8 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
     @IBAction func doneTapped(_ sender: UIButton) {
         
         if let activity = activity {
+               DataStore.shared.markActivityCompleted(activity: activity)
+               
                // Submit feedback to Supabase (dual-user sync)
                if let coupleActivityId = activity.coupleActivityId,
                   let userId = DataStore.shared.currentUserId {

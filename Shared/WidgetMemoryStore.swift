@@ -21,7 +21,7 @@ protocol WidgetMemorySource {
 
 enum WidgetMemoryStore {
 
-    static let appGroupId = "group.TwoOfUs.in"
+    static let appGroupId = "group.TwoOfUs.in.shivangi"
     private static let payloadFileName = "widget_timeline.json"
     private static let targetPixelArea: CGFloat = 600_000.0
 
