@@ -125,7 +125,16 @@ class OngoingActivitiesModalViewController: UIViewController, UICollectionViewDa
             stepsVC.activitytitle = selectedActivity.name
             stepsVC.activity = selectedActivity
             stepsVC.flowSource = .explore
-            self.navigationController?.pushViewController(stepsVC, animated: true)
+
+            let presentingVC = navigationController?.presentingViewController ?? presentingViewController
+
+            dismiss(animated: true) {
+                let navController = (presentingVC as? UITabBarController)?.selectedViewController as? UINavigationController
+                    ?? presentingVC as? UINavigationController
+                    ?? presentingVC?.navigationController
+
+                navController?.pushViewController(stepsVC, animated: true)
+            }
         }
     }
 

@@ -1700,8 +1700,11 @@ class DataStore {
                 // Send notification to partner — but skip Memory Jar activities:
                 // those already send a "memory_added" notification inside
                 // MemoryUploadManager once the memory is actually saved.
+                
                 let isMemoryJarActivity = activity.name.lowercased().hasPrefix("memory jar")
-                if !isMemoryJarActivity {
+                let isLoveNote = activity.name.lowercased().hasPrefix("love note")
+                let isNudge = activity.name.lowercased().hasPrefix("nudge")
+                if !isMemoryJarActivity, !isLoveNote, !isNudge  {
                     do {
                         try await NotificationService.shared.sendPartnerNotification(
                             relationshipId: relationshipId,
@@ -1887,25 +1890,23 @@ class DataStore {
         
         return filtered
     }
+
+    private func isActivityFullyCompleted(_ activity: Activity) -> Bool {
+        if let id = activity.coupleActivityId,
+           let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
+            return dbCoupleActivity.feedbackADone && dbCoupleActivity.feedbackBDone
+        }
+
+        return activity.status == .completed
+    }
+
     func getCompletedActivities() -> [Activity] {
         let presetCompleted = activities.filter { activity in
-            if activity.status == .completed { return true }
-            if let id = activity.coupleActivityId,
-               let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
-                if isUserA && dbCoupleActivity.feedbackADone { return true }
-                if !isUserA && dbCoupleActivity.feedbackBDone { return true }
-            }
-            return false
+            isActivityFullyCompleted(activity)
         }
         
         let customCompleted = customActivities.filter { activity in
-            if activity.status == .completed { return true }
-            if let id = activity.coupleActivityId,
-               let dbCoupleActivity = coupleActivities.first(where: { $0.coupleActivityId == id }) {
-                if isUserA && dbCoupleActivity.feedbackADone { return true }
-                if !isUserA && dbCoupleActivity.feedbackBDone { return true }
-            }
-            return false
+            isActivityFullyCompleted(activity)
         }
         
         return presetCompleted + customCompleted
@@ -2021,9 +2022,10 @@ class DataStore {
                         return ""
                     }()
                     let status: ActivityStatus = {
+                        if row.feedbackADone && row.feedbackBDone { return .completed }
                         switch row.status {
                         case "ongoing": return .ongoing
-                        case "completed": return .completed
+                        case "completed": return .ongoing
                         case "scheduled": return .scheduled
                         default: return .none
                         }
@@ -2045,14 +2047,24 @@ class DataStore {
                     if let index = self.activities.firstIndex(where: {
                         $0.name == coupleActivity.activityName
                     }) {
-                        switch coupleActivity.status {
-                        case "ongoing":
+                        let syncedStatus: ActivityStatus = {
+                            if coupleActivity.feedbackADone && coupleActivity.feedbackBDone { return .completed }
+                            switch coupleActivity.status {
+                            case "ongoing": return .ongoing
+                            case "completed": return .ongoing
+                            case "scheduled": return .scheduled
+                            default: return .none
+                            }
+                        }()
+
+                        switch syncedStatus {
+                        case .ongoing:
                             self.activities[index].status = .ongoing
                             self.activities[index].scheduledDate = nil
-                        case "completed":
+                        case .completed:
                             self.activities[index].status = .completed
                             self.activities[index].scheduledDate = nil
-                        case "scheduled":
+                        case .scheduled:
                             self.activities[index].status = .scheduled
                             self.activities[index].scheduledDate = coupleActivity.scheduledDate
                         default:
@@ -2062,9 +2074,10 @@ class DataStore {
                         self.activities[index].coupleActivityId = coupleActivity.coupleActivityId
                     } else {
                         let newStatus: ActivityStatus = {
+                            if coupleActivity.feedbackADone && coupleActivity.feedbackBDone { return .completed }
                             switch coupleActivity.status {
                             case "ongoing": return .ongoing
-                            case "completed": return .completed
+                            case "completed": return .ongoing
                             case "scheduled": return .scheduled
                             default: return .none
                             }

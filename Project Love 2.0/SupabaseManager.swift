@@ -174,6 +174,26 @@ final class SupabaseManager {
             .update([column: true])
             .eq("couple_activity_id", value: coupleActivityId.uuidString)
             .execute()
+
+        struct FeedbackFlags: Decodable {
+            let feedback_a_done: Bool
+            let feedback_b_done: Bool
+        }
+
+        let flags: FeedbackFlags = try await client
+            .from("couple_activities")
+            .select("feedback_a_done, feedback_b_done")
+            .eq("couple_activity_id", value: coupleActivityId.uuidString)
+            .single()
+            .execute()
+            .value
+
+        if flags.feedback_a_done && flags.feedback_b_done {
+            try await updateCoupleActivityStatus(
+                coupleActivityId: coupleActivityId,
+                status: "completed"
+            )
+        }
     }
 
     /// Fetch the single combined feedback row for an activity
@@ -410,4 +430,3 @@ final class SupabaseManager {
     }
 
 }
-

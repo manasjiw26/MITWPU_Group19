@@ -12,6 +12,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    /// Holds the next screen while it warms up behind the splash
+    private var preloadedVC: UIViewController?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -19,47 +21,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
 
-        let defaults = UserDefaults.standard
-        let onboardingStoryboard = UIStoryboard(name: "Onboarding", bundle: nil)
+        // Show splash screen immediately
+        let splashVC = SplashViewController()
+        window.rootViewController = splashVC
+        window.makeKeyAndVisible()
 
-        if defaults.bool(forKey: "hasCompletedOnboarding") {
-            // All onboarding done → go to main app
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            window.rootViewController = mainStoryboard.instantiateInitialViewController()
-
-        } else if defaults.bool(forKey: "hasCompletedPairing") {
-            // Pairing done → all done, go to main app
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            window.rootViewController = mainStoryboard.instantiateInitialViewController()
-            defaults.set(true, forKey: "hasCompletedOnboarding")
-
-        } else if defaults.bool(forKey: "hasCompletedInfoPages") {
-            // Info pages done → go to partner pairing
-            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
-            vc.view.backgroundColor = UIColor(named: "AppBackground")
-            window.rootViewController = UINavigationController(rootViewController: vc)
-
-        } else if defaults.bool(forKey: "hasCompletedAssessment") {
-            // Assessment done → go to info pages (what the app does)
-            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
-            window.rootViewController = UINavigationController(rootViewController: vc)
-
-        } else if defaults.bool(forKey: "hasCompletedBasicInfo") {
-            // Basic info done → go to assessment
-            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
-            window.rootViewController = UINavigationController(rootViewController: vc)
-
-        } else if defaults.bool(forKey: "hasCompletedAuth") {
-            // Auth done → go to basic info
-            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "tellUsAboutYourselfViewController") as! tellUsAboutYourselfViewController
-            window.rootViewController = UINavigationController(rootViewController: vc)
-
-        } else {
-            // Nothing completed → start from beginning (Onboarding storyboard initial VC)
-            window.rootViewController = onboardingStoryboard.instantiateInitialViewController()
+        // Preload the real destination in the background while splash plays.
+        // This triggers viewDidLoad + all Supabase fetches so the screen is
+        // fully ready by the time the splash animation ends.
+        DispatchQueue.main.async {
+            self.preloadedVC = self.buildNextViewController()
+            // Force the view to load now (triggers viewDidLoad + data fetching)
+            _ = self.preloadedVC?.view
         }
 
-        window.makeKeyAndVisible()
         // Listen for partner account deletion globally
         NotificationCenter.default.addObserver(
             self,
@@ -67,6 +42,55 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             name: .partnerAccountDeleted,
             object: nil
         )
+    }
+
+    /// Builds the correct next view controller based on onboarding state.
+    private func buildNextViewController() -> UIViewController {
+        let defaults = UserDefaults.standard
+        let onboardingStoryboard = UIStoryboard(name: "Onboarding", bundle: nil)
+
+        if defaults.bool(forKey: "hasCompletedOnboarding") {
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            return mainStoryboard.instantiateInitialViewController()!
+
+        } else if defaults.bool(forKey: "hasCompletedPairing") {
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            defaults.set(true, forKey: "hasCompletedOnboarding")
+            return mainStoryboard.instantiateInitialViewController()!
+
+        } else if defaults.bool(forKey: "hasCompletedInfoPages") {
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "PartnerVC") as! partnerViewController
+            vc.view.backgroundColor = UIColor(named: "AppBackground")
+            return UINavigationController(rootViewController: vc)
+
+        } else if defaults.bool(forKey: "hasCompletedAssessment") {
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "infoPageViewController") as! infoPageViewController
+            return UINavigationController(rootViewController: vc)
+
+        } else if defaults.bool(forKey: "hasCompletedBasicInfo") {
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "assesmentBeginViewController") as! assesmentBeginViewController
+            return UINavigationController(rootViewController: vc)
+
+        } else if defaults.bool(forKey: "hasCompletedAuth") {
+            let vc = onboardingStoryboard.instantiateViewController(withIdentifier: "tellUsAboutYourselfViewController") as! tellUsAboutYourselfViewController
+            return UINavigationController(rootViewController: vc)
+
+        } else {
+            return onboardingStoryboard.instantiateInitialViewController()!
+        }
+    }
+
+    /// Called by SplashViewController after its animation completes.
+    /// The destination screen is already loaded — just swap it in instantly.
+    func showMainApp() {
+        guard let window = self.window else { return }
+
+        // Use preloaded VC if ready, otherwise build it now (fallback)
+        let nextVC = preloadedVC ?? buildNextViewController()
+        preloadedVC = nil  // release reference
+
+        // Instant swap — native iOS splash behaviour, no animation
+        window.rootViewController = nextVC
     }
 
     // MARK: - Partner Deletion Alert (fires on any screen)
