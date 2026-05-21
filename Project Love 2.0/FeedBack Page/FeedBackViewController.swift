@@ -162,11 +162,15 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
            // Removed explicit UserDefaults count manipulation which was overriding server completion state
            
            // Dismiss screens
-           var topVC: UIViewController? = self
-        while let presenter = topVC?.presentingViewController {
-            topVC = presenter
-        }
-        topVC?.dismiss(animated: true)
+           if let nav = self.navigationController {
+               nav.popToRootViewController(animated: true)
+           } else {
+               var topVC: UIViewController? = self
+               while let presenter = topVC?.presentingViewController {
+                   topVC = presenter
+               }
+               topVC?.dismiss(animated: true)
+           }
         
     }
     
@@ -252,37 +256,43 @@ class FeedBackViewController: UIViewController, UITextViewDelegate {
     }
     
     private func dismissAndShowBadge() {
-        var rootVC: UIViewController? = self
-
-        while let presenter = rootVC?.presentingViewController {
-            rootVC = presenter
+        let presentBadge = {
+            let storyboard = UIStoryboard(name: "BuildYourBond", bundle: nil)
+            let badgeVC = storyboard.instantiateViewController(withIdentifier: "BadgePopupViewController") as! BadgePopUPViewController
+            badgeVC.bondName = self.bondName
+            badgeVC.modalPresentationStyle = .overFullScreen
+            
+            UIApplication.shared.connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+                .first?.rootViewController?.present(badgeVC, animated: false)
         }
 
-        // Dismiss everything first
-        rootVC?.dismiss(animated: true) {
-            //  Present badge popup after dismissal
-            let storyboard = UIStoryboard(
-                name: "BuildYourBond",
-                bundle: nil
-            )
-
-            let badgeVC = storyboard.instantiateViewController(
-                withIdentifier: "BadgePopupViewController"
-            ) as! BadgePopUPViewController
-            
-            badgeVC.bondName = self.bondName
-            
-            badgeVC.modalPresentationStyle = .overFullScreen
-            rootVC?.present(badgeVC, animated: false)
+        if let nav = self.navigationController {
+            nav.popToRootViewController(animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                presentBadge()
+            }
+        } else {
+            var rootVC: UIViewController? = self
+            while let presenter = rootVC?.presentingViewController {
+                rootVC = presenter
+            }
+            rootVC?.dismiss(animated: true) {
+                presentBadge()
+            }
         }
     }
     
     private func dismissAll() {
-        var topVC: UIViewController? = self
-        while let presenter = topVC?.presentingViewController {
-            topVC = presenter
+        if let nav = self.navigationController {
+            nav.popToRootViewController(animated: true)
+        } else {
+            var topVC: UIViewController? = self
+            while let presenter = topVC?.presentingViewController {
+                topVC = presenter
+            }
+            topVC?.dismiss(animated: true)
         }
-        topVC?.dismiss(animated: true)
     }
 
 }

@@ -36,61 +36,22 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Fc-Ra-eK8">
-                                                <rect key="frame" x="16" y="200.33333333333337" width="361" height="321"/>
+                                                <rect key="frame" x="16" y="200.33333333333337" width="361" height="441"/>
                                                 <subviews>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="mfw-bh-xAA">
-                                                        <rect key="frame" x="0.0" y="5" width="361" height="300"/>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mfw-bh-xAA">
+                                                        <rect key="frame" x="0.0" y="5" width="361" height="420"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="300" id="r6v-6p-m4c"/>
+                                                            <constraint firstAttribute="height" constant="420" id="r6v-6p-m4c"/>
                                                         </constraints>
-                                                        <prototypes>
-                                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="StepCell" id="h9E-zn-iYg" customClass="StepsTableViewCell" customModule="Project_Love_2_0" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="50" width="361" height="83"/>
-                                                                <autoresizingMask key="autoresizingMask"/>
-                                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="h9E-zn-iYg" id="wUV-0O-2AJ">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="361" height="83"/>
-                                                                    <autoresizingMask key="autoresizingMask"/>
-                                                                    <subviews>
-                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Z7-3h-TSz">
-                                                                            <rect key="frame" x="0.0" y="8" width="361" height="67"/>
-                                                                            <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Mw-GH-RPv">
-                                                                                    <rect key="frame" x="20" y="22" width="321" height="23"/>
-                                                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                                                    <nil key="textColor"/>
-                                                                                    <nil key="highlightedColor"/>
-                                                                                </label>
-                                                                            </subviews>
-                                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                            <constraints>
-                                                                                <constraint firstItem="4Mw-GH-RPv" firstAttribute="leading" secondItem="7Z7-3h-TSz" secondAttribute="leading" constant="20" id="IEv-nA-Zyb"/>
-                                                                                <constraint firstAttribute="trailing" secondItem="4Mw-GH-RPv" secondAttribute="trailing" constant="20" id="OIt-hx-MKV"/>
-                                                                                <constraint firstAttribute="bottom" secondItem="4Mw-GH-RPv" secondAttribute="bottom" constant="22" id="RpZ-za-9c1"/>
-                                                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="66" id="afN-Ly-Chf"/>
-                                                                                <constraint firstItem="4Mw-GH-RPv" firstAttribute="top" secondItem="7Z7-3h-TSz" secondAttribute="top" constant="22" id="zLj-28-4EV"/>
-                                                                            </constraints>
-                                                                            <userDefinedRuntimeAttributes>
-                                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                    <integer key="value" value="15"/>
-                                                                                </userDefinedRuntimeAttribute>
-                                                                            </userDefinedRuntimeAttributes>
-                                                                        </view>
-                                                                    </subviews>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="bottom" secondItem="7Z7-3h-TSz" secondAttribute="bottom" constant="8" id="BNy-EK-Bos"/>
-                                                                        <constraint firstItem="7Z7-3h-TSz" firstAttribute="leading" secondItem="wUV-0O-2AJ" secondAttribute="leading" id="VEP-UR-GBg"/>
-                                                                        <constraint firstItem="7Z7-3h-TSz" firstAttribute="top" secondItem="wUV-0O-2AJ" secondAttribute="top" constant="8" id="wd5-xA-i9X"/>
-                                                                        <constraint firstAttribute="trailing" secondItem="7Z7-3h-TSz" secondAttribute="trailing" id="zjX-B6-qAj"/>
-                                                                    </constraints>
-                                                                </tableViewCellContentView>
-                                                                <connections>
-                                                                    <outlet property="cardBackground" destination="7Z7-3h-TSz" id="dOe-S8-wyn"/>
-                                                                    <outlet property="titleLabel" destination="4Mw-GH-RPv" id="xGw-fv-2UZ"/>
-                                                                </connections>
-                                                            </tableViewCell>
-                                                        </prototypes>
-                                                    </tableView>
+                                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="til-32-aRx">
+                                                            <size key="itemSize" width="128" height="128"/>
+                                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                        </collectionViewFlowLayout>
+                                                        <cells/>
+                                                    </collectionView>
                                                 </subviews>
                                                 <color key="backgroundColor" name="AppBackground"/>
                                                 <constraints>
@@ -108,7 +69,7 @@
                                                     <action selector="continueButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="c5o-MQ-Mks"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to peek inside!👀" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9X7-vt-zcX">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe to see next step!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9X7-vt-zcX">
                                                 <rect key="frame" x="16" y="184.33333333333334" width="361" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -159,7 +120,7 @@
                     <connections>
                         <outlet property="activityTitle" destination="Vlh-pE-RLV" id="KQI-Fx-WYQ"/>
                         <outlet property="continueButton" destination="NFx-XE-Dbr" id="WJa-z3-fDL"/>
-                        <outlet property="stepsTable" destination="mfw-bh-xAA" id="MB5-Hc-Iw3"/>
+                        <outlet property="stepsCollectionView" destination="mfw-bh-xAA" id="MB5-Hc-Iw3"/>
                         <outlet property="subtitle" destination="Ktr-VS-Cqb" id="Vxs-YA-Ul3"/>
                         <outlet property="subtitle1" destination="9X7-vt-zcX" id="96A-Tp-ebZ"/>
                         <outlet property="tableBackgroundCell" destination="6Fc-Ra-eK8" id="AUE-04-HVQ"/>
