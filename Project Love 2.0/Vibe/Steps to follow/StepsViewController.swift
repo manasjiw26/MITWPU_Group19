@@ -332,12 +332,17 @@ class StepsViewController: UIViewController {
     }
     
     @IBAction func continueButton(_ sender: Any) {
-        if bondName != nil, let index = selectedActivityIndex, index < 3 {
+        if let bondName = bondName, let index = selectedActivityIndex, index < 3 {
             if let activity = activity {
                 DataStore.shared.markActivityCompleted(activity: activity)
+                DataStore.shared.unlockNextBondActivity(bondName: bondName, completedIndex: index)
                 bondDelegate?.didCompleteBondActivity()
             }
-            dismiss(animated: true)
+            if let navController = self.navigationController {
+                navController.popViewController(animated: true)
+            } else {
+                dismiss(animated: true)
+            }
             return
         }
 

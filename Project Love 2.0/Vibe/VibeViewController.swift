@@ -696,10 +696,10 @@ class VibeViewController: UIViewController,UICollectionViewDelegate,MoodCheckInC
                 }
             } else {
                 await MainActor.run {
-                    if self.partnerMoodTitle != "Waiting" || self.partnerMoodImage != "waiting" {
-                        self.partnerMoodTitle = "Waiting"
-                        self.partnerMoodImage = "waiting"
-                        self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.mood))
+                    if self.partnerMoodTitle != "Waiting.." || self.partnerMoodImage != "Empty_mood" {
+                                            self.partnerMoodTitle = "Waiting.."
+                                            self.partnerMoodImage = "Empty_mood"
+                                            self.vibeCollectionView.reloadSections(IndexSet(integer: VibeSection.mood))
                     }
                 }
             }
