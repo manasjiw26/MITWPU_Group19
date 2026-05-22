@@ -15,14 +15,20 @@ class signupOptionsViewController: UIViewController {
     
     let spinner = UIActivityIndicatorView(style: .large)
     
+    @IBOutlet weak var OnboardingAppImage: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setCornerRadius()
         spinner.center = view.center
         spinner.hidesWhenStopped = true
         view.addSubview(spinner)
     }
-
+    func setCornerRadius(){
+        OnboardingAppImage.layer.cornerRadius = 25
+        OnboardingAppImage.clipsToBounds = true
+        OnboardingAppImage.layer.borderColor = UIColor.black.cgColor
+        OnboardingAppImage.layer.borderWidth = 0.5
+    }
     
     @IBAction func googleSignIn(_ sender: UIButton) {
         // 1. Read the iOS client ID from Info.plist

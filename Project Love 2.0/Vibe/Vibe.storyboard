@@ -84,10 +84,9 @@
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="93" id="xDb-KS-Hpb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="filled">
-                                                    <attributedString key="attributedTitle">
-                                                        <fragment content="Continue"/>
-                                                    </attributedString>
+                                                <buttonConfiguration key="configuration" style="filled" title="Continue">
+                                                    <fontDescription key="titleFontDescription" type="system" pointSize="12"/>
+                                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <color key="baseBackgroundColor" red="0.61176470589999998" green="0.53333333329999999" blue="0.82352941180000006" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </buttonConfiguration>
                                                 <connections>
