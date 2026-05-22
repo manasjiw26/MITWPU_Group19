@@ -70,3 +70,9 @@ playground.xcworkspace
 # Environment files
 # ===============================
 .env
+
+# ===============================
+# Secrets (API keys, credentials)
+# ===============================
+**/Secrets.plist
+**/Secrets.xcconfig

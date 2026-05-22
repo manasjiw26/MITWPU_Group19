@@ -31,10 +31,13 @@ class signupOptionsViewController: UIViewController {
     }
     
     @IBAction func googleSignIn(_ sender: UIButton) {
-        // 1. Read the iOS client ID from Info.plist
-        guard let clientID = Bundle.main.object(forInfoDictionaryKey: "GIDCLientID") as? String else {
-            showAlert("Google Client ID not found in Info.plist")
-            return
+        // 1. Read the iOS client ID from SecretsManager (falls back to Info.plist)
+        let clientID: String
+        if let plistID = Bundle.main.object(forInfoDictionaryKey: "GIDCLientID") as? String,
+           !plistID.isEmpty, !plistID.hasPrefix("$") {
+            clientID = plistID
+        } else {
+            clientID = SecretsManager.googleClientID
         }
         
         // 2. Create Google Sign-In configuration

@@ -11,7 +11,7 @@
 			<string>REVERSED_CLIENT_ID</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1083654152457-3dl979qslvovb78f0e662h6uvo4gqcao</string>
+				<string>$(GOOGLE_REVERSED_CLIENT_ID)</string>
 			</array>
 		</dict>
 		<dict>
@@ -26,7 +26,7 @@
 		</dict>
 	</array>
 	<key>GIDCLientID</key>
-	<string>1083654152457-3dl979qslvovb78f0e662h6uvo4gqcao.apps.googleusercontent.com</string>
+	<string>$(GOOGLE_CLIENT_ID)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

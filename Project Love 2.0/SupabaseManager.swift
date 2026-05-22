@@ -16,8 +16,8 @@ final class SupabaseManager {
 
     private init() {
         client = SupabaseClient(
-            supabaseURL: URL(string: "https://wpvglekeytqkbngmbcqt.supabase.co")!,
-            supabaseKey: "sb_publishable_1xXOrpx5EAM0MzXxMy0VFA_MXwaQh4B"
+            supabaseURL: URL(string: SecretsManager.supabaseURL)!,
+            supabaseKey: SecretsManager.supabaseAnonKey
 
         )
     }

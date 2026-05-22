@@ -247,10 +247,10 @@
             </objects>
             <point key="canvasLocation" x="2723" y="292"/>
         </scene>
-        <!--Mood Check_In-->
+        <!--MoodCheckIn-->
         <scene sceneID="Osa-DT-wFc">
             <objects>
-                <viewControllerPlaceholder storyboardName="Mood Check_In" id="nF5-Uc-ocE" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="MoodCheckIn" id="nF5-Uc-ocE" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="KD5-yG-Dkc"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a6K-si-PXV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
