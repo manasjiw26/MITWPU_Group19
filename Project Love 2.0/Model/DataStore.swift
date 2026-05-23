@@ -72,7 +72,7 @@ class DataStore {
     private(set) var suggestedJSONActivities: [JSONActivity] = []
     private var HisMood: Mood?
     
-    private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "calm" )
+    private var HerMood: Mood? = Mood(id: -1, title: "Calm", imageName: "Calm" )
     private(set) var notifications: [AppNotification] = []
     private(set) var savedFeedback: [FeedBackGiven] = []
     
@@ -1532,8 +1532,8 @@ class DataStore {
     
     func sampleMoods() -> [MoodCheckIn] {
         let mood: [MoodCheckIn] = [
-            MoodCheckIn(label: "Me", imageName: "calm", moodLabel: "Calm"),
-            MoodCheckIn(label: "Her", imageName: "drained", moodLabel: "Drained")
+            MoodCheckIn(label: "Me", imageName: "Calm", moodLabel: "Calm"),
+            MoodCheckIn(label: "Her", imageName: "Drained", moodLabel: "Drained")
         ]
         return mood
     }
@@ -2408,7 +2408,7 @@ class DataStore {
                 Mood(id: 3, title: "Peaceful", imageName: "Peaceful"),
                 
                 Mood(id: 4, title: "Satisfied", imageName: "Satisfied"),
-                Mood(id: 5, title: "Calm", imageName: "calm"),
+                Mood(id: 5, title: "Calm", imageName: "Calm"),
                 Mood(id: 6, title: "Productive", imageName: "Productive"),
                 
                 Mood(id: 7, title: "Determined", imageName: "Determined"),
@@ -2420,7 +2420,7 @@ class DataStore {
                 Mood(id: 12, title: "Sad", imageName: "Sad"),
                 
                 Mood(id: 13, title: "Disappointed", imageName: "Disappointed"),
-                Mood(id: 14, title: "Drained", imageName: "drained"),
+                Mood(id: 14, title: "Drained", imageName: "Drained"),
                 Mood(id: 15, title: "Angry", imageName: "Angry")
             ]
         }
