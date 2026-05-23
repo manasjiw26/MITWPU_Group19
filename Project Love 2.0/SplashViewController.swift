@@ -3,7 +3,7 @@
 //  Project Love 2.0
 //
 //  Animated splash screen: two doodle blobs slide in from
-//  top-right and bottom-left corners, then the "TwoOfUs"
+//  top-right and bottom-left corners, then the "TwoTales"
 //  title zooms in — matching the app icon composition.
 //
 
@@ -15,7 +15,7 @@ class SplashViewController: UIViewController {
 
     private let doodleTop = UIImageView()      // winking doodle → enters from top-right
     private let doodleBottom = UIImageView()    // happy doodle   → enters from bottom-left
-    private let titleLabel = UILabel()          // "TwoOfUs"
+    private let titleLabel = UILabel()          // "TwoTales"
 
     // MARK: – Design Constants
     private let doodleSize: CGFloat = 220       // Size of the doodles (reverted to original size)
@@ -60,7 +60,7 @@ class SplashViewController: UIViewController {
     }
 
     private func setupTitle() {
-        titleLabel.text = "TwoOfUs"
+        titleLabel.text = "TwoTales"
         titleLabel.font = UIFont.systemFont(ofSize: 42, weight: .heavy)
         titleLabel.textColor = UIColor(red: 0.45, green: 0.25, blue: 0.70, alpha: 1.0) // deep purple
         titleLabel.textAlignment = .center

@@ -45,7 +45,7 @@ class ScheduleManager {
         let center = UNUserNotificationCenter.current()
         
         let content = UNMutableNotificationContent()
-        content.title = "TwoOfUs"
+        content.title = "TwoTales"
         content.body = message
         content.sound = .default
         content.userInfo = ["notificationType": "motivational"]
